@@ -1,4 +1,4 @@
-//noinspection JSCheckFunctionSignatures,JSUnresolvedFunction,JSUnusedGlobalSymbols,JSUnresolvedVariable,ES6UnusedImports,JSIncompatibleTypesComparison
+//noinspection JSCheckFunctionSignatures,JSUnresolvedFunction,JSUnusedGlobalSymbols,JSUnresolvedVariable,ES6UnusedImports,JSIncompatibleTypesComparison,JSClosureCompilerSyntax
 
 //#region ExtendedNodeList lambda's
 import {createElementFromHtmlString} from "./DOM.js";
@@ -18,14 +18,14 @@ randomStringExtension();
  * // chainability means:
  * $(`<div id="helloworld">`)
  *   .text(`Example: hello ... world`)
- *   .style( {
+ *   .styleInline( {
  *      marginTop: `1rem`,
  *      border: `3px solid green`,
  *      padding: `5px`, fontSize: `1.2em`,
  *      display: `inline-block` } )
  *   .append($(`<span> OK</span>`))
  *   .find$(`span`)
- *   .style({color: `red`});
+ *   .styleInline({color: `red`});
  * @namespace ExtendedNodelistLambdas
  */
 const ExtendedNodelistLambdas = {
