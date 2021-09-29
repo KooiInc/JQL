@@ -172,6 +172,14 @@ const ExtendedNodelistLambdas = {
   },
 
   /**
+   * Get the direct parent node of the first element of
+   * the ExtendedNodeList instance
+   * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+   * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
+   */
+  parent: extCollection => extCollection.first() && extCollection.first().parentNode || extCollection,
+
+  /**
    * Appends one ore more elements to the first element
    * of the instance collection (for real, in the DOM tree)
    * @param extCollection {...ExtendedNodeList} (implicit) current ExtendedNodeList instance
