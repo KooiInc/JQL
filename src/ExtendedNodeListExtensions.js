@@ -1,4 +1,4 @@
-//noinspection JSCheckFunctionSignatures,JSUnresolvedFunction,JSUnusedGlobalSymbols,JSUnresolvedVariable,ES6UnusedImports,JSIncompatibleTypesComparison,JSClosureCompilerSyntax
+//noinspection JSCheckFunctionSignatures,JSUnresolvedFunction,JSUnusedGlobalSymbols,JSUnresolvedVariable,ES6UnusedImports,JSIncompatibleTypesComparison,JSClosureCompilerSyntax,DuplicatedCode
 
 //#region ExtendedNodeList lambda's
 import {createElementFromHtmlString} from "./DOM.js";
@@ -150,6 +150,20 @@ const ExtendedNodelistLambdas = {
     }
 
     return extCollection;
+  },
+
+  /**
+   * Replace the collection of an ExtendedNodeList instance with something else
+   * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+   * @param newChild {HTMLElement|ExtendedNodeList} <code>HTMLElement</code> or
+   * <code>ExtendedNodeList</code> instance
+   * @returns {ExtendedNodeList} <code>ExtendedNodeList</code> instance, so chainable
+   * <br><b>Note:</b> the returned <code>ExtendedNodeList</code> instance is the replaced element.
+   */
+  replaceMe: (extCollection, newChild) => {
+    newChild = newChild instanceof HTMLElement ? new extCollection.constructor(newChild) : newChild;
+    extCollection.parent().replace(extCollection, newChild)
+    return newChild;
   },
 
   /**
