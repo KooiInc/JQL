@@ -11,7 +11,7 @@ randomStringExtension();
  * All extendedNodeListCollectionExtensions for ExtendedNodeList where looping may not be
  * possible. See (the source of)
  * <a href="./ExtensionHelpers.html#.initializePrototype"><code>ExtensionHelpers > initializePrototype</code></a>.
- * <br><b>Notes</b><ul>
+ * <p><b>Notes</b></p><ul>
  *  <li>Most methods are <i>chainable</i>.
  *  <li><code>.style</code> is a collection method, not in this file but also chainable.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
