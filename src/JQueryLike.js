@@ -148,11 +148,11 @@ export default (() => {
       const isHtmlString = isHtml(input);
       const shouldCreateElements = isArrayOfHtmlStrings || isHtmlString;
       // show raw input in log
-      const logStr = (`Raw input: [${cleanup4Log(isArrayOfHtmlStrings ? input.join(``) : input)}]`);
+      const logStr = (`JQL log: raw input: [${cleanup4Log(isArrayOfHtmlStrings ? input.join(``) : input)}]`);
 
       // the input is a css selector
       if (input.constructor === String && !shouldCreateElements) {
-        log(`From css querySelector:\n  ${logStr}`);
+        log(`JQL log: from css querySelector:\n  ${logStr}`);
         this.collection = [...selectorRoot.querySelectorAll(input)];
         return this;
       }
@@ -198,7 +198,7 @@ export default (() => {
       if (shouldCreateElements) {
         // append collection to DOM tree (if the root is not <br>)
         this.collection = inject2DOMTree(this.collection);
-        log(`Element creation log:\n  ${logStr}\n  Output (outerHTML truncated) [${
+        log(`JQL log: element creation:\n  ${logStr}\n  Output (outerHTML truncated) [${
           cleanup4Log(ElemArrayHtml(this.collection) || "sanitized: no elements remaining")
             .substr(0, logLineLength)}]`);
       }
