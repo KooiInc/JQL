@@ -126,8 +126,9 @@ const ExtendedNodelistLambdas = {
    * Replace a child in the collection of an ExtendedNodeList instance
    * with something else
    * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
-   * @param oldChild {HTMLElement} ExtendedNodeList instance or css selector string
-   * @param newChild {HTMLElement} or ExtendedNodeList instance
+   * @param oldChild {HTMLElement|string} <code>HTMLElement</code> or selector string
+   * @param newChild {HTMLElement} <code>HTMLElement</code> or
+   * <code>ExtendedNodeList</code> instance
    * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable
    */
   replace: (extCollection, oldChild, newChild) => {
