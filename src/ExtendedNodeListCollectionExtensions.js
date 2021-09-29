@@ -114,7 +114,7 @@ const replaceClass = (el, className, ...nwClassNames) => {
  * @memberof CollectionLambdas
  * @param el {HTMLElement} (implicit [ExtendedNodeList instance].collection[i]) an element from the collection
  */
-const remove = el => el.parentNode && el.parentNode.removeChild(el);
+const remove = el => el.remove();
 
 /**
  * remove [classNames] from all elements of the collection
@@ -139,12 +139,22 @@ const addClass = (el, ...classNames) =>
     el && classNames.forEach( cn => el.classList.add(cn) );
 
 /**
- * Hide all elements of a collection
+ * show all elements of a collection
  * @memberof CollectionLambdas
  * @param el {HTMLElement} (implicit [ExtendedNodeList instance].collection[i]) an element from the collection
  * @param show {boolean} true: show, false: hide
  */
-const visible = (el, show) => el.style.display = show ? `` : `none`;
+const show = el => el.style.display = ``;
+
+/**
+ * hide all elements of a collection
+ * @memberof CollectionLambdas
+ * @param el {HTMLElement} (implicit [ExtendedNodeList instance].collection[i]) an element from the collection
+ * @param show {boolean} true: show, false: hide
+ */
+const hide = el => el.style.display = `none`;
+
+  //(el, show) => el.style.display = show ? `` : `none`;
 
 /**
  * set data-attribute for all elements of the collection
@@ -285,7 +295,7 @@ const css = (el, keyOrKvPairs, value) => {
 //#endregion collection lambda's
 const extendedNodeListCollectionLamdas = {
   toggleClass, addClass, removeClass, attr, removeAttr,
-  toggleAttr, toggleStyleFragments, visible, empty, remove,
+  toggleAttr, toggleStyleFragments, show, hide, empty, remove,
   replaceClass, clear, setData, css, styleInline};
 
 export default extendedNodeListCollectionLamdas;

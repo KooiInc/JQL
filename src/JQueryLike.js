@@ -108,8 +108,12 @@ export default (() => {
           elem && elem instanceof HTMLElement
             ? [...acc, element2DOM(elem, root, position)] : acc, []);
     const cleanup4Log = logLine =>
-      logLine.substr(0, logLineLength)
+      logLine
+        .trim()
+        .substr(0, logLineLength)
+        .replace(/>\s+</g, `><`)
         .replace(/</g, `&lt;`)
+        .replace(/\s{2,}/g, ` `)
         .replace(/\n/g, `\\n`) + (logLine.length > logLineLength ? `&hellip;` : ``).trim();
     const ElemArrayHtml = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
     const selectorRoot = root !== document.body &&
@@ -148,12 +152,12 @@ export default (() => {
       const isHtmlString = isHtml(input);
       const shouldCreateElements = isArrayOfHtmlStrings || isHtmlString;
       // show raw input in log
-      const logStr = (`JQL log: raw input: [${cleanup4Log(isArrayOfHtmlStrings ? input.join(``) : input)}]`);
+      const logStr = (`(JQL log) raw input: [${cleanup4Log(isArrayOfHtmlStrings ? input.join(``) : input)}]`);
 
       // the input is a css selector
       if (input.constructor === String && !shouldCreateElements) {
         this.collection = [...selectorRoot.querySelectorAll(input)];
-        log(`JQL log: css querySelector [${input}], output ${this.collection.length} element(s)`);
+        log(`(JQL log) css querySelector [${input}], output ${this.collection.length} element(s)`);
         return this;
       }
 
@@ -198,7 +202,7 @@ export default (() => {
       if (shouldCreateElements) {
         // append collection to DOM tree (if the root is not <br>)
         this.collection = inject2DOMTree(this.collection);
-        log(`JQL log: element creation:\n  ${logStr}\n  Output (outerHTML truncated) [${
+        log(`${logStr}\n  Created (outerHTML truncated) [${
           cleanup4Log(ElemArrayHtml(this.collection) || "sanitized: no elements remaining")
             .substr(0, logLineLength)}]`);
       }
