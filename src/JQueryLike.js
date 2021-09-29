@@ -28,7 +28,7 @@ import {initializePrototype,} from "./ExtensionHelpers.js";
 // -------------------------------------------------------------------- //
 export default (() => {
   /**
-   * The core
+   * The JQL core
    * @namespace JQL
    */
 
