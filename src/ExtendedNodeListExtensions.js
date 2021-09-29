@@ -191,7 +191,9 @@ const ExtendedNodelistLambdas = {
    * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
    * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
    */
-  parent: extCollection => extCollection.first() && extCollection.first().parentNode || extCollection,
+  parent: extCollection => extCollection.first() &&
+    new extCollection.constructor(extCollection.first().parentNode) ||
+    extCollection,
 
   /**
    * Appends one ore more elements to the first element
