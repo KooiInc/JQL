@@ -152,8 +152,8 @@ export default (() => {
 
       // the input is a css selector
       if (input.constructor === String && !shouldCreateElements) {
-        log(`JQL log: from css querySelector:\n  ${logStr}`);
         this.collection = [...selectorRoot.querySelectorAll(input)];
+        log(`JQL log: css querySelector [${input}], output ${this.collection.length} element(s)`);
         return this;
       }
 
