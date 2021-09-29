@@ -1,0 +1,13 @@
+{
+  "name": "js",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "docdash": "^1.2.0",
+    "esbuild": "^0.12.28"
+  },
+  "scripts": {
+    "build": "node buildJQ.js",
+    "document": "jsdoc ./src -t ./docs -d ./api -R ./src/readme.md"
+  }
+}

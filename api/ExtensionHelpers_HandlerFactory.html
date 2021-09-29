@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>ExtensionHelpers/HandlerFactory - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~time">time</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="CollectionLambdas.html">CollectionLambdas</a><ul class='methods'><li data-type='method'><a href="CollectionLambdas.html#.addClass">addClass</a></li><li data-type='method'><a href="CollectionLambdas.html#.assignAttrValues">assignAttrValues</a></li><li data-type='method'><a href="CollectionLambdas.html#.attr">attr</a></li><li data-type='method'><a href="CollectionLambdas.html#.clear">clear</a></li><li data-type='method'><a href="CollectionLambdas.html#.css">css</a></li><li data-type='method'><a href="CollectionLambdas.html#.empty">empty</a></li><li data-type='method'><a href="CollectionLambdas.html#.remove">remove</a></li><li data-type='method'><a href="CollectionLambdas.html#.removeAttr">removeAttr</a></li><li data-type='method'><a href="CollectionLambdas.html#.removeClass">removeClass</a></li><li data-type='method'><a href="CollectionLambdas.html#.replaceClass">replaceClass</a></li><li data-type='method'><a href="CollectionLambdas.html#.setData">setData</a></li><li data-type='method'><a href="CollectionLambdas.html#.styleInline">styleInline</a></li><li data-type='method'><a href="CollectionLambdas.html#.toggleAttr">toggleAttr</a></li><li data-type='method'><a href="CollectionLambdas.html#.toggleClass">toggleClass</a></li><li data-type='method'><a href="CollectionLambdas.html#.toggleStyleFragments">toggleStyleFragments</a></li><li data-type='method'><a href="CollectionLambdas.html#.visible">visible</a></li></ul></li><li><a href="ExtendedNodelistLambdas.html">ExtendedNodelistLambdas</a><ul class='methods'><li data-type='method'><a href="ExtendedNodelistLambdas.html#.append">append</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.appendTo">appendTo</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.delegate">delegate</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.each">each</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.find">find</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.find$">find$</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.first">first</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.first$">first$</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.getData">getData</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.hasClass">hasClass</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.html">html</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.htmlFor">htmlFor</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.insert">insert</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.is">is</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.isEmpty">isEmpty</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.on">on</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.ON">ON</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.outerHtml">outerHtml</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.prop">prop</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.replace">replace</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.single">single</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.text">text</a></li><li data-type='method'><a href="ExtendedNodelistLambdas.html#.val">val</a></li></ul></li><li><a href="ExtensionHelpers.html">ExtensionHelpers</a><ul class='methods'><li data-type='method'><a href="ExtensionHelpers.html#.getAllDataAttributeValues">getAllDataAttributeValues</a></li><li data-type='method'><a href="ExtensionHelpers.html#.hex2Full">hex2Full</a></li><li data-type='method'><a href="ExtensionHelpers.html#.hex2RGBA">hex2RGBA</a></li><li data-type='method'><a href="ExtensionHelpers.html#.initializePrototype">initializePrototype</a></li><li data-type='method'><a href="ExtensionHelpers.html#.isVisible">isVisible</a></li><li data-type='method'><a href="ExtensionHelpers.html#.loop">loop</a></li></ul></li><li><a href="ExtensionHelpers_HandlerFactory.html">ExtensionHelpers/HandlerFactory</a><ul class='methods'><li data-type='method'><a href="ExtensionHelpers_HandlerFactory.html#.addListenerIfNotExisting">addListenerIfNotExisting</a></li><li data-type='method'><a href="ExtensionHelpers_HandlerFactory.html#.createHandlerForHID">createHandlerForHID</a></li><li data-type='method'><a href="ExtensionHelpers_HandlerFactory.html#.metaHandler">metaHandler</a></li></ul></li><li><a href="JQL.html">JQL</a><ul class='methods'><li data-type='method'><a href="JQL.html#.ExtendedNodeList">ExtendedNodeList</a></li><li data-type='method'><a href="JQL.html#.setStyle">setStyle</a></li><li data-type='method'><a href="JQL.html#.virtual">virtual</a></li></ul></li><li><a href="JQL_DOM.html">JQL/DOM</a><ul class='methods'><li data-type='method'><a href="JQL_DOM.html#.htmlToVirtualElement">htmlToVirtualElement</a></li></ul></li><li><a href="JQL_ExternalStyling.html">JQL/ExternalStyling</a><ul class='methods'><li data-type='method'><a href="JQL_ExternalStyling.html#.changeCssStyleRule">changeCssStyleRule</a></li></ul></li><li><a href="JQL_HTMLHelpers.html">JQL/HTMLHelpers</a><ul class='methods'><li data-type='method'><a href="JQL_HTMLHelpers.html#.setTagPermission">setTagPermission</a></li></ul></li><li><a href="JQL_HTMLHelpers_AllowUnknown.html">JQL/HTMLHelpers/AllowUnknown</a><ul class='methods'><li data-type='method'><a href="JQL_HTMLHelpers_AllowUnknown.html#.off">off</a></li><li data-type='method'><a href="JQL_HTMLHelpers_AllowUnknown.html#.on">on</a></li></ul></li><li><a href="JQL_Log.html">JQL/Log</a><ul class='methods'><li data-type='method'><a href="JQL_Log.html#.log">log</a></li><li data-type='method'><a href="JQL_Log.html#.setStyling4Log">setStyling4Log</a></li></ul></li><li><a href="JQL_Log_debugLog.html">JQL/Log/debugLog</a><ul class='methods'><li data-type='method'><a href="JQL_Log_debugLog.html#.hide">hide</a></li><li data-type='method'><a href="JQL_Log_debugLog.html#.isVisible">isVisible</a></li><li data-type='method'><a href="JQL_Log_debugLog.html#.off">off</a></li><li data-type='method'><a href="JQL_Log_debugLog.html#.on">on</a></li><li data-type='method'><a href="JQL_Log_debugLog.html#.show">show</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">ExtensionHelpers/HandlerFactory</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        ExtensionHelpers/HandlerFactory
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExtensionHelpers.js.html">ExtensionHelpers.js</a>, <a href="ExtensionHelpers.js.html#line136">line 136</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+                <div class="description usertext">Factory for handling events</div>
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".addListenerIfNotExisting"><span class="type-signature">(static) </span>addListenerIfNotExisting<span class="signature">(type)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExtensionHelpers.js.html">ExtensionHelpers.js</a>, <a href="ExtensionHelpers.js.html#line184">line 184</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    add listener for event type if it's not existing in the handlers Object
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the event type (e.g. 'click', 'focusin' etc)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".createHandlerForHID"><span class="type-signature">(static) </span>createHandlerForHID<span class="signature">(extCollection, HID, &hellip;callback)</span><span class="type-signature"> &rarr; {function}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExtensionHelpers.js.html">ExtensionHelpers.js</a>, <a href="ExtensionHelpers.js.html#line169">line 169</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    wraps a handler (from $([]).on/ON/delegate) and returnsa new handler function
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>extCollection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ExentedNodeList</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">the ExentedNodeList instance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>HID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">the Handler id: '[data-hid=...]' or some selector like '#something'- this determines execution or not of the callback lambda</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">the callback lambda</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".metaHandler"><span class="type-signature">(static) </span>metaHandler<span class="signature">(evt)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExtensionHelpers.js.html">ExtensionHelpers.js</a>, <a href="ExtensionHelpers.js.html#line157">line 157</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Handler method for an array of handlers per event type.<i>Per event type</i> (e.g. click, change etc.) this isthe one and only handler that is added to the document ObjectSo:<ul><li>All handlers are delegated.</li><li>For every <code>Event.type</code> there will be exactly onehandler, added to the document.</li><li><code>metaHandler</code> iteratesover the (wrapped) handler lambda's created with the<code>createHandlerForHID</code> factory.</li></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>evt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the event sent by the browser</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Sep 29 2021 10:49:52 GMT+0200 (Midden-Europese zomertijd) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
