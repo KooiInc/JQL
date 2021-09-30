@@ -1,6 +1,8 @@
-// noinspection JSUnusedLocalSymbols,JSCheckFunctionSignatures,JSValidateJSDoc
+// noinspection JSUnusedLocalSymbols,JSCheckFunctionSignatures,JSValidateJSDoc,JSUnresolvedVariable
+// noinspection JSUnresolvedVariable
+
 import {hex2RGBA} from "./ExtensionHelpers.js";
-import {isObjectAndNotArray, toDashedNotation} from "./Helpers.js"
+import {isObjectAndNotArray, } from "./Helpers.js"
 import setStyle from "./Styling.js";
 
 //#region collection lambda'style
@@ -12,7 +14,7 @@ import setStyle from "./Styling.js";
  * <p><b>Notes</b></p><ul>
  *  <li>All methods are <i>chainable</i>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller
- *  <br>so: <code>[instance].toggleClass(<s>someEl,</s> `someClass`)</code>
+ *  <br>so: <code>[instance].toggleClass(<s>someHTMLElement,</s> `someClass`)</code>
  *  </ul>
  * @example
  * // presume $ is the alias for ExtendedNodeList
@@ -147,7 +149,6 @@ const addClass = (el, ...classNames) =>
  * show all elements of a collection
  * @memberof CollectionLambdas
  * @param el {HTMLElement} (implicit [ExtendedNodeList instance].collection[i]) an element from the collection
- * @param show {boolean} true: show, false: hide
  */
 const show = el => el.style.display = ``;
 
@@ -155,7 +156,6 @@ const show = el => el.style.display = ``;
  * hide all elements of a collection
  * @memberof CollectionLambdas
  * @param el {HTMLElement} (implicit [ExtendedNodeList instance].collection[i]) an element from the collection
- * @param show {boolean} true: show, false: hide
  */
 const hide = el => el.style.display = `none`;
 
@@ -282,6 +282,8 @@ const styleInline = (el, keyOrKvPairs, value) => {
  * @param keyOrKvPairs {Object|string} Object or string e.g. <code>&#123;marginRight: '12px'&#125;</code>
  * or <code>'margin-right'</code>
  * <br>key or string may be: `paddingRight` or `"padding-right"`
+ * <br><b>Note</b>: if you want to use your own className, include a <code>className</code> property in
+ * the Object.
  * @param value {string|undefined} if value is not <code>undefined</code>, keyOrKvPairs should be a string too
  * <br>If the value should be empty (reset: e.g. <code>padding: ""</code>), use a dash "-"
  * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable
@@ -290,9 +292,15 @@ const css = (el, keyOrKvPairs, value) => {
   if (value && keyOrKvPairs.constructor === String) {
     keyOrKvPairs = { [keyOrKvPairs]: value === "-" ? "" : value };
   }
+  let nwClass = undefined;
 
-  const classExists  = ([...el.classList].find(c => c.startsWith(`JQLCreated`)));
-  const nwClass = classExists || `JQLCreated_${String.createRandomHtmlElementId(12)}`;
+  if (keyOrKvPairs.className) {
+    nwClass = keyOrKvPairs.className;
+    delete keyOrKvPairs.className;
+  }
+
+  const classExists  = ([...el.classList].find(c => c.startsWith(`JQLCreated`) || nwClass && c === nwClass));
+  nwClass = classExists || nwClass || `JQLCreated_${String.createRandomHtmlElementId(12)}`;
     setStyle(`.${nwClass}`, keyOrKvPairs, `JQLCustomCSS`);
     el.classList.add(nwClass);
 };
