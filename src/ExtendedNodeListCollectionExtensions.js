@@ -111,6 +111,7 @@ const clear = el => empty(el);
  * @param nwClassNames {...string} the class name(s) to replace [className] with
  */
 const replaceClass = (el, className, ...nwClassNames) => {
+  console.log(className, nwClassNames);
   el.classList.remove(className);
   nwClassNames.forEach(name => el.classList.add(name));
 }
