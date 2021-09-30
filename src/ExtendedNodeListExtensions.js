@@ -13,8 +13,8 @@ randomStringExtension();
  * <a href="./ExtensionHelpers.html#.initializePrototype"><code>ExtensionHelpers > initializePrototype</code></a>.
  * <p><b>Notes</b></p><ul>
  *  <li>Most methods are <i>chainable</i>.
- *  <li><a style="text-decoration: underline" href="./CollectionLambdas.html#.css"><code>[...].css</code></a>
- *  is a collection method, not in this file but also chainable.
+ *  <li><code>[...].css</code></a> is a collection method, not in this file but also chainable, see
+ *  <a href="./CollectionLambdas.html#.css">the documentation there</a>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
  * @example
  * import $ from "JQueryLike.js";
@@ -23,15 +23,15 @@ randomStringExtension();
  *  .text(`Example: hello ... world`)
  *  .append($(`<span> OK</span>`))
  *  .css({
-      marginTop: `0.5rem`,
-      border: `3px solid green`,
-      padding: `5px`,
-      fontSize: `1.2em`,
-      display: `inline-block`, })
+ *    marginTop: `0.5rem`,
+ *    border: `3px solid green`,
+ *    padding: `5px`,
+ *    fontSize: `1.2em`,
+ *    display: `inline-block`, })
  *  .find$(`span`)
- *  .css({color: `red`});
+ *  .css({className: `okRed`, color: `red`});
  *  // result (class names are partly random):
- *  // <div id="helloworld" class="JQLCreated_YZ5XnwbCEGxH">Example: hello ... world<span class="JQLCreated_kQGG7dtBdFp1"> OK</span></div>
+ *  // <div id="helloworld" class="JQLCreated_YZ5XnwbCEGxH">Example: hello ... world<span class="okRed"> OK</span></div>
  * @namespace ExtendedNodelistLambdas
  */
 const ExtendedNodelistLambdas = {
