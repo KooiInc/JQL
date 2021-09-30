@@ -29,6 +29,8 @@ randomStringExtension();
       display: `inline-block`, })
  *  .find$(`span`)
  *  .css({color: `red`});
+ *  result (class name is random):
+ *  <br><code><div id="helloworld" class="JQLCreated_YZ5XnwbCEGxH">Example: hello ... world<span class="JQLCreated_kQGG7dtBdFp1"> OK</span></div></code>
  * @namespace ExtendedNodelistLambdas
  */
 const ExtendedNodelistLambdas = {
