@@ -18,12 +18,7 @@ const getOrCreateStyleSheet = cssId =>
 const compareSelectors = (s1, s2) => s1.replace(`::`, `:`) === s2.replace(`::`, `:`);
 const setRule = (rule, values) =>
   Object.entries(values)
-    .forEach( ([prop, nwValue = ""]) => {
-      if (prop === `content`) {
-        return rule.style.content = nwValue;
-      }
-      rule.style.setProperty(toDashedNotation(prop), nwValue);
-    } );
+    .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
 /**
  * change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
  * @memberof JQL/ExternalStyling
