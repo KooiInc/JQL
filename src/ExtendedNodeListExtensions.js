@@ -13,7 +13,7 @@ randomStringExtension();
  * <a href="./ExtensionHelpers.html#.initializePrototype">ExtensionHelpers > initializePrototype</a>.
  * <p><b>Notes</b></p>
  *  <ul><li>Most methods are <i>chainable</i>.
- *  <li><code>[...].css</code></a> is a collection method, not in this file but also chainable, see
+ *  build.cmd<li><code>[...].css</code></a> is a collection method, not in this file but also chainable, see
  *  <a href="./CollectionLambdas.html#.css">the documentation there</a>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
  * @example
