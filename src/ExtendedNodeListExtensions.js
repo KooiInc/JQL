@@ -8,8 +8,8 @@ import {randomStringExtension} from "./Helpers.js";
 import setStyle from "./Styling.js";
 randomStringExtension();
 /**
- * All extendedNodeListCollectionExtensions for ExtendedNodeList where looping may not be
- * possible. See (the source of)
+ * All extension methods for <code>ExtendedNodeList</code> where looping may not be
+ * an option. See (the source of)
  * <a href="./ExtensionHelpers.html#.initializePrototype"><code>ExtensionHelpers > initializePrototype</code></a>.
  * <p><b>Notes</b></p><ul>
  *  <li>Most methods are <i>chainable</i>.

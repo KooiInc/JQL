@@ -9,6 +9,12 @@ import setStyle from "./Styling.js";
  * @description These lambda functions will be used to loop through every element
  * of an ExendedNodelist instance. The loop always returns the instance, so
  * every instance method is chainable.
+ * <p><b>Notes</b></p><ul>
+ *  <li>All methods are <i>chainable</i>.
+ *  <li><code>(implicit)</code> means the parameter should not be provided in the caller
+ *  <br>e.g. <code>[instance].toggleClass(`someClass`)<code>,
+ *  <b>not</b> <code>[instance].toggleClass(someEl, `someClass`)<code>
+ *  </ul>
  * @example
  * // presume $ is the alias for ExtendedNodeList
  * $(`.shouldBeRed`)
