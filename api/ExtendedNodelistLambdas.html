@@ -101,13 +101,18 @@
 
 
             
-                <div class="description usertext">All extendedNodeListCollectionExtensions for ExtendedNodeList where looping may not bepossible. See (the source of)<a href="./ExtensionHelpers.html#.initializePrototype"><code>ExtensionHelpers > initializePrototype</code></a>.<p><b>Notes</b></p><ul> <li>Most methods are <i>chainable</i>. <li><code>.style</code> is a collection method, not in this file but also chainable. <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul></div>
+                <div class="description usertext">All extendedNodeListCollectionExtensions for ExtendedNodeList where looping may not bepossible. See (the source of)<a href="./ExtensionHelpers.html#.initializePrototype"><code>ExtensionHelpers > initializePrototype</code></a>.<p><b>Notes</b></p><ul> <li>Most methods are <i>chainable</i>. <li><code>[...].css</code> is a collection method, not in this file but also chainable. <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul></div>
             
 
             
                 <h3>Example</h3>
                 
-    <pre class="prettyprint"><code>// presume $ is the alias for ExtendedNodeList// chainability means:$(`&lt;div id="helloworld">`)  .text(`Example: hello ... world`)  .styleInline( {     marginTop: `1rem`,     border: `3px solid green`,     padding: `5px`, fontSize: `1.2em`,     display: `inline-block` } )  .append($(`&lt;span> OK&lt;/span>`))  .find$(`span`)  .styleInline({color: `red`});</code></pre>
+    <pre class="prettyprint"><code>import $ from "JQueryLike.js";// chainability means:$(`&lt;div id="helloworld">`) .text(`Example: hello ... world`) .append($(`&lt;span> OK&lt;/span>`)) .css({
+      marginTop: `0.5rem`,
+      border: `3px solid green`,
+      padding: `5px`,
+      fontSize: `1.2em`,
+      display: `inline-block`, }) .find$(`span`) .css({color: `red`});</code></pre>
 
             
         
@@ -148,7 +153,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line209">line 209</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line210">line 210</a>
     </li></ul></dd>
     
 
@@ -357,7 +362,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line236">line 236</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line237">line 237</a>
     </li></ul></dd>
     
 
@@ -538,7 +543,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line476">line 476</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line477">line 477</a>
     </li></ul></dd>
     
 
@@ -801,7 +806,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line71">line 71</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -893,7 +898,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line333">line 333</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line334">line 334</a>
     </li></ul></dd>
     
 
@@ -1073,7 +1078,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line346">line 346</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line347">line 347</a>
     </li></ul></dd>
     
 
@@ -1257,7 +1262,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line307">line 307</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line308">line 308</a>
     </li></ul></dd>
     
 
@@ -1444,7 +1449,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line324">line 324</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line325">line 325</a>
     </li></ul></dd>
     
 
@@ -1628,7 +1633,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line81">line 81</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line82">line 82</a>
     </li></ul></dd>
     
 
@@ -1840,7 +1845,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line122">line 122</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line123">line 123</a>
     </li></ul></dd>
     
 
@@ -2041,7 +2046,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line403">line 403</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line404">line 404</a>
     </li></ul></dd>
     
 
@@ -2258,7 +2263,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line449">line 449</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line450">line 450</a>
     </li></ul></dd>
     
 
@@ -2485,7 +2490,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line254">line 254</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line255">line 255</a>
     </li></ul></dd>
     
 
@@ -2698,7 +2703,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line100">line 100</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -2878,7 +2883,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line91">line 91</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line92">line 92</a>
     </li></ul></dd>
     
 
@@ -3032,7 +3037,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line377">line 377</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line378">line 378</a>
     </li></ul></dd>
     
 
@@ -3236,7 +3241,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line491">line 491</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line492">line 492</a>
     </li></ul></dd>
     
 
@@ -3468,7 +3473,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line436">line 436</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line437">line 437</a>
     </li></ul></dd>
     
 
@@ -3625,7 +3630,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line197">line 197</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line198">line 198</a>
     </li></ul></dd>
     
 
@@ -3783,7 +3788,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line359">line 359</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line360">line 360</a>
     </li></ul></dd>
     
 
@@ -3990,7 +3995,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line136">line 136</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line137">line 137</a>
     </li></ul></dd>
     
 
@@ -4197,7 +4202,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line166">line 166</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -4381,7 +4386,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line286">line 286</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line287">line 287</a>
     </li></ul></dd>
     
 
@@ -4565,7 +4570,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line49">line 49</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line50">line 50</a>
     </li></ul></dd>
     
 
@@ -4775,7 +4780,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line180">line 180</a>
+        <a href="ExtendedNodeListExtensions.js.html">ExtendedNodeListExtensions.js</a>, <a href="ExtendedNodeListExtensions.js.html#line181">line 181</a>
     </li></ul></dd>
     
 
@@ -4961,7 +4966,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Sep 29 2021 15:54:11 GMT+0200 (Midden-Europese zomertijd) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Sep 30 2021 09:47:39 GMT+0200 (Midden-Europese zomertijd) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

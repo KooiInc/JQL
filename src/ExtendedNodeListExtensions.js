@@ -13,21 +13,22 @@ randomStringExtension();
  * <a href="./ExtensionHelpers.html#.initializePrototype"><code>ExtensionHelpers > initializePrototype</code></a>.
  * <p><b>Notes</b></p><ul>
  *  <li>Most methods are <i>chainable</i>.
- *  <li><code>.style</code> is a collection method, not in this file but also chainable.
+ *  <li><code>[...].css</code> is a collection method, not in this file but also chainable.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
  * @example
- * // presume $ is the alias for ExtendedNodeList
+ * import $ from "JQueryLike.js";
  * // chainability means:
  * $(`<div id="helloworld">`)
- *   .text(`Example: hello ... world`)
- *   .styleInline( {
- *      marginTop: `1rem`,
- *      border: `3px solid green`,
- *      padding: `5px`, fontSize: `1.2em`,
- *      display: `inline-block` } )
- *   .append($(`<span> OK</span>`))
- *   .find$(`span`)
- *   .styleInline({color: `red`});
+ *  .text(`Example: hello ... world`)
+ *  .append($(`<span> OK</span>`))
+ *  .css({
+      marginTop: `0.5rem`,
+      border: `3px solid green`,
+      padding: `5px`,
+      fontSize: `1.2em`,
+      display: `inline-block`, })
+ *  .find$(`span`)
+ *  .css({color: `red`});
  * @namespace ExtendedNodelistLambdas
  */
 const ExtendedNodelistLambdas = {
