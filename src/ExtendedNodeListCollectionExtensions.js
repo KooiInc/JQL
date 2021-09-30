@@ -12,8 +12,7 @@ import setStyle from "./Styling.js";
  * <p><b>Notes</b></p><ul>
  *  <li>All methods are <i>chainable</i>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller
- *  <br>e.g. <code>[instance].toggleClass(`someClass`)</code>,
- *  <b>not</b> <code>[instance].toggleClass(<s>someEl</s>, `someClass`)</code>
+ *  <br>so: <code>[instance].toggleClass(<s>someEl,</s> `someClass`)</code>
  *  </ul>
  * @example
  * // presume $ is the alias for ExtendedNodeList
