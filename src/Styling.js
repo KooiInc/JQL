@@ -25,7 +25,9 @@ const setRule = (rule, values) =>
  * @memberof JQL/ExternalStyling
  * @param selector {string} the (css) selectorText, like <code>ul li.inActive</code>, <code>.someClass</code> etc.
  * @param styleValues {Object} an object with CSSStyleDeclarations
- * <br><b>Note</b>: enclose a string value of `content` in quotes (e.g. <code>&#123;content: `'Some string'`&#125;</code>
+ * <br><b>Note</b>: enclose a string value of `content` in quotes (e.g. <code>&#123;content: `'Some string'`&#125;</code>)
+ * <br><b>Note</b>: rule keys should be valid (e.g. <code>&#123;marginRight: `0.3rem`&#125;</code>
+ * or <code>&#123;"margin-right": `0.3rem`&#125;</code>)
  * @param cssId {string|undefined} id of the css stylesheet (to create or retrieve), default "customCSS"
  * @example
  * // assume changeRuleset is imported as setStyleRule

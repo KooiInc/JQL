@@ -278,12 +278,15 @@ const styleInline = (el, keyOrKvPairs, value) => {
  * // presume $ is the alias for ExtendedNodeList
  * $(`<p>`).css({marginLeft: `12px`, color: `green`, borderLeft: `2px solid red`})
  * // the document will now contain <p class="JQLCreated_[a random string]]"></p>
+ * // use your own class name
+ * $(`<p>`).css({className: `leftRedBorder`, marginLeft: `12px`, color: `green`, borderLeft: `2px solid red`});
+ * // the document will now contain <p class="leftRedBorder"></p>
  * @param el {HTMLElement} (implicit) current ExtendedNodeList instance
  * @param keyOrKvPairs {Object|string} Object or string e.g. <code>&#123;marginRight: '12px'&#125;</code>
  * or <code>'margin-right'</code>
  * <br>key or string may be: `paddingRight` or `"padding-right"`
- * <br><b>Note</b>: if you want to use your own className, include a <code>className</code> property in
- * the Object.
+ * <br><b>Note</b>: if you want to use your own class name (so not a random name),
+ * include a <code>className</code> property in the Object. See example.
  * @param value {string|undefined} if value is not <code>undefined</code>, keyOrKvPairs should be a string too
  * <br>If the value should be empty (reset: e.g. <code>padding: ""</code>), use a dash "-"
  * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable

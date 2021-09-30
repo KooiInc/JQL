@@ -13,7 +13,8 @@ randomStringExtension();
  * <a href="./ExtensionHelpers.html#.initializePrototype"><code>ExtensionHelpers > initializePrototype</code></a>.
  * <p><b>Notes</b></p><ul>
  *  <li>Most methods are <i>chainable</i>.
- *  <li><code>[...].css</code> is a collection method, not in this file but also chainable.
+ *  <li><a style="text-decoration: underline" href="./CollectionLambdas.html#.css"><code>[...].css</code></a>
+ *  is a collection method, not in this file but also chainable.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
  * @example
  * import $ from "JQueryLike.js";
