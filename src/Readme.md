@@ -17,6 +17,4 @@ reading the documentation for everything used in this library.
 Or take a look at the source code of this 
 <a href="https://testbed.nicon.nl/JQLDemo/" target="_blank">demo/example</a>
 
-Tja
-
 **Have fun!**
