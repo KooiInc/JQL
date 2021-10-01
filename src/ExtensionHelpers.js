@@ -3,20 +3,19 @@
 import {randomStringExtension} from "./Helpers.js";
 import extendedNodeListCollectionLamdas from "./ExtendedNodeListCollectionExtensions.js";
 import ExtendedNodeListLambdas from "./ExtendedNodeListExtensions.js";
+import ExtendedNodeList from "./JQueryLike.js";
 // for jsdoc use (as 'type')
 
 //#region common helpers
 /**
  * <b>Module</b> The helpers for the JQL module
- * @namespace ExtensionHelpers
+ * @module ExtensionHelpers
  */
 /**
  * iterator used for most extendedNodeListCollectionExtensions.
  * Also exposed as '[ExtCollection].each'
- * @memberof ExtensionHelpers
-
- * @param {ExtendedNodeList} the collection of the current ExtendedNodeList instance
- * @param {function} lambda to use in the loop
+ * @param {ExtendedNodeList} extCollection the collection of the current ExtendedNodeList instance
+ * @param {function} callback to use in the loop
  * @returns {ExtendedNodeList} instance, so chainable
  */
 const loop = (extCollection, callback) => {
@@ -42,11 +41,10 @@ const addHandlerId = extCollection => {
 
 /**
  * determine visibility of a Html element
- * @memberof ExtensionHelpers
- * @param {HTMLElement} some html element or a style property
+ * @param {HTMLElement} el some html element or a style property
  * @returns {boolean} true if visible, false if not
  */
-const isVisible = function(el) {
+const isVisible = function (el) {
   const elStyle = el.style;
   const computedStyle = getComputedStyle(el);
   const invisible = [elStyle.visibility, computedStyle.visibility].includes("hidden");
@@ -61,7 +59,6 @@ const isVisible = function(el) {
 /**
  * retrieves key-value pairs from data-attributes
  * if applicable
- * @memberof ExtensionHelpers
  * @param el {HTMLElement} the html element
  * @returns {Object|undefined} key value-pairs
  */
@@ -76,12 +73,11 @@ const getAllDataAttributeValues = el => {
 
 /**
  * Generic prototype initializer for JQLike
- * @memberof ExtensionHelpers
  * @param ctor {ExtendedNodeList} The ExtendedNodeList constructor
  */
 const initializePrototype = ctor => {
   Object.entries(ExtendedNodeListLambdas)
-    .forEach( ([key, lambda]) => {
+    .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
         ctor.prototype[key] = function (...args) {
           return lambda(this, ...args);
@@ -89,7 +85,7 @@ const initializePrototype = ctor => {
       }
     });
   Object.entries(extendedNodeListCollectionLamdas)
-    .forEach( ([key, lambda]) => {
+    .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
         ctor.prototype[key] = function (...args) {
           return loop(this, el => lambda(el, ...args));
@@ -105,7 +101,6 @@ const initializePrototype = ctor => {
 /**
  * Convert abbreviated hex color to full (eg #0C0 to #00CC00)
  * Uses in hex2RGBA
- * @memberof ExtensionHelpers
  * @param hex {string} the hexadecimal color code
  * @returns {string}
  */
@@ -116,12 +111,11 @@ const hex2Full = hex => {
 
 /**
  * convert hex color to rgb(a) (eg #ffc to rgb(255, 255, 204))
- * @memberof ExtensionHelpers
  * @param hex {string} the hexadecimal color code eg #dddd00
  * @param opacity {number} the opacity value (0 - 1, eg 0.5)
  * @returns {string}
  */
-const hex2RGBA = function(hex, opacity = 100) {
+const hex2RGBA = function (hex, opacity = 100) {
   hex = hex2Full(hex.slice(1));
   const op = opacity % 100 !== 0;
   return `rgb${op ? "a" : ""}(${
@@ -133,11 +127,12 @@ const hex2RGBA = function(hex, opacity = 100) {
 //#endregion style color toggling helpers
 
 //#region handling helper
-  /**
-   * Factory for handling events
-   * @namespace ExtensionHelpers/HandlerFactory
-   */
-  const handlerFactory = (() => {
+/**
+ * A factory for handling the event handlers in a document
+ * @typedef HandlerFactory
+ * @function
+ */
+const HandlerFactory = () => {
   let handlers = {};
 
   /**
@@ -151,7 +146,8 @@ const hex2RGBA = function(hex, opacity = 100) {
    * <li><code>metaHandler</code> iterates
    * over the (wrapped) handler lambda's created with the
    * <code>createHandlerForHID</code> factory.</li></ul>
-   * @memberof ExtensionHelpers/HandlerFactory
+   * @typedef HandlerFactory/metaHandler
+   * @function
    * @param evt {Event} the event sent by the browser
    */
   const metaHandler = evt => handlers[evt.type].forEach(handler => handler(evt));
@@ -159,12 +155,13 @@ const hex2RGBA = function(hex, opacity = 100) {
   /**
    * wraps a handler (from $([]).on/ON/delegate) and returns
    * a new handler function
-   * @memberof ExtensionHelpers/HandlerFactory
-   * @param extCollection {ExentedNodeList} the ExentedNodeList instance
+   * @typedef HandlerFactory/createHandlerForHID
+   * @function
+   * @param extCollection {ExtendedNodeList} the ExentedNodeList instance
    * @param HID {string} the Handler id: '[data-hid=...]' or some selector like '#something'
    * - this determines execution or not of the callback lambda
-   * @param callback {...function} the callback lambda
-   * @returns {function(...[*])}
+   * @param callback {Function} the callback lambda
+   * @returns {Function} the wrapped callback lambda
    */
   const createHandlerForHID = (extCollection, HID, callback) => {
     return evt => {
@@ -178,14 +175,14 @@ const hex2RGBA = function(hex, opacity = 100) {
 
   /**
    * add listener for event type if it's not existing in the handlers Object
-   * @memberOf ExtensionHelpers/HandlerFactory
+   * @typedef HandlerFactory/addListenerIfNotExisting
+   * @function
    * @param type {string} the event type (e.g. 'click', 'focusin' etc)
    */
   const addListenerIfNotExisting = type =>
     !Object.keys(handlers).find(registeredType => registeredType === type) &&
-     document.addEventListener(type, metaHandler);
+    document.addEventListener(type, metaHandler);
 
-  // addHandler lambda, once for each event type
   return (extCollection, type, HIDselector, callback) => {
     addListenerIfNotExisting(type);
     const fn = createHandlerForHID(extCollection, HIDselector, callback);
@@ -193,8 +190,8 @@ const hex2RGBA = function(hex, opacity = 100) {
       ? {...handlers, [type]: handlers[type].concat(fn)}
       : {...handlers, [type]: [fn]};
   };
-})();
-
+};
+const handlerFactory = HandlerFactory();
 //#endregion handling helper
 export {
   loop,
