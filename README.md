@@ -11,7 +11,7 @@ Consider it a subset of JQuery <i>alike</i> methods for (collections of) HTML el
 The module can either be imported in a [compiled](/lib/JQLBundle.js) - or 
 [full code](../src/JQueryLike.js) version.
 
-[Start with](https://kooiinc.github.io/JQL/api/JQL.html#.ExtendedNodeList)
+[Start with](https://kooiinc.github.io/JQL/api)
 reading the documentation for everything used in this library.
 
 Or take a look at the source code of this 
