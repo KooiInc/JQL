@@ -1,13 +1,13 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
 import {randomStringExtension} from "./Helpers.js";
-import extendedNodeListCollectionLamdas from "./ExtendedNodeListCollectionExtensions.js";
-import ExtendedNodeListLambdas from "./ExtendedNodeListExtensions.js";
+import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
+import ExtendedNodeListLambdas from "./JQLExtensions.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 
 //#region common helpers
 /**
- * Some helpers for the JQL module.
- * @module ExtensionHelpers
+ * Some helpers for JQL (module, extensions).
+ * @module
  */
 /**
  * iterator used for most extendedNodeListCollectionExtensions.

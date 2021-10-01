@@ -22,7 +22,7 @@ import {
 import setStyle from "./Styling.js";
 
 /* local ExtendedNodelist extendedNodeListCollectionExtensions */
-import {initializePrototype,} from "./ExtensionHelpers.js";
+import {initializePrototype,} from "./JQLExtensionHelpers.js";
 
 /**
  * The JQL core

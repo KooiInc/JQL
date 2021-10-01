@@ -54,7 +54,7 @@ const addListenerIfNotExisting = type =>
  * The result of <code>HandlerFactory</code> is
  * a method to wrap, store and link event handlers to elements
  * in the document.
- * <br>See <a href="./ExtendedNodeListExtensions.js.html#line496">ExtendedNodeListExtensions.delegate</a>
+ * <br>See <a href="./JQLExtensions.js.html#line496">ExtendedNodeListExtensions.delegate</a>
  * code for usage.
  */
 export default (extCollection, type, HIDselector, callback) => {

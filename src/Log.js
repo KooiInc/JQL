@@ -11,7 +11,7 @@
 import {createElementFromHtmlString, } from "./DOM.js";
 import setStyle from "./Styling.js";
 import {time} from "./Helpers.js";
-import {isVisible} from "./ExtensionHelpers.js";
+import {isVisible} from "./JQLExtensionHelpers.js";
 
 /**
  * defaultStyling is the styling used for a the box used for logging (a <code>HTMLFieldSetElement</code> element).

@@ -2,7 +2,7 @@
 
 //#region ExtendedNodeList lambda's
 import {createElementFromHtmlString} from "./DOM.js";
-import {loop, addHandlerId, isVisible} from "./ExtensionHelpers.js";
+import {loop, addHandlerId, isVisible} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 // only to enable a 'type' for documentation
 import {randomStringExtension} from "./Helpers.js";

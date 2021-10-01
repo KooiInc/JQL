@@ -1,7 +1,7 @@
 // noinspection JSUnusedLocalSymbols,JSCheckFunctionSignatures,JSValidateJSDoc,JSUnresolvedVariable
 // noinspection JSUnresolvedVariable
 
-import {hex2RGBA} from "./ExtensionHelpers.js";
+import {hex2RGBA} from "./JQLExtensionHelpers.js";
 import {isObjectAndNotArray,} from "./Helpers.js"
 import setStyle from "./Styling.js";
 
