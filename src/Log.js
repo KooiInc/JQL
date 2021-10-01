@@ -8,7 +8,7 @@
  * @module Log
  */
 
-import {createElementFromHtmlString, } from "./DOM.js";
+import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import setStyle from "./Styling.js";
 import {time} from "./Helpers.js";
 import {isVisible} from "./JQLExtensionHelpers.js";
@@ -49,7 +49,7 @@ let useLogging = false;
  * @param cssId {string} the id of the custom style element (automagically created in the
  * header of the document in which JQL is used). Default is 'JQLCustomCSS'.
  */
-const setStyling4Log = (styles = defaultStyling, cssId = `JQLCustomCSS`) => {
+const setStyling4Log = (styles = defaultStyling, cssId = `customCSS`) => {
   const exists = document.querySelector(`#JQLCustomCSS`);
   // this triggers rename (id) of existing stylesheet
   if (exists) { exists.id = cssId; }
@@ -103,7 +103,7 @@ const createLogElement = () => {
             <legend>Logging</legend>
             <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
           </fieldset>`;
-  document.body.insertBefore(createElementFromHtmlString(loggingFieldSet, document.body), document.body.childNodes[0]);
+  element2DOM(createElementFromHtmlString(loggingFieldSet), document.body, insertPositions.BeforeBegin);
   return document.querySelector(`#jql_logger`);
 };
 
@@ -124,6 +124,4 @@ const log = (...args) => {
         `${time()} ${logLine(arg)}`)
     );
 };
-
-const logStatus = () => useLogging;
-export { log, debugLog, logStatus, setStyling4Log };
+export { log, debugLog, setStyling4Log };
