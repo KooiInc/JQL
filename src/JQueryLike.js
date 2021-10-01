@@ -163,11 +163,13 @@ const ExtendedNodeList = function (
      * create elements from Array of Html strings
      * the elements to create are sanitized (by DOMCleanup)
      */
-
     if (isArrayOfHtmlStrings) {
       input.forEach(htmlFragment => {
         const elemCreated = createElementFromHtmlString(htmlFragment);
-
+        if (elemCreated instanceof Comment) {
+          document.body.appendChild(elemCreated);
+          return;
+        }
         if (elemCreated) {
           elemCreated.dataset.invalid &&
           document.body.appendChild(elemCreated.childNodes[0]) ||
@@ -183,6 +185,10 @@ const ExtendedNodeList = function (
      */
     if (isHtmlString) {
       const nwElem = createElementFromHtmlString(input);
+      const isComment = nwElem && nwElem instanceof Comment;
+      if (isComment) {
+        document.body.appendChild(nwElem);
+      }
       if (nwElem) {
         const isInvalid = nwElem.dataset.invalid || nwElem.querySelector("[data-invalid]");
         this.collection = !isInvalid ? [nwElem] : this.collection;
@@ -196,7 +202,7 @@ const ExtendedNodeList = function (
       }
     }
 
-    if (shouldCreateElements) {
+    if (shouldCreateElements && this.collection.length > 0) {
       // append collection to DOM tree (if the root is not <br>)
       this.collection = inject2DOMTree(this.collection);
       log(`${logStr}\n  Created (outerHTML truncated) [${

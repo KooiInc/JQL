@@ -1,9 +1,8 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
-
 import {randomStringExtension} from "./Helpers.js";
 import extendedNodeListCollectionLamdas from "./ExtendedNodeListCollectionExtensions.js";
 import ExtendedNodeListLambdas from "./ExtendedNodeListExtensions.js";
-const ExtendedNodeList = {dummy: `for jsdoc usage (as 'type')`};
+const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 
 //#region common helpers
 /**

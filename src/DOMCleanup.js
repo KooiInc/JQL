@@ -1,5 +1,6 @@
 /**
- * @namespace JQL/HTMLHelpers
+ *
+ * @module HtmlCleanup
  */
 
 // alllow or disallow unknown tags (default: false)
@@ -7,26 +8,19 @@ let lenient = false;
 const log = false;
 /**
  * set allowance for unknown HTML tags, exposed as <code>JQL.allowUnknownHtmlTags</code>
- * @namespace JQL/HTMLHelpers/AllowUnknown
+ * @typedef allowUnknownHtmlTags
+ * @type {Object}
+ * @property {function} on Allow unknown HTML tags
+ * @property {function} off Do not allow unknown HTML tags (default)
  */
 const allowUnknownHtmlTags = {
-  /**
-   * Allow unknown HTML tags
-   * @memberof JQL/HTMLHelpers/AllowUnknown
-   * @returns {boolean}
-   */
   on: () => lenient = true,
-  /**
-   * Do not allow unknown HTML tags (default)
-   * @memberof JQL/HTMLHelpers/AllowUnknown
-   * @returns {boolean}
-   */
   off: () => lenient = false,
 };
 
 /**
  * The initial set of tags and allowances for cleanup
- * @memberof JQL/HTMLHelpers
+ * @member cleanupTagInfo
  */
 const cleanupTagInfo = {
   a: {elem: HTMLAnchorElement, allowed: true},
@@ -190,8 +184,9 @@ const getRestricted = emphasizeTag =>
 
 /**
  * Set/unset permission for creation of a specific tag. Exposed as <code>JQL.setTagPermission</code>.
- * @memberof JQL/HTMLHelpers
- * @param tagName {string} the tag to set allowance for.
+ * @member setTagPermission
+ * @function
+ * @param tagName {string} the tag to set allowance for, e.g. <code>link</code> or <code>iframe</code>.
  * <br><b>Note</b>: when the tag does not exist in <code>cleanupTagInfo</code>, nothing happens.
  * @param allowed {boolean} true: can use tag, false: can not use tag.
  */

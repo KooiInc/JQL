@@ -1,8 +1,11 @@
 // noinspection JSValidateJSDoc
 
 /**
- * Static JQL extension method. A small log library for JQL debugging purposes.
- * @namespace JQL/Log
+ * A small module for logging in a fixed positioned log box
+ * <br>Every line logged is preceded by the time it is logged (granularity: milliseconds)
+ * The styling of the logbox happens via a <code>&lt;style></code> element, added to the
+ * header of the enclosing document.
+ * @module Log
  */
 
 import {createElementFromHtmlString, } from "./DOM.js";
@@ -13,7 +16,6 @@ import {isVisible} from "./ExtensionHelpers.js";
 /**
  * defaultStyling is the styling used for a the box used for logging (a <code>HTMLFieldSetElement</code> element).
  * May be overridden by your own styles, but must use the id <code>#logBox</code>.
- * @memberof JQL/Log
  */
 let defaultStyling = {
   "#logBox": {
@@ -41,8 +43,7 @@ let defaultStyling = {
 };
 let useLogging = false;
 /**
- * Add style classes for the log box to a custom css style element. Exposed as <code>JQL.setStyling4Log</code>
- * @memberof JQL/Log
+ * Add style classes for the log box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
  * Default styles are in <code>defaultStyling</code>
  * @param cssId {string} the id of the custom style element (automagically created in the
@@ -57,52 +58,37 @@ const setStyling4Log = (styles = defaultStyling, cssId = `JQLCustomCSS`) => {
 
 let useHtml = false;
 
-/** @namespace JQL/Log/debugLog */
 /**
- * Use logging for debug (set on/off or show/hide the log box), exposed as <code>JQL.debugLog</code>
- * @memberof JQL/debugLog
+ * Use logging for debug (set on/off or show/hide the log box).
+ * @typedef debugLog
+ * @type {Object}
+ * @property {function} isVisible Is the log box visible?
+ * @property {function} on Activate logging for JQL.
+ * @property {function} off Deactivate logging for JQL.
+ * @property {function} hide Hide the log box.
+ * @property {function} show Show the log box.
  */
 const debugLog = {
-  /**
-   * Is the log box visible?
-   * @memberof JQL/Log/debugLog
-   */
   isVisible() {
     const logBox = document.querySelector(`#logBox`);
     return logBox && isVisible(logBox);
   },
-  /**
-   * Activate logging for JQL.
-   * @memberof JQL/Log/debugLog
-   */
   on() {
     useLogging = true;
     document.querySelector(`#logBox`).classList.add(`visible`);
     log(`Logging started`);
   },
-  /**
-   * Deactivate logging for JQL.
-   * @memberof JQL/Log/debugLog
-   */
   off() {
     log(`Logging stopped`);
     document.querySelector(`#logBox`).classList.remove(`visible`);
     useLogging = false;
   },
-  /**
-   * Hide the log box.
-   * @memberof JQL/Log/debugLog
-   */
   hide() {
     const logBox = document.querySelector(`#logBox`);
     if (logBox) {
       document.querySelector(`#logBox`).classList.remove(`visible`);
     }
   },
-  /**
-   * Show the log box.
-   * @memberof JQL/Log/debugLog
-   */
   show() {
     const logBox = document.querySelector(`#logBox`);
     if (logBox) {
@@ -125,9 +111,7 @@ const logBox = document.querySelector("#jql_logger") || createLogElement();
 
 /**
  * Create log entry/entries, preceded with the time of logging (millisecond granularity).
- * <br>Exposed as <code>JQL.log</code>
  * <br>If the local [useLogging] boolean is false, nothing is logged
- * @memberof JQL/Log
  * @param args {...(string|Object)} string(s) or Object(s) to print in the log box
  * * <br><b>Note</b> Objects are converted to JSON representation
  */

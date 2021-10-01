@@ -2,6 +2,12 @@
 // noinspection JSValidateJSDoc
 import {toDashedNotation} from "./Helpers.js";
 
+/**
+ * Add or change style rules in a <code>&lt;style></code> element, added to the
+ * header of the enclosing document if not already done so
+ * @module Styling
+ */
+
 const createStyle = cssId => {
   const theLink = Object.assign(
     document.createElement(`style`), { id: cssId, type: `text/css` } );
@@ -11,17 +17,12 @@ const createStyle = cssId => {
 const getOrCreateStyleSheet = cssId =>
   (document.querySelector(`#${cssId}`) || createStyle(cssId)).sheet;
 
-/**
- * Static JQL extension method, exposed as <code>JQL.setClass</code>
- * @namespace JQL/ExternalStyling
- */
 const compareSelectors = (s1, s2) => s1.replace(`::`, `:`) === s2.replace(`::`, `:`);
 const setRule = (rule, values) =>
   Object.entries(values)
     .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
 /**
  * change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
- * @memberof JQL/ExternalStyling
  * @param selector {string} the (css) selectorText, like <code>ul li.inActive</code>, <code>.someClass</code> etc.
  * @param styleValues {Object} an object with CSSStyleDeclarations
  * <br><b>Note</b>: enclose a string value of `content` in quotes (e.g. <code>&#123;content: `'Some string'`&#125;</code>)
@@ -57,5 +58,4 @@ function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
     setRule(rule, styleValues);
   }
 }
-
 export default changeCssStyleRule;

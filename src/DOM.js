@@ -1,4 +1,6 @@
 // some DOM plumbing
+// noinspection JSUnresolvedVariable,JSCheckFunctionSignatures
+
 import {
   cleanupHtml,
   getRestricted,
@@ -6,29 +8,29 @@ import {
   allowUnknownHtmlTags } from "./DOMCleanup.js";
 
 /**
- * DOM methods for JQL
- * @namespace JQL/DOM
+ * Methods for manipulating the <code>Document Object [Model]</code> (aka <code>DOM</code>)
+ * @Module DOM
  */
 
-// insert Element position helper
 /**
- * Helper type for positioning element (<code>insertAdjacent[HTML/HTMLElement]</code>).
- * Exposed as <code>JQL.insertPositions</code>
- * @memberof JQL/DOM
+ * The possible positions of elements to insert (<code>HTMLElement.insertAdjacent[HTML/HTMLElement]</code>).
+ * @typedef adjacents
+ * @property BeforeBegin {string} before element
+ * @property AfterBegin {string} before first child
+ * @property BeforeEnd {string} after last child
+ * @property AfterEnd {string} after element
  */
 const adjacents = {
-  BeforeBegin: "beforebegin", // before element
-  AfterBegin: "afterbegin",   // before first child
-  BeforeEnd: "beforeend",     // after last child
-  AfterEnd: "afterend" };     // after element
+  BeforeBegin: "beforebegin",
+  AfterBegin: "afterbegin",
+  BeforeEnd: "beforeend",
+  AfterEnd: "afterend" };
 
-// create DOM object from html string
 /**
- * Create a HTML element with id and html in memory.
- * <br>[<b>private</b>], Used for sanitizing a HTML string. Not exposed in JQL.
- * @memberof JQL/DOM
- * @param htmlString {string} The HTML to sanitize
- * @returns {Element|undefined} {HTMLElement|undefined}
+ * Create a HTML element from a html string in memory.
+ * @param htmlString {string} The HTML string to use
+ * <br><b>Note</b>: the html is sanizited
+ * @returns {HTMLElement|undefined} {HTMLElement|undefined}
  */
 const htmlToVirtualElement = htmlString => {
   const placeholder = Object.assign(document.createElement("div"), { id:"placeholder", innerHTML: htmlString.trim() });
@@ -38,22 +40,32 @@ const htmlToVirtualElement = htmlString => {
     : undefined;
 };
 
-// add Element to [root] on position [position]
+/**
+ * Add a <code>HTMLElement</code> to the document
+ * @param elem {HTMLElement} The element to add
+ * @param root {HTMLElement} The root element the element should be added to (default: document.body)
+ * @param position {string} the position where the element must end up (default <code>beforeend</code>)
+ */
 const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd) =>
   elem && elem instanceof HTMLElement && root.insertAdjacentElement(position, elem);
 
 
-// create DOM element from [htmlStr] (in memory)
-// The resulting element is always sanitized using the
-// attrbutes/tags settings. Use element2DOM to fysically
-// insert/append etc. it into your DOMtree
+/**
+ * Convert a html string to an instance of <code>HTMLElement</code>.
+ * <br><b>Note</b>: the resulting element is always sanitized using the
+ * attrbutes/tags settings. Use <code>DOM.element2DOM</code> to fysically
+ * insert/append etc. it into your DOMtree
+ * @param htmlStr {string} The html to convert to <code>HTMLElement</code>
+ * e.g. <code>&lt;p id="id" class="someClass">Hello &lt;span style="color: green">world&lt;/span>&lt;/p></code>
+ * @returns {HTMLElement|Comment} the newly created <code>HTMLElement</code> instance or nothing
+ * (in case of creating a html comment)
+ */
 const createElementFromHtmlString = htmlStr => {
   htmlStr = htmlStr.trim();
   let nwElem = htmlToVirtualElement(htmlStr);
 
   if (htmlStr.startsWith(`<!--`) && htmlStr.endsWith(`-->`)) {
-    document.body.appendChild(document.createComment(htmlStr.replace(/<\!\-\-|\-\->$/g, '')));
-    return undefined;
+    return document.createComment(htmlStr.replace(/<!--|-->$/g, ''));
   }
   
   if (!nwElem.dataset.iscomment && !nwElem.children.length) {
