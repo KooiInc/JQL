@@ -18,8 +18,8 @@ const throwIf = (assertion = false, message = `Unspecified error`, ErrorType = E
     throw new ErrorType(message);
   })();
 /**
- * Returns the current time, including milliseconds in square brackets, e.q. <code>[12:32:34.346]</code>.
- * In JQL exposed as <code>JQL.time</code>
+ * Returns the current time, including milliseconds enclosed in square brackets,
+ * e.q. <code>[12:32:34.346]</code>.
  * @returns {string}
  */
 const time = () => ((d) => 
@@ -119,8 +119,16 @@ const initDefault = (value, defaultValue, ...includeFalsies) => {
     ? false : Boolean(value) === false;
   return empty(value) ? defaultValue : value;
 };
-
-const toDashedNotation = prop => prop.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`);
+/**
+ * Convert a camel-cased term to dashed string, e.g. for style rule keys
+ * @example
+ * toDashedNotation(`marginRight`); //=> `margin-right`
+ * toDashedNotation(`borderTopLeftRadius`); //=> `border-top-left-radius`
+ * toDashedNotation(`BorderTopLeftRadius`); //=> `border-top-left-radius`
+ * @param str2Convert {string} The (property)string to convert
+ * @returns {string}
+ */
+const toDashedNotation = str2Convert => str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`.toLowerCase());
 const toUndashedNotation = prop => [...prop.toLowerCase()]
   .reduce( (acc, v) => {
     const isDash = v === `-`;
@@ -236,6 +244,21 @@ const tryParseJson = jsonTrialValue => {
     return jsonTrialValue;
   }
 };
+/**
+ * A helper for <code>localStorage</code>.
+ * @typedef storage
+ * @property get {function} (key:string) retrieve item with [key].
+ * @property object {function} see <code>getObject</code>.
+ * @property getObject {function} alias for <code>storage.object</code>.
+ *  (key:string) retrieve item [key] where value is JSON and return as parsed Object.
+ *  <br>If parsing did not succeed (aka, value is not or not valid JSON) this returns the plain value.
+ *  @property set {function} (key:string, value: string) create a <code>localStorage</code>
+ *  item with [key] and [value].
+ *  @property setJSON {function} (key:string, value: Object) create a <code>localStorage</code> item with [key]/
+ *  and [value] where value is an Object (and will be converted to JSON).
+ *  @property remove {function} (key: string) remove item with key [key] from <code>localStorage</code>.
+ *  @property clear {function}: remove evertything from <code>localStorage</code>
+ */
 const storage = {
   get: key => localStorage.getItem(key),
   object: key => tryParseJson(localStorage.getItem(key)), // backward compatibility
