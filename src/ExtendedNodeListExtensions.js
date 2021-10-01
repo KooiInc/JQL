@@ -2,7 +2,8 @@
 
 //#region ExtendedNodeList lambda's
 import {createElementFromHtmlString} from "./DOM.js";
-import {loop, handlerFactory, addHandlerId, isVisible} from "./ExtensionHelpers.js";
+import {loop, addHandlerId, isVisible} from "./ExtensionHelpers.js";
+import handlerFactory from "./HandlerFactory.js";
 // only to enable a 'type' for documentation
 import {randomStringExtension} from "./Helpers.js";
 import setStyle from "./Styling.js";
@@ -12,11 +13,11 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 /**
  * All extension methods for <code>ExtendedNodeList</code> where looping may not be
  * an option. See (the source of)
- * <a href="./ExtensionHelpers.html#.initializePrototype">ExtensionHelpers > initializePrototype</a>.
+ * <a href="./module-ExtensionHelpers.html#~initializePrototype">ExtensionHelpers > initializePrototype</a>.
  * <p><b>Notes</b></p>
  *  <ul><li>Most methods are <i>chainable</i>.
  *  build.cmd<li><code>[...].css</code></a> is a collection method, not in this file but also chainable, see
- *  <a href="./CollectionLambdas.html#.css">the documentation there</a>.
+ *  <a href="./module-ExtendedNodeListCollectionExtensions.html#~css">the documentation there</a>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
  * @module
  * @example

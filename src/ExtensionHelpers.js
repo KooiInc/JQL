@@ -125,87 +125,10 @@ const hex2RGBA = function (hex, opacity = 100) {
 //#endregion style color toggling helpers
 
 //#region handling helper
-// noinspection JSValidateJSDoc
-/**
- * A factory to create, wrap and store event handler lambda's for
- * elements in the enclosing document
- * @member HandlerFactory
- * @function
- * @returns {Function}
- */
-const HandlerFactory = () => {
-  let handlers = {};
 
-  /**
-   * Handler method for an array of handlers per event type.
-   * <i>Per event type</i> (e.g. <code>click</code>, <code>change</code> etc.) this is
-   * the one and only handler that is added to the document Object
-   * So:<ul>
-   * <li>All handlers are delegated.</li>
-   * <li>For every <code>Event.type</code> there will be exactly one
-   * handler, added to the document.</li>
-   * <li><code>metaHandler</code> iterates
-   * over the (wrapped) handler lambda's created with the
-   * <code>createHandlerForHID</code> factory.</li></ul>
-   * @member HandlerFactory/metaHandler
-   * @function
-   * @param evt {Event} the event sent by the browser
-   */
-  const metaHandler = evt => handlers[evt.type].forEach(handler => handler(evt));
-
-  /**
-   * Wraps a handler (from $([]).on/ON/delegate) and returns
-   * a new function.
-   * @member HandlerFactory/createHandlerForHID
-   * @function
-   * @param extCollection {ExtendedNodeList} the ExentedNodeList instance
-   * @param HID {string} the Handler id: '[data-hid=...]' or some selector like '#something'
-   * - this determines execution or not of the callback lambda
-   * @param callback {Function} the callback lambda
-   * @returns {Function} the wrapped callback lambda
-   */
-  const createHandlerForHID = (extCollection, HID, callback) => {
-    return evt => {
-      const target = evt.target.closest(HID);
-
-      if (target) {
-        return callback(new extCollection.constructor(target), evt);
-      }
-    };
-  };
-
-  /**
-   * add listener for event type if it's not existing in the handlers Object
-   * @member HandlerFactory/addListenerIfNotExisting
-   * @function
-   * @param type {string} the event type (e.g. <code>click</code>, <code>focusin</code> etc)
-   */
-  const addListenerIfNotExisting = type =>
-    !Object.keys(handlers).find(registeredType => registeredType === type) &&
-    document.addEventListener(type, metaHandler);
-
-  /**
-   * The result of <code>HandlerFactory</code> is
-   * a method to wrap, store and link event handlers to elements
-   * in the document.
-   * <br>See <a href="./ExtendedNodeListExtensions.js.html#line480">ExtendedNodelistLambdas.delegate</a>
-   * code for usage.
-   * @member HandlerFactory/factoryReturnValue
-   * @function
-   */
-  return (extCollection, type, HIDselector, callback) => {
-    addListenerIfNotExisting(type);
-    const fn = createHandlerForHID(extCollection, HIDselector, callback);
-    handlers = handlers[type]
-      ? {...handlers, [type]: handlers[type].concat(fn)}
-      : {...handlers, [type]: [fn]};
-  };
-};
-const handlerFactory = HandlerFactory();
 //#endregion handling helper
 export {
   loop,
-  handlerFactory,
   hex2RGBA,
   initializePrototype,
   isVisible,

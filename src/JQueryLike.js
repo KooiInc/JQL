@@ -260,42 +260,42 @@ Object.entries({
   /**
    * Activate/deactivate/show/hide (debug-)logging
    * <code>JQL.log</code>,
-   * see <a href="./JQL_Log_debugLog.html">JQL/Log</a>
+   * see <a href="./module-Log.html">Log (type: debugLog)</a>
    */
   debugLog,
 
   /**
    * Log stuff to the logger (if active)
    * * <code>JQL.log</code>,
-   * see <a href="./JQL_Log.html#.log">JQL/log</a>
+   * see <a href="./module-Log.html#~log">JQL/log</a>
    */
   log,
 
   /**
    * Allow/disallow the use of certain HTML tags when creating elements using JQL
    * <code>JQL.setTagPermission</code>,
-   * see <a href="./JQL_HTMLHelpers.html#.setTagPermission">JQL/HTMLHelpers</a>
+   * see <a href="./module-HTMLCleanup.html#~setTagPermission">HTMLCleanup</a>
    */
   setTagPermission,
 
   /**
    * Allow/disallow unknown HTML tags
    * <code>JQL.allowUnknownHtmlTags,</code>,
-   * see <a href="./JQL_HTMLHelpers_AllowUnknown.html">JQL/HTMLHelpers</a>
+   * see <a href="./module-HTMLCleanup.html">HTMLCleanup</a>
    */
   allowUnknownHtmlTags,
 
   /**
    * Positions for use in insertAdjacentHTML(-Element)
    * <code>JQL.insertPositions</code>,
-   * See <a href="JQL_DOM.html">JQL/DOM</a>
+   * See <a href="module-DOM.html">DOM (type: adjacents)</a>
    */
   insertPositions,
 
   /**
    * Set the styling for the logger element (<code>#logBox</code>)
    * <code>JQL.setStyling4Log</code>,
-   * see <a href="./JQL_Log.html#.setStyling4Log">JQL/Log</a>
+   * see <a href="./module-Log.html#~setStyling4Log">Log.setStyling4Log</a>
    */
   setStyling4Log,
 

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>DOM - Documentation</title>
+    <title>HandlerFactory - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">DOM</h1>
+    <h1 class="page-title">HandlerFactory</h1>
     
 
     
@@ -47,6 +47,8 @@
         
             
         
+            
+        
     
 </header>
 
@@ -55,7 +57,7 @@
         <div class="container-overview">
         
             
-                <div class="description usertext">Methods for manipulating the <code>Document Object [Model]</code> (aka <code>DOM</code>)</div>
+                <div class="description usertext">A factory to create, wrap and store event handler lambda's forelements in the enclosing document</div>
             
 
             
@@ -69,7 +71,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DOM.js.html">DOM.js</a>, <a href="DOM.js.html#line10">line 10</a>
+        <a href="HandlerFactory.js.html">HandlerFactory.js</a>, <a href="HandlerFactory.js.html#line2">line 2</a>
     </li></ul></dd>
     
 
@@ -107,6 +109,93 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id="module:HandlerFactory"><span class="type-signature"></span>(require("HandlerFactory"))<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HandlerFactory.js.html">HandlerFactory.js</a>, <a href="HandlerFactory.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    The result of <code>HandlerFactory</code> isa method to wrap, store and link event handlers to elementsin the document.<br>See <a href="./ExtendedNodeListExtensions.js.html#line496">ExtendedNodeListExtensions.delegate</a>code for usage.
+</div>
 
 
 
@@ -162,7 +251,7 @@
 
     
 
-    <h4 class="name" id="~createElementFromHtmlString"><span class="type-signature">(inner) </span>createElementFromHtmlString<span class="signature">(htmlStr)</span><span class="type-signature"> &rarr; {HTMLElement|Comment}</span></h4>
+    <h4 class="name" id="~addListenerIfNotExisting"><span class="type-signature">(inner) </span>addListenerIfNotExisting<span class="signature">(type)</span><span class="type-signature"></span></h4>
 
     
 
@@ -174,7 +263,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DOM.js.html">DOM.js</a>, <a href="DOM.js.html#line63">line 63</a>
+        <a href="HandlerFactory.js.html">HandlerFactory.js</a>, <a href="HandlerFactory.js.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -214,7 +303,7 @@
 
 
 <div class="description usertext">
-    Convert a html string to an instance of <code>HTMLElement</code>.<br><b>Note</b>: the resulting element is always sanitized using theattrbutes/tags settings. Use <code>DOM.element2DOM</code> to fysicallyinsert/append etc. it into your DOMtree
+    add listener for event type if it's not existing in the handlers Object
 </div>
 
 
@@ -252,7 +341,7 @@
 
         <tr>
             
-                <td class="name"><code>htmlStr</code></td>
+                <td class="name"><code>type</code></td>
             
 
             <td class="type">
@@ -268,7 +357,189 @@
 
             
 
-            <td class="description last">The html to convert to <code>HTMLElement</code>e.g. <code>&lt;p id="id" class="someClass">Hello &lt;span style="color: green">world&lt;/span>&lt;/p></code></td>
+            <td class="description last">the event type (e.g. <code>click</code>, <code>focusin</code> etc)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~createHandlerForHID"><span class="type-signature">(inner) </span>createHandlerForHID<span class="signature">(extCollection, HID, callback)</span><span class="type-signature"> &rarr; {function}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="HandlerFactory.js.html">HandlerFactory.js</a>, <a href="HandlerFactory.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Wraps a handler (from $([]).on/ON/delegate) and returnsa new function.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>extCollection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ExtendedNodeList</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the ExentedNodeList instance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>HID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Handler id: '[data-hid=...]' or some selector like '#something'- this determines execution or not of the callback lambda</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the callback lambda</td>
         </tr>
 
     
@@ -294,7 +565,7 @@
 
         
 <div class="param-desc">
-    the newly created <code>HTMLElement</code> instance or nothing(in case of creating a html comment)
+    the wrapped callback lambda
 </div>
 
 
@@ -305,10 +576,7 @@
     </dt>
     <dd>
         
-<span class="param-type">HTMLElement</span>
-|
-
-<span class="param-type">Comment</span>
+<span class="param-type">function</span>
 
 
     </dd>
@@ -323,7 +591,7 @@
 
     
 
-    <h4 class="name" id="~element2DOM"><span class="type-signature">(inner) </span>element2DOM<span class="signature">(elem, root, position)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~metaHandler"><span class="type-signature">(inner) </span>metaHandler<span class="signature">(evt)</span><span class="type-signature"></span></h4>
 
     
 
@@ -335,7 +603,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DOM.js.html">DOM.js</a>, <a href="DOM.js.html#line49">line 49</a>
+        <a href="HandlerFactory.js.html">HandlerFactory.js</a>, <a href="HandlerFactory.js.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -375,7 +643,7 @@
 
 
 <div class="description usertext">
-    Add a <code>HTMLElement</code> to the document
+    Handler method for an array of handlers per event type.<i>Per event type</i> (e.g. <code>click</code>, <code>change</code> etc.) this isthe one and only handler that is added to the document ObjectSo:<ul><li>All handlers are delegated.</li><li>For every <code>Event.type</code> there will be exactly onehandler, added to the document.</li><li><code>metaHandler</code> iteratesover the (wrapped) handler lambda's created with the<code>createHandlerForHID</code> factory.</li></ul>
 </div>
 
 
@@ -413,13 +681,13 @@
 
         <tr>
             
-                <td class="name"><code>elem</code></td>
+                <td class="name"><code>evt</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">HTMLElement</span>
+<span class="param-type">Event</span>
 
 
             
@@ -429,53 +697,7 @@
 
             
 
-            <td class="description last">The element to add</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>root</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">HTMLElement</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The root element the element should be added to (default: document.body)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>position</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the position where the element must end up (default <code>beforeend</code>)</td>
+            <td class="description last">the event sent by the browser</td>
         </tr>
 
     
@@ -501,357 +723,8 @@
 
 
         
-            
-
     
 
-    <h4 class="name" id="~htmlToVirtualElement"><span class="type-signature">(inner) </span>htmlToVirtualElement<span class="signature">(htmlString)</span><span class="type-signature"> &rarr; {HTMLElement|undefined}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DOM.js.html">DOM.js</a>, <a href="DOM.js.html#line35">line 35</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Create a HTML element from a html string in memory.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>htmlString</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The HTML string to use<br><b>Note</b>: the html is sanizited</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    {HTMLElement|undefined}
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">HTMLElement</span>
-|
-
-<span class="param-type">undefined</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
-
-        
-                
-<h4 class="name" id="~adjacents">adjacents</h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DOM.js.html">DOM.js</a>, <a href="DOM.js.html#line15">line 15</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>BeforeBegin</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">before element</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>AfterBegin</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">before first child</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>BeforeEnd</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">after last child</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>AfterEnd</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">after element</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<div class="description usertext">
-    The possible positions of elements to insert (<code>HTMLElement.insertAdjacent[HTML/HTMLElement]</code>).
-</div>
-
-
-
-
-
-
-
-
-            
     
 
     
