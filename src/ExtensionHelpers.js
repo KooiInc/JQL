@@ -3,12 +3,11 @@
 import {randomStringExtension} from "./Helpers.js";
 import extendedNodeListCollectionLamdas from "./ExtendedNodeListCollectionExtensions.js";
 import ExtendedNodeListLambdas from "./ExtendedNodeListExtensions.js";
-import ExtendedNodeList from "./JQueryLike.js";
-// for jsdoc use (as 'type')
+const ExtendedNodeList = {dummy: `for jsdoc usage (as 'type')`};
 
 //#region common helpers
 /**
- * <b>Module</b> The helpers for the JQL module
+ * Some helpers for the JQL module.
  * @module ExtensionHelpers
  */
 /**
@@ -26,7 +25,7 @@ const loop = (extCollection, callback) => {
 };
 
 /**
- * Create a handlerId for Element
+ * Create a handlerId for Element.
  * if it does not already exist
  * @private
  * @param extCollection {ExtendedNodeList} current ExtendedNodeList instance
@@ -40,7 +39,7 @@ const addHandlerId = extCollection => {
 };
 
 /**
- * determine visibility of a Html element
+ * Determine the current visibility of a HTMLElement.
  * @param {HTMLElement} el some html element or a style property
  * @returns {boolean} true if visible, false if not
  */
@@ -57,8 +56,8 @@ const isVisible = function (el) {
 };
 
 /**
- * retrieves key-value pairs from data-attributes
- * if applicable
+ * Retrieves key-value pairs from data-attributes
+ * if applicable.
  * @param el {HTMLElement} the html element
  * @returns {Object|undefined} key value-pairs
  */
@@ -72,7 +71,7 @@ const getAllDataAttributeValues = el => {
 };
 
 /**
- * Generic prototype initializer for JQLike
+ * Generic prototype initializer for JQL.
  * @param ctor {ExtendedNodeList} The ExtendedNodeList constructor
  */
 const initializePrototype = ctor => {
@@ -110,7 +109,7 @@ const hex2Full = hex => {
 };
 
 /**
- * convert hex color to rgb(a) (eg #ffc to rgb(255, 255, 204))
+ * Convert hex color to rgb(a) (eg #ffc to rgb(255, 255, 204)).
  * @param hex {string} the hexadecimal color code eg #dddd00
  * @param opacity {number} the opacity value (0 - 1, eg 0.5)
  * @returns {string}
@@ -127,17 +126,20 @@ const hex2RGBA = function (hex, opacity = 100) {
 //#endregion style color toggling helpers
 
 //#region handling helper
+// noinspection JSValidateJSDoc
 /**
- * A factory for handling the event handlers in a document
- * @typedef HandlerFactory
+ * A factory to create, wrap and store event handler lambda's for
+ * elements in the enclosing document
+ * @member HandlerFactory
  * @function
+ * @returns {Function}
  */
 const HandlerFactory = () => {
   let handlers = {};
 
   /**
    * Handler method for an array of handlers per event type.
-   * <i>Per event type</i> (e.g. click, change etc.) this is
+   * <i>Per event type</i> (e.g. <code>click</code>, <code>change</code> etc.) this is
    * the one and only handler that is added to the document Object
    * So:<ul>
    * <li>All handlers are delegated.</li>
@@ -146,16 +148,16 @@ const HandlerFactory = () => {
    * <li><code>metaHandler</code> iterates
    * over the (wrapped) handler lambda's created with the
    * <code>createHandlerForHID</code> factory.</li></ul>
-   * @typedef HandlerFactory/metaHandler
+   * @member HandlerFactory/metaHandler
    * @function
    * @param evt {Event} the event sent by the browser
    */
   const metaHandler = evt => handlers[evt.type].forEach(handler => handler(evt));
 
   /**
-   * wraps a handler (from $([]).on/ON/delegate) and returns
-   * a new handler function
-   * @typedef HandlerFactory/createHandlerForHID
+   * Wraps a handler (from $([]).on/ON/delegate) and returns
+   * a new function.
+   * @member HandlerFactory/createHandlerForHID
    * @function
    * @param extCollection {ExtendedNodeList} the ExentedNodeList instance
    * @param HID {string} the Handler id: '[data-hid=...]' or some selector like '#something'
@@ -175,14 +177,23 @@ const HandlerFactory = () => {
 
   /**
    * add listener for event type if it's not existing in the handlers Object
-   * @typedef HandlerFactory/addListenerIfNotExisting
+   * @member HandlerFactory/addListenerIfNotExisting
    * @function
-   * @param type {string} the event type (e.g. 'click', 'focusin' etc)
+   * @param type {string} the event type (e.g. <code>click</code>, <code>focusin</code> etc)
    */
   const addListenerIfNotExisting = type =>
     !Object.keys(handlers).find(registeredType => registeredType === type) &&
     document.addEventListener(type, metaHandler);
 
+  /**
+   * The result of <code>HandlerFactory</code> is
+   * a method to wrap, store and link event handlers to elements
+   * in the document.
+   * <br>See <a href="./ExtendedNodeListExtensions.js.html#line480">ExtendedNodelistLambdas.delegate</a>
+   * code for usage.
+   * @member HandlerFactory/factoryReturnValue
+   * @function
+   */
   return (extCollection, type, HIDselector, callback) => {
     addListenerIfNotExisting(type);
     const fn = createHandlerForHID(extCollection, HIDselector, callback);

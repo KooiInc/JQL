@@ -7,6 +7,7 @@ import {loop, handlerFactory, addHandlerId, isVisible} from "./ExtensionHelpers.
 import {randomStringExtension} from "./Helpers.js";
 import setStyle from "./Styling.js";
 randomStringExtension();
+const ExtendedNodeList = {dummy: `for jsdoc usage (as 'type')`};
 /**
  * All extension methods for <code>ExtendedNodeList</code> where looping may not be
  * an option. See (the source of)
