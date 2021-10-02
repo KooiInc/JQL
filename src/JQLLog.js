@@ -1,13 +1,12 @@
 // noinspection JSValidateJSDoc
 
 /**
- * A small module for logging in a fixed positioned log box
+ * A small module for logging in a fixed positioned JQLLog box
  * <br>Every line logged is preceded by the time it is logged (granularity: milliseconds)
  * The styling of the logbox happens via a <code>&lt;style></code> element, added to the
  * header of the enclosing document.
  * @module Log
  */
-
 import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import setStyle from "./Styling.js";
 import {time} from "./Helpers.js";
@@ -41,15 +40,16 @@ let defaultStyling = {
     font: `normal 12px/15px verdana, arial`,
   },
 };
+let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;
 /**
- * Add style classes for the log box to a custom css style element.
+ * Add style classes for the JQLLog box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
  * Default styles are in <code>defaultStyling</code>
  * @param cssId {string} the id of the custom style element (automagically created in the
  * header of the document in which JQL is used). Default is 'JQLCustomCSS'.
  */
-const setStyling4Log = (styles = defaultStyling, cssId = `customCSS`) => {
+const setStyling4Log = (styles = defaultStyling, cssId = defaultStylingId) => {
   const exists = document.querySelector(cssId);
   // this triggers rename (id) of existing stylesheet
   if (exists) { exists.id = cssId; }
@@ -59,14 +59,14 @@ const setStyling4Log = (styles = defaultStyling, cssId = `customCSS`) => {
 let useHtml = false;
 
 /**
- * Use logging for debug (set on/off or show/hide the log box).
+ * Use logging for debug (set on/off or show/hide the JQLLog box).
  * @typedef debugLog
  * @type {Object}
- * @property {function} isVisible Is the log box visible?
+ * @property {function} isVisible Is the JQLLog box visible?
  * @property {function} on Activate logging for JQL.
  * @property {function} off Deactivate logging for JQL.
- * @property {function} hide Hide the log box.
- * @property {function} show Show the log box.
+ * @property {function} hide Hide the JQLLog box.
+ * @property {function} show Show the JQLLog box.
  */
 const debugLog = {
   isVisible() {
@@ -76,10 +76,10 @@ const debugLog = {
   on() {
     useLogging = true;
     document.querySelector(`#logBox`).classList.add(`visible`);
-    log(`Logging started`);
+    JQLLog(`Logging started`);
   },
   off() {
-    log(`Logging stopped`);
+    JQLLog(`Logging stopped`);
     document.querySelector(`#logBox`).classList.remove(`visible`);
     useLogging = false;
   },
@@ -110,12 +110,12 @@ const createLogElement = () => {
 const logBox = document.querySelector("#jql_logger") || createLogElement();
 
 /**
- * Create log entry/entries, preceded with the time of logging (millisecond granularity).
+ * Create JQLLog entry/entries, preceded with the time of logging (millisecond granularity).
  * <br>If the local [useLogging] boolean is false, nothing is logged
- * @param args {...(string|Object)} string(s) or Object(s) to print in the log box
+ * @param args {...(string|Object)} string(s) or Object(s) to print in the JQLLog box
  * * <br><b>Note</b> Objects are converted to JSON representation
  */
-const log = (...args) => {
+const JQLLog = (...args) => {
     if (!useLogging) { return; }
     const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => 
@@ -124,4 +124,6 @@ const log = (...args) => {
         `${time()} ${logLine(arg)}`)
     );
 };
-export { log, debugLog, defaultStyling as defaultStyling4Log, setStyling4Log };
+
+const setStylingId4Log = id => defaultStylingId = id;
+export { JQLLog, debugLog, setStylingId4Log, setStyling4Log };

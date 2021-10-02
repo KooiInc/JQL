@@ -28,7 +28,7 @@ const time = () => ((d) =>
 const Logger = (forceConsole = false) => {
   let logEl;
   if (typeof window === "object" && !forceConsole) {
-      logEl = document.querySelector("#log") || (() => {
+      logEl = document.querySelector("#JQLLog") || (() => {
         const pre = Object.assign(document.createElement('pre'), { id: "log" });
         document.body.append(pre);
         return pre;

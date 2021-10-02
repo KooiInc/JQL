@@ -1,4 +1,5 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
+import {setStylingId4Log} from "./JQLLog.js";
 import {randomStringExtension} from "./Helpers.js";
 import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
 import ExtendedNodeListLambdas from "./JQLExtensions.js";
@@ -74,10 +75,12 @@ const getAllDataAttributeValues = el => {
  * @param ctor {ExtendedNodeList} The ExtendedNodeList constructor
  */
 const initializePrototype = ctor => {
+  // noinspection JSUnresolvedVariable
+  const proto = ctor.prototype;
   Object.entries(ExtendedNodeListLambdas)
     .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
-        ctor.prototype[key] = function (...args) {
+        proto[key] = function (...args) {
           return lambda(this, ...args);
         };
       }
@@ -85,12 +88,13 @@ const initializePrototype = ctor => {
   Object.entries(extendedNodeListCollectionLamdas)
     .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
-        ctor.prototype[key] = function (...args) {
+        proto[key] = function (...args) {
           return loop(this, el => lambda(el, ...args));
         };
       }
     });
-  ctor.prototype.isSet = true;
+  proto.isSet = true;
+  setStylingId4Log(proto.customStylesheetId);
 };
 
 //#endregion common helpers */
@@ -123,10 +127,6 @@ const hex2RGBA = function (hex, opacity = 100) {
 };
 
 //#endregion style color toggling helpers
-
-//#region handling helper
-
-//#endregion handling helper
 export {
   loop,
   hex2RGBA,

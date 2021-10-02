@@ -1,11 +1,9 @@
-// noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols,JSUnresolvedFunction,JSValidateJSDoc
-
+// noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols,JSUnresolvedFunction,JSValidateJSDoc,JSUnresolvedVariable
 import {
   debugLog,
-  log,
-  defaultStyling4Log,
+  JQLLog,
   setStyling4Log,
-} from "./Log.js";
+} from "./JQLLog.js";
 
 import {time,} from "./Helpers.js";
 
@@ -25,11 +23,12 @@ import setStyle from "./Styling.js";
 /* local ExtendedNodelist extendedNodeListCollectionExtensions */
 import {initializePrototype,} from "./JQLExtensionHelpers.js";
 
+const customStylesheetId = `JQLCustomCSS`;
+
 /**
  * The JQL core
  * @module JQL
  */
-
 // -------------------------------------------------------------------- //
 /**
  * The core constructor for creating and/or deliver a node(list), exposed as
@@ -86,9 +85,7 @@ const ExtendedNodeList = function (
   if (ExtendedNodeList.prototype.isSet === undefined) {
     initializePrototype(ExtendedNodeList);
   }
-
   this.collection = [];
-  this.customStylesheetId = "JQLCustomCSS";
   const logLineLength = 75;
   this.cssSelector = input && input.trim && input || null;
 
@@ -149,13 +146,13 @@ const ExtendedNodeList = function (
       !input.some(s => !isHtml(s));
     const isHtmlString = isHtml(input);
     const shouldCreateElements = isArrayOfHtmlStrings || isHtmlString;
-    // show raw input in log
+    // show raw input in JQLLog
     const logStr = (`(JQL log) raw input: [${cleanup4Log(isArrayOfHtmlStrings ? input.join(``) : input)}]`);
 
     // the input is a css selector
     if (input.constructor === String && !shouldCreateElements) {
       this.collection = [...selectorRoot.querySelectorAll(input)];
-      log(`(JQL log) css querySelector [${input}], output ${this.collection.length} element(s)`);
+      JQLLog(`(JQL log) css querySelector [${input}], output ${this.collection.length} element(s)`);
       return this;
     }
 
@@ -206,24 +203,18 @@ const ExtendedNodeList = function (
     if (shouldCreateElements && this.collection.length > 0) {
       // append collection to DOM tree (if the root is not <br>)
       this.collection = inject2DOMTree(this.collection);
-      log(`${logStr}\n  Created (outerHTML truncated) [${
+      JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
         cleanup4Log(ElemArrayHtml(this.collection) || "sanitized: no elements remaining")
           .substr(0, logLineLength)}]`);
     }
 
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
-    log(msg);
+    JQLLog(msg);
     // ^ only if logStatus = on, so also
     console.log(msg);
   }
 }
-/**
- * Set default styling for fieldset.#logbox (so, logging)
- * which en passant initializes the custom style sheet for the document
- */
-setStyle(`#logBox`, defaultStyling4Log, this.customStylesheetId);
-
 const JQL = (...args) => new ExtendedNodeList(...args);
 
 // assign static methods
@@ -261,21 +252,21 @@ Object.entries({
    * // usage
    * $(`<div>Hello stranger. Try hovering me!</div>`).addClass(`something`);
    */
-  setStyle: (selector, ruleValues) => setStyle(selector, ruleValues, JQL().customStylesheetId),
+  setStyle: (selector, ruleValues) => setStyle(selector, ruleValues, customStylesheetId),
 
   /**
    * Activate/deactivate/show/hide (debug-)logging
-   * <code>JQL.log</code>,
+   * <code>JQL.JQLLog</code>,
    * see <a href="./module-Log.html">Log (type: debugLog)</a>
    */
   debugLog,
 
   /**
    * Log stuff to the logger (if active)
-   * * <code>JQL.log</code>,
-   * see <a href="./module-Log.html#~log">JQL/log</a>
+   * * <code>JQL.JQLLog</code>,
+   * see <a href="./module-Log.html#~JQLLog">JQL/JQLLog</a>
    */
-  log,
+  log: JQLLog,
 
   /**
    * Allow/disallow the use of certain HTML tags when creating elements using JQL
@@ -310,6 +301,7 @@ Object.entries({
    * <code>JQL.time</code>, see <a href="module-Helpers.html#~time">Helpers.time</a>
    */
   time,
+  customStylesheetId,
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
 export default JQL;
