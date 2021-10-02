@@ -5,7 +5,7 @@
  * <br>Every line logged is preceded by the time it is logged (granularity: milliseconds)
  * The styling of the logbox happens via a <code>&lt;style></code> element, added to the
  * header of the enclosing document.
- * @module Log
+ * @module JQLLog
  */
 import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import setStyle from "./Styling.js";
