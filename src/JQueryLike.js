@@ -3,6 +3,7 @@
 import {
   debugLog,
   log,
+  defaultStyling4Log,
   setStyling4Log,
 } from "./Log.js";
 
@@ -217,6 +218,11 @@ const ExtendedNodeList = function (
     console.log(msg);
   }
 }
+/**
+ * Set default styling for fieldset.#logbox (so, logging)
+ * which en passant initializes the custom style sheet for the document
+ */
+setStyle(`#logBox`, defaultStyling4Log, this.customStylesheetId);
 
 const JQL = (...args) => new ExtendedNodeList(...args);
 

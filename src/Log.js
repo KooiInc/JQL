@@ -50,7 +50,7 @@ let useLogging = false;
  * header of the document in which JQL is used). Default is 'JQLCustomCSS'.
  */
 const setStyling4Log = (styles = defaultStyling, cssId = `customCSS`) => {
-  const exists = document.querySelector(`#JQLCustomCSS`);
+  const exists = document.querySelector(cssId);
   // this triggers rename (id) of existing stylesheet
   if (exists) { exists.id = cssId; }
     Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, cssId));
@@ -124,4 +124,4 @@ const log = (...args) => {
         `${time()} ${logLine(arg)}`)
     );
 };
-export { log, debugLog, setStyling4Log };
+export { log, debugLog, defaultStyling as defaultStyling4Log, setStyling4Log };
