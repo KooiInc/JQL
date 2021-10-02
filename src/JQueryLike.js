@@ -264,7 +264,7 @@ Object.entries({
   /**
    * Log stuff to the logger (if active)
    * * <code>JQL.JQLLog</code>,
-   * see <a href="./module-Log.html#~JQLLog">JQL/JQLLog</a>
+   * see <a href="./module-JQLLog.html#~JQLLog">JQL/JQLLog</a>
    */
   log: JQLLog,
 

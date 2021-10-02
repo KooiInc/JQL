@@ -112,6 +112,7 @@ const logBox = document.querySelector("#jql_logger") || createLogElement();
 /**
  * Create JQLLog entry/entries, preceded with the time of logging (millisecond granularity).
  * <br>If the local [useLogging] boolean is false, nothing is logged
+ * <br> in JQL exposed as <code>JQL.log</code>
  * @param args {...(string|Object)} string(s) or Object(s) to print in the JQLLog box
  * * <br><b>Note</b> Objects are converted to JSON representation
  */
