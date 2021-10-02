@@ -19,7 +19,6 @@ import {isVisible} from "./JQLExtensionHelpers.js";
  */
 let defaultStyling = {
   "#logBox": {
-    margin: `2rem`,
     border: `1px dotted rgb(153, 153, 153)`,
     height: `25vh`,
     width: `90vw`,
