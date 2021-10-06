@@ -183,7 +183,7 @@ const ExtendedNodeList = function (
       const nwElem = createElementFromHtmlString(input);
       const isComment = nwElem && nwElem instanceof Comment;
       if (isComment) {
-        document.body.appendChild(nwElem);
+        root.appendChild(nwElem);
       }
       if (nwElem) {
         const isInvalid = nwElem.dataset.invalid || nwElem.querySelector("[data-invalid]");
@@ -191,9 +191,9 @@ const ExtendedNodeList = function (
 
         if (isInvalid) {
           nwElem.dataset.invalid &&
-          document.body.appendChild(nwElem.firstChild) ||
+          root.appendChild(nwElem.firstChild) ||
           nwElem.querySelectorAll("[data-invalid]").forEach(el =>
-            document.body.appendChild(el.firstChild));
+            root.appendChild(el.firstChild));
         }
       }
     }
