@@ -244,10 +244,12 @@ const append = (extCollection, ...elems2Append) => {
  * Appends the collection of one ExtendedNodeList instance
  * to another instance, so injects the element(s) of
  * [extCollection] to the first element of [extCollection2AppendTo]
- * (for real, injected and visible in the DOM tree)
+ * (for real, injected and visible in the DOM tree).
+ * <br><b>Note</b>: this returns the appended instance,
+ * so not extCollection2AppendTo.
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param extCollection2AppendTo {ExtendedNodeList} the instance to append to
- * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
+ * @returns {ExtendedNodeList} initial instance of ExtendedNodeList, so chainable
  */
 const appendTo = (extCollection, extCollection2AppendTo) => {
   if (extCollection2AppendTo.constructor !== extCollection.constructor) {
@@ -256,7 +258,7 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
 
   extCollection2AppendTo.append(extCollection);
 
-  return extCollection2AppendTo;
+  return extCollection;
 };
 
 /**
@@ -269,6 +271,7 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
  */
 const insert = (extCollection, elem, insertBeforeElem) => {
   const firstElem = extCollection.first();
+  
   if (!firstElem) {
     return extCollection;
   }

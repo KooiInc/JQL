@@ -1,9 +1,7 @@
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols,JSUnresolvedFunction,JSValidateJSDoc,JSUnresolvedVariable
-import {
-  debugLog,
-  JQLLog,
-  setStyling4Log,
-} from "./JQLLog.js";
+// noinspection JSUnresolvedFunction
+
+let {debugLog, JQLLog, setStyling4Log} = await(import("./JQLLog.js"));
 
 import {time,} from "./Helpers.js";
 
