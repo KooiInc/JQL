@@ -27,8 +27,11 @@ let defaultStyling = {
     padding: 0,
     overflow: `hidden`,
     transition: `all 0.7s`,
+    position: `fixed`,
   },
   "#logBox.visible": {
+    backgroundColor: `white`,
+    position: `relative`,
     zIndex: 5,
     opacity: 1,
     border: `1px dotted rgb(153, 153, 153)`,
