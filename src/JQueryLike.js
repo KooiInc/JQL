@@ -213,8 +213,8 @@ Object.entries({
    * @example
    * import $ from "JQueryLike.js";
    * const inMemoryParagraph = $.virtual(`<p>I am and I am not</p>`);
-   * // you won't see this in the DOM, but you can manipulate props
-   * inMemoryParagraph.style({color: `green`}).setData({IAmGreen: `yep`});
+   * // you won't see this in the DOM, but you can manipulate properties
+   * inMemoryParagraph.styleInline({color: `green`}).setData({IAmGreen: `yep`});
    * $(`body`).append(inMemoryParagraph);
    * // result: <p style="color:green" data-i-am-green="yep">I am and I am not</p>
    * //                                ^ Note: stringified output from the browser
