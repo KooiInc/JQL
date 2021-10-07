@@ -26,7 +26,7 @@ let defaultStyling = {
     border: `none`,
     padding: 0,
     overflow: `hidden`,
-    transition: `all 0.7s`,
+    transition: `all 1s`,
     position: `fixed`,
   },
   "#logBox.visible": {
@@ -37,10 +37,10 @@ let defaultStyling = {
     border: `1px dotted rgb(153, 153, 153)`,
     minWidth: `90vw`,
     minHeight: `20vh`,
-    maxWidth: `90vw`,
+    maxWidth: `95vw`,
     overflow: `auto`,
     maxHeight: `20vh`,
-    marginLeft: `1.5rem`,
+    margin: `1rem auto auto`,
     padding: `5px`,
   },
   "#logBox legend": {
