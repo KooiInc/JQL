@@ -41,18 +41,19 @@ let defaultStyling = {
     overflow: `auto`,
     maxHeight: `20vh`,
     margin: `1rem auto auto`,
-    padding: `5px`,
+    padding: `0 8px 19px 8px`,
   },
   "#logBox legend": {
     textAlign: `center`,
-    backgroundColor: `rgb(119, 119, 119)`,
-    padding: `2px 5px`,
-    marginTop: `-0.8rem`,
-    marginBottom: `-0.5rem`,
-    left: `50%`,
-    right: `50%`,
-    color: `white`,
+    backgroundColor: `rgba(119, 119, 119, 1.0)`,
+    padding: `2px 10px`,
+    color: `rgba(255, 255, 255, 1.0)`,
     font: `normal 12px/15px verdana, arial`,
+    boxShadow: `2px 1px 10px #777`,
+    borderRadius: `4px`,
+  },
+  "#logBox legend:before": {
+    content: `'JQL Logging'`,
   },
 };
 let defaultStylingId = `JQLCustomCSS`;
@@ -115,7 +116,7 @@ const debugLog = {
 const createLogElement = () => {
   const loggingFieldSet = `
           <fieldset id="logBox">
-            <legend>Logging</legend>
+            <legend></legend>
             <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
           </fieldset>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), document.body, insertPositions.BeforeBegin);

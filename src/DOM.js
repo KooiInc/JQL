@@ -6,6 +6,7 @@ import {
   getRestricted,
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
+import {truncateHtmlStr} from "./Helpers.js";
 
 /**
  * Methods for manipulating the <code>Document Object [Model]</code> (aka <code>DOM</code>)
@@ -46,9 +47,17 @@ const htmlToVirtualElement = htmlString => {
  * @param root {HTMLElement} The root element the element should be added to (default: document.body)
  * @param position {string} the position where the element must end up (default <code>beforeend</code>)
  */
-const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd) =>
-  elem && elem instanceof HTMLElement && root.insertAdjacentElement(position, elem);
-
+const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd) => {
+  if (elem) {
+    if (elem instanceof HTMLElement) {
+      return root.insertAdjacentElement(position, elem);
+    }
+    if (elem instanceof Comment) {
+      root.insertAdjacentHTML(position, `<!--${elem.textContent}-->`);
+      return elem;
+    }
+  }
+};
 
 /**
  * Convert a html string to an instance of <code>HTMLElement</code>.
@@ -68,11 +77,11 @@ const createElementFromHtmlString = htmlStr => {
     return document.createComment(htmlStr.replace(/<!--|-->$/g, ''));
   }
   
-  if (!nwElem.dataset.iscomment && !nwElem.children.length) {
+  if (!nwElem.children.length) {
       nwElem = document.createElement("span");
       nwElem.dataset.invalid = "See comment in this element";
-      nwElem.appendChild(document.createComment(`[${
-        htmlStr}] => not valid or not allowed`));
+      nwElem.appendChild(document.createComment(`JQL element creation: ${
+        truncateHtmlStr(htmlStr, 100)} => not valid or not allowed`));
   }
 
   return nwElem.dataset.invalid ? nwElem : nwElem.children[0];

@@ -47,6 +47,12 @@ const Logger = (forceConsole = false) => {
         console.clear() :
         logLines.forEach(ll => console.log(`* `, ll));  };
 };
+const truncateHtmlStr = (str, maxLength = 120) => str.trim()
+  .substr(0, maxLength)
+  .replace(/>\s+</g, `><`)
+  .replace(/</g, `&lt;`)
+  .replace(/\s{2,}/g, ` `)
+  .replace(/\n/g, `\\n`) + (str.length > maxLength ? `&hellip;` : ``).trim();
 const time2Fragments = (milliseconds) => {
   milliseconds = Math.abs(milliseconds);
   let secs = Math.floor(Math.abs(milliseconds) / 1000);
@@ -312,4 +318,5 @@ export {
   isObjectAndNotArray,
   toDashedNotation,
   toUndashedNotation,
+  truncateHtmlStr,
 };

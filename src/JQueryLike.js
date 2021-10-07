@@ -3,7 +3,7 @@
 
 let {debugLog, JQLLog, setStyling4Log} = await(import("./JQLLog.js"));
 
-import {time,} from "./Helpers.js";
+import {time,truncateHtmlStr} from "./Helpers.js";
 
 import {
   setTagPermission,
@@ -22,6 +22,7 @@ import setStyle from "./Styling.js";
 import {initializePrototype,} from "./JQLExtensionHelpers.js";
 
 const customStylesheetId = `JQLCustomCSS`;
+const isComment = elem => elem && elem instanceof Comment;
 
 /**
  * The JQL core
@@ -86,6 +87,7 @@ const ExtendedNodeList = function (
   this.collection = [];
   const logLineLength = 75;
   this.cssSelector = input && input.trim && input || null;
+  root = root instanceof ExtendedNodeList ? root.first() : root;
 
   /**
    * Injects the collection to the DOM tree
@@ -98,17 +100,9 @@ const ExtendedNodeList = function (
     root instanceof HTMLBRElement
       ? collection
       : collection.reduce((acc, elem) =>
-        elem && elem instanceof HTMLElement
+        elem && (elem instanceof HTMLElement || isComment(elem))
           ? [...acc, element2DOM(elem, root, position)] : acc, []);
-  const cleanup4Log = logLine =>
-    logLine
-      .trim()
-      .substr(0, logLineLength)
-      .replace(/>\s+</g, `><`)
-      .replace(/</g, `&lt;`)
-      .replace(/\s{2,}/g, ` `)
-      .replace(/\n/g, `\\n`) + (logLine.length > logLineLength ? `&hellip;` : ``).trim();
-  const ElemArrayHtml = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
+  const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
   const selectorRoot = root !== document.body &&
   (input.constructor === String &&
     input.toLowerCase() !== "body") ? root : document;
@@ -145,7 +139,7 @@ const ExtendedNodeList = function (
     const isHtmlString = isHtml(input);
     const shouldCreateElements = isArrayOfHtmlStrings || isHtmlString;
     // show raw input in JQLLog
-    const logStr = (`(JQL log) raw input: [${cleanup4Log(isArrayOfHtmlStrings ? input.join(``) : input)}]`);
+    const logStr = (`(JQL log) raw input: [${truncateHtmlStr(isArrayOfHtmlStrings ? input.join(``) : input, 80)}]`);
 
     // the input is a css selector
     if (input.constructor === String && !shouldCreateElements) {
@@ -162,14 +156,11 @@ const ExtendedNodeList = function (
     if (isArrayOfHtmlStrings) {
       input.forEach(htmlFragment => {
         const elemCreated = createElementFromHtmlString(htmlFragment);
-        if (elemCreated instanceof Comment) {
-          document.body.appendChild(elemCreated);
-          return;
-        }
+
         if (elemCreated) {
-          elemCreated.dataset.invalid &&
-          document.body.appendChild(elemCreated.childNodes[0]) ||
-          this.collection.push(elemCreated);
+          (!isComment(elemCreated) && elemCreated.dataset.invalid) &&
+            document.body.appendChild(elemCreated.childNodes[0]) ||
+            this.collection.push(elemCreated);
         }
       });
     }
@@ -181,12 +172,10 @@ const ExtendedNodeList = function (
      */
     if (isHtmlString) {
       const nwElem = createElementFromHtmlString(input);
-      const isComment = nwElem && nwElem instanceof Comment;
-      if (isComment) {
-        root.appendChild(nwElem);
-      }
+      const commented = isComment(nwElem);
+
       if (nwElem) {
-        const isInvalid = nwElem.dataset.invalid || nwElem.querySelector("[data-invalid]");
+        const isInvalid = !commented && (nwElem.dataset.invalid || nwElem.querySelector("[data-invalid]"));
         this.collection = !isInvalid ? [nwElem] : this.collection;
 
         if (isInvalid) {
@@ -202,9 +191,10 @@ const ExtendedNodeList = function (
       // append collection to DOM tree (if the root is not <br>)
       this.collection = inject2DOMTree(this.collection);
       JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
-        cleanup4Log(ElemArrayHtml(this.collection) || "sanitized: no elements remaining")
+        truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining")
           .substr(0, logLineLength)}]`);
     }
+
 
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;

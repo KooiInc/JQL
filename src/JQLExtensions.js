@@ -224,15 +224,16 @@ const parent = extCollection => extCollection.first() &&
  */
 const append = (extCollection, ...elems2Append) => {
   const firstElem = extCollection.first();
+
   if (firstElem && elems2Append) {
     elems2Append.forEach(elem => {
       if (elem.constructor === String) {
         new extCollection.constructor(elem, firstElem);
       }
-      if (elem.collection && elem.collection.length) {
+      if (Array.isArray(elem.collection) && elem.collection.filter(v => v).length > 0) {
         elem.collection.forEach(el => firstElem.appendChild(el))
       }
-      if (elem instanceof HTMLElement) {
+      if (elem instanceof HTMLElement || elem instanceof Comment) {
         firstElem.appendChild(elem);
       }
     });
