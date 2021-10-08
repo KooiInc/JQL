@@ -5,6 +5,7 @@ import {randomStringExtension} from "./Helpers.js";
 import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
 import ExtendedNodeListLambdas from "./JQLExtensions.js";
 import {element2DOM, insertPositions} from "./DOM.js";
+
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 
 //#region common helpers
@@ -18,14 +19,14 @@ const isHtmlString = input => input.constructor === String && /^<|>$/.test(`${in
 const isArrayOfHtmlStrings = input => Array.isArray(input) && !input.some(s => !isHtmlString(s));
 const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
 const checkInput = (input, self) =>
-    self.collection = !input ? [] :
-      input instanceof HTMLElement ? [input] : input instanceof NodeList
-        ? [...input] : input instanceof self.constructor
-          ? input.collection : undefined;
+  self.collection = !input ? [] :
+    input instanceof HTMLElement ? [input] : input instanceof NodeList
+      ? [...input] : input instanceof self.constructor
+        ? input.collection : undefined;
 const setCollectionFromCssSelector = (input, root, self) => {
   /** determine the root to query from */
   const selectorRoot = root !== document.body && (input.constructor === String && input.toLowerCase() !== "body")
-      ? root : document;
+    ? root : document;
   self.collection = [...selectorRoot.querySelectorAll(input)];
   return `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
@@ -52,12 +53,10 @@ const loop = (extCollection, callback) => {
  * @param position {insertPositions} The position to inject the element(s)
  * @returns {Array} an Array of injected <code>HTMLElement</code>s, maybe empty
  */
-const inject2DOMTree = ( collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
-  root instanceof HTMLBRElement
-    ? collection
-    : collection.reduce((acc, elem) =>
-      elem && (elem instanceof HTMLElement || isCommentNode(elem))
-        ? [...acc, element2DOM(elem, root, position)] : acc, []);
+const inject2DOMTree = (collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
+  collection.reduce((acc, elem) =>
+    elem && (elem instanceof HTMLElement || isCommentNode(elem))
+      ? [...acc, element2DOM(elem, root, position)] : acc, []);
 
 /**
  * Create a handlerId for Element.

@@ -92,22 +92,16 @@ const ExtendedNodeList = function (
   root = document.body,
   position = insertPositions.BeforeEnd) {
 
-  /**
-   * if not already existing create this constructors' prototype
-   * from all methods exposed by [extendedNodeListCollectionExtensions]
-   */
   if (ExtendedNodeList.prototype.isSet === undefined) {
     initializePrototype(ExtendedNodeList);
   }
 
   checkInput(input, this);
 
-  /** input is NodeList, Node or instanceof ExtendedNodeList, no further ado */
   if (Array.isArray(this.collection)) {
     return this;
   }
 
-  /** input is css selector or raw html */
   try {
     this.collection = [];
     root = root instanceof ExtendedNodeList ? root.first() : root;
@@ -129,29 +123,22 @@ const ExtendedNodeList = function (
     }
 
     if (shouldCreateElements && this.collection.length > 0) {
-      // append collection to DOM tree (if the root is not <br>)
-      this.collection = inject2DOMTree(this.collection, root, position);
-
-      // remove comments from the equation (if instance is not virtual)
-      if (!(root instanceof HTMLBRElement)) {
-        this.collection = this.collection.filter(el => !isCommentNode(el));
-      }
+      this.collection = !(root instanceof HTMLBRElement)
+        ? inject2DOMTree(this.collection, root, position).filter(el => !isCommentNode(el))
+        : this.collection;
 
       JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining")
           .substr(0, logLineLength)}]`);
     }
-
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
     debugLog.isOn && JQLLog(msg) || console.log(msg);
   }
 }
 
-// expose as JQL
 const JQL = (...args) => new ExtendedNodeList(...args);
 
-// assign static methods
 Object.entries({
   /**
    * alias for <code>document.querySelector</code>
