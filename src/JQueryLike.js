@@ -144,9 +144,7 @@ const ExtendedNodeList = function (
 
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
-    JQLLog(msg);
-    // ^ only if logStatus = on, so also
-    console.log(msg);
+    debugLog.isOn && JQLLog(msg) || console.log(msg);
   }
 }
 

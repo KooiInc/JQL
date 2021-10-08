@@ -58,6 +58,7 @@ let defaultStyling = {
 };
 let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;
+let log2Console = false;
 /**
  * Add style classes for the JQLLog box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
@@ -83,8 +84,11 @@ let useHtml = false;
  * @property {function} off Deactivate logging for JQL.
  * @property {function} hide Hide the JQLLog box.
  * @property {function} show Show the JQLLog box.
+ * @property {function} toConsole Log to console.
+ * @property {function} (getter) isOn is logging on?
  */
 const debugLog = {
+  get isOn() { return useLogging; },
   isVisible() {
     const logBox = document.querySelector(`#logBox`);
     return logBox && isVisible(logBox);
@@ -98,6 +102,13 @@ const debugLog = {
     JQLLog(`Logging stopped`);
     document.querySelector(`#logBox`).classList.remove(`visible`);
     useLogging = false;
+  },
+  toConsole(yes) {
+    log2Console = yes;
+    if (yes) {
+      document.querySelector(`#logBox`).classList.remove(`visible`);
+      useLogging = false;
+    }
   },
   hide() {
     const logBox = document.querySelector(`#logBox`);
