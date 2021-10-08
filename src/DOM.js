@@ -78,10 +78,8 @@ const createElementFromHtmlString = htmlStr => {
   }
   
   if (!nwElem.children.length) {
-      nwElem = document.createElement("span");
-      nwElem.dataset.invalid = "See comment in this element";
-      nwElem.appendChild(document.createComment(`JQL element creation: ${
-        truncateHtmlStr(htmlStr, 100)} => not valid or not allowed`));
+      return document.createComment(`JQL element creation error! ${
+        truncateHtmlStr(htmlStr, 100)} => not valid or not allowed`);
   }
 
   return nwElem.dataset.invalid ? nwElem : nwElem.children[0];

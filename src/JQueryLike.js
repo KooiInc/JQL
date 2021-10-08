@@ -1,11 +1,12 @@
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols,JSUnresolvedFunction,JSValidateJSDoc,JSUnresolvedVariable
 // noinspection JSUnresolvedFunction
 
-let {debugLog, JQLLog, setStyling4Log} = await(import("./JQLLog.js"));
+let {debugLog, JQLLog, setStyling4Log} = await (import("./JQLLog.js"));
 
 import {
   time,
-  truncateHtmlStr, } from "./Helpers.js";
+  truncateHtmlStr,
+} from "./Helpers.js";
 
 import {
   setTagPermission,
@@ -26,7 +27,8 @@ import {
   inject2DOMTree,
   isCommentNode,
   ElemArray2HtmlString,
-  checkInput, } from "./JQLExtensionHelpers.js";
+  checkInput,
+} from "./JQLExtensionHelpers.js";
 
 const customStylesheetId = `JQLCustomCSS`;
 const logLineLength = 75;
@@ -96,29 +98,34 @@ const ExtendedNodeList = function (
 
   checkInput(input, this);
 
-  if (Array.isArray(this.collection)) { return this; }
+  if (Array.isArray(this.collection)) {
+    return this;
+  }
 
   try {
     this.collection = [];
     root = root instanceof ExtendedNodeList ? root.first() : root;
-    const selectorRoot = root !== document.body &&
-    (input.constructor === String &&
-      input.toLowerCase() !== "body") ? root : document;
 
     // determine what the input value actually is
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const isRawHtml = isHtmlString(input);
     const shouldCreateElements = isRawHtmlArray || isRawHtml;
-    // show raw input in JQLLog
-    const logStr = (`(JQL log) raw input: [${truncateHtmlStr(isRawHtmlArray ? input.join(``) : input, 80)}]`);
 
     // not html, not Node(s): the input is/should be a css selector
     if (input.constructor === String && !shouldCreateElements) {
+      // determine the root to query from
+      const selectorRoot = root !== document.body &&
+      (input.constructor === String &&
+        input.toLowerCase() !== "body") ? root : document;
       this.cssSelector = input.trim();
       this.collection = [...selectorRoot.querySelectorAll(input)];
       JQLLog(`(JQL log) css querySelector [${input}], output ${this.collection.length} element(s)`);
       return this;
     }
+
+    // Raw input for logging
+    const logStr = (`(JQL log) raw input: [${
+      truncateHtmlStr(isRawHtmlArray ? input.join(``) : input, 80)}]`);
 
     /**
      * the input is an Array of html strings
@@ -128,12 +135,7 @@ const ExtendedNodeList = function (
     if (isRawHtmlArray) {
       input.forEach(htmlFragment => {
         const elemCreated = createElementFromHtmlString(htmlFragment);
-
-        if (elemCreated) {
-          (!isCommentNode(elemCreated) && elemCreated.dataset.invalid) &&
-            document.body.appendChild(elemCreated.childNodes[0]) ||
-            this.collection.push(elemCreated);
-        }
+        elemCreated && this.collection.push(elemCreated);
       });
     }
 
@@ -144,29 +146,22 @@ const ExtendedNodeList = function (
      */
     if (isRawHtml) {
       const nwElem = createElementFromHtmlString(input);
-      const commented = isCommentNode(nwElem);
-
-      if (nwElem) {
-        const isInvalid = !commented && (nwElem.dataset.invalid || nwElem.querySelector("[data-invalid]"));
-        this.collection = !isInvalid ? [nwElem] : this.collection;
-
-        if (isInvalid) {
-          nwElem.dataset.invalid &&
-          root.appendChild(nwElem.firstChild) ||
-          nwElem.querySelectorAll("[data-invalid]").forEach(el =>
-            root.appendChild(el.firstChild));
-        }
-      }
+      nwElem && this.collection.push(nwElem);
     }
 
     if (shouldCreateElements && this.collection.length > 0) {
       // append collection to DOM tree (if the root is not <br>)
       this.collection = inject2DOMTree(this.collection, root, position);
+
+      // remove comments from the equation (if instance is not virtual)
+      if (!(root instanceof HTMLBRElement)) {
+        this.collection = this.collection.filter(el => !isCommentNode(el));
+      }
+
       JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining")
           .substr(0, logLineLength)}]`);
     }
-
 
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
@@ -175,10 +170,26 @@ const ExtendedNodeList = function (
     console.log(msg);
   }
 }
+
+// expose as JQL
 const JQL = (...args) => new ExtendedNodeList(...args);
 
 // assign static methods
 Object.entries({
+  /**
+   * alias for <code>document.querySelector</code>
+   * @param selector {string} a css selector
+   * @returns {HTMLElement|null}
+   */
+  node: selector => document.querySelector(selector),
+
+  /**
+   * Alias for <code>document.querySelectorAll</code>
+   * @param selector {string} a css selector
+   * @returns {NodeListOf<*>}
+   */
+  nodes: selector => document.querySelectorAll(selector),
+
   /**
    * Create an ExtendedNodeList instance without injecting elements (so, collection elements in memory)
    * <code>JQL.virtual</code>,

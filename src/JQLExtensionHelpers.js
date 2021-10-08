@@ -12,46 +12,16 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
  * Some helpers for JQL (module, extensions).
  * @module
  */
+// no comment
 const isCommentNode = elem => elem && elem instanceof Comment;
-
-const isHtmlString = input =>
-  input.constructor === String &&
-  `${input}`.trim().startsWith("<") &&
-  `${input}`.trim().endsWith(">");
-
-const isArrayOfHtmlStrings = input => Array.isArray(input) &&
-  !input.some(s => !isHtmlString(s));
-
+const isHtmlString = input => input.constructor === String && /^<|>$/.test(`${input}`.trim());
+const isArrayOfHtmlStrings = input => Array.isArray(input) && !input.some(s => !isHtmlString(s));
 const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
-
-/*
-if (!input) {
-      // nothing to do, return the empty ExentedNodeList
-      return this;
-    }
-
-    // input is one of ...
-    if (input instanceof HTMLElement) {
-      this.collection = [input];
-      return this;
-    }
-
-    if (input instanceof NodeList) {
-      this.collection = [...input];
-      return this;
-    }
-
-    if (input instanceof ExtendedNodeList) {
-      this.collection = input.collection;
-      return this;
-    }
- */
-
 const checkInput = (input, self) =>
-  self.collection = !input ? [] :
-    input instanceof HTMLElement ? [input] : input instanceof NodeList
-      ? [...input] : input instanceof self.constructor
-        ? input.collection : undefined;
+    self.collection = !input ? [] :
+      input instanceof HTMLElement ? [input] : input instanceof NodeList
+        ? [...input] : input instanceof self.constructor
+          ? input.collection : undefined;
 
 /**
  * iterator used for most extendedNodeListCollectionExtensions.
