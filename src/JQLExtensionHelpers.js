@@ -22,7 +22,13 @@ const checkInput = (input, self) =>
       input instanceof HTMLElement ? [input] : input instanceof NodeList
         ? [...input] : input instanceof self.constructor
           ? input.collection : undefined;
-
+const setCollectionFromCssSelector = (input, root, self) => {
+  /** determine the root to query from */
+  const selectorRoot = root !== document.body && (input.constructor === String && input.toLowerCase() !== "body")
+      ? root : document;
+  self.collection = [...selectorRoot.querySelectorAll(input)];
+  return `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
+};
 /**
  * iterator used for most extendedNodeListCollectionExtensions.
  * Also exposed as '[ExtCollection].each'
@@ -168,4 +174,5 @@ export {
   inject2DOMTree,
   ElemArray2HtmlString,
   checkInput,
+  setCollectionFromCssSelector,
 };

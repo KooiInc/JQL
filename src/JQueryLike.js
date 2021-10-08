@@ -1,7 +1,10 @@
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols,JSUnresolvedFunction,JSValidateJSDoc,JSUnresolvedVariable
 // noinspection JSUnresolvedFunction
 
-let {debugLog, JQLLog, setStyling4Log} = await (import("./JQLLog.js"));
+import {
+  debugLog,
+  JQLLog,
+  setStyling4Log } from "./JQLLog.js";
 
 import {
   time,
@@ -28,6 +31,7 @@ import {
   isCommentNode,
   ElemArray2HtmlString,
   checkInput,
+  setCollectionFromCssSelector,
 } from "./JQLExtensionHelpers.js";
 
 const customStylesheetId = `JQLCustomCSS`;
@@ -98,55 +102,30 @@ const ExtendedNodeList = function (
 
   checkInput(input, this);
 
+  /** input is NodeList, Node or instanceof ExtendedNodeList, no further ado */
   if (Array.isArray(this.collection)) {
     return this;
   }
 
+  /** input is css selector or raw html */
   try {
     this.collection = [];
     root = root instanceof ExtendedNodeList ? root.first() : root;
-
-    // determine what the input value actually is
-    const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const isRawHtml = isHtmlString(input);
+    const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const shouldCreateElements = isRawHtmlArray || isRawHtml;
 
-    // not html, not Node(s): the input is/should be a css selector
-    if (input.constructor === String && !shouldCreateElements) {
-      // determine the root to query from
-      const selectorRoot = root !== document.body &&
-      (input.constructor === String &&
-        input.toLowerCase() !== "body") ? root : document;
-      this.cssSelector = input.trim();
-      this.collection = [...selectorRoot.querySelectorAll(input)];
-      JQLLog(`(JQL log) css querySelector [${input}], output ${this.collection.length} element(s)`);
+    if (!shouldCreateElements) {
+      JQLLog(setCollectionFromCssSelector(input, root, this));
       return this;
     }
 
-    // Raw input for logging
     const logStr = (`(JQL log) raw input: [${
       truncateHtmlStr(isRawHtmlArray ? input.join(``) : input, 80)}]`);
 
-    /**
-     * the input is an Array of html strings
-     * create elements from Array of Html strings
-     * the elements to create are sanitized (by DOMCleanup)
-     */
-    if (isRawHtmlArray) {
-      input.forEach(htmlFragment => {
-        const elemCreated = createElementFromHtmlString(htmlFragment);
-        elemCreated && this.collection.push(elemCreated);
-      });
-    }
-
-    /**
-     * the input is a html string
-     * create elements from Html string
-     * the element to create is sanitized (by DOMCleanup)
-     */
-    if (isRawHtml) {
-      const nwElem = createElementFromHtmlString(input);
-      nwElem && this.collection.push(nwElem);
+    if (shouldCreateElements) {
+      [input].flat()
+        .forEach(htmlFragment => this.collection.push(createElementFromHtmlString(htmlFragment)));
     }
 
     if (shouldCreateElements && this.collection.length > 0) {

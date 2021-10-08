@@ -82,7 +82,7 @@ const createElementFromHtmlString = htmlStr => {
         truncateHtmlStr(htmlStr, 100)} => not valid or not allowed`);
   }
 
-  return nwElem.dataset.invalid ? nwElem : nwElem.children[0];
+  return nwElem.children[0];
 };
 
 export {
