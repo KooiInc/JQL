@@ -1,8 +1,10 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
+
 import {setStylingId4Log} from "./JQLLog.js";
 import {randomStringExtension} from "./Helpers.js";
 import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
 import ExtendedNodeListLambdas from "./JQLExtensions.js";
+import {element2DOM, insertPositions} from "./DOM.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 
 //#region common helpers
@@ -10,6 +12,47 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
  * Some helpers for JQL (module, extensions).
  * @module
  */
+const isCommentNode = elem => elem && elem instanceof Comment;
+
+const isHtmlString = input =>
+  input.constructor === String &&
+  `${input}`.trim().startsWith("<") &&
+  `${input}`.trim().endsWith(">");
+
+const isArrayOfHtmlStrings = input => Array.isArray(input) &&
+  !input.some(s => !isHtmlString(s));
+
+const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
+
+/*
+if (!input) {
+      // nothing to do, return the empty ExentedNodeList
+      return this;
+    }
+
+    // input is one of ...
+    if (input instanceof HTMLElement) {
+      this.collection = [input];
+      return this;
+    }
+
+    if (input instanceof NodeList) {
+      this.collection = [...input];
+      return this;
+    }
+
+    if (input instanceof ExtendedNodeList) {
+      this.collection = input.collection;
+      return this;
+    }
+ */
+
+const checkInput = (input, self) =>
+  self.collection = !input ? [] :
+    input instanceof HTMLElement ? [input] : input instanceof NodeList
+      ? [...input] : input instanceof self.constructor
+        ? input.collection : undefined;
+
 /**
  * iterator used for most extendedNodeListCollectionExtensions.
  * Also exposed as '[ExtCollection].each'
@@ -23,6 +66,22 @@ const loop = (extCollection, callback) => {
   }
   return extCollection;
 };
+
+/**
+ * Injects the collection to the DOM tree
+ * @private
+ * @param collection {Array} array of <code>HTMLElement</code>s (in memory),
+ * i.e. the collection of the instance to return
+ * @param root {HTMLElement} The root element to wich the collection should be injected to
+ * @param position {insertPositions} The position to inject the element(s)
+ * @returns {Array} an Array of injected <code>HTMLElement</code>s, maybe empty
+ */
+const inject2DOMTree = ( collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
+  root instanceof HTMLBRElement
+    ? collection
+    : collection.reduce((acc, elem) =>
+      elem && (elem instanceof HTMLElement || isCommentNode(elem))
+        ? [...acc, element2DOM(elem, root, position)] : acc, []);
 
 /**
  * Create a handlerId for Element.
@@ -133,4 +192,10 @@ export {
   initializePrototype,
   isVisible,
   addHandlerId,
+  isHtmlString,
+  isArrayOfHtmlStrings,
+  isCommentNode,
+  inject2DOMTree,
+  ElemArray2HtmlString,
+  checkInput,
 };

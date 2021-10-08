@@ -3,7 +3,9 @@
 
 let {debugLog, JQLLog, setStyling4Log} = await(import("./JQLLog.js"));
 
-import {time,truncateHtmlStr} from "./Helpers.js";
+import {
+  time,
+  truncateHtmlStr, } from "./Helpers.js";
 
 import {
   setTagPermission,
@@ -12,17 +14,22 @@ import {
 
 import {
   createElementFromHtmlString,
-  element2DOM,
   insertPositions,
 } from "./DOM.js";
 
 import setStyle from "./Styling.js";
 
-/* local ExtendedNodelist extendedNodeListCollectionExtensions */
-import {initializePrototype,} from "./JQLExtensionHelpers.js";
+import {
+  initializePrototype,
+  isHtmlString,
+  isArrayOfHtmlStrings,
+  inject2DOMTree,
+  isCommentNode,
+  ElemArray2HtmlString,
+  checkInput, } from "./JQLExtensionHelpers.js";
 
 const customStylesheetId = `JQLCustomCSS`;
-const isComment = elem => elem && elem instanceof Comment;
+const logLineLength = 75;
 
 /**
  * The JQL core
@@ -79,100 +86,65 @@ const ExtendedNodeList = function (
   root = document.body,
   position = insertPositions.BeforeEnd) {
 
-  // if not already existing create this constructors' prototype
-  // from all methods exposed by [extendedNodeListCollectionExtensions]
+  /**
+   * if not already existing create this constructors' prototype
+   * from all methods exposed by [extendedNodeListCollectionExtensions]
+   */
   if (ExtendedNodeList.prototype.isSet === undefined) {
     initializePrototype(ExtendedNodeList);
   }
-  this.collection = [];
-  const logLineLength = 75;
-  this.cssSelector = input && input.trim && input || null;
-  root = root instanceof ExtendedNodeList ? root.first() : root;
 
-  /**
-   * Injects the collection to the DOM tree
-   * @private
-   * @param collection {...HTMLElement} array of <code>HTMLElement</code>s (in memory),
-   * i.e. the collection of the instance to return
-   * @returns {Array} an Array of injected <code>HTMLElement</code>s, maybe empty
-   */
-  const inject2DOMTree = collection =>
-    root instanceof HTMLBRElement
-      ? collection
-      : collection.reduce((acc, elem) =>
-        elem && (elem instanceof HTMLElement || isComment(elem))
-          ? [...acc, element2DOM(elem, root, position)] : acc, []);
-  const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
-  const selectorRoot = root !== document.body &&
-  (input.constructor === String &&
-    input.toLowerCase() !== "body") ? root : document;
+  checkInput(input, this);
+
+  if (Array.isArray(this.collection)) { return this; }
 
   try {
-    if (!input) {
-      // nothing to do, return the empty ExentedNodeList
-      return this;
-    }
-
-    // input is one of ...
-    if (input instanceof HTMLElement) {
-      this.collection = [input];
-      return this;
-    }
-
-    if (input instanceof NodeList) {
-      this.collection = [...input];
-      return this;
-    }
-
-    if (input instanceof ExtendedNodeList) {
-      this.collection = input.collection;
-      return this;
-    }
+    this.collection = [];
+    root = root instanceof ExtendedNodeList ? root.first() : root;
+    const selectorRoot = root !== document.body &&
+    (input.constructor === String &&
+      input.toLowerCase() !== "body") ? root : document;
 
     // determine what the input value actually is
-    const isHtml = str =>
-      str.constructor === String &&
-      `${str}`.trim().startsWith("<") &&
-      `${str}`.trim().endsWith(">");
-    const isArrayOfHtmlStrings = Array.isArray(input) &&
-      !input.some(s => !isHtml(s));
-    const isHtmlString = isHtml(input);
-    const shouldCreateElements = isArrayOfHtmlStrings || isHtmlString;
+    const isRawHtmlArray = isArrayOfHtmlStrings(input);
+    const isRawHtml = isHtmlString(input);
+    const shouldCreateElements = isRawHtmlArray || isRawHtml;
     // show raw input in JQLLog
-    const logStr = (`(JQL log) raw input: [${truncateHtmlStr(isArrayOfHtmlStrings ? input.join(``) : input, 80)}]`);
+    const logStr = (`(JQL log) raw input: [${truncateHtmlStr(isRawHtmlArray ? input.join(``) : input, 80)}]`);
 
-    // the input is a css selector
+    // not html, not Node(s): the input is/should be a css selector
     if (input.constructor === String && !shouldCreateElements) {
+      this.cssSelector = input.trim();
       this.collection = [...selectorRoot.querySelectorAll(input)];
       JQLLog(`(JQL log) css querySelector [${input}], output ${this.collection.length} element(s)`);
       return this;
     }
 
-    /*
+    /**
      * the input is an Array of html strings
      * create elements from Array of Html strings
      * the elements to create are sanitized (by DOMCleanup)
      */
-    if (isArrayOfHtmlStrings) {
+    if (isRawHtmlArray) {
       input.forEach(htmlFragment => {
         const elemCreated = createElementFromHtmlString(htmlFragment);
 
         if (elemCreated) {
-          (!isComment(elemCreated) && elemCreated.dataset.invalid) &&
+          (!isCommentNode(elemCreated) && elemCreated.dataset.invalid) &&
             document.body.appendChild(elemCreated.childNodes[0]) ||
             this.collection.push(elemCreated);
         }
       });
     }
 
-    /*
+    /**
      * the input is a html string
      * create elements from Html string
      * the element to create is sanitized (by DOMCleanup)
      */
-    if (isHtmlString) {
+    if (isRawHtml) {
       const nwElem = createElementFromHtmlString(input);
-      const commented = isComment(nwElem);
+      const commented = isCommentNode(nwElem);
 
       if (nwElem) {
         const isInvalid = !commented && (nwElem.dataset.invalid || nwElem.querySelector("[data-invalid]"));
@@ -189,7 +161,7 @@ const ExtendedNodeList = function (
 
     if (shouldCreateElements && this.collection.length > 0) {
       // append collection to DOM tree (if the root is not <br>)
-      this.collection = inject2DOMTree(this.collection);
+      this.collection = inject2DOMTree(this.collection, root, position);
       JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining")
           .substr(0, logLineLength)}]`);
