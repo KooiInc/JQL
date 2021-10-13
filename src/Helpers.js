@@ -82,7 +82,12 @@ function hasDuplicatesForKeys(data, ...keys) {
   data.forEach( d => check.add( keys.map( k => d[k] ).join(``) ) );
   return [...check].length < data.length;
 }
-// save for later
+
+/**
+ * Simple even/odd checker
+ * @param nr {Number} the input number to check
+ * @returns {boolean}
+ */
 const isEven = nr => !(nr & 1);
 const shuffleLuckyNumbers = n => {
   const shuffleFisherYates = (array) => {
