@@ -7,7 +7,6 @@ import {toDashedNotation} from "./Helpers.js";
  * header of the enclosing document if not already done so
  * @module Styling
  */
-
 const createStyle = cssId => {
   const theLink = Object.assign(
     document.createElement(`style`), { id: cssId, type: `text/css` } );
