@@ -1,4 +1,4 @@
-// noinspection JSUnusedGlobalSymbols,JSUnresolvedFunction
+// noinspection JSUnusedGlobalSymbols,JSUnresolvedFunction,JSCheckFunctionSignatures
 // noinspection JSUnusedGlobalSymbols
 
 /**
@@ -29,9 +29,9 @@ const Logger = (forceConsole = false) => {
   let logEl;
   if (typeof window === "object" && !forceConsole) {
       logEl = document.querySelector("#JQLLog") || (() => {
-        const pre = Object.assign(document.createElement('pre'), { id: "log" });
-        document.body.append(pre);
-        return pre;
+        return document.body.insertAdjacentElement(
+          Object.assign(document.createElement('pre'), { id: "log" })
+        );
       })();
   return (...logLines) => {
       if (logLines.length < 1) {
@@ -42,10 +42,6 @@ const Logger = (forceConsole = false) => {
       logEl.normalize();
     };
   }
-  return (...logLines) => {
-      logLines.length < 1 ?
-        console.clear() :
-        logLines.forEach(ll => console.log(`* `, ll));  };
 };
 const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .substr(0, maxLength)
@@ -72,7 +68,7 @@ const time2Fragments = (milliseconds) => {
 
 /**
  * Generic function to check for duplicates with certain keys
- * witin an array of objects
+ * within an array of objects
  * @param data {Array} The array
  * @param keys {string[]} The keys to filter on
  * @returns {boolean}
