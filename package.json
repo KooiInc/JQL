@@ -1,6 +1,6 @@
 {
-  "name": "js",
-  "version": "0.0.0",
+  "name": "JQL",
+  "version": "1.0.0",
   "private": true,
   "devDependencies": {
     "docdash": "^1.2.0",
