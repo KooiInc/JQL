@@ -69,6 +69,32 @@ const time2Fragments = (milliseconds) => {
     milliSeconds: millisecs,
   };
 };
+
+/**
+ * Generic function to check for duplicates with certain keys
+ * witin an array of objects
+ * @param data {Array} The array
+ * @param keys {string[]} The keys to filter on
+ * @returns {boolean}
+ */
+function hasDuplicatesForKeys(data, ...keys) {
+  let check = new Set();
+  data.forEach( d => check.add( keys.map( k => d[k] ).join(``) ) );
+  return [...check].length < data.length;
+}
+// save for later
+const isEven = nr => !(nr & 1);
+const shuffleLuckyNumbers = n => {
+  const shuffleFisherYates = (array) => {
+    let i = array.length;
+    while (i--) {
+      const ri = Math.floor(Math.random() * i);
+      [array[i], array[ri]] = [array[ri], array[i]];
+    }
+    return array;
+  }
+  return shuffleFisherYates([...Array(n)].map((...[, i]) => i+1 <= n ? i+1 : i + 1 - n));
+};
 // no map or forEach, to keep it (a bit) faster
 const parseAllToTemplate = (objects2Parse, intoTemplate, fallback = String.fromCharCode(0)) => {
   let lines = [...Array(objects2Parse.length)];
