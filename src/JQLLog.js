@@ -126,10 +126,10 @@ const debugLog = {
 
 const createLogElement = () => {
   const loggingFieldSet = `
-          <fieldset id="logBox">
-            <legend></legend>
-            <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
-          </fieldset>`;
+    <fieldset id="logBox">
+      <legend></legend>
+      <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
+    </fieldset>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), document.body, insertPositions.BeforeBegin);
   return document.querySelector(`#jql_logger`);
 };
