@@ -2,7 +2,7 @@
   "name": "js",
   "version": "0.0.0",
   "private": true,
-  "dependencies": {
+  "devDependencies": {
     "docdash": "^1.2.0",
     "esbuild": "^0.12.28"
   },
