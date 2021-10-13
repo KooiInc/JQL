@@ -14,4 +14,6 @@ The module can either be imported in a [compiled](https://kooiinc.github.io/JQL/
 Explore this 
 <a href="https://testbed.nicon.nl/JQLDemo/" target="_blank">demo/example</a>
 
+Or explore the <a href="https://kooiinc.github.io/JQLDoc" target="_blank">the code documentation</a>
+
 **Have fun!**
