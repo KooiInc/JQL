@@ -43,12 +43,26 @@ const Logger = (forceConsole = false) => {
     };
   }
 };
+
+/**
+ * Trunctate a html string (e.g. from <code>[element]outerHTML</code>)
+ * to a single line with a maximum length
+ * @param str {string} The html string
+ * @param maxLength {Number} The length to truncate to (default: 120)
+ * @returns {string}
+ */
 const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .substr(0, maxLength)
   .replace(/>\s+</g, `><`)
   .replace(/</g, `&lt;`)
   .replace(/\s{2,}/g, ` `)
   .replace(/\n/g, `\\n`) + (str.length > maxLength ? `&hellip;` : ``).trim();
+
+/**
+ * Split up a given time (in milliseconds) to days/hours/minutes/seconds/milliseconds
+ * @param milliseconds {Number} The number of milliseconds (e.g. from <code>new Date().getTime()</code>)
+ * @returns {{hours: number, seconds: number, minutes: number, days: number, milliSeconds: number}}
+ */
 const time2Fragments = (milliseconds) => {
   milliseconds = Math.abs(milliseconds);
   let secs = Math.floor(Math.abs(milliseconds) / 1000);
@@ -85,6 +99,7 @@ function hasDuplicatesForKeys(data, ...keys) {
  * @returns {boolean}
  */
 const isEven = nr => !(nr & 1);
+
 const shuffleLuckyNumbers = n => {
   const shuffleFisherYates = (array) => {
     let i = array.length;
@@ -104,6 +119,7 @@ const parseAllToTemplate = (objects2Parse, intoTemplate, fallback = String.fromC
   }
   return lines.join("");
 };
+
 const randomStringExtension = () => {
   if (String.getRandom) {
     return;
@@ -128,6 +144,16 @@ const randomStringExtension = () => {
     return firstChr.concat(String.getRandom(len - 1, excludes));
   };
 };
+
+/**
+ * Repeat a given string [n] times
+ * @param str {string} The string to repeat
+ * @param n {Number} The number of time to repeat the string
+ * @example
+ * console.log(repeat(`-`, 10));
+ * // logs: ----------
+ * @returns {string}
+ */
 const repeat = (str, n) => Array(n).join(str);
 const parseTemplate = (template, valuesMapping, fallback = String.fromCharCode(0)) =>
   template.replace(/{[^}]+}/g, (match) =>
@@ -143,15 +169,15 @@ const addCssIfNotAlreadyAdded = (cssId, styleSheetLocation) => {
   }
   setTagPermission("link", false);
 };
-// init default values from parameters, allowing to
-// maintain falsy values (like null or 0) if applicable
+
 const initDefault = (value, defaultValue, ...includeFalsies) => {
   const empty = value => includeFalsies &&
-  includeFalsies.filter(v =>
-    value !== undefined && isNaN(value) ? isNaN(v) : v === value).length
-    ? false : Boolean(value) === false;
+    includeFalsies.filter(v =>
+      value !== undefined && isNaN(value) ? isNaN(v) : v === value).length
+      ? false : Boolean(value) === false;
   return empty(value) ? defaultValue : value;
 };
+
 /**
  * Convert a camel-cased term to dashed string, e.g. for style rule keys
  * @example
@@ -162,6 +188,15 @@ const initDefault = (value, defaultValue, ...includeFalsies) => {
  * @returns {string}
  */
 const toDashedNotation = str2Convert => str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`.toLowerCase());
+
+/**
+ * Convert a dashed term to camelCased string e.g.
+ * @example
+ * toUndashedNotation(`margin-right`); //=> `marginRight`
+ * toUndashedNotation(`border-top-left-adius`); //=> `borderTopLeftRadius`
+ * @param str2Convert {string} The (property)string to convert
+ * @returns {string}
+ */
 const toUndashedNotation = prop => [...prop.toLowerCase()]
   .reduce( (acc, v) => {
     const isDash = v === `-`;
@@ -169,10 +204,17 @@ const toUndashedNotation = prop => [...prop.toLowerCase()]
     acc.nextUpcase = isDash;
     return acc;
   }, {s: '', nextUpcase: false}).s;
+
+/**
+ * Is [obj] really an object (and not a <code>Date</code> or <code>Array</code>)?
+ * @param obj {Object}
+ * @returns {boolean|false|number}
+ */
 const isObjectAndNotArray = obj =>
   (obj.constructor !== Date &&
     !Array.isArray(obj) && JSON.stringify(obj) === "{}") ||
   obj.constructor !== String && Object.keys(obj).length;
+
 const importAsync = (url, callback) => import(url).then(callback);
 const createDeepCloneExtension = () => {
   const isImmutable = val =>
@@ -210,6 +252,13 @@ const createDeepCloneExtension = () => {
   }
   Object.clone = cloneObj;
 };
+
+/**
+ * @todo: use Number.toLocaleString is way simpler, check for edge cases
+ * @param number
+ * @param locale
+ * @returns {*|string}
+ */
 const groupDigits = (number, locale = "DecimalComma") => {
   const separators = {
     DecimalDot: { thousands: ",", decimal: "." },
@@ -239,6 +288,7 @@ const groupDigits = (number, locale = "DecimalComma") => {
       parts.decimal ? `${separators[locale].decimal}${parts.decimal}` : ``}`;
   })();
 };
+
 const curry = fn => {
   const curryFn = (...args1) => args1.length >= fn.length ? fn(...args1) : (...args2) => curryFn(...args1, ...args2);
   return curryFn;
