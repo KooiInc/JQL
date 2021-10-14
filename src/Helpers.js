@@ -183,7 +183,6 @@ const initDefault = (value, defaultValue, ...includeFalsies) => {
  * @example
  * toDashedNotation(`marginRight`); //=> `margin-right`
  * toDashedNotation(`borderTopLeftRadius`); //=> `border-top-left-radius`
- * toDashedNotation(`BorderTopLeftRadius`); //=> `border-top-left-radius`
  * @param str2Convert {string} The (property)string to convert
  * @returns {string}
  */
@@ -254,7 +253,7 @@ const createDeepCloneExtension = () => {
 };
 
 /**
- * @todo: use Number.toLocaleString is way simpler, check for edge cases
+ * <b>Todo</b> use Number.toLocaleString is way simpler, check for edge cases
  * @param number
  * @param locale
  * @returns {*|string}
@@ -328,8 +327,8 @@ const tryParseJson = jsonTrialValue => {
   }
 };
 /**
- * A helper for <code>localStorage</code>.
  * @typedef storage
+ * @description A helper for <code>localStorage</code>.
  * @property get {function} (key:string) retrieve item with [key].
  * @property object {function} see <code>getObject</code>.
  * @property getObject {function} alias for <code>storage.object</code>.
@@ -351,6 +350,7 @@ const storage = {
   remove: key => localStorage.removeItem(key),
   clear: () => localStorage.clear()
 };
+
 // see also: https://stackblitz.com/edit/typescript-mmrre8?file=index.ts
 const round2NDecimals = (input, decimals = 2, toString = false) => {
   // just return input value if it's not a recognizable number
