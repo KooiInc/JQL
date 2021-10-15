@@ -154,7 +154,7 @@ const randomStringExtension = () => {
  * // logs: ----------
  * @returns {string}
  */
-const repeat = (str, n) => Array(n).join(str);
+const repeat = (str, n) => Array(n + 1).join(str);
 const parseTemplate = (template, valuesMapping, fallback = String.fromCharCode(0)) =>
   template.replace(/{[^}]+}/g, (match) =>
     valuesMapping[match.slice(1, -1)] || fallback || match);
