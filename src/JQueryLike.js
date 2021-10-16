@@ -75,6 +75,7 @@ const logLineLength = 75;
  * @returns {ExtendedNodeList} An instance of ExtendedNodeList
  * @example
  * import $ from "JQueryLike.js";
+ * // a few examples
  * $(document.querySelectorAll(`p`));
  * $(document.querySelector(`p.something`));
  * $($(`.something`));
