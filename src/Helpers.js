@@ -1,4 +1,4 @@
-// noinspection JSUnusedGlobalSymbols,JSUnresolvedFunction,JSCheckFunctionSignatures
+// noinspection JSUnusedGlobalSymbols,JSUnresolvedFunction,JSCheckFunctionSignatures,JSUnusedLocalSymbols
 // noinspection JSUnusedGlobalSymbols
 
 /**
@@ -202,7 +202,7 @@ const toDashedNotation = str2Convert => str2Convert.replace(/[A-Z]/g, a => `-${a
  * @example
  * toUndashedNotation(`margin-right`); //=> `marginRight`
  * toUndashedNotation(`border-top-left-adius`); //=> `borderTopLeftRadius`
- * @param str2Convert {string} The (property)string to convert
+ * @param prop {string} The (property)string to convert
  * @returns {string}
  */
 const toUndashedNotation = prop => [...prop.toLowerCase()]
