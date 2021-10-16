@@ -146,6 +146,15 @@ const randomStringExtension = () => {
 };
 
 /**
+ * Get frequencies for all elements of [arr]
+ * If [arr] is not an Array, just returns it
+ * @param arr {Array}
+ * @returns {Object|Array}
+ */
+const frequencies = arr =>
+  Array.isArray(arr) && arr.reduce((acc, curr) => ({...acc, [curr]: -~acc[curr]}), {}) || arr;
+
+/**
  * Repeat a given string [n] times
  * @param str {string} The string to repeat
  * @param n {Number} The number of time to repeat the string
