@@ -128,6 +128,7 @@ const debugLog = {
   },
   reversed(reverse) {
     reverseLogging = reverse;
+    JQLLog(`Logging ${reverse ? `latest first` : `latest last`}`);
   },
   clear() {
     const logBoxTxt = document.querySelector(`#logBox #jql_logger`);
