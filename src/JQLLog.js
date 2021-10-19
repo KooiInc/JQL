@@ -155,7 +155,7 @@ const JQLLog = (...args) => {
     const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => 
       logBox.insertAdjacentHTML(
-        reverseLogging ? `afterend` : `afterbegin`,
+        reverseLogging ? `beforeend` : `afterbegin`,
         `${time()} ${logLine(arg)}`)
     );
 };
