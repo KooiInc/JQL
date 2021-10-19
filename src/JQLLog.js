@@ -86,7 +86,7 @@ let useHtml = false;
  * @property {function} hide Hide the JQLLog box.
  * @property {function} show Show the JQLLog box.
  * @property {function} toConsole Log to console.
- * @property {function} reversed Log chronologically (false) or latest first (true)
+ * @property {function} reversed Log top to bottom (false) or latest first (default true)
  * @property {function} (getter) isOn is logging on?
 
  */
