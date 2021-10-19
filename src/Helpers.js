@@ -195,7 +195,8 @@ const initDefault = (value, defaultValue, ...includeFalsies) => {
  * @param str2Convert {string} The (property)string to convert
  * @returns {string}
  */
-const toDashedNotation = str2Convert => str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`.toLowerCase());
+const toDashedNotation = str2Convert =>
+  str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`.toLowerCase()).replace(/^\-|\-$/, ``);
 
 /**
  * Convert a dashed term to camelCased string e.g.
