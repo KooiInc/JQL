@@ -89,7 +89,6 @@ let useHtml = false;
  * @property {function} reversed Log top to bottom (false) or latest first (default true)
  * @property {function} clear the log box
  * @property {function} (getter) isOn is logging on?
-
  */
 const debugLog = {
   get isOn() { return useLogging; },
@@ -126,6 +125,13 @@ const debugLog = {
       document.querySelector(`#logBox`).classList.add(`visible`);
     }
   },
+  /**
+   * Change log direction
+   * <code>debugLog.reversed</code>
+   * @see debugLog
+   * @function debugLog/reversed
+   * @param reverse {boolean} latest last (false) or latest first (true) (default true)
+   */
   reversed(reverse) {
     reverseLogging = reverse;
     JQLLog(`Reverse logging reset: now logging ${
