@@ -125,6 +125,7 @@ const debugLog = {
 };
 
 const createLogElement = () => {
+  setStyling4Log();
   const loggingFieldSet = `
     <fieldset id="logBox">
       <legend></legend>
