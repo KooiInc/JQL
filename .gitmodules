@@ -1,4 +1,0 @@
-[submodule "JQLDoc"]
-	path = JQLDoc
-	url = https://github.com/KooiInc/JQLDoc.git
-	branch = main
