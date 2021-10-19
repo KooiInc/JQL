@@ -87,6 +87,7 @@ let useHtml = false;
  * @property {function} show Show the JQLLog box.
  * @property {function} toConsole Log to console.
  * @property {function} reversed Log top to bottom (false) or latest first (default true)
+ * @property {function} clear the log box
  * @property {function} (getter) isOn is logging on?
 
  */
@@ -127,6 +128,9 @@ const debugLog = {
   },
   reversed(reverse) {
     reverseLogging = reverse;
+  },
+  clear() {
+    document.querySelector(`#logBox #jql_logger`).textContent = ``;
   }
 };
 
