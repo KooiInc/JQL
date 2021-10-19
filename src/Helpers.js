@@ -196,7 +196,9 @@ const initDefault = (value, defaultValue, ...includeFalsies) => {
  * @returns {string}
  */
 const toDashedNotation = str2Convert =>
-  str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`.toLowerCase()).replace(/^\-|\-$/, ``);
+  str2Convert
+    .replace(/[A-Z]/g, a => `-${a.toLowerCase()}`)
+    .replace(/^\-|\-$/, ``);
 
 /**
  * Convert a dashed term to camelCased string e.g.
