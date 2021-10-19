@@ -59,7 +59,7 @@ let defaultStyling = {
 let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;
 let log2Console = false;
-let reverseLogging = false;
+let reverseLogging = true;
 /**
  * Add style classes for the JQLLog box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
@@ -86,7 +86,7 @@ let useHtml = false;
  * @property {function} hide Hide the JQLLog box.
  * @property {function} show Show the JQLLog box.
  * @property {function} toConsole Log to console.
- * @property {function} reversed Log from top to bottom (true) or not
+ * @property {function} reversed Log chronologically (false) or latest first (true)
  * @property {function} (getter) isOn is logging on?
 
  */
@@ -155,7 +155,7 @@ const JQLLog = (...args) => {
     const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => 
       logBox.insertAdjacentHTML(
-        reverseLogging ? `beforeend` : `afterbegin`,
+        reverseLogging ? `afterbegin` : `beforeend`,
         `${time()} ${logLine(arg)}`)
     );
 };
