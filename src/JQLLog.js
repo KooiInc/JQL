@@ -130,7 +130,9 @@ const debugLog = {
     reverseLogging = reverse;
   },
   clear() {
-    document.querySelector(`#logBox #jql_logger`).textContent = ``;
+    const logBoxTxt = document.querySelector(`#logBox #jql_logger`);
+    logBoxTxt.textContent = ``;
+    JQLLog(`Cleared`);
   }
 };
 
