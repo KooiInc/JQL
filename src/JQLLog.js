@@ -35,9 +35,9 @@ let defaultStyling = {
     zIndex: 5,
     opacity: 1,
     border: `1px dotted rgb(153, 153, 153)`,
-    minWidth: `97vw`,
+    minWidth: `90vw`,
     minHeight: `20vh`,
-    maxWidth: `97vw`,
+    maxWidth: `95vw`,
     overflow: `auto`,
     maxHeight: `20vh`,
     margin: `1rem auto auto`,
@@ -152,7 +152,7 @@ const createLogElement = () => {
       <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
     </fieldset>`;
   // noinspection JSCheckFunctionSignatures
-  element2DOM(...[createElementFromHtmlString(loggingFieldSet), ,insertPositions.AfterBegin]);
+  element2DOM(...[createElementFromHtmlString(loggingFieldSet),,insertPositions.AfterBegin]);
   return document.querySelector(`#jql_logger`);
 };
 
