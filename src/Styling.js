@@ -24,35 +24,21 @@ const setRule = (rule, values) =>
   Object.entries(values)
     .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
 
-function setRules(ruleSet, selector, styleSheetOrMediaRule, styleRules) {
-    let rule = [...ruleSet].find( r => compareSelectors((r.selectorText || ``), selector) );
-
-    if (!rule) {
-      styleSheetOrMediaRule.insertRule(`${selector} {}`, styleSheetOrMediaRule.cssRules.length || 0);
-      rule = ruleSet[styleSheetOrMediaRule.cssRules.length-1];
-    }
+function setRules(cssRules, selector, rulesContainer, styleRules) {
+    const rule = [...cssRules].find( r => compareSelectors((r.selectorText || ``), selector) ) ||
+      cssRules[rulesContainer.insertRule(`${selector} {}`, rulesContainer.cssRules.length || 0)];
 
     setRule(rule, styleRules);
 }
 
 function setMediaRule(selector, styleValues, styleSheet) {
-  const mediaRule = selector;
   const mediaStyleRules = styleValues.mediaSelectors;
-  let mediaRuleSheet = undefined;
-  let ruleSet = [...styleSheet.cssRules].find( r => r.cssText.startsWith(mediaRule));
+  const mediaRuleSheet = [...styleSheet.cssRules].find( r => r.cssText.startsWith(selector)) ||
+    styleSheet.cssRules[styleSheet.insertRule(`${selector} {}`, styleSheet.cssRules.length || 0)];
 
-  ruleSet = ruleSet ? ruleSet : (() => {
-    styleSheet.insertRule(`${mediaRule} {}`, styleSheet.cssRules.length || 0);
-    mediaRuleSheet = styleSheet.cssRules[styleSheet.cssRules.length-1];
-    return mediaRuleSheet;
-  })();
-
-  if (ruleSet) {
-    for (let selector in mediaStyleRules) {
-      setRules(ruleSet.cssRules, selector, mediaRuleSheet, mediaStyleRules[selector]);
-    }
+  for (let selector in mediaStyleRules) {
+    setRules(mediaRuleSheet.cssRules, selector, mediaRuleSheet, mediaStyleRules[selector]);
   }
-
 }
 
 /**
@@ -78,8 +64,8 @@ function setMediaRule(selector, styleValues, styleSheet) {
  * setStyleRule( "@media(max-width: 1200px)",
  * //             ^ @media rule
  *              { mediaSelectors: {".someClass": {width: `500px`}, "#someDiv": {color: red}} } )
- * //                              ^ media selector                             ^
- * //                                                                           ^ css rules
+ * //                              ^ selector                                   ^
+ * //                                                                           ^ css rule(s)
  */
 function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
   if (!styleValues ||
@@ -90,14 +76,9 @@ function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
   }
   const styleSheet = getOrCreateStyleSheet(cssId);
 
-  if (selector.startsWith(`@media`)) {
-    return setMediaRule(selector, styleValues, styleSheet);
-  }
-
-  const ruleSet = styleSheet.cssRules;
-
-  if (ruleSet) {
-    return setRules(ruleSet, selector, styleSheet, styleValues);
-  }
+  return selector.startsWith(`@media`)
+    ? setMediaRule(selector, styleValues, styleSheet)
+    : setRules(styleSheet.cssRules, selector, styleSheet, styleValues);
 }
+
 export default changeCssStyleRule;
