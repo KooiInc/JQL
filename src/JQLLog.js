@@ -55,7 +55,7 @@ let defaultStyling = {
   "#logBox legend:before": {
     content: `'JQL Logging'`,
   },
-  "@media (max-width: 1200px) and (min-width: 600px)[#logBox.visible]": {
+  "@media (max-width: 1200px)[#logBox.visible]": {
     minWidth: `90vw`,
     maxWidth: `90vw`,
   },
