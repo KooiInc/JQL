@@ -40,7 +40,7 @@ let defaultStyling = {
     overflow: `auto`,
     minHeight: `20vh`,
     maxHeight: `20vh`,
-    margin: `1rem 0 1rem 0`,
+    margin: `1rem auto`,
     padding: `0 8px 19px 8px`,
   },
   "#logBox legend": {
