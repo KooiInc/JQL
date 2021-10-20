@@ -151,7 +151,8 @@ const createLogElement = () => {
       <legend></legend>
       <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
     </fieldset>`;
-  element2DOM(createElementFromHtmlString(loggingFieldSet), document.body, insertPositions.AfterBegin);
+  // noinspection JSCheckFunctionSignatures
+  element2DOM(...[createElementFromHtmlString(loggingFieldSet), ,insertPositions.AfterBegin]);
   return document.querySelector(`#jql_logger`);
 };
 
