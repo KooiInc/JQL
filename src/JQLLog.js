@@ -58,8 +58,8 @@ let defaultStyling = {
   "@media (max-width: 1200px)": {
     mediaSelectors: {
       "#logBox.visible": {
-        minWidth: `90vw`,
-        maxWidth: `90vw`,
+        minWidth: `80vw`,
+        maxWidth: `80vw`,
       }
     },
   },
