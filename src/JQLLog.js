@@ -30,17 +30,17 @@ let defaultStyling = {
     position: `fixed`,
   },
   "#logBox.visible": {
-    backgroundColor: `white`,
+    backgroundColor: `#ffffe0`,
     position: `relative`,
     zIndex: 5,
     opacity: 1,
     border: `1px dotted rgb(153, 153, 153)`,
-    minWidth: `90vw`,
-    minHeight: `20vh`,
-    maxWidth: `95vw`,
+    minWidth: `70vw`,
+    maxWidth: `70vw`,
     overflow: `auto`,
+    minHeight: `20vh`,
     maxHeight: `20vh`,
-    margin: `1rem auto auto`,
+    margin: `1rem 0 1rem 0`,
     padding: `0 8px 19px 8px`,
   },
   "#logBox legend": {
@@ -55,9 +55,10 @@ let defaultStyling = {
   "#logBox legend:before": {
     content: `'JQL Logging'`,
   },
-  "#logBox pre": {
-    backgroundColor: `white`,
-  }
+  "@media (max-width: 1200px) and (min-width: 600px)[#logBox.visible]": {
+    minWidth: `90vw`,
+    maxWidth: `90vw`,
+  },
 };
 let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;

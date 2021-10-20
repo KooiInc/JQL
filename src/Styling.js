@@ -13,6 +13,15 @@ const createStyle = cssId => {
   document.querySelector(`head`).appendChild(theLink);
   return theLink;
 }
+
+const getMediaSelector = selector => {
+  if (selector.startsWith(`@media`)) {
+    const [media, mSelector] = selector.split(`[`);
+    return [media, mSelector.slice(0, -1)];
+  }
+  return [, selector];
+}
+
 const getOrCreateStyleSheet = cssId =>
   (document.querySelector(`#${cssId}`) || createStyle(cssId)).sheet;
 
@@ -21,7 +30,8 @@ const setRule = (rule, values) =>
   Object.entries(values)
     .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
 /**
- * change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
+ * Change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
+ * A @media rule can also be inserted, using <code>[@media rule][style rule]</code>
  * @param selector {string} the (css) selectorText, like <code>ul li.inActive</code>, <code>.someClass</code> etc.
  * @param styleValues {Object} an object with CSSStyleDeclarations
  * <br><b>Note</b>: enclose a string value of `content` in quotes (e.g. <code>&#123;content: `'Some string'`&#125;</code>)
@@ -34,6 +44,11 @@ const setRule = (rule, values) =>
  * //           ^ someRule  ^                                             ^
  * //                       ^ styleProps                                  ^
  * //                                                                     ^ id of the stylesheet
+ * //
+ * // set a @media rule
+ * setStyleRule("@media(max-width: 1200px)[div.myClass]", {width: 800px}, "YesItsMyCss");
+ * //            ^ @media selector         ^
+ * //                                      ^ rule selector (must be between [])
  */
 function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
   if (!styleValues ||
@@ -44,14 +59,35 @@ function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
   }
 
   const styleSheet = getOrCreateStyleSheet(cssId);
-  const ruleSet = styleSheet.cssRules;
+  const [mediaRule, realSelector]  = getMediaSelector(selector);
+  let mediaRuleset = undefined;
+  selector = mediaRule ? realSelector : selector;
+
+  let ruleSet = styleSheet.cssRules;
+
+  if (mediaRule) {
+    ruleSet = [...ruleSet].find( r => r.cssText.startsWith(mediaRule));
+
+    if (!ruleSet) {
+      styleSheet.insertRule(`${mediaRule} {}`, styleSheet.cssRules.length || 0);
+      mediaRuleset = styleSheet.cssRules[styleSheet.cssRules.length-1];
+      ruleSet = mediaRuleset.cssRules;
+    }
+    mediaRuleset = ruleSet;
+    ruleSet = ruleSet.cssRules;
+  }
 
   if (ruleSet) {
-    let rule = [...ruleSet].find(r => compareSelectors(r.selectorText, selector));
+    let rule = [...ruleSet].find( r => compareSelectors((r.selectorText || ``), selector) );
 
-    if (!rule) {
+    if (!rule && !mediaRule) {
       styleSheet.insertRule(`${selector} {}`, styleSheet.cssRules.length || 0);
       rule = ruleSet[styleSheet.cssRules.length-1];
+    }
+
+    if (!rule && mediaRule) {
+      mediaRuleset.insertRule(`${selector} {}`, 0);
+      rule = mediaRuleset.cssRules[mediaRuleset.cssRules.length-1];
     }
 
     setRule(rule, styleValues);
