@@ -36,6 +36,7 @@ import {
 
 const customStylesheetId = `JQLCustomCSS`;
 const logLineLength = 75;
+let logSystem = false;
 
 /**
  * The JQL core
@@ -111,7 +112,7 @@ const ExtendedNodeList = function (
     const shouldCreateElements = isRawHtmlArray || isRawHtml;
 
     if (!shouldCreateElements) {
-      JQLLog(setCollectionFromCssSelector(input, root, this));
+      logSystem && JQLLog(setCollectionFromCssSelector(input, root, this));
       return this;
     }
 
@@ -128,13 +129,13 @@ const ExtendedNodeList = function (
         ? inject2DOMTree(this.collection, root, position).filter(el => !isCommentNode(el))
         : this.collection;
 
-      JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
+      logSystem && JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining")
           .substr(0, logLineLength)}]`);
     }
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
-    debugLog.isOn && JQLLog(msg) || console.log(msg);
+    debugLog.isOn && logSystem && JQLLog(msg) || console.log(msg);
   }
 }
 
@@ -233,6 +234,14 @@ Object.entries({
   setStyling4Log,
 
   /**
+   * Activate or deactive logging of system messages. Default: false
+   * <code>JQL.setSystemLogActiveState([state])</code>,
+   * see <a href="./module-Log.html#~setStyling4Log">Log.setStyling4Log</a>
+   * @param activeState {boolean} on (true) or off (default false)
+   */
+  setSystemLogActiveState: activeState => logSystem = activeState,
+
+/**
    * Current time helper
    * <code>JQL.time</code>, see <a href="module-Helpers.html#~time">Helpers.time</a>
    */
