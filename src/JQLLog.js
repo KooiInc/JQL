@@ -55,6 +55,9 @@ let defaultStyling = {
   "#logBox legend:before": {
     content: `'JQL Logging'`,
   },
+  "#logBox pre": {
+    backgroundColor: `white`,
+  }
 };
 let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;

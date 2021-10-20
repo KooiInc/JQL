@@ -236,7 +236,6 @@ Object.entries({
   /**
    * Activate or deactive logging of system messages. Default: false
    * <code>JQL.setSystemLogActiveState([state])</code>,
-   * see <a href="./module-Log.html#~setStyling4Log">Log.setStyling4Log</a>
    * @param activeState {boolean} on (true) or off (default false)
    */
   setSystemLogActiveState: activeState => logSystem = activeState,
