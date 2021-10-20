@@ -31,7 +31,8 @@ const setRule = (rule, values) =>
     .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
 /**
  * Change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
- * A @media rule can also be inserted, using <code>[@media rule][style rule]</code>
+ * <br>A @media rule can also be inserted, using <code>[@media rule][style rule]</code>
+ * @todo: buggy, make it better
  * @param selector {string} the (css) selectorText, like <code>ul li.inActive</code>, <code>.someClass</code> etc.
  * @param styleValues {Object} an object with CSSStyleDeclarations
  * <br><b>Note</b>: enclose a string value of `content` in quotes (e.g. <code>&#123;content: `'Some string'`&#125;</code>)
