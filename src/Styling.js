@@ -9,37 +9,34 @@ import {toDashedNotation} from "./Helpers.js";
  * header of the enclosing document if not already done so
  * @module Styling
  */
-const createStyle = cssId => {
-  const theLink = Object.assign(
-    document.createElement(`style`), { id: cssId, type: `text/css` } );
-  document.querySelector(`head`).appendChild(theLink);
-  return theLink;
-}
-
-const getOrCreateStyleSheet = cssId =>
-  (document.querySelector(`#${cssId}`) || createStyle(cssId)).sheet;
-
+const injectStyleElement = cssId => document.querySelector(`head`)
+    .insertAdjacentElement(
+      `beforeend`,
+      Object.assign(document.createElement(`style`), { id: cssId, type: `text/css` } )
+    );
+const getOrCreateStyleSheet = cssId => (document.querySelector(`#${cssId}`) || injectStyleElement(cssId)).sheet;
 const compareSelectors = (s1, s2) => s1.replace(`::`, `:`) === s2.replace(`::`, `:`);
-const setRule = (rule, values) =>
-  Object.entries(values)
+const setRule4Selector = (rule, values) => Object.entries(values)
     .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
-
-function setRules(cssRules, selector, rulesContainer, styleRules) {
-    const rule = [...cssRules].find( r => compareSelectors((r.selectorText || ``), selector) ) ||
+const setRules = (cssRules, selector, rulesContainer, styleRules) => {
+    const rule4Selector = [...cssRules].find( r => compareSelectors((r.selectorText || ``), selector) ) ||
       cssRules[rulesContainer.insertRule(`${selector} {}`, rulesContainer.cssRules.length || 0)];
-
-    setRule(rule, styleRules);
-}
-
-function setMediaRule(selector, styleValues, styleSheet) {
-  const mediaStyleRules = styleValues.mediaSelectors;
-  const mediaRuleSheet = [...styleSheet.cssRules].find( r => r.cssText.startsWith(selector)) ||
+    setRule4Selector(rule4Selector, styleRules);
+};
+const setMediaRule = (selector, styleValues, styleSheet) => {
+  const mediaCssRule = [...styleSheet.cssRules].find( r => r.cssText.startsWith(selector)) ||
     styleSheet.cssRules[styleSheet.insertRule(`${selector} {}`, styleSheet.cssRules.length || 0)];
+  const mediaStyleRules = styleValues.mediaSelectors;
 
   for (let selector in mediaStyleRules) {
-    setRules(mediaRuleSheet.cssRules, selector, mediaRuleSheet, mediaStyleRules[selector]);
+    setRules(mediaCssRule.cssRules, selector, mediaCssRule, mediaStyleRules[selector]);
   }
-}
+};
+const checkParams = (selector, styleValues) => selector &&
+    selector.constructor === String && selector.trim().length &&
+    !Array.isArray(styleValues) &&
+    styleValues.constructor === Object &&
+    Object.keys(styleValues).length;
 
 /**
  * Change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
@@ -68,12 +65,8 @@ function setMediaRule(selector, styleValues, styleSheet) {
  * //                                                                           ^ css rule(s)
  */
 function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
-  if (!styleValues ||
-    Array.isArray(styleValues) ||
-    styleValues.constructor !== Object ||
-    Object.keys(styleValues).length < 1) {
-    return;
-  }
+  if ( !checkParams(selector, styleValues) ) { return; }
+
   const styleSheet = getOrCreateStyleSheet(cssId);
 
   return selector.startsWith(`@media`)
