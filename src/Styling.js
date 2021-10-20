@@ -57,7 +57,9 @@ function setMediaRule(selector, styleValues, styleSheet) {
 
 /**
  * Change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
- * <br>A @media rule can also be inserted, using <code>[@media rule][style rule]</code>
+ * <br><br>A @media rule can also be inserted. Use a media rule for the selector (e.g.<code>@media print</code>)
+ * and set the style rules for it for one or more selectors using an object with one key: <i>mediaSelectors</i>, e.g.:
+ * <br><code>{mediaSelectors: { "div#x": {display: `none`}, "div#y": color: `green`} }</code>
  * @todo: buggy, make it better
  * @param selector {string} the (css) selectorText, like <code>ul li.inActive</code>, <code>.someClass</code> etc.
  * @param styleValues {Object} an object with CSSStyleDeclarations
@@ -68,14 +70,16 @@ function setMediaRule(selector, styleValues, styleSheet) {
  * @example
  * // assume changeRuleset is imported as setStyleRule
  * setStyleRule(".myClass", {color: "#c0c0c0", padding: "0 4px 0 15px"}, "YesItsMyCss");
- * //           ^ someRule  ^                                             ^
- * //                       ^ styleProps                                  ^
+ * //           ^ someRule   ^                                            ^
+ * //                        ^ css rules                                  ^
  * //                                                                     ^ id of the stylesheet
  * //
  * // set a @media rule
- * setStyleRule("@media(max-width: 1200px)[div.myClass]", {width: 800px}, "YesItsMyCss");
- * //            ^ @media selector         ^
- * //                                      ^ rule selector (must be between [])
+ * setStyleRule( "@media(max-width: 1200px)",
+ * //             ^ @media rule
+ *              { mediaSelectors: {".someClass": {width: `500px`}, "#someDiv": {color: red}} } )
+ * //                              ^ media selector                             ^
+ * //                                                                           ^ css rules
  */
 function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
   if (!styleValues ||
