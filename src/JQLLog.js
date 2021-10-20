@@ -128,7 +128,7 @@ const debugLog = {
   /**
    * Change log direction
    * <code>debugLog.reversed</code>
-   * @see debugLog
+   * @name debugLog#reversed
    * @function debugLog/reversed
    * @param reverse {boolean} latest last (false) or latest first (true) (default true)
    */
@@ -151,7 +151,7 @@ const createLogElement = () => {
       <legend></legend>
       <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
     </fieldset>`;
-  element2DOM(createElementFromHtmlString(loggingFieldSet), document.body, insertPositions.BeforeBegin);
+  element2DOM(createElementFromHtmlString(loggingFieldSet), document.body, insertPositions.AfterBegin);
   return document.querySelector(`#jql_logger`);
 };
 
