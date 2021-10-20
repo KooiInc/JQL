@@ -55,9 +55,13 @@ let defaultStyling = {
   "#logBox legend:before": {
     content: `'JQL Logging'`,
   },
-  "@media (max-width: 1200px)[#logBox.visible]": {
-    minWidth: `90vw`,
-    maxWidth: `90vw`,
+  "@media (max-width: 1200px)": {
+    mediaSelectors: {
+      "#logBox.visible": {
+        minWidth: `90vw`,
+        maxWidth: `90vw`,
+      }
+    },
   },
 };
 let defaultStylingId = `JQLCustomCSS`;

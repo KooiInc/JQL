@@ -1,5 +1,7 @@
 // derived from https://testbed.nicon.nl/showFiddle/ehd2710f
-// noinspection JSValidateJSDoc
+// noinspection JSValidateJSDoc,JSUnresolvedVariable
+// noinspection JSUnresolvedVariable
+
 import {toDashedNotation} from "./Helpers.js";
 
 /**
@@ -14,14 +16,6 @@ const createStyle = cssId => {
   return theLink;
 }
 
-const getMediaSelector = selector => {
-  if (selector.startsWith(`@media`)) {
-    const [media, mSelector] = selector.split(`[`);
-    return [media, mSelector.slice(0, -1)];
-  }
-  return [, selector];
-}
-
 const getOrCreateStyleSheet = cssId =>
   (document.querySelector(`#${cssId}`) || createStyle(cssId)).sheet;
 
@@ -29,6 +23,38 @@ const compareSelectors = (s1, s2) => s1.replace(`::`, `:`) === s2.replace(`::`, 
 const setRule = (rule, values) =>
   Object.entries(values)
     .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
+
+function setRules(ruleSet, selector, styleSheetOrMediaRule, styleRules) {
+    let rule = [...ruleSet].find( r => compareSelectors((r.selectorText || ``), selector) );
+
+    if (!rule) {
+      styleSheetOrMediaRule.insertRule(`${selector} {}`, styleSheetOrMediaRule.cssRules.length || 0);
+      rule = ruleSet[styleSheetOrMediaRule.cssRules.length-1];
+    }
+
+    setRule(rule, styleRules);
+}
+
+function setMediaRule(selector, styleValues, styleSheet) {
+  const mediaRule = selector;
+  const mediaStyleRules = styleValues.mediaSelectors;
+  let mediaRuleSheet = undefined;
+  let ruleSet = [...styleSheet.cssRules].find( r => r.cssText.startsWith(mediaRule));
+
+  ruleSet = ruleSet ? ruleSet : (() => {
+    styleSheet.insertRule(`${mediaRule} {}`, styleSheet.cssRules.length || 0);
+    mediaRuleSheet = styleSheet.cssRules[styleSheet.cssRules.length-1];
+    return mediaRuleSheet;
+  })();
+
+  if (ruleSet) {
+    for (let selector in mediaStyleRules) {
+      setRules(ruleSet.cssRules, selector, mediaRuleSheet, mediaStyleRules[selector]);
+    }
+  }
+
+}
+
 /**
  * Change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
  * <br>A @media rule can also be inserted, using <code>[@media rule][style rule]</code>
@@ -58,40 +84,16 @@ function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
     Object.keys(styleValues).length < 1) {
     return;
   }
-
   const styleSheet = getOrCreateStyleSheet(cssId);
-  const [mediaRule, realSelector]  = getMediaSelector(selector);
-  let mediaRuleset = undefined;
-  selector = mediaRule ? realSelector : selector;
 
-  let ruleSet = styleSheet.cssRules;
-
-  if (mediaRule) {
-    ruleSet = [...ruleSet].find( r => r.cssText.startsWith(mediaRule));
-
-    if (!ruleSet) {
-      styleSheet.insertRule(`${mediaRule} {}`, styleSheet.cssRules.length || 0);
-      mediaRuleset = styleSheet.cssRules[styleSheet.cssRules.length-1];
-      ruleSet = mediaRuleset.cssRules;
-    }
-    mediaRuleset = ruleSet;
-    ruleSet = ruleSet.cssRules;
+  if (selector.startsWith(`@media`)) {
+    return setMediaRule(selector, styleValues, styleSheet);
   }
 
+  const ruleSet = styleSheet.cssRules;
+
   if (ruleSet) {
-    let rule = [...ruleSet].find( r => compareSelectors((r.selectorText || ``), selector) );
-
-    if (!rule && !mediaRule) {
-      styleSheet.insertRule(`${selector} {}`, styleSheet.cssRules.length || 0);
-      rule = ruleSet[styleSheet.cssRules.length-1];
-    }
-
-    if (!rule && mediaRule) {
-      mediaRuleset.insertRule(`${selector} {}`, 0);
-      rule = mediaRuleset.cssRules[mediaRuleset.cssRules.length-1];
-    }
-
-    setRule(rule, styleValues);
+    return setRules(ruleSet, selector, styleSheet, styleValues);
   }
 }
 export default changeCssStyleRule;
