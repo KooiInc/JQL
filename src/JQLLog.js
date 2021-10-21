@@ -179,7 +179,7 @@ const JQLLog = (...args) => {
     args.forEach( arg => 
       logBox.insertAdjacentHTML(
         reverseLogging ? `afterbegin` : `beforeend`,
-        `${time()} ${logLine(arg)}`)
+        `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
 };
 
