@@ -2,7 +2,7 @@
  *
  * @module HtmlCleanup
  */
-
+import {truncate2SingleStr} from "./Helpers.js";
 // alllow or disallow unknown tags (default: false)
 let lenient = false;
 const log = true;
@@ -144,7 +144,10 @@ let notAllowedAttributes = /(^action|allow|contenteditable|data|on)|download|for
 let notAllowedAttributeValues = /javascript|injected|import|noreferrer|alert|DataURL/i;
 const logPossibleErrors = elCreationInfo => {
   if (log && Object.keys(elCreationInfo.removed).length) {
-    console.info(`TAG creation errors:\n`,elCreationInfo.removed);
+    const msgs = Object.entries(elCreationInfo.removed)
+      .reduce( (acc, [k, v]) => [...acc, `${k} => ${v}`], [])
+      .join(`\n`);
+    console.info(`HTML creation errors:\n`,msgs);
   }
 };
 // cleanup a given html element
@@ -164,19 +167,19 @@ const cleanupHtml = elem => {
           const evilValues = notAllowedAttributeValues.test(attr.value.trim());
           const evilAttrib = notAllowedAttributes.test(attr.name.trim());
         if (evilValues) {
-          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute, not rendered. Value: ${attr.value}`;
-          //console.info(`DOM cleanup message: attribute [${attr.name}] with value [${attr.value}] removed`);
+          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute, not rendered (value: ${
+            truncate2SingleStr(attr.value || `none`, 60)})`;
           child.removeAttribute(attr.name);
         } else if (evilAttrib) {
-          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute, not rendered. Value: ${attr.value || `none`}`;
-          //console.info(`DOM cleanup message: attribute [${attr.name}] removed`);
+          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute, not rendered (value: ${
+            truncate2SingleStr(attr.value || `none`, 60)})`;
           child.removeAttribute(attr.name);
         }
     });
     const tagInSet = cleanupTagInfo.isAllowed(child);
     if (!tagInSet) {
-      elCreationInfo.removed[`TAG <${child.nodeName.toLowerCase()}>`] = `Illegal tag. , not rendered.`;
-      //log && console.info(`DOM cleanup message: tag [${child.nodeName.toLowerCase()}] removed`);
+      elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `Illegal tag, not rendered (value: ${
+        truncate2SingleStr(child.outerHTML, 60)})`;
       child.parentNode.removeChild(child);
     }
   });
