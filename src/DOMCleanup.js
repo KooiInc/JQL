@@ -5,7 +5,7 @@
 
 // alllow or disallow unknown tags (default: false)
 let lenient = false;
-const log = false;
+const log = true;
 /**
  * set allowance for unknown HTML tags, exposed as <code>JQL.allowUnknownHtmlTags</code>
  * @typedef allowUnknownHtmlTags
