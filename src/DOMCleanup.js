@@ -142,10 +142,20 @@ const cleanupTagInfo = {
 // regexex not allowed attributes/attribute values
 let notAllowedAttributes = /(^action|allow|contenteditable|data|on)|download|formaction|form|autofocus|poster|source|dirname|srcdoc|srcset|xlink|for|event|xmlns/i;
 let notAllowedAttributeValues = /javascript|injected|import|noreferrer|alert|DataURL/i;
-
+const logPossibleErrors = elCreationInfo => {
+  if (log && Object.keys(elCreationInfo.removed).length) {
+    console.info(`TAG creation errors log:\n`, elCreationInfo.removed);
+  }
+};
 // cleanup a given html element
 const cleanupHtml = elem => {
   const template = document.createElement("template");
+  const elCreationInfo = {
+    rawHTML: elem.outerHTML,
+    removed: { },
+    // removedAttributes: [],
+    // removedTags: [],
+  }
   template.innerHTML = `<div id="placeholder">${elem.outerHTML}</div>`;
   const el2Clean = template.content.querySelector("#placeholder");
   el2Clean.querySelectorAll("*").forEach(child => {
@@ -154,19 +164,23 @@ const cleanupHtml = elem => {
           const evilValues = notAllowedAttributeValues.test(attr.value.trim());
           const evilAttrib = notAllowedAttributes.test(attr.name.trim());
         if (evilValues) {
-          console.info(`DOM cleanup message: attribute [${attr.name}] with value [${attr.value}] removed`);
+          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute, removed. Value: ${attr.value}`;
+          //console.info(`DOM cleanup message: attribute [${attr.name}] with value [${attr.value}] removed`);
           child.removeAttribute(attr.name);
         } else if (evilAttrib) {
-          console.info(`DOM cleanup message: attribute [${attr.name}] removed`);
+          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute, removed. Value: ${attr.value || `none`}`;
+          //console.info(`DOM cleanup message: attribute [${attr.name}] removed`);
           child.removeAttribute(attr.name);
         }
     });
     const tagInSet = cleanupTagInfo.isAllowed(child);
     if (!tagInSet) {
-      log && console.info(`DOM cleanup message: tag [${child.nodeName.toLowerCase()}] removed`);
+      elCreationInfo.removed[`TAG <${child.nodeName.toLowerCase()}>`] = `Illegal tag. Removed`;
+      //log && console.info(`DOM cleanup message: tag [${child.nodeName.toLowerCase()}] removed`);
       child.parentNode.removeChild(child);
     }
   });
+  logPossibleErrors(elCreationInfo);
   return el2Clean.children[0];
 };
 
