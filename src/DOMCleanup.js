@@ -135,8 +135,7 @@ const cleanupTagInfo = {
     const tagInSet = Object.values(this)
       .find(tag => tag.elem && elem instanceof tag.elem ||
         (elem.nodeName || "").toLowerCase() === tag.name);
-    return (tagInSet && tagInSet.allowed) ||
-      lenient && !tagInSet;
+    return (tagInSet && tagInSet.allowed) || lenient && !tagInSet;
   }
 };
 
@@ -179,8 +178,7 @@ const getRestricted = emphasizeTag =>
     .reduce((acc, [key, value]) =>
       !value.allowed &&
       [...acc, (emphasizeTag && key === emphasizeTag ? emphasize(key) : key)] ||
-      acc
-      , []);
+      acc, []);
 
 /**
  * Set/unset permission for creation of a specific tag. Exposed as <code>JQL.setTagPermission</code>.

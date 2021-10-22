@@ -1,5 +1,4 @@
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols,JSUnresolvedFunction,JSValidateJSDoc,JSUnresolvedVariable
-// noinspection JSUnresolvedFunction
 
 import {
   debugLog,

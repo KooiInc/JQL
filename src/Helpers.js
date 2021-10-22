@@ -58,6 +58,9 @@ const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .replace(/\s{2,}/g, ` `)
   .replace(/\n/g, `\\n`) + (str.length > maxLength ? `&hellip;` : ``).trim();
 
+const truncateStr = (str, maxLength = 120) =>
+  truncateHtmlStr(str, maxLength).replace(/&lt;/g, `<`)
+
 /**
  * Split up a given time (in milliseconds) to days/hours/minutes/seconds/milliseconds
  * @param milliseconds {Number} The number of milliseconds (e.g. from <code>new Date().getTime()</code>)
@@ -408,4 +411,5 @@ export {
   toDashedNotation,
   toUndashedNotation,
   truncateHtmlStr,
+  truncateStr
 };

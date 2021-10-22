@@ -6,7 +6,7 @@ import {
   getRestricted,
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
-import {truncateHtmlStr} from "./Helpers.js";
+import {truncateStr} from "./Helpers.js";
 
 /**
  * Methods for manipulating the <code>Document Object [Model]</code> (aka <code>DOM</code>)
@@ -79,7 +79,7 @@ const createElementFromHtmlString = htmlStr => {
   
   if (!nwElem.children.length) {
       return document.createComment(`JQL element creation error! ${
-        truncateHtmlStr(htmlStr, 100)} => not valid or not allowed`);
+        truncateStr(htmlStr, 100)} => not valid or not allowed`);
   }
 
   return nwElem.children[0];
