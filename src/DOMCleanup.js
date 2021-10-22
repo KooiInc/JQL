@@ -144,7 +144,7 @@ let notAllowedAttributes = /(^action|allow|contenteditable|data|on)|download|for
 let notAllowedAttributeValues = /javascript|injected|import|noreferrer|alert|DataURL/i;
 const logPossibleErrors = elCreationInfo => {
   if (log && Object.keys(elCreationInfo.removed).length) {
-    console.info(`TAG creation errors log:\n`, elCreationInfo.removed);
+    console.info(`TAG creation errors:\n`, elCreationInfo.removed);
   }
 };
 // cleanup a given html element
