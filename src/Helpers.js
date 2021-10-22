@@ -1,5 +1,4 @@
 // noinspection JSUnusedGlobalSymbols,JSUnresolvedFunction,JSCheckFunctionSignatures,JSUnusedLocalSymbols
-// noinspection JSUnusedGlobalSymbols
 
 /**
  * Helper methods
@@ -10,8 +9,10 @@ import {setTagPermission} from "./DOMCleanup.js";
 import {createElementFromHtmlString} from "./DOM.js";
 const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
 const cleanWhitespace = str => str.replace(/\s{2,}/g, " ");
-const toZeroPaddedEuropeanDate = val => val.split("/").reverse().map(v => `${v}`.padStart(2, "0")).join("/");
-const date2EuropeanDate = date => date.toISOString().split("T").shift().split("-").reverse().map(v => `${v}`.padStart(2, "0")).join("-");
+const toZeroPaddedEuropeanDate = val =>
+  val.split("/").reverse().map(v => `${v}`.padStart(2, "0")).join("/");
+const date2EuropeanDate = date =>
+  date.toISOString().split("T").shift().split("-").reverse().map(v => `${v}`.padStart(2, "0")).join("-");
 const displayHour = h => `${h}`.padStart(2, `0`) + `:00`;
 const throwIf = (assertion = false, message = `Unspecified error`, ErrorType = Error) =>
   assertion && (() => {
@@ -58,7 +59,7 @@ const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .replace(/\s{2,}/g, ` `)
   .replace(/\n/g, `\\n`) + (str.length > maxLength ? `&hellip;` : ``).trim();
 
-const truncateStr = (str, maxLength = 120) =>
+const truncate2SingleStr = (str, maxLength = 120) =>
   truncateHtmlStr(str, maxLength).replace(/&lt;/g, `<`)
 
 /**
@@ -201,7 +202,7 @@ const initDefault = (value, defaultValue, ...includeFalsies) => {
 const toDashedNotation = str2Convert =>
   str2Convert
     .replace(/[A-Z]/g, a => `-${a.toLowerCase()}`)
-    .replace(/^\-|\-$/, ``);
+    .replace(/^-|-$/, ``);
 
 /**
  * Convert a dashed term to camelCased string e.g.
@@ -411,5 +412,5 @@ export {
   toDashedNotation,
   toUndashedNotation,
   truncateHtmlStr,
-  truncateStr
+  truncate2SingleStr
 };
