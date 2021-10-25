@@ -147,7 +147,7 @@ const logPossibleErrors = elCreationInfo => {
     const msgs = Object.entries(elCreationInfo.removed)
       .reduce( (acc, [k, v]) => [...acc, `${k} => ${v}`], [])
       .join(`\n`);
-    console.info(`HTML creation errors:\n`,msgs);
+    console.info(`JQL HTML creation errors:\n`,msgs);
   }
 };
 // cleanup a given html element

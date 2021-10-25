@@ -15,55 +15,59 @@ import {isVisible} from "./JQLExtensionHelpers.js";
 /**
  * defaultStyling is the styling used for a the box used for logging (a <code>HTMLFieldSetElement</code> element).
  * May be overridden by your own styles, but must use the id <code>#logBox</code>.
+ * @var defaultStyling
  */
 let defaultStyling = {
   "#logBox": {
-    minWidth: 0,
-    maxWidth: 0,
-    minHeight: 0,
-    maxHeight: 0,
-    opacity: 0,
+    minWidth: `0px`,
+    maxWidth: `0px`,
+    minHeight: `0px`,
+    maxHeight: `0px`,
+    opacity: `0`,
     border: `none`,
-    padding: 0,
+    padding: `0px`,
     overflow: `hidden`,
-    transition: `all 1s`,
+    transition: `all 1s ease 0s`,
     position: `fixed`,
   },
   "#logBox.visible": {
-    backgroundColor: `#ffffe0`,
-    position: `relative`,
-    zIndex: 5,
-    opacity: 1,
+    backgroundColor: `rgb(255, 255, 224)`,
+    position: `static`,
+    opacity: `1`,
     border: `1px dotted rgb(153, 153, 153)`,
-    minWidth: `50vw`,
-    maxWidth: `50vw`,
+    maxWidth: `90vw`,
+    minWidth: `30vw`,
+    minHeight: `10vh`,
+    maxHeight: `90vh`,
     overflow: `auto`,
-    minHeight: `20vh`,
-    maxHeight: `20vh`,
-    margin: `1rem 0`,
-    padding: `0 8px 19px 8px`,
+    width: `50vw`,
+    height: `20vh`,
+    margin: `1rem 0px`,
+    padding: `0px 8px 19px`,
+    resize: `both`,
   },
-  "#logBox legend": {
+  "#logBox .legend": {
     textAlign: `center`,
-    backgroundColor: `rgba(119, 119, 119, 1.0)`,
+    position: `absolute`,
+    marginTop: `-1em`,
+    width: `inherit`,
+  },
+  "#logBox .legend div": {
+    textAlign: `center`,
+    display: `inline-block`,
+    width: `auto`,
+    height: `1.2rem`,
+    backgroundColor: `rgb(119, 119, 119)`,
     padding: `2px 10px`,
-    color: `rgba(255, 255, 255, 1.0)`,
-    font: `normal 12px/15px verdana, arial`,
-    boxShadow: `2px 1px 10px #777`,
+    color: `rgb(255, 255, 255)`,
+    boxShadow: `rgb(119 119 119) 2px 1px 10px`,
     borderRadius: `4px`,
   },
-  "#logBox legend:before": {
-    content: `'JQL Logging'`,
-  },
-  "@media (max-width: 1200px)": {
-    mediaSelectors: {
-      "#logBox.visible": {
-        minWidth: `80vw`,
-        maxWidth: `80vw`,
-      }
-    },
+  "#logBox .legend div:before": {
+    content: `"JQL Logging"`,
   },
 };
+
 let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;
 let log2Console = false;
@@ -155,12 +159,14 @@ const debugLog = {
 const createLogElement = () => {
   setStyling4Log();
   const loggingFieldSet = `
-    <fieldset id="logBox">
-      <legend></legend>
+    <div id="logBox">
+      <div class="legend">
+        <div></div>
+      </div>
       <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
-    </fieldset>`;
+    </div>`;
   // noinspection JSCheckFunctionSignatures
-  element2DOM(...[createElementFromHtmlString(loggingFieldSet),,insertPositions.AfterBegin]);
+  element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
   return document.querySelector(`#jql_logger`);
 };
 
