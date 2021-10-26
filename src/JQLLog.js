@@ -88,19 +88,22 @@ const setStyling4Log = (styles = defaultStyling, cssId = defaultStylingId) => {
 };
 
 let useHtml = false;
+/*
+ * @typedef debugLog
+ * @memberof JQLLog#
+ * @type {Object}
+ */
 
 /**
  * Use logging for debug (set on/off or show/hide the JQLLog box).
- * @typedef debugLog
- * @type {Object}
  * @property {function} isVisible Is the JQLLog box visible?
  * @property {function} on Activate logging for JQL.
  * @property {function} off Deactivate logging for JQL.
  * @property {function} hide Hide the JQLLog box.
  * @property {function} show Show the JQLLog box.
  * @property {function} toConsole Log to console.
- * @property {function} reversed Log top to bottom (false) or latest first (default true)
- * @property {function} clear the log box
+ * @property {function} reversed Log top to bottom (false) or latest first (default true).
+ * @property {function} clear the log box.
  * @property {function} (getter) isOn is logging on?
  */
 const debugLog = {
@@ -122,25 +125,24 @@ const debugLog = {
     useLogging = false;
   },
   /**
-   * log everything to console
-   * <code>debugLog.toConsole([true/false])</code>
-   * <br><b>Note</b>: this destroys the div#logBox in the document
-   * if applicable.
-   * @function debugLog/toConsole
-   * @param reverse {boolean} latest last (false) or latest first (true) (default true)
+   * <code>debugLog.toConsole([true, false])</code>
+   * <br>log everything to console
+   * <br><b>Note</b>: this possibly destroys an alreay created
+   * <code>div#logBox</code> in the document if set to true.
+   * @method debugLog[toConsole]
+   * @param console {boolean} latest last (false) or latest first (true) (default true)
    */
-  toConsole(yep) {
-    log2Console = yep;
-    useLogging = yep;
-    yep && logBox && logBox.parentNode.remove();
+  toConsole(console) {
+    log2Console = console;
+    useLogging = console;
+    console && logBox && logBox.parentNode.remove();
   },
   hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
   show: () => logBox && logBox.parentNode.classList.add(`visible`),
   /**
-   * Change log direction
-   * <code>debugLog.reversed([true/false])</code>
-   * @name debugLog#reversed
-   * @function debugLog/reversed
+   * <code>debugLog.reversed([true, false])</code>
+   * <br>Change direction of log entries
+   * @function debugLog[reversed]
    * @param reverse {boolean} latest last (false) or latest first (true) (default true)
    */
   reversed(reverse) {
@@ -170,12 +172,16 @@ const createLogElement = () => {
   return document.querySelector(`#jql_logger`);
 };
 
+const decodeForConsole = something => something.constructor === String &&
+  Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
+  something;
+
 /**
  * Create JQLLog entry/entries, preceded with the time of logging (millisecond granularity).
  * <br>If the local [useLogging] boolean is false, nothing is logged
  * <br> in JQL exposed as <code>JQL.log</code>
  * @param args {...(string|Object)} string(s) or Object(s) to print in the JQLLog box
- * * <br><b>Note</b> Objects are converted to JSON representation
+ * <br><b>Note</b> Objects are converted to JSON representation
  */
 const JQLLog = (...args) => {
     if (!useLogging) { return; }
@@ -184,7 +190,7 @@ const JQLLog = (...args) => {
     }
     const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => log2Console
-      ? console.log(arg.replace(/&lt;/g, `<`).replace(/&hellip;/g, `...`))
+      ? console.log(decodeForConsole(arg))
       : logBox.insertAdjacentHTML(
           reverseLogging ? `afterbegin` : `beforeend`,
           `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
