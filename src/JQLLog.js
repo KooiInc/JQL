@@ -19,6 +19,7 @@ import {isVisible} from "./JQLExtensionHelpers.js";
  * @property {function} debugLog.isVisible Is the JQLLog box visible?
  * @property {function} debugLog.on Activate logging for JQL.
  * @property {function} debugLog.off Deactivate logging for JQL.
+ * @property {function} debugLog.remove Deactivate logging for JQL and remove <code>div#logBox</code>.
  * @property {function} debugLog.hide Hide the JQLLog box.
  * @property {function} debugLog.show Show the JQLLog box.
  * @property {function} debugLog.toConsole Log to console
@@ -59,6 +60,10 @@ const debugLog = {
     log2Console = console;
     useLogging = console;
     console && logBox && logBox.parentNode.remove();
+  },
+  remove: () => {
+    useLogging = false;
+    document.querySelector(`#logBox`).remove();
   },
   hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
   show: () => logBox && logBox.parentNode.classList.add(`visible`),
