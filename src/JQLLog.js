@@ -13,11 +13,76 @@ import {time} from "./Helpers.js";
 import {isVisible} from "./JQLExtensionHelpers.js";
 
 /**
- * defaultStyling is the styling used for a the box used for logging (a <code>HTMLFieldSetElement</code> element).
- * May be overridden by your own styles, but must use the id <code>#logBox</code>.
- * @var defaultStyling
+ * Helpers for logging
+ * @type {object}
+ * @name debugLog
+ * @property {function} debugLog.isVisible Is the JQLLog box visible?
+ * @property {function} debugLog.on Activate logging for JQL.
+ * @property {function} debugLog.off Deactivate logging for JQL.
+ * @property {function} debugLog.hide Hide the JQLLog box.
+ * @property {function} debugLog.show Show the JQLLog box.
+ * @property {function} debugLog.toConsole Log to console
+ *  (see <a href="#~debugLog%255BtoConsole%255D">debugLog[toConsole]</a>).
+ * @property {function} debugLog.reversed Log top to bottom or latest first
+ *  (see <a href="#~debugLog%255Breversed%255D">debugLog[reversed]</a>).
+ * @property {function} debugLog.clear the log box.
+ * @property {boolean} debugLog.isOn (getter) is logging on?
  */
-let defaultStyling = {
+const debugLog = {
+  get isOn() { return useLogging; },
+  isVisible: () => logBox && isVisible(logBox),
+  on() {
+    useLogging = true;
+    if (!log2Console) {
+      logBox = document.querySelector("#jql_logger") || createLogElement();
+      logBox.parentNode.classList.add(`visible`);
+    }
+    JQLLog(`Logging started (to ${log2Console ? `console` : `document`})`);
+  },
+  off() {
+    if (logBox) {
+      JQLLog(`Logging stopped`);
+      logBox && logBox.parentNode.classList.remove(`visible`);
+    }
+    useLogging = false;
+  },
+  /**
+   * Log everything to thje browser console
+   * <br>Exposed as: <code>debugLog.toConsole</code>
+   * <br><b>Note</b>: this possibly destroys an alreay created
+   * <code>div#logBox</code> in the document if set to true.
+   * @static
+   * @method debugLog[toConsole]
+   * @param console {boolean} log to browser console (true) or not (false, default)
+   */
+  toConsole(console = false) {
+    log2Console = console;
+    useLogging = console;
+    console && logBox && logBox.parentNode.remove();
+  },
+  hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
+  show: () => logBox && logBox.parentNode.classList.add(`visible`),
+  /**
+   * Change direction of log entries
+   * <br>Exposed as: <code>debugLog.reversed</code>
+   * @static
+   * @method debugLog[reversed]
+   * @param reverse {boolean} latest last (false) or latest first (true) (default true)
+   */
+  reversed(reverse = true) {
+    reverseLogging = reverse;
+    JQLLog(`Reverse logging reset: now logging ${
+      reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
+  },
+  clear() {
+    if (logBox) {
+      logBox.textContent = ``;
+      JQLLog(`Cleared`);
+    }
+  }
+};
+
+let stylingDefault4Log = {
   "#logBox": {
     minWidth: `0px`,
     maxWidth: `0px`,
@@ -66,6 +131,10 @@ let defaultStyling = {
   "#logBox .legend div:before": {
     content: `"JQL Logging"`,
   },
+  "#logBox #jql_logger": {
+    lineHeight: `1.4em`,
+    fontFamily: `consolas, monospace`,
+  }
 };
 
 let defaultStylingId = `JQLCustomCSS`;
@@ -76,11 +145,11 @@ let logBox = undefined;
 /**
  * Add style classes for the JQLLog box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
- * Default styles are in <code>defaultStyling</code>
+ * Default styles are in <code>stylingDefault4Log</code>
  * @param cssId {string} the id of the custom style element (automagically created in the
  * header of the document in which JQL is used). Default is 'JQLCustomCSS'.
  */
-const setStyling4Log = (styles = defaultStyling, cssId = defaultStylingId) => {
+const setStyling4Log = (styles = stylingDefault4Log, cssId = defaultStylingId) => {
   const exists = document.querySelector(cssId);
   // this triggers rename (id) of existing stylesheet
   if (exists) { exists.id = cssId; }
@@ -88,86 +157,17 @@ const setStyling4Log = (styles = defaultStyling, cssId = defaultStylingId) => {
 };
 
 let useHtml = false;
-/*
- * @typedef debugLog
- * @memberof JQLLog#
- * @type {Object}
- */
-
-/**
- * Use logging for debug (set on/off or show/hide the JQLLog box).
- * @property {function} isVisible Is the JQLLog box visible?
- * @property {function} on Activate logging for JQL.
- * @property {function} off Deactivate logging for JQL.
- * @property {function} hide Hide the JQLLog box.
- * @property {function} show Show the JQLLog box.
- * @property {function} toConsole Log to console.
- * @property {function} reversed Log top to bottom (false) or latest first (default true).
- * @property {function} clear the log box.
- * @property {function} (getter) isOn is logging on?
- */
-const debugLog = {
-  get isOn() { return useLogging; },
-  isVisible: () => logBox && isVisible(logBox),
-  on() {
-    useLogging = true;
-    if (!log2Console) {
-      logBox = document.querySelector("#jql_logger") || createLogElement();
-      logBox.parentNode.classList.add(`visible`);
-    }
-    JQLLog(`Logging started (to ${log2Console ? `console` : `document`})`);
-  },
-  off() {
-    if (logBox) {
-      JQLLog(`Logging stopped`);
-      logBox && logBox.parentNode.classList.remove(`visible`);
-    }
-    useLogging = false;
-  },
-  /**
-   * <code>debugLog.toConsole([true, false])</code>
-   * <br>log everything to console
-   * <br><b>Note</b>: this possibly destroys an alreay created
-   * <code>div#logBox</code> in the document if set to true.
-   * @method debugLog[toConsole]
-   * @param console {boolean} latest last (false) or latest first (true) (default true)
-   */
-  toConsole(console) {
-    log2Console = console;
-    useLogging = console;
-    console && logBox && logBox.parentNode.remove();
-  },
-  hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
-  show: () => logBox && logBox.parentNode.classList.add(`visible`),
-  /**
-   * <code>debugLog.reversed([true, false])</code>
-   * <br>Change direction of log entries
-   * @function debugLog[reversed]
-   * @param reverse {boolean} latest last (false) or latest first (true) (default true)
-   */
-  reversed(reverse) {
-    reverseLogging = reverse;
-    JQLLog(`Reverse logging reset: now logging ${
-      reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
-  },
-  clear() {
-    if (logBox) {
-      logBox.textContent = ``;
-      JQLLog(`Cleared`);
-    }
-  }
-};
 
 const createLogElement = () => {
   setStyling4Log();
+  const jql_logger_element = useHtml ? `div` : `pre`;
   const loggingFieldSet = `
     <div id="logBox">
       <div class="legend">
         <div></div>
       </div>
-      <${useHtml ? `div` : `pre`} id="jql_logger"></pre>
+      <${jql_logger_element} id="jql_logger"></${jql_logger_element}>
     </div>`;
-  // noinspection JSCheckFunctionSignatures
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
   return document.querySelector(`#jql_logger`);
 };
