@@ -64,7 +64,7 @@ const checkParams = (selector, styleValues) => selector &&
  * //                              ^ selector                                   ^
  * //                                                                           ^ css rule(s)
  */
-function changeCssStyleRule(selector, styleValues = {}, cssId="customCSS") {
+function changeCssStyleRule(selector, styleValues = {}, cssId="JQLCustomCSS") {
   if ( !checkParams(selector, styleValues) ) { return; }
 
   const styleSheet = getOrCreateStyleSheet(cssId);
