@@ -22,9 +22,9 @@ import {isVisible} from "./JQLExtensionHelpers.js";
  * @property {function} debugLog.hide Hide the JQLLog box.
  * @property {function} debugLog.show Show the JQLLog box.
  * @property {function} debugLog.toConsole Log to console
- *  (see <a href="#~debugLog%255BtoConsole%255D">debugLog[toConsole]</a>).
+ *  (see <a href="#.debugLog%255BtoConsole%255D">debugLog[toConsole]</a>).
  * @property {function} debugLog.reversed Log top to bottom or latest first
- *  (see <a href="#~debugLog%255Breversed%255D">debugLog[reversed]</a>).
+ *  (see <a href="#.debugLog%255Breversed%255D">debugLog[reversed]</a>).
  * @property {function} debugLog.clear the log box.
  * @property {boolean} debugLog.isOn (getter) is logging on?
  */
