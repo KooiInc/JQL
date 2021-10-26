@@ -1,4 +1,4 @@
-// noinspection JSValidateJSDoc
+// noinspection JSValidateJSDoc,JSUnresolvedVariable,JSUnusedGlobalSymbols
 
 /**
  * A small module for logging in a fixed positioned JQLLog box
@@ -72,6 +72,7 @@ let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
+let logBox = undefined;
 /**
  * Add style classes for the JQLLog box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
@@ -104,42 +105,40 @@ let useHtml = false;
  */
 const debugLog = {
   get isOn() { return useLogging; },
-  isVisible() {
-    const logBox = document.querySelector(`#logBox`);
-    return logBox && isVisible(logBox);
-  },
+  isVisible: () => logBox && isVisible(logBox),
   on() {
     useLogging = true;
-    document.querySelector(`#logBox`).classList.add(`visible`);
-    JQLLog(`Logging started`);
+    if (!log2Console) {
+      logBox = document.querySelector("#jql_logger") || createLogElement();
+      logBox.parentNode.classList.add(`visible`);
+    }
+    JQLLog(`Logging started (to ${log2Console ? `console` : `document`})`);
   },
   off() {
-    JQLLog(`Logging stopped`);
-    document.querySelector(`#logBox`).classList.remove(`visible`);
+    if (logBox) {
+      JQLLog(`Logging stopped`);
+      logBox && logBox.parentNode.classList.remove(`visible`);
+    }
     useLogging = false;
   },
-  toConsole(yes) {
-    log2Console = yes;
-    if (yes) {
-      document.querySelector(`#logBox`).classList.remove(`visible`);
-      useLogging = false;
-    }
+  /**
+   * log everything to console
+   * <code>debugLog.toConsole([true/false])</code>
+   * <br><b>Note</b>: this destroys the div#logBox in the document
+   * if applicable.
+   * @function debugLog/toConsole
+   * @param reverse {boolean} latest last (false) or latest first (true) (default true)
+   */
+  toConsole(yep) {
+    log2Console = yep;
+    useLogging = yep;
+    yep && logBox && logBox.parentNode.remove();
   },
-  hide() {
-    const logBox = document.querySelector(`#logBox`);
-    if (logBox) {
-      document.querySelector(`#logBox`).classList.remove(`visible`);
-    }
-  },
-  show() {
-    const logBox = document.querySelector(`#logBox`);
-    if (logBox) {
-      document.querySelector(`#logBox`).classList.add(`visible`);
-    }
-  },
+  hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
+  show: () => logBox && logBox.parentNode.classList.add(`visible`),
   /**
    * Change log direction
-   * <code>debugLog.reversed</code>
+   * <code>debugLog.reversed([true/false])</code>
    * @name debugLog#reversed
    * @function debugLog/reversed
    * @param reverse {boolean} latest last (false) or latest first (true) (default true)
@@ -150,9 +149,10 @@ const debugLog = {
       reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
   },
   clear() {
-    const logBoxTxt = document.querySelector(`#logBox #jql_logger`);
-    logBoxTxt.textContent = ``;
-    JQLLog(`Cleared`);
+    if (logBox) {
+      logBox.textContent = ``;
+      JQLLog(`Cleared`);
+    }
   }
 };
 
@@ -170,8 +170,6 @@ const createLogElement = () => {
   return document.querySelector(`#jql_logger`);
 };
 
-const logBox = document.querySelector("#jql_logger") || createLogElement();
-
 /**
  * Create JQLLog entry/entries, preceded with the time of logging (millisecond granularity).
  * <br>If the local [useLogging] boolean is false, nothing is logged
@@ -181,11 +179,15 @@ const logBox = document.querySelector("#jql_logger") || createLogElement();
  */
 const JQLLog = (...args) => {
     if (!useLogging) { return; }
+    if (!log2Console && !logBox) {
+      createLogElement();
+    }
     const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
-    args.forEach( arg => 
-      logBox.insertAdjacentHTML(
-        reverseLogging ? `afterbegin` : `beforeend`,
-        `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
+    args.forEach( arg => log2Console
+      ? console.log(arg.replace(/&lt;/g, `<`).replace(/&hellip;/g, `...`))
+      : logBox.insertAdjacentHTML(
+          reverseLogging ? `afterbegin` : `beforeend`,
+          `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
 };
 
