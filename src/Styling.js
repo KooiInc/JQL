@@ -9,19 +9,6 @@ let cssId = `customCSS`;
  * @module Styling
  */
 
-/**
- * custom stylesheet id helper
- * @type {object}
- * @property id {getter/setter} The id to use for a custom style sheet
- * <br>default value: "customCSS"
- * @example
- * customStylesheet.id = "mySheet";
- * console.log(custumStylesheet.id); //=> 'mySheet'
- */
-const customStylesheet = {
-  set id(nwId) { cssId = nwId; },
-  get id() { return cssId; }
-}
 const injectStyleElement = (idCss = customStylesheet.id) => document.querySelector(`head`)
     .insertAdjacentElement(
       `beforeend`,
@@ -50,6 +37,24 @@ const checkParams = (selector, styleValues) => selector &&
     !Array.isArray(styleValues) &&
     styleValues.constructor === Object &&
     Object.keys(styleValues).length;
+
+/**
+ * custom stylesheet id helper
+ * @type {object}
+ * @property id {getter/setter} The id to use for a custom style sheet
+ * <br>default value: "customCSS"
+ * @property getSheet {getter} retrieve the custom style sheet
+ * <br><b>Note</b>: the stylesheet will be created if it doesn't exist
+ * @example
+ * customStylesheet.id = "mySheet";
+ * console.log(custumStylesheet.id); //=> 'mySheet'
+ * console.log(custumStylesheet.getSheet.outerHTML); //=> <style type="text/css" id="mySheet></style>"
+ */
+const customStylesheet = {
+  set id(nwId) { cssId = nwId; },
+  get id() { return cssId; },
+  get getSheet() { return getOrCreateStyleSheet(); },
+}
 
 /**
  * Change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
