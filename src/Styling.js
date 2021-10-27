@@ -1,19 +1,27 @@
 // derived from https://testbed.nicon.nl/showFiddle/ehd2710f
-// noinspection JSValidateJSDoc,JSUnresolvedVariable
-// noinspection JSUnresolvedVariable
-
+// noinspection JSValidateJSDoc, JSUnresolvedVariable
 import {toDashedNotation} from "./Helpers.js";
 let cssId = `customCSS`;
 
-const customStylesheet = {
-  set id(id) { cssId = id; },
-  get id() { return cssId; }
-}
 /**
- * Add or change style rules in a <code>&lt;style></code> element, added to the
+ * Styling module: add or change style rules in a <code>&lt;style></code> element, added to the
  * header of the enclosing document if not already done so
  * @module Styling
  */
+
+/**
+ * custom stylesheet id helper
+ * @type {object}
+ * @property id {getter/setter} The id to use for a custom style sheet
+ * <br>default value: "customCSS"
+ * @example
+ * customStylesheet.id = "mySheet";
+ * console.log(custumStylesheet.id); //=> 'mySheet'
+ */
+const customStylesheet = {
+  set id(nwId) { cssId = nwId; },
+  get id() { return cssId; }
+}
 const injectStyleElement = (idCss = customStylesheet.id) => document.querySelector(`head`)
     .insertAdjacentElement(
       `beforeend`,
@@ -31,7 +39,7 @@ const setRules = (cssRules, selector, rulesContainer, styleRules) => {
 const setMediaRule = (selector, styleValues, styleSheet) => {
   const mediaCssRule = [...styleSheet.cssRules].find( r => r.cssText.startsWith(selector)) ||
     styleSheet.cssRules[styleSheet.insertRule(`${selector} {}`, styleSheet.cssRules.length || 0)];
-  const mediaStyleRules = styleValues.mediaSelectors;
+  const mediaStyleRules = styleValues["mediaSelectors"];
 
   for (let selector in mediaStyleRules) {
     setRules(mediaCssRule.cssRules, selector, mediaCssRule, mediaStyleRules[selector]);

@@ -48,7 +48,7 @@ const debugLog = {
     useLogging = false;
   },
   /**
-   * Log everything to thje browser console
+   * Log everything to the browser console
    * <br>Exposed as: <code>debugLog.toConsole</code>
    * <br><b>Note</b>: this possibly destroys an alreay created
    * <code>div#logBox</code> in the document if set to true.
