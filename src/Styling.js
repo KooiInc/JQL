@@ -73,9 +73,9 @@ const checkParams = (selector, styleValues) => selector &&
  * // set a @media rule
  * setStyleRule( "@media(max-width: 1200px)",
  * //             ^ @media rule
- *              { mediaSelectors: {".someClass": {width: `500px`}, "#someDiv": {color: red}} } )
- * //                              ^ selector                                   ^
- * //                                                                           ^ css rule(s)
+ *               { mediaSelectors: {".myClass": {maxWidth: `75vw`}, "#someDiv": {color: red}} } )
+ * //                                ^ selector  ^
+ * //                                            ^ css rule(s)
  */
 function changeCssStyleRule(selector, styleValues = {}, customCssId = customStylesheet.id) {
   if ( !checkParams(selector, styleValues) ) { return; }
