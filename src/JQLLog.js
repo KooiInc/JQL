@@ -8,7 +8,7 @@
  * @module JQLLog
  */
 import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
-import {setStyle} from "./Styling.js";
+import {setStyle, globalCssID} from "./Styling.js";
 import {time} from "./Helpers.js";
 import {isVisible} from "./JQLExtensionHelpers.js";
 
@@ -151,14 +151,13 @@ let logBox = undefined;
  * Add style classes for the JQLLog box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
  * Default styles are in <code>stylingDefault4Log</code>
- * @param cssId {string} the id of the custom style element (automagically created in the
  * header of the document in which JQL is used). Default is 'JQLCustomCSS'.
  */
-const setStyling4Log = (styles = stylingDefault4Log, cssId = defaultStylingId) => {
-  const exists = document.querySelector(cssId);
+const setStyling4Log = (styles = stylingDefault4Log) => {
+  const exists = document.querySelector(globalCssID.id);
   // this triggers rename (id) of existing stylesheet
-  if (exists) { exists.id = cssId; }
-    Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, cssId));
+  if (exists) { exists.id = globalCssID.id; }
+    Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style));
 };
 
 let useHtml = false;

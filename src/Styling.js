@@ -3,8 +3,12 @@
 // noinspection JSUnresolvedVariable
 
 import {toDashedNotation} from "./Helpers.js";
-let cssId = `JQLCustomCSS`;
-const setGlobalCssID = id => cssId = id;
+let cssId = `customCSS`;
+
+const globalCssID = {
+  set id(id) { cssId = id; },
+  get id() { return cssId }
+}
 /**
  * Add or change style rules in a <code>&lt;style></code> element, added to the
  * header of the enclosing document if not already done so
@@ -65,10 +69,10 @@ const checkParams = (selector, styleValues) => selector &&
  * //                              ^ selector                                   ^
  * //                                                                           ^ css rule(s)
  */
-function changeCssStyleRule(selector, styleValues = {}, cssId = cssId) {
+function changeCssStyleRule(selector, styleValues = {}) {
   if ( !checkParams(selector, styleValues) ) { return; }
 
-  const styleSheet = getOrCreateStyleSheet(cssId);
+  const styleSheet = getOrCreateStyleSheet(globalCssID.id);
 
   return selector.startsWith(`@media`)
     ? setMediaRule(selector, styleValues, styleSheet)
@@ -77,5 +81,5 @@ function changeCssStyleRule(selector, styleValues = {}, cssId = cssId) {
 
 export {
   changeCssStyleRule as setStyle,
-  setGlobalCssID,
+  globalCssID,
 };

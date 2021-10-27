@@ -20,7 +20,7 @@ import {
   insertPositions,
 } from "./DOM.js";
 
-import {setStyle, setGlobalCssID} from "./Styling.js";
+import {setStyle, globalCssID} from "./Styling.js";
 
 import {
   initializePrototype,
@@ -33,11 +33,10 @@ import {
   setCollectionFromCssSelector,
 } from "./JQLExtensionHelpers.js";
 
-const customStylesheetId = `JQLCustomCSS`;
 const logLineLength = 75;
 let logSystem = false;
 
-setGlobalCssID(customStylesheetId);
+globalCssID.id = `JQLCustomCSS`;
 
 /**
  * The JQL core
@@ -190,7 +189,7 @@ Object.entries({
    * // usage
    * $(`<div>Hello stranger. Try hovering me!</div>`).addClass(`something`);
    */
-  setStyle: (selector, ruleValues) => setStyle(selector, ruleValues, customStylesheetId),
+  setStyle: (selector, ruleValues) => setStyle(selector, ruleValues),
 
   /**
    * Activate/deactivate/show/hide (debug-)logging
@@ -246,7 +245,6 @@ Object.entries({
    * <code>JQL.time</code>, see <a href="module-Helpers.html#~time">Helpers.time</a>
    */
   time,
-  customStylesheetId,
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
 export default JQL;
