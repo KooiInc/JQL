@@ -5,21 +5,21 @@
 import {toDashedNotation} from "./Helpers.js";
 let cssId = `customCSS`;
 
-const globalCssID = {
+const customStylesheet = {
   set id(id) { cssId = id; },
-  get id() { return cssId }
+  get id() { return cssId; }
 }
 /**
  * Add or change style rules in a <code>&lt;style></code> element, added to the
  * header of the enclosing document if not already done so
  * @module Styling
  */
-const injectStyleElement = cssId => document.querySelector(`head`)
+const injectStyleElement = (idCss = customStylesheet.id) => document.querySelector(`head`)
     .insertAdjacentElement(
       `beforeend`,
-      Object.assign(document.createElement(`style`), { id: cssId, type: `text/css` } )
+      Object.assign(document.createElement(`style`), { id: idCss, type: `text/css` } )
     );
-const getOrCreateStyleSheet = cssId => (document.querySelector(`#${cssId}`) || injectStyleElement(cssId)).sheet;
+const getOrCreateStyleSheet = () => (document.querySelector(`#${cssId}`) || injectStyleElement()).sheet;
 const compareSelectors = (s1, s2) => s1.replace(`::`, `:`) === s2.replace(`::`, `:`);
 const setRule4Selector = (rule, values) => Object.entries(values)
     .forEach( ([prop, nwValue = ""]) => rule.style.setProperty(toDashedNotation(prop), nwValue) );
@@ -54,7 +54,7 @@ const checkParams = (selector, styleValues) => selector &&
  * <br><b>Note</b>: enclose a string value of `content` in quotes (e.g. <code>&#123;content: `'Some string'`&#125;</code>)
  * <br><b>Note</b>: rule keys should be valid (e.g. <code>&#123;marginRight: `0.3rem`&#125;</code>
  * or <code>&#123;"margin-right": `0.3rem`&#125;</code>)
- * @param cssId {string|undefined} id of the css stylesheet (to create or retrieve), default "customCSS"
+ * @param customCssId {string|undefined} id of the css stylesheet (to create or retrieve), default "customCSS"
  * @example
  * // assume changeRuleset is imported as setStyleRule
  * setStyleRule(".myClass", {color: "#c0c0c0", padding: "0 4px 0 15px"}, "YesItsMyCss");
@@ -69,10 +69,10 @@ const checkParams = (selector, styleValues) => selector &&
  * //                              ^ selector                                   ^
  * //                                                                           ^ css rule(s)
  */
-function changeCssStyleRule(selector, styleValues = {}) {
+function changeCssStyleRule(selector, styleValues = {}, customCssId = customStylesheet.id) {
   if ( !checkParams(selector, styleValues) ) { return; }
 
-  const styleSheet = getOrCreateStyleSheet(globalCssID.id);
+  const styleSheet = getOrCreateStyleSheet(customCssId);
 
   return selector.startsWith(`@media`)
     ? setMediaRule(selector, styleValues, styleSheet)
@@ -81,5 +81,5 @@ function changeCssStyleRule(selector, styleValues = {}) {
 
 export {
   changeCssStyleRule as setStyle,
-  globalCssID,
+  customStylesheet,
 };

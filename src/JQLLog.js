@@ -8,7 +8,7 @@
  * @module JQLLog
  */
 import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
-import {setStyle, globalCssID} from "./Styling.js";
+import {setStyle, customStylesheet} from "./Styling.js";
 import {time} from "./Helpers.js";
 import {isVisible} from "./JQLExtensionHelpers.js";
 
@@ -141,8 +141,6 @@ let stylingDefault4Log = {
     fontFamily: `consolas, monospace`,
   }
 };
-
-let defaultStylingId = `JQLCustomCSS`;
 let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
@@ -153,12 +151,8 @@ let logBox = undefined;
  * Default styles are in <code>stylingDefault4Log</code>
  * header of the document in which JQL is used). Default is 'JQLCustomCSS'.
  */
-const setStyling4Log = (styles = stylingDefault4Log) => {
-  const exists = document.querySelector(globalCssID.id);
-  // this triggers rename (id) of existing stylesheet
-  if (exists) { exists.id = globalCssID.id; }
-    Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style));
-};
+const setStyling4Log = (styles = stylingDefault4Log) =>
+  Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, customStylesheet.id));
 
 let useHtml = false;
 
@@ -202,4 +196,4 @@ const JQLLog = (...args) => {
 };
 
 const setStylingId4Log = id => defaultStylingId = id;
-export { JQLLog, debugLog, setStylingId4Log, setStyling4Log };
+export { JQLLog, debugLog, setStyling4Log };

@@ -1,11 +1,9 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
 
-import {setStylingId4Log} from "./JQLLog.js";
 import {randomStringExtension} from "./Helpers.js";
 import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
 import ExtendedNodeListLambdas from "./JQLExtensions.js";
 import {element2DOM, insertPositions} from "./DOM.js";
-
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 
 //#region common helpers
@@ -128,7 +126,6 @@ const initializePrototype = ctor => {
       }
     });
   proto.isSet = true;
-  setStylingId4Log(proto.customStylesheetId);
 };
 
 //#endregion common helpers */
