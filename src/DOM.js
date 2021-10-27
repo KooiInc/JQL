@@ -28,7 +28,7 @@ const adjacents = {
   AfterEnd: "afterend" };
 
 /**
- * Create a HTML element from a html string in memory.
+ * Derive a HTML element <i>in memory</i> from a given html string.
  * @param htmlString {string} The HTML string to use
  * <br><b>Note</b>: the html is sanizited
  * @returns {HTMLElement|undefined} {HTMLElement|undefined}
