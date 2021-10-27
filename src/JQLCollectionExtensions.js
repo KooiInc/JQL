@@ -3,7 +3,7 @@
 
 import {hex2RGBA} from "./JQLExtensionHelpers.js";
 import {isObjectAndNotArray,} from "./Helpers.js"
-import setStyle from "./Styling.js";
+import { setStyle } from "./Styling.js";
 
 //#region collection lambda'style
 /**
@@ -292,7 +292,7 @@ const css = (el, keyOrKvPairs, value) => {
 
   const classExists = ([...el.classList].find(c => c.startsWith(`JQLCreated`) || nwClass && c === nwClass));
   nwClass = classExists || nwClass || `JQLCreated_${String.createRandomHtmlElementId(12)}`;
-  setStyle(`.${nwClass}`, keyOrKvPairs, `JQLCustomCSS`);
+  setStyle(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
 

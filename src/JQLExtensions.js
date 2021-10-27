@@ -6,7 +6,6 @@ import {loop, addHandlerId, isVisible} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 // only to enable a 'type' for documentation
 import {randomStringExtension} from "./Helpers.js";
-import setStyle from "./Styling.js";
 
 randomStringExtension();
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};

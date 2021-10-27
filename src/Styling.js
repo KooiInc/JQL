@@ -3,7 +3,8 @@
 // noinspection JSUnresolvedVariable
 
 import {toDashedNotation} from "./Helpers.js";
-
+let cssId = `JQLCustomCSS`;
+const setGlobalCssID = id => cssId = id;
 /**
  * Add or change style rules in a <code>&lt;style></code> element, added to the
  * header of the enclosing document if not already done so
@@ -64,7 +65,7 @@ const checkParams = (selector, styleValues) => selector &&
  * //                              ^ selector                                   ^
  * //                                                                           ^ css rule(s)
  */
-function changeCssStyleRule(selector, styleValues = {}, cssId="JQLCustomCSS") {
+function changeCssStyleRule(selector, styleValues = {}, cssId = cssId) {
   if ( !checkParams(selector, styleValues) ) { return; }
 
   const styleSheet = getOrCreateStyleSheet(cssId);
@@ -74,4 +75,7 @@ function changeCssStyleRule(selector, styleValues = {}, cssId="JQLCustomCSS") {
     : setRules(styleSheet.cssRules, selector, styleSheet, styleValues);
 }
 
-export default changeCssStyleRule;
+export {
+  changeCssStyleRule as setStyle,
+  setGlobalCssID,
+};

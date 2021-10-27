@@ -8,7 +8,7 @@
  * @module JQLLog
  */
 import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
-import setStyle from "./Styling.js";
+import {setStyle} from "./Styling.js";
 import {time} from "./Helpers.js";
 import {isVisible} from "./JQLExtensionHelpers.js";
 

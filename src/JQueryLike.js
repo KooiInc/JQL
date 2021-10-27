@@ -20,7 +20,7 @@ import {
   insertPositions,
 } from "./DOM.js";
 
-import setStyle from "./Styling.js";
+import {setStyle, setGlobalCssID} from "./Styling.js";
 
 import {
   initializePrototype,
@@ -36,6 +36,8 @@ import {
 const customStylesheetId = `JQLCustomCSS`;
 const logLineLength = 75;
 let logSystem = false;
+
+setGlobalCssID(customStylesheetId);
 
 /**
  * The JQL core
