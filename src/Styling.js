@@ -48,7 +48,8 @@ const checkParams = (selector, styleValues) => selector &&
  * @example
  * customStylesheet.id = "mySheet";
  * console.log(custumStylesheet.id); //=> 'mySheet'
- * console.log(custumStylesheet.getSheet.outerHTML); //=> <style type="text/css" id="mySheet></style>"
+ * console.log(custumStylesheet.getSheet.outerHTML);
+ * //=> <style type="text/css" id="mySheet></style>"
  */
 const customStylesheet = {
   set id(nwId) { cssId = nwId; },
