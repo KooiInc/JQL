@@ -229,7 +229,7 @@ Object.entries({
   /**
    * Set the styling for the logger element (<code>#logBox</code>)
    * <code>JQL.setStyling4Log</code>,
-   * see <a href="./module-Log.html#~setStyling4Log">Log.setStyling4Log</a>
+   * see <a href="./module-JQLLog.html#~setStyling4Log">JQLLog.setStyling4Log</a>
    */
   setStyling4Log,
 
