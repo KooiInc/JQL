@@ -519,34 +519,9 @@ const ON = (extCollection, type, ...callbacks) => {
   return extCollection;
 };
 
+export default {
+    text, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
+    parent, append, appendTo, insert, single, first, first$, find, find$,
+    prop, on, html, outerHtml, htmlFor, delegate, ON, };
 
-const ExtendedNodelistLambdas = {
-    text,
-    each,
-    getData,
-    isEmpty,
-    is,
-    hasClass,
-    replace,
-    replaceMe,
-    val,
-    parent,
-    append,
-    appendTo,
-    insert,
-    single,
-    first,
-    first$,
-    find,
-    find$,
-    prop,
-    on,
-    html,
-    outerHtml,
-    htmlFor,
-    delegate,
-    ON,
-};
-
-export default ExtendedNodelistLambdas;
 //#endregion ExtendedNodeList lambda's

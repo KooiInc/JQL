@@ -297,10 +297,8 @@ const css = (el, keyOrKvPairs, value) => {
 };
 
 //#endregion collection lambda's
-const extendedNodeListCollectionLamdas = {
+export default {
   toggleClass, addClass, removeClass, attr, removeAttr,
   toggleAttr, toggleStyleFragments, show, hide, empty, remove,
   replaceClass, clear, setData, css, styleInline
 };
-
-export default extendedNodeListCollectionLamdas;
