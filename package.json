@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "docdash": "^1.2.0",
-    "esbuild": "^0.13.9"
+    "esbuild": "^0.13.12"
   },
   "scripts": {
     "build": "node JQLcompile.js"
