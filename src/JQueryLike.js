@@ -112,7 +112,8 @@ const ExtendedNodeList = function (
     const shouldCreateElements = isRawHtmlArray || isRawHtml;
 
     if (!shouldCreateElements) {
-      logSystem && JQLLog(setCollectionFromCssSelector(input, root, this));
+      const forLog = setCollectionFromCssSelector(input, root, this);
+      logSystem && JQLLog(forLog) ;
       return this;
     }
 

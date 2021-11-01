@@ -297,6 +297,9 @@ const css = (el, keyOrKvPairs, value) => {
 };
 
 //#endregion collection lambda's
+/**
+ *
+ */
 export default {
   toggleClass, addClass, removeClass, attr, removeAttr,
   toggleAttr, toggleStyleFragments, show, hide, empty, remove,
