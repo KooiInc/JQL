@@ -140,7 +140,7 @@ const cleanupTagInfo = {
 };
 
 // regexex not allowed attributes/attribute values
-let notAllowedAttributes = /(^action|allow|contenteditable|data|on)|download|formaction|form|autofocus|poster|source|dirname|srcdoc|srcset|xlink|for|event|xmlns/i;
+let notAllowedAttributes = /(^action|allow|contenteditable|data|on)|download|formaction|form|autofocus|poster|source|dirname|srcdoc|srcset|xlink|event|xmlns/i;
 let notAllowedAttributeValues = /javascript|injected|import|noreferrer|alert|DataURL/i;
 const logPossibleErrors = elCreationInfo => {
   if (log && Object.keys(elCreationInfo.removed).length) {
