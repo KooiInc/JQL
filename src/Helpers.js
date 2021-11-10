@@ -44,7 +44,26 @@ const Logger = (forceConsole = false) => {
     };
   }
 };
-
+/**
+ * A tagged template function to create a <code>Regexp</code> from
+ * multiple lines, with or without comments.
+ * @example
+ * createRegExp`
+ *   ^[\p{L}]              //=> always start with a letter
+ *   [\p{L}_\.#\-\d+~=!]+  //=> followed by letters including _ . # - 0-9 ~ = or !
+ *   // [...]
+ *   ${`gui`}              //=> flags ([g]lobal, case [i]nsensitive, [u]nicode)`
+ * // ---
+ * // Result: /^[\p{L}][\p{L}_\.#\-\d+~=!]+/giu
+ * @param {template} regexStr
+ * @param {string }flags
+ * @returns {RegExp}
+ */
+const createRegExp = (regexStr, flags = ``) => new RegExp(
+  regexStr.raw[0]
+    .split(`\n`)
+    .map( line => line.replace(/\/\/.*$/, ``).trim() )
+    .join(``), flags );
 /**
  * Trunctate a html string (e.g. from <code>[element]outerHTML</code>)
  * to a single line with a maximum length
@@ -388,6 +407,7 @@ export {
   cleanWhitespace,
   toZeroPaddedEuropeanDate,
   date2EuropeanDate,
+  createRegExp,
   displayHour,
   throwIf,
   Logger,
