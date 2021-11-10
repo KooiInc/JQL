@@ -182,11 +182,10 @@ const frequencies = arr =>
  * @param str {string} The string to repeat
  * @param n {Number} The number of time to repeat the string
  * @example
- * console.log(repeat(`-`, 10));
- * // logs: ----------
+ * console.log(repeat(`-`, 10)); //=> -----------
  * @returns {string}
  */
-const repeat = (str, n) => Array(n + 1).join(str);
+const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 const parseTemplate = (template, valuesMapping, fallback = String.fromCharCode(0)) =>
   template.replace(/{[^}]+}/g, (match) =>
     valuesMapping[match.slice(1, -1)] || fallback || match);
