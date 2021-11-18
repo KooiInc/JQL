@@ -1,5 +1,5 @@
 /**
- * The initial set of tags and allowances for HTML cleanup
+ * The initial set of tags and allowances for HTML cleanup, as used in DOMCleanup
  * @module HtmlTags
  */
 export default {
