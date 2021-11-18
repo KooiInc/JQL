@@ -67,9 +67,9 @@ const cleanupHtml = elem => {
           child.removeAttribute(attr.name);
         }
     });
-    const tagInSet = cleanupTagInfo.isAllowed(child);
-    if (!tagInSet) {
-      elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `Illegal tag, not rendered (value: ${
+    const allowed = cleanupTagInfo.isAllowed(child);
+    if (!allowed) {
+      elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `Illegal tag, not rendered (tag: ${
         truncate2SingleStr(child.outerHTML, 60)})`;
       child.remove();
     }
