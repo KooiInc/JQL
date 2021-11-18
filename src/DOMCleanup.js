@@ -54,12 +54,12 @@ const cleanupHtml = elem => {
             ? !attrRegExpStore.data.test(name) : !ATTRS[isSVG ? `svg` : `html`].find(a => a === name);
 
         if (evilValue) {
-          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute value, attribute not rendered (value: ${
+          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute value, attribute [${name}] not rendered (value: ${
             truncate2SingleStr(attr.value || `none`, 60)})`;
         }
 
         if (evilAttrib) {
-          elCreationInfo.removed[`${attr.name}`] = `Not rendered illegal attribute (value: ${
+          elCreationInfo.removed[`${attr.name}`] = `Not rendered illegal attribute [${name}] (value: ${
             truncate2SingleStr(attr.value || `none`, 60)})`;
         }
 
@@ -71,7 +71,7 @@ const cleanupHtml = elem => {
     if (!tagInSet) {
       elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `Illegal tag, not rendered (value: ${
         truncate2SingleStr(child.outerHTML, 60)})`;
-      child.parentNode.removeChild(child);
+      child.remove();
     }
   });
   logPossibleErrors(elCreationInfo);

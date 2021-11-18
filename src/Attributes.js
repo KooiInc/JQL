@@ -124,7 +124,7 @@ export const html = freeze([
 ]);
 
 /**
- * the set of allowed svg attributes as used in [module HtmlCleanup]{@link module:HtmlCleanup}
+ * the set of allowed svg attributes
  * @type {string[]}
  */
 export const svg = freeze([
