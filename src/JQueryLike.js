@@ -193,58 +193,52 @@ Object.entries({
   setStyle: (selector, ruleValues) => setStyle(selector, ruleValues),
 
   /**
-   * Activate/deactivate/show/hide (debug-)logging
-   * <code>JQL.JQLLog</code>,
-   * see <a href="./module-Log.html">Log (type: debugLog)</a>
+   * Activate/deactivate/show/hide (debug-)logging.
+   * See [module Log]{@link module:JQLLog}
    */
   debugLog,
 
   /**
-   * Log stuff to the logger (if active)
-   * * <code>JQL.JQLLog</code>,
-   * see <a href="./module-JQLLog.html#~JQLLog">JQL/JQLLog</a>
+   * Log stuff to the logger (if active).
+   * See [module Log]{@link module:JQLLog}
    */
   log: JQLLog,
 
   /**
-   * Allow/disallow the use of certain HTML tags when creating elements using JQL
-   * <code>JQL.setTagPermission</code>,
-   * see <a href="./module-HTMLCleanup.html#~setTagPermission">HTMLCleanup</a>
+   * Allow/disallow the use of certain HTML tags when creating elements using JQL.
+   * See [module HtmlTags]{@link module:HtmlTags}
    */
   setTagPermission,
 
   /**
-   * Allow/disallow unknown HTML tags
-   * <code>JQL.allowUnknownHtmlTags,</code>,
-   * see <a href="./module-HTMLCleanup.html">HTMLCleanup</a>
+   * Allow/disallow unknown HTML tags.
+   * See [module HtmlCleanup]{@link module:HtmlCleanup}
    */
   allowUnknownHtmlTags,
 
   /**
-   * Positions for use in insertAdjacentHTML(-Element)
-   * <code>JQL.insertPositions</code>,
-   * See <a href="module-DOM.html">DOM (type: adjacents)</a>
+   * Positions for use in insertAdjacentHTML(-Element).
+   * See [module DOM]{@link module:DOM}
    */
   insertPositions,
 
   /**
-   * Set the styling for the logger element (<code>#logBox</code>)
-   * <code>JQL.setStyling4Log</code>,
-   * see <a href="./module-JQLLog.html#~setStyling4Log">JQLLog.setStyling4Log</a>
+   * Set the styling for the logger element (<code>#logBox</code>).
+   * See [module Log]{@link module:JQLLog}
    */
   setStyling4Log,
 
   /**
    * Activate or deactive logging of system messages. Default: false
-   * <code>JQL.setSystemLogActiveState([state])</code>,
    * @param activeState {boolean} on (true) or off (default false)
    */
   setSystemLogActiveState: activeState => logSystem = activeState,
 
 /**
-   * Current time helper
-   * <code>JQL.time</code>, see <a href="module-Helpers.html#~time">Helpers.time</a>
-   */
+ * <code>JQL.time</code><br>
+ * Current time helper.
+ * See [module Helpers]{@link module:Helpers}
+ */
   time,
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 

@@ -1,4 +1,6 @@
 /**
+ * Clean/sanitize html. It uses definitions from
+ * [HTMLTags]{@link module:HtmlTags} and [Attributes]{@link module:Attributes}
  * @module HtmlCleanup
  */
 import {truncate2SingleStr} from "./Helpers.js";
@@ -41,6 +43,7 @@ const cleanupHtml = elem => {
   template.innerHTML = `<div id="placeholder">${elem.outerHTML}</div>`;
   const el2Clean = template.content.querySelector("#placeholder");
   el2Clean.querySelectorAll("*").forEach(child => {
+    const isSVG = child instanceof SVGElement;
     [...child.attributes]
       .forEach(attr => {
         const name = attr.name.trim().toLowerCase();
@@ -48,17 +51,19 @@ const cleanupHtml = elem => {
         const evilValue = name === "href"
             ? !attrRegExpStore.validURL.test(value) : attrRegExpStore.notAllowedValues.test(value);
         const evilAttrib = name.startsWith(`data`)
-            ? !attrRegExpStore.data.test(name) : !ATTRS.html.find(a => a === name);
+            ? !attrRegExpStore.data.test(name) : !ATTRS[isSVG ? `svg` : `html`].find(a => a === name);
 
         if (evilValue) {
           elCreationInfo.removed[`${attr.name}`] = `Illegal attribute value, attribute not rendered (value: ${
             truncate2SingleStr(attr.value || `none`, 60)})`;
-          child.removeAttribute(attr.name);
         }
 
-        if (!evilValue && evilAttrib) {
+        if (evilAttrib) {
           elCreationInfo.removed[`${attr.name}`] = `Not rendered illegal attribute (value: ${
             truncate2SingleStr(attr.value || `none`, 60)})`;
+        }
+
+        if (evilValue || evilAttrib) {
           child.removeAttribute(attr.name);
         }
     });

@@ -1,7 +1,7 @@
 // nicked from https://github.com/cure53/DOMPurify
 
 /**
- * The set of allowed attributes, used in DOMCleanup
+ * The set of allowed attributes, as used in [module HtmlCleanup]{@link module:HtmlCleanup}
  * @module Attributes
  */
 const freeze = Object;
@@ -124,7 +124,7 @@ export const html = freeze([
 ]);
 
 /**
- * the set of allowed svg attributes
+ * the set of allowed svg attributes as used in [module HtmlCleanup]{@link module:HtmlCleanup}
  * @type {string[]}
  */
 export const svg = freeze([
