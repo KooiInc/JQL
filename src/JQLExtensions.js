@@ -372,6 +372,8 @@ const find$ = (extCollection, selector) => {
 /**
  * Get or set a property/attribute value of first element from
  * the ExtendedNodeList instance collection
+ * TODO: only existing properties, which is quite secure, but may be annonying
+ * <br>maybe this should be done via DOMCleanup (weed out forbidden properties)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param property {string} (e.g. 'title')
  * @param value {string|undefined} If it has a value, then set the property value
