@@ -2,7 +2,7 @@
 
 import {
   debugLog,
-  JQLLog,
+  Log,
   setStyling4Log } from "./JQLLog.js";
 
 import {
@@ -13,6 +13,7 @@ import {
 import {
   setTagPermission,
   allowUnknownHtmlTags,
+  logElementCreationErrors,
 } from "./DOMCleanup.js";
 
 import {
@@ -52,6 +53,7 @@ customStylesheet.id = `JQLCustomCSS`;
  * contains html (e.g. <code>&lt;p class="someClass">Hello wrld>&lt;/p></code>), the element(s) is/are
  * created and by default injected in de DOM tree unless [<code>root</code>] is a <code>HTMLBRElement</code>.
  * <br><b>Note</b>: any html creation triggers checking and sanitizing the html to prevent script injection etc.
+ * <br>See also [module JQLExtensionHelpers.initializePrototype]{@link module:JQLExtensionHelpers~initializePrototype}
  * @param input One of<ul>
  * <li><code>Node</code> list
  * <li><code>HtmlElement</code> instance
@@ -113,7 +115,7 @@ const ExtendedNodeList = function (
 
     if (!shouldCreateElements) {
       const forLog = setCollectionFromCssSelector(input, root, this);
-      logSystem && JQLLog(forLog) ;
+      logSystem && Log(forLog) ;
       return this;
     }
 
@@ -130,13 +132,13 @@ const ExtendedNodeList = function (
         ? inject2DOMTree(this.collection, root, position).filter(el => !isCommentNode(el))
         : this.collection;
 
-      logSystem && JQLLog(`${logStr}\n  Created (outerHTML truncated) [${
+      logSystem && Log(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining")
           .substr(0, logLineLength)}]`);
     }
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
-    debugLog.isOn && logSystem && (JQLLog(msg) || console.log(msg));
+    debugLog.isOn && logSystem && (Log(msg) || console.log(msg));
   }
 }
 
@@ -159,7 +161,7 @@ Object.entries({
 
   /**
    * Create an ExtendedNodeList instance without injecting elements (so, collection elements in memory)
-   * <code>JQL.virtual</code>,
+   * <code>[JQL instance].virtual</code>,
    * @example
    * import $ from "JQueryLike.js";
    * const inMemoryParagraph = $.virtual(`<p>I am and I am not</p>`);
@@ -178,7 +180,8 @@ Object.entries({
    * <ul><li>The rules are written to a custom style sheet with id <code>#JQLCustomCSS</code> into the document
    * <li>You can use pseudo selectors. In case of creating a rule with the <code>content</code> property
    * be sure to quote the text value (see example)</ul>
-   * <code>JQL.setStyle</code>,
+   * <code>[JQL instance].setStyle</code>,
+   * See [module Styling]{@link module:Styling~changeCssStyleRule}
    * @param selector {string} the selector e.g. <code>#someElem.someClass</code>
    * @param ruleValues {Object} an object containing the rules for the selector
    * @example
@@ -192,25 +195,27 @@ Object.entries({
 
   /**
    * Activate/deactivate/show/hide (debug-)logging.
-   * See [module Log]{@link module:JQLLog}
+   * See [module JQLLog]{@link module:JQLLog~debugLog}
    */
   debugLog,
 
   /**
-   * Log stuff to the logger (if active).
-   * See [module Log]{@link module:JQLLog}
+   * Log stuff to the logger ([if activated]{@link module:JQLLog~debugLog}).
+   * <br><code>[JQL instance].log</code>,
+   * See [module JQLLog]{@link module:JQLLog~Log}
    */
-  log: JQLLog,
+  log: Log,
 
   /**
    * Allow/disallow the use of certain HTML tags when creating elements using JQL.
-   * See [module HtmlTags]{@link module:HtmlTags}
+   * See [module HtmlTags]{@link module:HtmlTags~setTagPermission}
    */
   setTagPermission,
 
   /**
    * Allow/disallow unknown HTML tags.
-   * See [module HtmlCleanup]{@link module:HtmlCleanup}
+   * <br><code>[JQL instance].allowUnknownHtmlTags</code>,
+   * See [module HtmlCleanup]{@link module:HtmlCleanup~allowUnknownHtmlTags}
    */
   allowUnknownHtmlTags,
 
@@ -221,13 +226,22 @@ Object.entries({
   insertPositions,
 
   /**
+   * Activate/deactivate logging of element creation errors (in the console)
+   * <br><code>[JQL instance].logElementCreationErrors</code>,
+   * See [module HtmlCleanup]{@link module:HtmlCleanup~logElementCreationErrors}
+   */
+  logElementCreationErrors,
+
+  /**
    * Set the styling for the logger element (<code>#logBox</code>).
-   * See [module Log]{@link module:JQLLog}
+   * <br><code>[JQL instance].setStyling4Log</code>
+   * See [module Log]{@link module:JQLLog~setStyling4Log}
    */
   setStyling4Log,
 
   /**
    * Activate or deactive logging of system messages. Default: false
+   * <br><code>[JQL instance].setSystemLogActiveState</code>
    * @param activeState {boolean} on (true) or off (default false)
    */
   setSystemLogActiveState: activeState => logSystem = activeState,
@@ -235,7 +249,7 @@ Object.entries({
 /**
  * <code>JQL.time</code><br>
  * Current time helper.
- * See [module Helpers]{@link module:Helpers}
+ * See [module Helpers]{@link module:Helpers~time}
  */
   time,
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);

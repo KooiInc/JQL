@@ -6,12 +6,12 @@
 import {truncate2SingleStr} from "./Helpers.js";
 import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
-const logElementCreationErrors2Console = false;
+let logElementCreationErrors2Console = false;
 
 /**
  * set allowance for unknown HTML tags, exposed as <code>JQL.allowUnknownHtmlTags</code>
+ * <br>See also [module HtmlTags]{@link module:HtmlTags}
  * @typedef allowUnknownHtmlTags
- * @type {Object}
  * @property {function} on Allow unknown HTML tags
  * @property {function} off Do not allow unknown HTML tags (default)
  */
@@ -54,7 +54,7 @@ const cleanupHtml = elem => {
             ? !attrRegExpStore.data.test(name) : !ATTRS[isSVG ? `svg` : `html`].find(a => a === name);
 
         if (evilValue || evilAttrib) {
-          elCreationInfo.removed[`${attr.name}`] = `attribute/property (value) not allowed, remove (value: ${
+          elCreationInfo.removed[`${attr.name}`] = `attribute/property (-value) not allowed, remove (value: ${
             truncate2SingleStr(attr.value || `none`, 60)})`;
           child.removeAttribute(attr.name);
         }
@@ -80,6 +80,20 @@ const getRestricted = emphasizeTag =>
       [...acc, (emphasizeTag && key === emphasizeTag ? emphasize(key) : key)] ||
       acc, []);
 
+/**
+ * Set permissions for specific tags. See [module HtmlTags]{@link module:HtmlTags}
+ * <br>Exposed as <code>JQL.setTagPermission</code>.
+ * @function
+ * @name setTagPermission
+ * @param tagName {string} the tag to set allowance for, e.g. <code>link</code> or <code>iframe</code>.
+ * @param allowed {boolean} true: can use tag, false: can not use tag.
+ */
 const setTagPermission = cleanupTagInfo.setTagPermission;
 
-export {cleanupHtml, getRestricted, setTagPermission, allowUnknownHtmlTags};
+/**
+ * Activate/Deactivate logging of element creation errors to console.
+ * @param onOff {boolean} Activate (true) or deactivate (false). Off by default.
+ */
+const logElementCreationErrors = onOff => logElementCreationErrors2Console = onOff;
+
+export { cleanupHtml, getRestricted, setTagPermission, allowUnknownHtmlTags, logElementCreationErrors, };
