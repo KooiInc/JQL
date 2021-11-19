@@ -6,7 +6,7 @@
 import {truncate2SingleStr} from "./Helpers.js";
 import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
-const log = true;
+const logElementCreationErrors2Console = false;
 
 /**
  * set allowance for unknown HTML tags, exposed as <code>JQL.allowUnknownHtmlTags</code>
@@ -25,8 +25,8 @@ const attrRegExpStore = {
   whiteSpace: /[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g,
   notAllowedValues: /javascript|injected|noreferrer|alert|DataURL/gi
 };
-const logPossibleErrors = elCreationInfo => {
-  if (log && Object.keys(elCreationInfo.removed).length) {
+const logContingentErrors = elCreationInfo => {
+  if (logElementCreationErrors2Console && Object.keys(elCreationInfo.removed).length) {
     const msgs = Object.entries(elCreationInfo.removed)
       .reduce( (acc, [k, v]) => [...acc, `${k} => ${v}`], [])
       .join(`\n`);
@@ -66,7 +66,7 @@ const cleanupHtml = elem => {
       child.remove();
     }
   });
-  logPossibleErrors(elCreationInfo);
+  logContingentErrors(elCreationInfo);
   return el2Clean.children[0];
 };
 
