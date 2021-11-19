@@ -167,9 +167,7 @@ Object.entries({
    * inMemoryParagraph.styleInline({color: `green`}).setData({IAmGreen: `yep`});
    * $(`body`).append(inMemoryParagraph);
    * // result: <p style="color:green" data-i-am-green="yep">I am and I am not</p>
-   * //                                ^ Note: stringified output from the browser
-   * // now, there it is
-   * $(`<div>Hello stranger. Try hovering me!</div>`).addClass(`something`);
+   * //                                ^ Note: data-attribute displays stringified output from the browser
    * @poram html {string} a HTML string e.g. <code>&lt;div class="hi">a div&lt;/div></code>
    * @returns {ExtendedNodeList} An instance of ExtendedNodeList
    */

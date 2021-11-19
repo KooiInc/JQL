@@ -29,8 +29,8 @@ const adjacents = {
 
 /**
  * Derive a HTML element <i>in memory</i> from a given html string.
+ * @private
  * @param htmlString {string} The HTML string to use
- * <br><b>Note</b>: the html is sanizited
  * @returns {HTMLElement|undefined} {HTMLElement|undefined}
  */
 const htmlToVirtualElement = htmlString => {
@@ -61,12 +61,12 @@ const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd)
 
 /**
  * Convert a html string to an instance of <code>HTMLElement</code>.
- * <br><b>Note</b>: the resulting element is always sanitized using the
- * attrbutes/tags settings. Use <code>DOM.element2DOM</code> to fysically
- * insert/append etc. it into your DOMtree
- * @param htmlStr {string} The html to convert to <code>HTMLElement</code>
+ * <br><b>Note</b>: the resulting element(s) is/are always sanitized.
+ * Use <code>DOM.element2DOM</code> to fysically insert/append etc. it into your DOMtree
  * e.g. <code>&lt;p id="id" class="someClass">Hello &lt;span style="color: green">world&lt;/span>&lt;/p></code>
- * @returns {HTMLElement|Comment} the newly created <code>HTMLElement</code> instance or nothing
+ * or <code>&lt;!-- a comment --></code>
+ * @param htmlStr {string} The html to convert to <code>HTMLElement</code>
+ * @returns {HTMLElement|Comment} the newly created <code>HTMLElement</code> instance or a comment element
  * (in case of creating a html comment)
  */
 const createElementFromHtmlString = htmlStr => {

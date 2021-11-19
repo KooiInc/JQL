@@ -53,23 +53,15 @@ const cleanupHtml = elem => {
         const evilAttrib = name.startsWith(`data`)
             ? !attrRegExpStore.data.test(name) : !ATTRS[isSVG ? `svg` : `html`].find(a => a === name);
 
-        if (evilValue) {
-          elCreationInfo.removed[`${attr.name}`] = `Illegal attribute value, attribute [${name}] not rendered (value: ${
-            truncate2SingleStr(attr.value || `none`, 60)})`;
-        }
-
-        if (evilAttrib) {
-          elCreationInfo.removed[`${attr.name}`] = `Not rendered illegal attribute [${name}] (value: ${
-            truncate2SingleStr(attr.value || `none`, 60)})`;
-        }
-
         if (evilValue || evilAttrib) {
+          elCreationInfo.removed[`${attr.name}`] = `attribute/property (value) not allowed, remove (value: ${
+            truncate2SingleStr(attr.value || `none`, 60)})`;
           child.removeAttribute(attr.name);
         }
     });
     const allowed = cleanupTagInfo.isAllowed(child);
     if (!allowed) {
-      elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `Illegal tag, not rendered (tag: ${
+      elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `not allowed, not rendered (tag: ${
         truncate2SingleStr(child.outerHTML, 60)})`;
       child.remove();
     }
