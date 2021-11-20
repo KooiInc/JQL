@@ -38,11 +38,11 @@ const debugLog = {
       logBox = document.querySelector("#jql_logger") || createLogElement();
       logBox.parentNode.classList.add(`visible`);
     }
-    JQLLog(`Logging started (to ${log2Console ? `console` : `document`})`);
+    Log(`Logging started (to ${log2Console ? `console` : `document`})`);
   },
   off() {
     if (logBox) {
-      JQLLog(`Logging stopped`);
+      Log(`Logging stopped`);
       logBox && logBox.parentNode.classList.remove(`visible`);
     }
     useLogging = false;
@@ -76,13 +76,13 @@ const debugLog = {
    */
   reversed(reverse = true) {
     reverseLogging = reverse;
-    JQLLog(`Reverse logging reset: now logging ${
+    Log(`Reverse logging reset: now logging ${
       reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
   },
   clear() {
     if (logBox) {
       logBox.textContent = ``;
-      JQLLog(`Cleared`);
+      Log(`Cleared`);
     }
   }
 };
@@ -181,7 +181,7 @@ const decodeForConsole = something => something.constructor === String &&
  * @param args {...(string|Object)} string(s) or Object(s) to print in the JQLLog box
  * <br><b>Note</b> Objects are converted to JSON representation
  */
-const JQLLog = (...args) => {
+const Log = (...args) => {
     if (!useLogging) { return; }
     if (!log2Console && !logBox) {
       createLogElement();
@@ -196,4 +196,4 @@ const JQLLog = (...args) => {
 };
 
 const setStylingId4Log = id => defaultStylingId = id;
-export { JQLLog, debugLog, setStyling4Log };
+export { Log, debugLog, setStyling4Log };

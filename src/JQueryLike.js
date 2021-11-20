@@ -5,6 +5,8 @@ import {
   Log,
   setStyling4Log } from "./JQLLog.js";
 
+import modalFactory from "./Modal.js"
+
 import {
   time,
   truncateHtmlStr,
@@ -191,7 +193,7 @@ Object.entries({
    * // usage
    * $(`<div>Hello stranger. Try hovering me!</div>`).addClass(`something`);
    */
-  setStyle: (selector, ruleValues) => setStyle(selector, ruleValues),
+  setStyle: (selector, ruleValues, cssId) => setStyle(selector, ruleValues, cssId),
 
   /**
    * Activate/deactivate/show/hide (debug-)logging.
@@ -221,7 +223,7 @@ Object.entries({
 
   /**
    * Positions for use in insertAdjacentHTML(-Element).
-   * See [module DOM]{@link module:DOM}
+   * See [module DOM.adjacents]{@link module:DOM~adjacents}
    */
   insertPositions,
 
@@ -252,6 +254,7 @@ Object.entries({
  * See [module Helpers]{@link module:Helpers~time}
  */
   time,
+  modal: () => modalFactory(JQL),
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
 export default JQL;

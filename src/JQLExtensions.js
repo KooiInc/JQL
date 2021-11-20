@@ -11,12 +11,12 @@ randomStringExtension();
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 /**
  * All extension methods for <code>ExtendedNodeList</code> where looping may not be
- * an option. See (the source of)
- * <a href="./module-ExtensionHelpers.html#~initializePrototype">ExtensionHelpers > initializePrototype</a>.
+ * an option. The methods end up in the JQL prototype
+ * [See JQLExtensionHelpers]{@link module:JQLExtensionHelpers~initializePrototype}
  * <p><b>Notes</b></p>
  *  <ul><li>Most methods are <i>chainable</i>.
- *  build.cmd<li><code>[...].css</code></a> is a collection method, not in this file but also chainable, see
- *  <a href="./module-ExtendedNodeListCollectionExtensions.html#~css">the documentation there</a>.
+ *  <li><code>[...].css</code></a> is a collection method, not in this file but also chainable, see
+ *  [the documentation there]{@link module:JQLCollectionExtensions}</a>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
  * @module
  * @example
@@ -77,6 +77,8 @@ const text = (extCollection, textValue, append) => {
  * // where $ = the alias for the ExtendedNodeList constructor
  */
 const each = (extCollection, lambda) => loop(extCollection, lambda);
+
+const remove = extCollection => extCollection.first()?.remove();
 
 /**
  * Get the value of a data-attribute for the first element
@@ -522,7 +524,7 @@ const ON = (extCollection, type, ...callbacks) => {
 };
 
 export default {
-    text, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
+    text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
     parent, append, appendTo, insert, single, first, first$, find, find$,
     prop, on, html, outerHtml, htmlFor, delegate, ON, };
 
