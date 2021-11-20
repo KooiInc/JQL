@@ -2,17 +2,15 @@
 // import { setStyle } from "./Styling.js";
 export default initModal;
 
-
 function initModal($) {
   initStyling($);
   let timer = null;
   const isTouchDevice = "ontouchstart" in document.documentElement;
   const clickOrTouch =  isTouchDevice ? "touchend" : "click";
-  const closeIfActive = () => {
+  $().delegate( clickOrTouch, `#closer, .between`, () => {
     $(".between").remove();
     $(".popupBox").remove();
-  };
-  $().delegate(clickOrTouch, `#closer, .between`, closeIfActive);
+  } );
   const positionStuff = (theBox, closerHandle) => {
     theBox.addClass(`showAndCenter`);
 
@@ -32,9 +30,7 @@ function initModal($) {
     closeIfActive();
     let okIcon = null;
     window.scrollTo(0, 0);
-    const closingHandler = self => self.first().remove();
-    const betweenLayer = $(`<div class="between"></div>`)
-      .delegate(clickOrTouch, `.between`, closeIfActive);
+    $(`<div class="between"></div>`)
     const modalBox = $(`
       <div class="popupBox">
         <div data-modalcontent></div>

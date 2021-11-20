@@ -78,6 +78,10 @@ const text = (extCollection, textValue, append) => {
  */
 const each = (extCollection, lambda) => loop(extCollection, lambda);
 
+/**
+ * Remove (the first element of a) collection from the DOM
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ */
 const remove = extCollection => extCollection.first()?.remove();
 
 /**
@@ -89,8 +93,7 @@ const remove = extCollection => extCollection.first()?.remove();
  * @returns {string|number|undefined}
  */
 const getData = (extCollection, dataAttribute, valueWhenFalsy) => {
-  const firstElem = extCollection.first();
-  return firstElem && firstElem.dataset[dataAttribute] || valueWhenFalsy;
+  return extCollection.first()?.dataset[dataAttribute] || valueWhenFalsy;
 };
 
 /**
@@ -353,10 +356,8 @@ const first$ = (extCollection, indexOrSelector) => extCollection.single(indexOrS
  * @param selector {string} css selector
  * @returns {Array|NodeListOf}
  */
-const find = (extCollection, selector) => {
-  const firstElem = extCollection.first();
-  return firstElem && firstElem.querySelectorAll(selector) || [];
-};
+const find = (extCollection, selector) =>
+  extCollection.first()?.querySelectorAll(selector) || [];
 
 /**
  * Find one or more elements within the ExtendedNodeList instance collection
