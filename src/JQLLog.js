@@ -129,11 +129,12 @@ let stylingDefault4Log = {
     position: `absolute`,
     marginTop: `-1em`,
     width: `inherit`,
+    maxWidth: `inherit`,
   },
   "#logBox .legend div": {
     textAlign: `center`,
     display: `inline-block`,
-    width: `auto`,
+    maxWidth: `inherit`,
     height: `1.2rem`,
     backgroundColor: `rgb(119, 119, 119)`,
     padding: `2px 10px`,
