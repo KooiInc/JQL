@@ -1,10 +1,10 @@
-// import {createElementFromHtmlString, element2DOM} from "./DOM.js";
-// import { setStyle } from "./Styling.js";
+import $ from "./JQueryLike.js";
 export default initModal;
 
-function initModal($) {
+function initModal() {
   initStyling($);
-  let timer = null;
+  let timer = undefined;
+  let intermediateCallback;
   const isTouchDevice = "ontouchstart" in document.documentElement;
   let popupBox, between, closer;
   const clickOrTouch =  isTouchDevice ? "touchend" : "click";
@@ -31,7 +31,6 @@ function initModal($) {
     $(`#closer, .between, .popupBox`).removeClass(`active`);
     $(`body`).removeClass(`popupActive`);
   };
-  $().delegate( clickOrTouch, `#closer, .between`,  hideModal );
   const positionAndShow = (theBox, closerHandle) => {
     $(`.between, .popupBox`).addClass(`active`);
     popupBox.styleInline({height: `auto`, width: `auto`});
@@ -52,27 +51,34 @@ function initModal($) {
     }
   };
   const endTimer = () => timer && clearTimeout(timer);
-  const create = (message, omitOkBttn) => {
-    createBoxIfNotExists();
-    endTimer();
-    hideModal();
-    popupBox.find$(`[data-modalcontent]`).empty().append($(message));
-    positionAndShow(popupBox, omitOkBttn ? undefined : closer)
-  };
-  const remove = callback => {
-    endTimer();
-    timer = setTimeout(() => {
-      hideModal();
-      if (callback && callback instanceof Function) { callback(); }
-    }, 300); // 300 is the fading time (ease-out)
-    return timer;
-  };
   const timed = (message, closeAfter = 2, callback = null, omitOkBttn = false ) => {
     hideModal();
     create(message, omitOkBttn);
     const remover = callback ? () => remove(callback) : remove;
     timer = setTimeout(remover, closeAfter * 1000);
   };
+  const create = (message, omitOkBttn, callback) => {
+    intermediateCallback = callback;
+    if (!message.isJQL && message.constructor !== String) {
+      return timed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);
+    }
+
+    createBoxIfNotExists();
+    endTimer();
+    hideModal();
+    popupBox.find$(`[data-modalcontent]`)
+      .empty()
+      .append( message.isJQL ? message : $(`<div>${message}</div>`) );
+    positionAndShow(popupBox, omitOkBttn ? undefined : closer)
+  };
+  const remove = evtOrCallback => {
+    endTimer();
+    const callback = evtOrCallback instanceof Function ? evtOrCallback : intermediateCallback;
+    if (callback && callback instanceof Function) { intermediateCallback = undefined; return callback(); }
+    hideModal();
+  };
+
+  $().delegate( clickOrTouch, `#closer, .between`,  remove );
 
   return {
     create: create,
@@ -127,7 +133,7 @@ function initStyling($) {
       resize: `both`,
     },
     '.popupBox div[data-modalcontent]': {
-      minHeight: `1.8rem`,
+      minHeight: `1rem`,
       maxHeight: 'inherit',
       clear: 'both',
       padding: '4px 6px'

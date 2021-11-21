@@ -5,7 +5,7 @@ import {
   Log,
   setStyling4Log } from "./JQLLog.js";
 
-import modalFactory from "./Modal.js"
+import modalFactory from "./Modal.js";
 
 import {
   time,
@@ -110,6 +110,7 @@ const ExtendedNodeList = function (
 
   try {
     this.collection = [];
+    this.isJQL = true;
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
