@@ -39,8 +39,8 @@ function initModal() {
     body.addClass(`popupActive`);
     const [betweenH, bodyDim] = [between.dimensions().height, body.dimensions()];
 
-    if (betweenH < bodyDim) {
-      between.styleInline({height: `${bodyDim.bottom}px`});
+    if (betweenH < bodyDim.height) {
+      between.styleInline({bottom: `-${bodyDim.bottom}px`});
     }
 
     if (betweenH >= bodyDim) {
