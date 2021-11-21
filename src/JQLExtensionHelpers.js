@@ -125,7 +125,7 @@ const initializePrototype = ctor => {
         };
       }
     });
-  proto.isSet = true;
+  proto.isJQL = true;
 };
 
 //#endregion common helpers */

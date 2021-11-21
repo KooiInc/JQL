@@ -98,7 +98,7 @@ const ExtendedNodeList = function (
   root = document.body,
   position = insertPositions.BeforeEnd) {
 
-  if (ExtendedNodeList.prototype.isSet === undefined) {
+  if (ExtendedNodeList.prototype.isJQL === undefined) {
     initializePrototype(ExtendedNodeList);
   }
 
@@ -110,7 +110,6 @@ const ExtendedNodeList = function (
 
   try {
     this.collection = [];
-    this.isJQL = true;
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);

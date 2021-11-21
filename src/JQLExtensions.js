@@ -8,6 +8,7 @@ import handlerFactory from "./HandlerFactory.js";
 import {randomStringExtension} from "./Helpers.js";
 
 randomStringExtension();
+
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 /**
  * All extension methods for <code>ExtendedNodeList</code> where looping may not be
@@ -154,14 +155,14 @@ const hasClass = (extCollection, ...classNames) => {
 const replace = (extCollection, oldChild, newChild) => {
   const firstElem = extCollection.first();
 
-  if (newChild.constructor === extCollection.constructor) {
+  if (newChild.isJQL) {
     newChild = newChild.first();
   }
 
   if (firstElem && oldChild) {
     oldChild = oldChild.constructor === String
       ? firstElem.querySelector(oldChild)
-      : oldChild.constructor === extCollection.constructor
+      : oldChild.isJQL
         ? oldChild.first()
         : oldChild;
 
@@ -257,7 +258,7 @@ const append = (extCollection, ...elems2Append) => {
  * @returns {ExtendedNodeList} initial instance of ExtendedNodeList, so chainable
  */
 const appendTo = (extCollection, extCollection2AppendTo) => {
-  if (extCollection2AppendTo.constructor !== extCollection.constructor) {
+  if (!extCollection2AppendTo.isJQL) {
     extCollection2AppendTo = new extCollection.constructor(extCollection2AppendTo);
   }
 
@@ -285,7 +286,7 @@ const insert = (extCollection, elem, insertBeforeElem) => {
     // noinspection JSIncompatibleTypesComparison
     insertBeforeElem = insertBeforeElem.constructor === String
       ? firstElem.querySelector(insertBeforeElem)
-      : insertBeforeElem.constructor === extCollection.constructor
+      : insertBeforeElem.isJQL
         ? insertBeforeElem.first()
         : insertBeforeElem;
   } else {
@@ -293,7 +294,7 @@ const insert = (extCollection, elem, insertBeforeElem) => {
   }
 
   // noinspection JSIncompatibleTypesComparison
-  if (elem.constructor === extCollection.constructor) {
+  if (elem.isJQL) {
     elem = elem.first();
   }
 
