@@ -493,6 +493,13 @@ const htmlFor = (extCollection, forQuery, htmlString = "", append = false) => {
 };
 
 /**
+ * retrieve the current dimensions of the first element in the collection
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @returns {DOMRect | undefined}
+ */
+const dimensions = extCollection => extCollection.first()?.getBoundingClientRect();
+
+/**
  * Create event handler lambda(s)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * <br><b>Note</b>: may be empty
@@ -527,6 +534,6 @@ const ON = (extCollection, type, ...callbacks) => {
 export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
     parent, append, appendTo, insert, single, first, first$, find, find$,
-    prop, on, html, outerHtml, htmlFor, delegate, ON, };
+    dimensions, prop, on, html, outerHtml, htmlFor, delegate, ON, };
 
 //#endregion ExtendedNodeList lambda's
