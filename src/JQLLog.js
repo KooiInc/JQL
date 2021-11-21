@@ -105,7 +105,7 @@ let stylingDefault4Log = {
     position: `static`,
     opacity: `1`,
     border: `1px dotted rgb(153, 153, 153)`,
-    maxWidth: `90vw`,
+    maxWidth: `33vw`,
     minWidth: `30vw`,
     minHeight: `10vh`,
     maxHeight: `90vh`,
@@ -115,6 +115,14 @@ let stylingDefault4Log = {
     margin: `1rem 0px`,
     padding: `0px 8px 19px`,
     resize: `both`,
+  },
+  "@media screen and (min-width: 320px) and (max-width: 1024px)": {
+    mediaSelectors: {
+      "#logBox.visible": {
+        maxWidth: `90vw`,
+        width: `90vw`,
+        resize: `none` },
+    }
   },
   "#logBox .legend": {
     textAlign: `center`,
@@ -139,6 +147,8 @@ let stylingDefault4Log = {
   "#logBox #jql_logger": {
     lineHeight: `1.4em`,
     fontFamily: `consolas, monospace`,
+    whiteSpace: `pre-wrap`,
+    maxWidth: `inherit`,
   }
 };
 let useLogging = false;
@@ -154,7 +164,7 @@ let logBox = undefined;
 const setStyling4Log = (styles = stylingDefault4Log) =>
   Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, customStylesheet.id));
 
-let useHtml = false;
+let useHtml = true;
 
 const createLogElement = () => {
   setStyling4Log();

@@ -4,6 +4,7 @@ export default initModal;
 function initModal() {
   initStyling($);
   let savedTimer, savedCallback, savedModalState;
+  const wrappedBody = $(document.body);
   const positionCloserHandle = () => {
     if (!closer.hasClass(`active`)) { return; }
     const [modalDim, iconDim]  = [popupBox.dimensions(),  closer.dimensions()];
@@ -22,6 +23,7 @@ function initModal() {
       .prop(`title`, `Click here or anywhere outside the box to close`);
     const between = $(`<div class="between"></div>`);
     new ResizeObserver(positionCloserHandle).observe(popupBox.first());
+    new ResizeObserver(positionCloserHandle).observe(wrappedBody.first());
     return [popupBox, between, closer,];
   };
   const [popupBox, between, closer] = createElements();
@@ -37,7 +39,7 @@ function initModal() {
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
     popupBox.styleInline({height: `auto`, width: `auto`});
-    const [betweenH, bodyDim] = [between.dimensions().height, $(`body`).addClass(`popupActive`).dimensions()];
+    const [betweenH, bodyDim] = [between.dimensions().height, wrappedBody.addClass(`popupActive`).dimensions()];
     between.styleInline( {bottom: betweenH <= bodyDim.height ? `-${bodyDim.bottom}px` : 0 } );
 
     if (closeHndl) {
@@ -82,7 +84,7 @@ function initModal() {
 
     hideModal();
     const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
-    savedTimer = setTimeout(() => $(`body`).removeClass(`popupActive`), time2Wait);
+    savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
   };
 
   $().delegate( clickOrTouch, `#closer, .between`,  remove );
@@ -119,25 +121,34 @@ function initStyling($) {
       opacity: 0.5,
     },
     '.popupBox': {
+      position: 'fixed',
       maxWidth: '30vw',
       maxHeight: '40vh',
       backgroundColor: 'white',
       boxShadow: '3px 2px 12px #777',
       borderRadius: '6px',
-      zIndex: '3',
+      zIndex: -1,
       opacity: '0',
       overflow: `auto`,
-      transition: 'opacity linear 0.6s',
-      position: 'fixed',
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
+      transition: 'opacity linear 0.6s',
       font: 'normal 13px/17px Verdana, Arial, sans-serif',
-      resize: `none`,
     },
     '.popupBox.active': {
+      zIndex: 3,
       opacity: '1',
       resize: `both`,
+    },
+    "@media screen and (min-width: 320px) and (max-width: 1200px)": {
+      mediaSelectors: {
+        ".popupBox": {
+          maxWidth: `75vw`,
+          maxHeight: `30vh`,
+        },
+
+      }
     },
     '.popupBox div[data-modalcontent]': {
       minHeight: `1rem`,
