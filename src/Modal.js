@@ -74,11 +74,16 @@ function initModal() {
       .append( message.isJQL ? message : $(`<div>${message}</div>`) );
     positionAndShow(popupBox, omitOkBttn ? undefined : closer)
   };
-  const remove = evtOrCallback => {
+  const remove = (evtOrCallback, canRemove) => {
     endTimer();
+    if (canRemove) {
+      canClose = true;
+    }
+
     if (!canClose) {
       return;
     }
+
     const callback = evtOrCallback instanceof Function ? evtOrCallback : intermediateCallback;
     if (callback && callback instanceof Function) { intermediateCallback = undefined; return callback(); }
     hideModal();
