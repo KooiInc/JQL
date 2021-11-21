@@ -6,6 +6,7 @@ function initModal() {
   let timer = undefined;
   let intermediateCallback;
   let canClose;
+  const stillOpen = () => alert(`A modal window is still open, make sure it is closed first!`);
   const isTouchDevice = "ontouchstart" in document.documentElement;
   let popupBox, between, closer;
   const clickOrTouch =  isTouchDevice ? "touchend" : "click";
@@ -53,6 +54,7 @@ function initModal() {
   };
   const endTimer = () => timer && clearTimeout(timer);
   const timed = (message, closeAfter = 2, callback = null ) => {
+    if (!canClose && popupBox.hasClass(`active`)) { return stillOpen(); }
     canClose = true;
     hideModal();
     create(message);
@@ -60,13 +62,16 @@ function initModal() {
     timer = setTimeout(remover, closeAfter * 1000);
   };
   const create = (message, reallyModal = false, callback) => {
+    createBoxIfNotExists();
+
+    if (!canClose && popupBox.hasClass(`active`)) { return stillOpen(); }
+
     intermediateCallback = callback;
     canClose = !reallyModal;
 
     if (!message.isJQL && message.constructor !== String) {
       return timed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);    }
 
-    createBoxIfNotExists();
     endTimer();
     popupBox.find$(`[data-modalcontent]`)
       .empty()

@@ -140,7 +140,7 @@ const is = (extCollection, checkValue) => {
  */
 const hasClass = (extCollection, ...classNames) => {
   const firstElem = extCollection.first();
-  return classNames.find(name => firstElem.classList.contains(name)) || false;
+  return classNames?.find(name => firstElem.classList.contains(name)) || false;
 };
 
 /**
