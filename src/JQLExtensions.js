@@ -4,12 +4,12 @@
 import {createElementFromHtmlString} from "./DOM.js";
 import {loop, addHandlerId, isVisible} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
-// only to enable a 'type' for documentation
 import {randomStringExtension} from "./Helpers.js";
-
 randomStringExtension();
 
+// only to enable a 'type' for documentation
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
+
 /**
  * All extension methods for <code>ExtendedNodeList</code> where looping may not be
  * an option. The methods end up in the JQL prototype
