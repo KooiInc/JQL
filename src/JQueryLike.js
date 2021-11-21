@@ -5,7 +5,7 @@ import {
   Log,
   setStyling4Log } from "./JQLLog.js";
 
-import modalFactory from "./Modal.js";
+import popupFactory from "./Popup.js";
 
 import {
   time,
@@ -255,7 +255,7 @@ Object.entries({
  * See [module Helpers]{@link module:Helpers~time}
  */
   time,
-  modal: () => modalFactory(JQL),
+  popup: () => popupFactory(JQL),
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
 export default JQL;
