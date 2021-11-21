@@ -32,7 +32,7 @@ function initModal() {
     $(`#closer, .between, .popupBox`).removeClass(`active`);
     $(`body`).removeClass(`popupActive`);
   };
-  const positionAndShow = (theBox, closerHandle) => {
+  const positionAndShow = (theBox, canHandleClose) => {
     $(`.between, .popupBox`).addClass(`active`);
     popupBox.styleInline({height: `auto`, width: `auto`});
     const body = $(`body`);
@@ -46,8 +46,8 @@ function initModal() {
     if (betweenH >= bodyDim) {
       between.styleInline({bottom: 0});
     }
-    if (closerHandle) {
-      closerHandle.addClass(`active`);
+    if (canHandleClose) {
+      canHandleClose.addClass(`active`);
       positionCloserHandle(popupBox);
     }
   };
@@ -59,33 +59,29 @@ function initModal() {
     const remover = callback ? () => remove(callback) : remove;
     timer = setTimeout(remover, closeAfter * 1000);
   };
-  const create = (message, omitOkBttn = false, callback) => {
+  const create = (message, reallyModal = false, callback) => {
     intermediateCallback = callback;
-    canClose = !omitOkBttn;
+    canClose = !reallyModal;
+
     if (!message.isJQL && message.constructor !== String) {
-      return timed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);
-    }
+      return timed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);    }
 
     createBoxIfNotExists();
     endTimer();
-    hideModal();
     popupBox.find$(`[data-modalcontent]`)
       .empty()
       .append( message.isJQL ? message : $(`<div>${message}</div>`) );
-    positionAndShow(popupBox, omitOkBttn ? undefined : closer)
+    positionAndShow(popupBox, !canClose ? undefined : closer)
   };
-  const remove = (evtOrCallback, canRemove) => {
+  const remove = evtOrCallback => {
     endTimer();
-    if (canRemove) {
-      canClose = true;
-    }
 
-    if (!canClose) {
-      return;
-    }
+    if (!canClose) { return; }
 
     const callback = evtOrCallback instanceof Function ? evtOrCallback : intermediateCallback;
+
     if (callback && callback instanceof Function) { intermediateCallback = undefined; return callback(); }
+
     hideModal();
   };
 
@@ -94,7 +90,8 @@ function initModal() {
   return {
     create: create,
     createTimed: timed,
-    remove: remove
+    remove: remove,
+    removeFromModal: callback => { canClose = true; remove(callback); }
   };
 }
 
