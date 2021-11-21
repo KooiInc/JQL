@@ -5,6 +5,7 @@ function initModal() {
   initStyling($);
   let timer = undefined;
   let intermediateCallback;
+  let canClose;
   const isTouchDevice = "ontouchstart" in document.documentElement;
   let popupBox, between, closer;
   const clickOrTouch =  isTouchDevice ? "touchend" : "click";
@@ -51,14 +52,16 @@ function initModal() {
     }
   };
   const endTimer = () => timer && clearTimeout(timer);
-  const timed = (message, closeAfter = 2, callback = null, omitOkBttn = false ) => {
+  const timed = (message, closeAfter = 2, callback = null ) => {
+    canClose = true;
     hideModal();
-    create(message, omitOkBttn);
+    create(message);
     const remover = callback ? () => remove(callback) : remove;
     timer = setTimeout(remover, closeAfter * 1000);
   };
-  const create = (message, omitOkBttn, callback) => {
+  const create = (message, omitOkBttn = false, callback) => {
     intermediateCallback = callback;
+    canClose = !omitOkBttn;
     if (!message.isJQL && message.constructor !== String) {
       return timed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);
     }
@@ -73,6 +76,9 @@ function initModal() {
   };
   const remove = evtOrCallback => {
     endTimer();
+    if (!canClose) {
+      return;
+    }
     const callback = evtOrCallback instanceof Function ? evtOrCallback : intermediateCallback;
     if (callback && callback instanceof Function) { intermediateCallback = undefined; return callback(); }
     hideModal();
@@ -138,7 +144,7 @@ function initStyling($) {
       clear: 'both',
       padding: '4px 6px'
     },
-    '.popupBox p, .popupBox h3': { marginTop: '0.4em', marginBottom: '0' },
+    '.popupBox p, .popupBox div': { margin: '0.5rem 0' },
     '.popupBox h3': { marginBottom: '0.5em', fontSize: '1.1em' },
     '.closeHandleIcon': {
       position: `fixed`,
