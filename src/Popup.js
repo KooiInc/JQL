@@ -3,13 +3,9 @@ export default initModal;
 
 function initModal() {
   initStyling($);
-  let timer = undefined;
-  let intermediateCallback;
-  let canClose;
-  const isTouchDevice = "ontouchstart" in document.documentElement;
-  let popupBox, between, closer;
-  const clickOrTouch =  isTouchDevice ? "touchend" : "click";
+  let savedTimer, savedCallback, savedModalState, popupBox, between, closer;
   const positionCloserHandle = () => {
+    if (!closer.hasClass(`active`)) { return; }
     const [modalDim, iconDim]  = [popupBox.dimensions(),  closer.dimensions()];
     closer.styleInline({
       position: `fixed`,
@@ -17,79 +13,72 @@ function initModal() {
       left: `${modalDim.right - (iconDim.width/2)}px`,
     });
   };
-  const createBoxIfNotExists = () => {
-    if ($(`.popupBox`).isEmpty()) {
-      popupBox = $(`<div class="popupBox">
-           <div data-modalcontent></div>
-         </div>` );
-      closer = $(`<span id="closer" class="closeHandleIcon"></span>`)
+  (() => {
+    popupBox =
+      $(`<div class="popupBox">
+         <div data-modalcontent></div>
+       </div>` );
+    closer = $(`<span id="closer" class="closeHandleIcon"></span>`)
         .prop(`title`, `Click here or anywhere outside the box to close`);
-      between = $(`<div class="between"></div>`)
-      new ResizeObserver(positionCloserHandle).observe(popupBox.first());
-    }
-  };
+    between = $(`<div class="between"></div>`);
+    new ResizeObserver(positionCloserHandle).observe(popupBox.first());
+  })();
+  const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
   const stillOpen = () => {
     alert(`A modal window is still open, make sure it is closed first!`);
     return true;
   }
-  const activeModalPresent = () => !canClose && popupBox.hasClass(`active`) && stillOpen() && true;
+  const checkActiveModal = () => !savedModalState && popupBox.hasClass(`active`) && stillOpen();
   const hideModal = () => {
     $(`#closer, .between, .popupBox`).removeClass(`active`);
     $(`body`).removeClass(`popupActive`);
   };
-  const positionAndShow = (theBox, canHandleClose) => {
+  const positionAndShow = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
     popupBox.styleInline({height: `auto`, width: `auto`});
-    const body = $(`body`);
-    body.addClass(`popupActive`);
-    const [betweenH, bodyDim] = [between.dimensions().height, body.dimensions()];
+    const [betweenH, bodyDim] = [between.dimensions().height, $(`body`).addClass(`popupActive`).dimensions()];
 
-    if (betweenH < bodyDim.height) {
-      between.styleInline({bottom: `-${bodyDim.bottom}px`});
-    }
+    between.styleInline( {bottom: betweenH < bodyDim.height ? `-${bodyDim.bottom}px` : 0 } );
 
-    if (betweenH >= bodyDim) {
-      between.styleInline({bottom: 0});
-    }
-    if (canHandleClose) {
-      canHandleClose.addClass(`active`);
-      positionCloserHandle(popupBox);
+    if (closeHndl) {
+      closeHndl.addClass(`active`);
+      positionCloserHandle();
     }
   };
-  const endTimer = () => timer && clearTimeout(timer);
-  const timed = (message, closeAfter = 2, callback = null ) => {
-    if (activeModalPresent()) { return; }
-    canClose = true;
+  const endTimer = () => savedTimer && clearTimeout(savedTimer);
+  const createTimed = (message, closeAfter = 2, callback = null ) => {
+    if (checkActiveModal()) { return; }
+    savedModalState = true;
     hideModal();
     create(message);
     const remover = callback ? () => remove(callback) : remove;
-    timer = setTimeout(remover, closeAfter * 1000);
+    savedTimer = setTimeout(remover, closeAfter * 1000);
   };
-  const create = (message, reallyModal = false, callback) => {
-    createBoxIfNotExists();
-
-    if (activeModalPresent()) { return; }
-
-    intermediateCallback = callback;
-    canClose = !reallyModal;
+  const doCreate = (message, reallyModal, callback) => {
+    savedModalState = !reallyModal;
+    savedCallback = callback;
 
     if (!message.isJQL && message.constructor !== String) {
-      return timed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);    }
+      return createTimed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);    }
 
     endTimer();
     popupBox.find$(`[data-modalcontent]`)
       .empty()
       .append( message.isJQL ? message : $(`<div>${message}</div>`) );
-    positionAndShow(popupBox, !canClose ? undefined : closer)
-  };
+    positionAndShow(popupBox, !savedModalState ? undefined : closer);
+  }
+  const create = (message, reallyModal = false, callback) =>
+    !checkActiveModal() && doCreate(message, reallyModal, callback);
+
+
   const remove = evtOrCallback => {
     endTimer();
 
-    if (!canClose) { return; }
+    if (!savedModalState) { return; }
 
-    const callback = evtOrCallback instanceof Function ? evtOrCallback : intermediateCallback;
+    const callback = evtOrCallback instanceof Function ? evtOrCallback : savedCallback;
 
-    if (callback && callback instanceof Function) { intermediateCallback = undefined; return callback(); }
+    if (callback && callback instanceof Function) { savedCallback = undefined; return callback(); }
 
     hideModal();
   };
@@ -97,10 +86,10 @@ function initModal() {
   $().delegate( clickOrTouch, `#closer, .between`,  remove );
 
   return {
-    create: create,
-    createTimed: timed,
-    remove: remove,
-    removeFromModal: callback => { canClose = true; remove(callback); }
+    create,
+    createTimed,
+    remove,
+    removeFromModal: callback => { savedModalState = true; remove(callback); }
   };
 }
 
