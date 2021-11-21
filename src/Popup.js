@@ -33,7 +33,6 @@ function initModal() {
   const checkActiveModal = () => !savedModalState && popupBox.hasClass(`active`) && stillOpen();
   const hideModal = () => {
     $(`#closer, .between, .popupBox`).removeClass(`active`);
-    $(`body`).removeClass(`popupActive`);
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
@@ -82,6 +81,8 @@ function initModal() {
     if (callback && callback instanceof Function) { savedCallback = undefined; return callback(); }
 
     hideModal();
+    const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
+    savedTimer = setTimeout(() => $(`body`).removeClass(`popupActive`), time2Wait);
   };
 
   $().delegate( clickOrTouch, `#closer, .between`,  remove );
@@ -111,7 +112,7 @@ function initStyling($) {
       overflow: 'hidden',
       backgroundColor: 'white',
       opacity: 0,
-      transition: 'all linear 0.3s 0s',
+      transition: 'all linear 0.3s',
     },
     '.between.active': {
       zIndex: 2,
@@ -126,7 +127,7 @@ function initStyling($) {
       zIndex: '3',
       opacity: '0',
       overflow: `auto`,
-      transition: 'opacity linear 0.6s 0s',
+      transition: 'opacity linear 0.6s',
       position: 'fixed',
       top: '50%',
       left: '50%',

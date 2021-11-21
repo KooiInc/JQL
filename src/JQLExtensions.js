@@ -86,8 +86,20 @@ const each = (extCollection, lambda) => loop(extCollection, lambda);
 const remove = extCollection => extCollection.first()?.remove();
 
 /**
- * Get the value of a data-attribute for the first element
- * of the ExtendedNodeList instance
+ * Get computed style for a css property of the first element of the ExtendedNodeList instance
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @param property the css property (e.g. <code>left</code> or <code>display</code>)
+ * @returns {string | undefined}
+ */
+const computedStyle = (extCollection, property) => {
+  if (extCollection.first()) {
+    return getComputedStyle(extCollection.first())[property];
+  }
+}
+
+
+/**
+ * Get the value of a data-attribute for the first element of the ExtendedNodeList instance
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param dataAttribute {string} some attribute, e.q. 'initial'
  * @param valueWhenFalsy {string|number|undefined} value when the attribute does not exist
@@ -535,6 +547,6 @@ const ON = (extCollection, type, ...callbacks) => {
 export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
     parent, append, appendTo, insert, single, first, first$, find, find$,
-    dimensions, prop, on, html, outerHtml, htmlFor, delegate, ON, };
+    computedStyle, dimensions, prop, on, html, outerHtml, htmlFor, delegate, ON, };
 
 //#endregion ExtendedNodeList lambda's
