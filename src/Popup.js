@@ -2,7 +2,7 @@ import $ from "./JQueryLike.js";
 export default initModal;
 
 function initModal() {
-  initStyling($);
+  initStyling();
   let savedTimer, savedCallback, savedModalState;
   const wrappedBody = $(document.body);
   const positionCloserHandle = () => {
@@ -97,7 +97,7 @@ function initModal() {
   };
 }
 
-function initStyling($) {
+function initStyling() {
   const styling = {
     'body.popupActive': {
       overflow: `hidden`,
