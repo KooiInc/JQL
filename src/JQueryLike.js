@@ -96,7 +96,7 @@ customStylesheet.id = `JQLCustomCSS`;
 const ExtendedNodeList = function (
   input,
   root = document.body,
-  position = insertPositions.BeforeEnd) {
+  position = insertPositions.BeforeEnd ) {
 
   if (ExtendedNodeList.prototype.isJQL === undefined) {
     initializePrototype(ExtendedNodeList);
@@ -122,7 +122,7 @@ const ExtendedNodeList = function (
     }
 
     const logStr = (`(JQL log) raw input: [${
-      truncateHtmlStr(isRawHtmlArray ? input.join(``) : input, 80)}]`);
+      truncateHtmlStr(isRawHtmlArray ? input.join(``) : input, logLineLength)}]`);
 
     if (shouldCreateElements) {
       [input].flat()
@@ -135,8 +135,7 @@ const ExtendedNodeList = function (
         : this.collection;
 
       logSystem && Log(`${logStr}\n  Created (outerHTML truncated) [${
-        truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining")
-          .substr(0, logLineLength)}]`);
+        truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining", logLineLength)}]`);
     }
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
@@ -248,12 +247,13 @@ Object.entries({
    */
   setSystemLogActiveState: activeState => logSystem = activeState,
 
-/**
- * <code>JQL.time</code><br>
- * Current time helper.
- * See [module Helpers]{@link module:Helpers~time}
- */
+  /**
+   * <code>JQL.time</code><br>
+   * Current time helper.
+   * See [module Helpers]{@link module:Helpers~time}
+   */
   time,
+
   popup: () => popupFactory(JQL),
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 

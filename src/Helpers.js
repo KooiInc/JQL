@@ -1,7 +1,7 @@
 // noinspection JSUnusedGlobalSymbols,JSUnresolvedFunction,JSCheckFunctionSignatures,JSUnusedLocalSymbols
 
 /**
- * Helper methods
+ * Generic helper and utility methods
  * @module Helpers
  */
 

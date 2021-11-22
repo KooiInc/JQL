@@ -146,6 +146,7 @@ let stylingDefault4Log = {
     content: `"JQL Logging"`,
   },
   "#logBox #jql_logger": {
+    marginTop: `0.7rem`,
     lineHeight: `1.4em`,
     fontFamily: `consolas, monospace`,
     whiteSpace: `pre-wrap`,
