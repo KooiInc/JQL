@@ -8,7 +8,12 @@ import {randomStringExtension} from "./Helpers.js";
 randomStringExtension();
 
 // only to enable a 'type' for documentation
-const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
+//const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
+
+/**
+ * The JQLLike library as type (for documentation). See [module JQL]{@link module:JQL~ExtendedNodeList}
+ * @typedef {function(...[*]): ExtendedNodeList} ExtendedNodeList
+ */
 
 /**
  * All extension methods for <code>ExtendedNodeList</code> where looping may not be
@@ -547,6 +552,8 @@ const ON = (extCollection, type, ...callbacks) => {
 export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
     parent, append, appendTo, insert, single, first, first$, find, find$,
-    computedStyle, dimensions, prop, on, html, outerHtml, htmlFor, delegate, ON, };
+    computedStyle, dimensions, prop, on, html, outerHtml, htmlFor,
+    delegate, ON,
+};
 
 //#endregion ExtendedNodeList lambda's

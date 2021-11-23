@@ -1,9 +1,42 @@
-import $ from "./JQueryLike.js";
+// noinspection JSUnresolvedVariable
+
+/**
+ * a small library to create/use (modal) popups
+ * @module Popup
+ * @exports Popup/popupFactory
+ */
 export default popupFactory;
 
-function popupFactory() {
-  initStyling();
-  let savedTimer, savedCallback, savedModalState;
+/**
+ * The JQLLike library as type (for documentation). See [module JQL]{@link module:JQL~ExtendedNodeList}
+ * @typedef {function(...[*]): ExtendedNodeList} ExtendedNodeList
+ */
+
+/**
+ * This factory delivers 4 methods to create or remove a (modal) popup window in the browser.<ul>
+ *   <li>[create]{@link module:Popup~popupFactory_create}
+ *   <li>[createTimed]{@link module:Popup~popupFactory_createTimed}
+ *   <li>[remove]{@link module:Popup~popupFactory_remove}
+ *   <li>[removeModal]{@link module:Popup~popupFactory_removeModal}</ul>
+ *  All popups are modal (the background page is inactivated until the popup is closed).
+ *  A normal popup can be closed by clicking a small icon or outside the box.
+ *  A 'really modal' popup can only be closed using a handler you define yourself.
+ * @param $ {ExtendedNodeList} JQLike constructor
+ * @returns {{removeFromModal: removeFromModal, create: (function(*=, *=, *=)), remove: ((function(*): (undefined|*))|*), createTimed: createTimed}}
+ */
+function popupFactory($) {
+  initStyling($.setStyle);
+  let savedTimer, savedCallback;
+  const stillOpen = () => {
+    alert(`A modal window is still open, make sure it is closed first!`);
+    return true;
+  }
+  const currentModalState = {
+    currentPopupIsModal: false,
+    set isModal(tf) { this.currentPopupIsModal = tf; },
+    get isModal() { return this.currentPopupIsModal; },
+    isModalActive() { return this.currentPopupIsModal && popupBox.hasClass(`active`) && stillOpen() },
+  }
   const wrappedBody = $(document.body);
   const positionCloserHandle = () => {
     if (!closer.hasClass(`active`)) { return; }
@@ -29,11 +62,7 @@ function popupFactory() {
   };
   const [popupBox, between, closer] = createElements();
   const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
-  const stillOpen = () => {
-    alert(`A modal window is still open, make sure it is closed first!`);
-    return true;
-  }
-  const checkActiveModal = () => !savedModalState && popupBox.hasClass(`active`) && stillOpen();
+  const checkActiveModal = () => currentModalState.isReallyModal && popupBox.hasClass(`active`) && stillOpen();
   const hideModal = () => {
     $(`#closer, .between, .popupBox`).removeClass(`active`);
   };
@@ -49,16 +78,36 @@ function popupFactory() {
     }
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
-  const createTimed = (message, closeAfter = 2, callback = null ) => {
-    if (checkActiveModal()) { return; }
-    savedModalState = true;
-    hideModal();
-    create(message);
-    const remover = callback ? () => remove(callback) : remove;
-    savedTimer = setTimeout(remover, closeAfter * 1000);
-  };
+
+  /**
+   * Create a popup from a string or JQLike instance. If [reallyModal] is true
+   * the popup can only be closed using a method you create (e.g. a button click
+   * within the popup). A callback can be used to execute after closing the popup.
+   * <br>Exposed as <code>[popup].create</code>
+   * <br><b>Note</b> if a 'really modal' popup is open, you can't create a new popup
+   * @example
+   * // assuming 'popup' as name for the (imported and) initialized popupFactory
+   * // and JQLike is imported as '$'
+   * // ----
+   * // plain or html string
+   * popup.create(`Hello world`);
+   * popup.create(`<p>Hello world</p>`);
+   * // an ExtendedNodelist instance
+   * popup.create($(`<p>Hello world</p>`));
+   * // a really modal popup
+   * const button4Modal = $(`<button>Click me to close!</button>`)
+   *    .on(`click`, popup.removeModal(() => popup.createTimed(`<p>Goodbye!</p>`, 2));
+   * popup.create(button4Modal, true);
+   * // a popup with a callback
+   * popup.create(`<p>Hello world</p>`, false, () => popup.create(`<p>Goodbye!</p>`);
+   * @name popupFactory_create
+   * @function
+   * @param message {string | ExtendedNodeList} a (html) string or a JQLike instance
+   * @param reallyModal {boolean} allow default closing behavior or not
+   * @param callback {function} a callback lambda to execute after closing the popup
+   */
   const doCreate = (message, reallyModal, callback) => {
-    savedModalState = !reallyModal;
+    currentModalState.isModal = reallyModal;
     savedCallback = callback;
 
     if (!message.isJQL && message.constructor !== String) {
@@ -68,16 +117,45 @@ function popupFactory() {
     popupBox.find$(`[data-modalcontent]`)
       .empty()
       .append( message.isJQL ? message : $(`<div>${message}</div>`) );
-    activate(popupBox, !savedModalState ? undefined : closer);
+    activate(popupBox, !currentModalState ? undefined : closer);
   }
+
   const create = (message, reallyModal = false, callback) =>
-    !checkActiveModal() && doCreate(message, reallyModal, callback);
+    !currentModalState.isModalActive() && doCreate(message, reallyModal, callback);
 
+  /**
+   * Create a popup that closes automatically after [closeAfter] seconds
+   * <br>Exposed as <code>[popup].createTimed</code>
+   * <br><b>Note</b> if a 'really modal' popup is open, you can't create a new popup
+   * @name popupFactory_createTimed
+   * @function
+   * @param message {string | ExtendedNodeList} a (html) string or a JQLike instance
+   * @param closeAfter {number} the time (seconds, default 2) after which the popup should close
+   * @param callback {function} a callback lambda to execute after the popup is closed
+   */
+  const createTimed = (message, closeAfter = 2, callback = null ) => {
+    if (currentModalState.isModalActive()) { return; }
+    hideModal();
+    create(message);
+    const remover = callback ? () => remove(callback) : remove;
+    savedTimer = setTimeout(remover, closeAfter * 1000);
+  };
 
+  /**
+   * Remove a popup
+   * <br>Exposed as <code>[popup].remove</code>
+   * <br><b>Note</b> if the popup is 'really modal', you can't remove it with this,
+   * use <code>popup.removeModal</code> for that.
+   * @name popupFactory_remove
+   * @function
+   * @param callback {function|event|undefined} an event (if closed by a click delegate),
+   * or a callback lambda to execute after the popup is closed (e.g. passed by
+   * <code>popup.createTimed</code>. May be empty.
+   */
   const remove = evtOrCallback => {
     endTimer();
 
-    if (!savedModalState) { return; }
+    if (currentModalState.isModalActive()) { return; }
 
     const callback = evtOrCallback instanceof Function ? evtOrCallback : savedCallback;
 
@@ -91,17 +169,30 @@ function popupFactory() {
     savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
   };
 
+  /**
+   * Remove a really modal popup
+   * <br>Exposed as <code>[popup].removeModal</code>
+   * @name popupFactory_removeModal
+   * @function
+   * @param callback {function|undefined} a callback lambda to execute after the popup is closed, may
+   * be empty
+   */
+  const removeModal = callback => {
+    currentModalState.isModal = false;
+    remove(callback);
+  };
+
   $().delegate( clickOrTouch, `#closer, .between`,  remove );
 
   return {
     create,
     createTimed,
     remove,
-    removeFromModal: callback => { savedModalState = true; remove(callback); }
+    removeModal,
   };
 }
 
-function initStyling() {
+function initStyling(setStyle) {
   const styling = {
     'body.popupActive': {
       overflow: `hidden`,
@@ -177,5 +268,5 @@ function initStyling() {
       opacity: 1,
     }
   };
-  Object.entries(styling).forEach( ([selector, rules]) => $.setStyle(selector, rules, `modalCss`));
+  Object.entries(styling).forEach( ([selector, rules]) => setStyle(selector, rules, `modalCss`));
 }
