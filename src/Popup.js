@@ -1,7 +1,7 @@
 import $ from "./JQueryLike.js";
-export default initModal;
+export default popupFactory;
 
-function initModal() {
+function popupFactory() {
   initStyling();
   let savedTimer, savedCallback, savedModalState;
   const wrappedBody = $(document.body);
@@ -18,7 +18,7 @@ function initModal() {
     const popupBox =
       $(`<div class="popupBox">
          <div data-modalcontent></div>
-       </div>` );
+       </div>`);
     const closer = $(`<span id="closer" class="closeHandleIcon"></span>`)
       .prop(`title`, `Click here or anywhere outside the box to close`);
     const between = $(`<div class="between"></div>`);
@@ -80,7 +80,10 @@ function initModal() {
 
     const callback = evtOrCallback instanceof Function ? evtOrCallback : savedCallback;
 
-    if (callback && callback instanceof Function) { savedCallback = undefined; return callback(); }
+    if (callback && callback instanceof Function) {
+      savedCallback = undefined;
+      return callback();
+    }
 
     hideModal();
     const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
