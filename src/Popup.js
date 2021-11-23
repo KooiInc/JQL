@@ -22,8 +22,9 @@ function popupFactory() {
     const closer = $(`<span id="closer" class="closeHandleIcon"></span>`)
       .prop(`title`, `Click here or anywhere outside the box to close`);
     const between = $(`<div class="between"></div>`);
-    new ResizeObserver(positionCloserHandle).observe(popupBox.first());
-    new ResizeObserver(positionCloserHandle).observe(wrappedBody.first());
+    const resizeObserver = new ResizeObserver(positionCloserHandle);
+    resizeObserver.observe(popupBox.first());
+    resizeObserver.observe(wrappedBody.first());
     return [popupBox, between, closer,];
   };
   const [popupBox, between, closer] = createElements();
