@@ -8,7 +8,9 @@
 export default popupFactory;
 
 /**
- * The JQLLike library as type (for documentation). See [module JQL]{@link module:JQL~ExtendedNodeList}
+ * The JQLLike library.<br>
+ * See [module JQL]{@link module:JQL~ExtendedNodeList}
+ * @private
  * @typedef {function(...[*]): ExtendedNodeList} ExtendedNodeList
  */
 

@@ -7,14 +7,6 @@ import handlerFactory from "./HandlerFactory.js";
 import {randomStringExtension} from "./Helpers.js";
 randomStringExtension();
 
-// only to enable a 'type' for documentation
-//const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
-
-/**
- * The JQLLike library as type (for documentation). See [module JQL]{@link module:JQL~ExtendedNodeList}
- * @typedef {function(...[*]): ExtendedNodeList} ExtendedNodeList
- */
-
 /**
  * All extension methods for <code>ExtendedNodeList</code> where looping may not be
  * an option. The methods end up in the JQL prototype
@@ -41,6 +33,13 @@ randomStringExtension();
  *  .css({className: `okRed`, color: `red`});
  *  // result (class names are partly random):
  *  // <div id="helloworld" class="JQLCreated_YZ5XnwbCEGxH">Example: hello ... world<span class="okRed"> OK</span></div>
+ */
+
+/**
+ * The JQLLike library.<br>
+ * See [module JQL]{@link module:JQL~ExtendedNodeList}
+ * @private
+ * @typedef {function(...[*]): ExtendedNodeList} ExtendedNodeList
  */
 
 /**
