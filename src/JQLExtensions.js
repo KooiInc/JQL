@@ -79,10 +79,10 @@ const text = (extCollection, textValue, append) => {
 const each = (extCollection, lambda) => loop(extCollection, lambda);
 
 /**
- * Remove (the first element of a) collection from the DOM
+ * Remove each collection element from the DOM tree
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  */
-const remove = extCollection => extCollection.first()?.remove();
+const remove = extCollection => loop(extCollection, el => el.remove());
 
 /**
  * Get computed style for a css property of the first element of the ExtendedNodeList instance
@@ -399,7 +399,7 @@ const prop = (extCollection, property, value) => {
   if (value === undefined) {
     return !extCollection.isEmpty ? extCollection.first()[property] : undefined;
   }
-  
+
   if (!extCollection.isEmpty) {
     loop(extCollection, el => el[property] = value);
   }
