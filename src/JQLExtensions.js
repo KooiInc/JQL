@@ -445,7 +445,7 @@ const html = (extCollection, htmlValue, append) => {
 
     if (!(nwElement instanceof Comment)) {
       const cb = el => el.innerHTML = append ? el.innerHTML + nwElement.innerHTML : nwElement.innerHTML;
-      loop(el, cb);
+      loop(extCollection, cb);
     }
   }
 
