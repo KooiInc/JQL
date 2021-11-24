@@ -385,8 +385,9 @@ const find$ = (extCollection, selector) => {
 };
 
 /**
- * Get or set a property/attribute value of first element from
- * the ExtendedNodeList instance collection
+ * Get a property/attribute value of first element from
+ * the ExtendedNodeList instance collection or set it for each element of
+ * the collection
  * TODO: only existing properties, which is quite secure, but may be annonying
  * <br>maybe this should be done via DOMCleanup (weed out forbidden properties)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
@@ -395,10 +396,12 @@ const find$ = (extCollection, selector) => {
  * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable
  */
 const prop = (extCollection, property, value) => {
-  const firstElem = extCollection.first();
-  if (firstElem && property in firstElem) {
-    firstElem[property] = value || firstElem[property];
-    return value ? extCollection : firstElem[property];
+  if (value === undefined) {
+    return !extCollection.isEmpty ? extCollection.first()[property] : undefined;
+  }
+  
+  if (!extCollection.isEmpty) {
+    loop(extCollection, el => el[property] = value);
   }
 
   return extCollection;
