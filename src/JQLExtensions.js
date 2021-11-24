@@ -43,11 +43,9 @@ randomStringExtension();
  */
 
 /**
- * Get or set textContent the first element in the
- * the collection of [extCollection] and return
- * either a string from the joined array of text
- * values from all elements in the collection or
- * ExtendedNodeList instance.
+ * Get textContent of the first element in the
+ * the collection of [extCollection] or set the textContent
+ * for each element of the collection. .
  * overwrites current textContent of the first element,
  * or appends the text to it.
  * <br><b>Note</b>: uses textContent, so no html here
@@ -58,20 +56,17 @@ randomStringExtension();
  * or (if <code>textValue</code> is empty) the property value.
  */
 const text = (extCollection, textValue, append) => {
-  const el = extCollection.first();
-
-  if (!el) {
+  if (extCollection.isEmpty()) {
     return extCollection;
   }
 
+  const cb = el => el.textContent = append ? el.TextContent + textValue : textValue;
+
   if (!textValue) {
-    return el.textContent;
-  } else if (append) {
-    el.textContent += textValue;
-  } else {
-    el.textContent = textValue;
+    return extCollection.first().textContent;
   }
 
+  loop(extCollection, cb);
   return extCollection;
 };
 
@@ -434,7 +429,7 @@ const on = (extCollection, type, callback) => {
  * ExtendedNodeList instance.
  * overwrites current html of the first element,
  * or appends the value to it.
- * Note: the html is always sanitized (see DOMCleanup)
+ * Note: the html is always sanitized (see [module HtmlCleanup]{@link: module:HtmlCleanup})
  * @todo split up (get, set)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param htmlValue {string|undefined} string or nothing
@@ -533,7 +528,7 @@ const delegate = (extCollection, type, cssSelector, ...callbacks) => {
 };
 
 /**
- * Add handler lambda(s) for event [type] and
+ * Add one or multiple handler lambda(s) for event [type] and
  * the ExtendedNodeList instance
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param type {string} event type (e.g. 'click')
