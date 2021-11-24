@@ -422,17 +422,13 @@ const on = (extCollection, type, callback) => {
 };
 
 /**
- * Get or set (inner-) html of the first element in the
- * collection of [extCollection] and return
- * either a string from the joined array of text
- * values from all elements in the collection or
- * ExtendedNodeList instance.
- * overwrites current html of the first element,
- * or appends the value to it.
+ * Get (inner-) html of the first element in the
+ * collection of [extCollection] or set html for each
+ * element of the collection.
+ * Overwrites current html of the elements, or appends the value to it.
  * Note: the html is always sanitized (see [module HtmlCleanup]{@link: module:HtmlCleanup})
- * @todo split up (get, set)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param htmlValue {string|undefined} string or nothing
+ * @param htmlValue {ExtendedNodeList|string|undefined} JQL instance, html string or nothing
  * @param append {boolean} appends the html if true, otherwise destructive
  * @returns {string|ExtendedNodeList} current ExtendedNodeList instance or
  * (if <code>htmlValue</code> is empty) the current (inner)html of the first
@@ -440,28 +436,16 @@ const on = (extCollection, type, callback) => {
  */
 const html = (extCollection, htmlValue, append) => {
   if (htmlValue === undefined) {
-    const firstEl = extCollection.first();
-    if (firstEl) {
-      return firstEl.innerHTML;
-    }
-    return "";
+    return extCollection.first()?.innerHTML;
   }
 
-  if (extCollection.collection.length) {
-    const el2Change = extCollection.first();
-    if (!el2Change) {
-      return "";
-    }
-    if (`{htmlValue}`.trim().length < 1) {
-      el2Change.textContent = "";
-    } else {
-      const nwElement = createElementFromHtmlString(`<div>${htmlValue}</div>`);
+  if (!extCollection.isEmpty()) {
+    const nwElement = htmlValue.isJQL
+      ? htmlValue.first() : createElementFromHtmlString(`<div>${htmlValue}</div>`);
 
-      if (append) {
-        el2Change.innerHTML += nwElement.innerHTML;
-      } else {
-        el2Change.innerHTML = nwElement.innerHTML;
-      }
+    if (!(nwElement instanceof Comment)) {
+      const cb = el => el.innerHTML = append ? el.innerHTML + nwElement.innerHTML : nwElement.innerHTML;
+      loop(el, cb);
     }
   }
 
