@@ -60,7 +60,7 @@ const text = (extCollection, textValue, append) => {
     return extCollection;
   }
 
-  const cb = el => el.textContent = append ? el.TextContent + textValue : textValue;
+  const cb = el => el.textContent = append ? el.textContent + textValue : textValue;
 
   if (!textValue) {
     return extCollection.first().textContent;
