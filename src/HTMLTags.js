@@ -134,7 +134,7 @@ export default {
     const tagInSet = tags
       .find(tag => tag.elem && elem instanceof tag.elem ||
         (elem.nodeName || "").toLowerCase() === tag.name);
-    return (tagInSet && tagInSet.allowed) || this.isLenient && !tagInSet;
+    return (tagInSet && tagInSet.allowed) || isLenient && !tagInSet;
   },
   /**
    * Set/unset permission for creation of a specific tag, e.g. <code>iframe</code>.
