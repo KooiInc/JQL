@@ -1,4 +1,4 @@
-//noinspection JSCheckFunctionSignatures,JSUnresolvedFunction,JSUnusedGlobalSymbols,JSUnresolvedVariable,ES6UnusedImports,JSIncompatibleTypesComparison,JSClosureCompilerSyntax,DuplicatedCode
+//noinspection JSUnresolvedFunction,JSUnresolvedVariable,DuplicatedCode,JSValidateJSDoc,JSClosureCompilerSyntax
 
 //#region ExtendedNodeList lambda's
 import {createElementFromHtmlString, insertPositions} from "./DOM.js";
@@ -208,13 +208,14 @@ const replaceMe = (extCollection, newChild) => {
  */
 const val = (extCollection, value2Set) => {
   const firstElem = extCollection.first();
-  if (!firstElem) {
-    return;
-  }
-  if ([HTMLInputElement, HTMLSelectElement].includes(firstElem.constructor)) {
-    if (value2Set || typeof value2Set === "string") {
+
+  if (!firstElem) { return; }
+
+  if ([HTMLInputElement, HTMLSelectElement].includes(firstElem?.constructor)) {
+    if (value2Set || [String, Number].find(v2s => value2Set.constructor === v2s)) {
       firstElem.value = value2Set;
     }
+
     return firstElem.value;
   }
 };
@@ -235,7 +236,7 @@ const parent = extCollection => extCollection.first() &&
  * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
  * within <code>&lt;p></code>)
  * @param extCollection {...ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param elems2Append {...(HTMLElement|ExtendedNodeList|string)} The element(s) to append. One or more strings,
+ * @param elems2Append {(string|HTMLElement|Comment|ExtendedNodelist)[]} The element(s) to append. One or more strings,
  * HTMLElements or JQL instances. Types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
@@ -247,7 +248,6 @@ const append = (extCollection, ...elems2Append) => {
 
       if (elem2Append.constructor === String) {
         const nwElem = new JQL(elem2Append);
-        //loop( nwElem, appendEl => loop(extCollection, el => el.appendChild(appendEl)) );
         loop(extCollection, el => el.insertAdjacentHTML(`beforeend`, nwElem.outerHtml()));
       }
 
@@ -287,32 +287,32 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
 };
 
 /**
- * Injects an element before each element of the collection of an instance of ExtendedNodeList.
+ * Injects an element at the start of each element of the collection of an instance of ExtendedNodeList.
+ * <br>When [elem] is a html string, it should be valid html, otherwise nothing is prepended obviously,
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param elem {HTMLElement|ExtendedNodeList} the element to append
- * @param insertBefore {extCollection|string} optional: selector or extCollection.
- * If a selector, then the beforeElement will be a child of extCollection
- * ([extCollection instance].find([insertBefore])
+ * @param content {...(string|HTMLElement|ExtendedNodeList)} the element(s) to append
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
-const prepend = (extCollection, elem) => {
+const prepend = (extCollection, ...content) => {
+  if (content && !extCollection.isEmpty()) {
+    const prependElem = (el, elem2Prepend) => el.insertAdjacentElement(insertPositions.AfterBegin, elem2Prepend)
 
-  if (elem && !extCollection.isEmpty()) {
+    for (let elem of content) {
 
-    if (elem.constructor === String) {
-      elem = new extCollection.constructor(elem);
+      if (elem.constructor === String) {
+        elem = new extCollection.constructor(ele);
+      }
+
+      if (ele.isJQL) {
+        loop(elem, elem2Prepend =>
+          loop(extCollection, el => prependElem(el, elem2Prepend))
+        );
+      }
+
+      if (elem instanceof HTMLElement || elem instanceof Comment) {
+        loop(extCollection, el => prependElem(el, elem));
+      }
     }
-
-    if (elem.isJQL) {
-      loop(elem, elem2Insert =>
-        loop(extCollection, el => el.insertAdjacentElement(insertPositions.AfterBegin, elem2Insert))
-      );
-    }
-
-    if (elem instanceof HTMLElement || elem instanceof Comment) {
-      loop(extCollection, el => el.insertAdjacentElement(insertPositions.AfterBegin, elem));
-    }
-
   }
 
   return extCollection;
