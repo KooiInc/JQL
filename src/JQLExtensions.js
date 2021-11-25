@@ -236,7 +236,7 @@ const parent = extCollection => extCollection.first() &&
  * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
  * within <code>&lt;p></code>)
  * @param extCollection {...ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param elems2Append {(string|HTMLElement|Comment|ExtendedNodelist)[]} The element(s) to append. One or more strings,
+ * @param elems2Append {...(string|HTMLElement|Comment|ExtendedNodelist)} The element(s) to append. One or more strings,
  * HTMLElements or JQL instances. Types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
