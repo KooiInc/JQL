@@ -66,8 +66,7 @@ const text = (extCollection, textValue, append) => {
     return extCollection.first().textContent;
   }
 
-  loop(extCollection, cb);
-  return extCollection;
+  return loop(extCollection, cb);
 };
 
 /**
@@ -448,7 +447,7 @@ const html = (extCollection, htmlValue, append) => {
 
     if (!(nwElement instanceof Comment)) {
       const cb = el => el.innerHTML = append ? el.innerHTML + nwElement.innerHTML : nwElement.innerHTML;
-      loop(extCollection, cb);
+      return loop(extCollection, cb);
     }
   }
 
