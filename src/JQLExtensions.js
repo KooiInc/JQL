@@ -232,12 +232,12 @@ const parent = extCollection => extCollection.first() &&
 
 /**
  * Appends one ore more elements to each element of the instance collection (for real, in the DOM tree).
- * <br>If elems2Append consists of html string(s), they should contain be <i>valid</i> html
+ * <br>If elems2Append consists of html string(s), they should contain <i>valid</i> html
  * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
  * within <code>&lt;p></code>)
- * @param extCollection {...ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param elems2Append {...(string|HTMLElement|Comment|ExtendedNodelist)} The element(s) to append. One or more strings,
- * HTMLElements or JQL instances. Types may be mixed.
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @param elems2Append {...(string|HTMLElement|Comment|ExtendedNodelist)} The element(s) to append.
+ * Types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
 const append = (extCollection, ...elems2Append) => {
@@ -288,10 +288,12 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
 
 /**
  * Injects an element at the start of each element of the collection of an instance of ExtendedNodeList.
- * <br>When [elem] is a html string, it should be valid html, otherwise nothing is prepended obviously,
+ * <br>When [elem] is a html string, it should be valid html, otherwise nothing is prepended obviously
+ * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
+ * within <code>&lt;p></code>)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param content {...(string|HTMLElement|ExtendedNodeList)} the element(s) to append: one or more
- * strings, HTMLElements or instances of ExtendedNodeList. The types may be mixed.
+ * @param content {...(string|HTMLElement|ExtendedNodeList|Comment)} the element(s) to append.
+ * The types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
 const prepend = (extCollection, ...content) => {
