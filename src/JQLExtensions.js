@@ -1,7 +1,7 @@
 //noinspection JSCheckFunctionSignatures,JSUnresolvedFunction,JSUnusedGlobalSymbols,JSUnresolvedVariable,ES6UnusedImports,JSIncompatibleTypesComparison,JSClosureCompilerSyntax,DuplicatedCode
 
 //#region ExtendedNodeList lambda's
-import {createElementFromHtmlString} from "./DOM.js";
+import {createElementFromHtmlString, insertPositions} from "./DOM.js";
 import {loop, addHandlerId, isVisible} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 import {randomStringExtension} from "./Helpers.js";
@@ -230,39 +230,47 @@ const parent = extCollection => extCollection.first() &&
   extCollection;
 
 /**
- * Appends one ore more elements to the first element
- * of the instance collection (for real, in the DOM tree)
+ * Appends one ore more elements to each element of the instance collection (for real, in the DOM tree).
+ * <br>If elems2Append consists of html string(s), they should contain be <i>valid</i> html
+ * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
+ * within <code>&lt;p></code>)
  * @param extCollection {...ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param elems2Append {...(HTMLElement|ExtendedNodeList|string)}
- * The element(s) to append. If string(s), should be valid html
+ * @param elems2Append {...(HTMLElement|ExtendedNodeList|string)} The element(s) to append. One or more strings,
+ * HTMLElements or JQL instances. Types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
 const append = (extCollection, ...elems2Append) => {
-  const firstElem = extCollection.first();
+  const JQL = extCollection.constructor;
+  if (!extCollection.isEmpty() && elems2Append) {
+    elems2Append.forEach(elem2Append => {
 
-  if (firstElem && elems2Append) {
-    elems2Append.forEach(elem => {
-      if (elem.constructor === String) {
-        new extCollection.constructor(elem, firstElem);
+      if (elem2Append.constructor === String) {
+        const nwElem = new JQL(elem2Append);
+        //loop( nwElem, appendEl => loop(extCollection, el => el.appendChild(appendEl)) );
+        loop(extCollection, el => el.insertAdjacentHTML(`beforeend`, nwElem.outerHtml()));
       }
-      if (Array.isArray(elem.collection) && elem.collection.filter(v => v).length > 0) {
-        elem.collection.forEach(el => firstElem.appendChild(el))
+
+      if (elem2Append.isJQL && !elem2Append.isEmpty()) {
+        loop( elem2Append, appendEl =>
+          loop(extCollection, el => el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl))
+        )
       }
-      if (elem instanceof HTMLElement || elem instanceof Comment) {
-        firstElem.appendChild(elem);
+
+      if (elem2Append instanceof HTMLElement || elem2Append instanceof Comment) {
+        loop (extCollection, el => el.appendChild(elem2Append));
       }
     });
   }
+
   return extCollection;
 };
 
 /**
  * Appends the collection of one ExtendedNodeList instance
  * to another instance, so injects the element(s) of
- * [extCollection] to the first element of [extCollection2AppendTo]
+ * [extCollection] to each element of [extCollection2AppendTo]
  * (for real, injected and visible in the DOM tree).
- * <br><b>Note</b>: this returns the appended instance,
- * so not extCollection2AppendTo.
+ * <br><b>Note</b>: this returns the extCollection2AppendTo.
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param extCollection2AppendTo {ExtendedNodeList} the instance to append to
  * @returns {ExtendedNodeList} initial instance of ExtendedNodeList, so chainable
@@ -274,7 +282,7 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
 
   extCollection2AppendTo.append(extCollection);
 
-  return extCollection;
+  return extCollection2AppendTo;
 };
 
 /**

@@ -118,7 +118,7 @@ function popupFactory($) {
     endTimer();
     popupBox.find$(`[data-modalcontent]`)
       .empty()
-      .append( message.isJQL ? message : $(`<div>${message}</div>`) );
+      .append( message.isJQL ? message : $.virtual(`<div>${message}</div>`) );
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
 
