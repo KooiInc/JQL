@@ -242,22 +242,23 @@ const parent = extCollection => extCollection.first() &&
  */
 const append = (extCollection, ...elems2Append) => {
   const JQL = extCollection.constructor;
-  if (!extCollection.isEmpty() && elems2Append) {
 
+  if (!extCollection.isEmpty() && elems2Append) {
     for (let elem2Append of elems2Append) {
 
       if (elem2Append.constructor === String) {
-        const nwElem = new JQL(elem2Append);
-        loop(extCollection, el => el.insertAdjacentHTML(`beforeend`, nwElem.outerHtml()));
+        elem2Append = new JQL(elem2Append);
       }
 
       if (elem2Append.isJQL && !elem2Append.isEmpty()) {
         loop( elem2Append, appendEl =>
-          loop(extCollection, el => el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl))
+          loop(extCollection, el =>
+            appendEl instanceof Comment
+              ? el.insertAdjacentHTML(insertPositions.BeforeEnd, `<!--${appendEl.textContent}-->`)
+              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl))
         )
       }
-
-      if (elem2Append instanceof HTMLElement || elem2Append instanceof Comment) {
+      if (elem2Append instanceof HTMLElement) {
         loop (extCollection, el => el.appendChild(elem2Append));
       }
     }
