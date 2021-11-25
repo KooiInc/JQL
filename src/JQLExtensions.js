@@ -290,7 +290,8 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
  * Injects an element at the start of each element of the collection of an instance of ExtendedNodeList.
  * <br>When [elem] is a html string, it should be valid html, otherwise nothing is prepended obviously,
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param content {...(string|HTMLElement|ExtendedNodeList)} the element(s) to append
+ * @param content {...(string|HTMLElement|ExtendedNodeList)} the element(s) to append: one or more
+ * strings, HTMLElements or instances of ExtendedNodeList. The types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
 const prepend = (extCollection, ...content) => {
@@ -298,12 +299,11 @@ const prepend = (extCollection, ...content) => {
     const prependElem = (el, elem2Prepend) => el.insertAdjacentElement(insertPositions.AfterBegin, elem2Prepend)
 
     for (let elem of content) {
-
       if (elem.constructor === String) {
         elem = new extCollection.constructor(ele);
       }
 
-      if (ele.isJQL) {
+      if (elem.isJQL) {
         loop(elem, elem2Prepend =>
           loop(extCollection, el => prependElem(el, elem2Prepend))
         );
