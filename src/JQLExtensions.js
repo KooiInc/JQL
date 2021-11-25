@@ -242,7 +242,8 @@ const parent = extCollection => extCollection.first() &&
 const append = (extCollection, ...elems2Append) => {
   const JQL = extCollection.constructor;
   if (!extCollection.isEmpty() && elems2Append) {
-    elems2Append.forEach(elem2Append => {
+
+    for (let elem2Append of elems2Append) {
 
       if (elem2Append.constructor === String) {
         const nwElem = new JQL(elem2Append);
@@ -259,18 +260,18 @@ const append = (extCollection, ...elems2Append) => {
       if (elem2Append instanceof HTMLElement || elem2Append instanceof Comment) {
         loop (extCollection, el => el.appendChild(elem2Append));
       }
-    });
+    }
+
   }
 
   return extCollection;
 };
 
 /**
- * Appends the collection of one ExtendedNodeList instance
- * to another instance, so injects the element(s) of
- * [extCollection] to each element of [extCollection2AppendTo]
+ * Appends the collection of one ExtendedNodeList instance to another instance,
+ * so injects the element(s) of [extCollection] to each element of [extCollection2AppendTo]
  * (for real, injected and visible in the DOM tree).
- * <br><b>Note</b>: this returns the extCollection2AppendTo.
+ * <br><b>Note</b>: this returns the extCollection2AppendTo (so, the parent JQL instance).
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param extCollection2AppendTo {ExtendedNodeList} the instance to append to
  * @returns {ExtendedNodeList} initial instance of ExtendedNodeList, so chainable
@@ -286,37 +287,33 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
 };
 
 /**
- * Injects an element before the first element
- * of the collection of an instance of ExtendedNodeList
+ * Injects an element before each element of the collection of an instance of ExtendedNodeList.
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param elem {HTMLElement|ExtendedNodeList} the element to append
- * @param insertBeforeElem {ChildNode|string} optional: selector or first element of extCollection
+ * @param insertBefore {extCollection|string} optional: selector or extCollection.
+ * If a selector, then the beforeElement will be a child of extCollection
+ * ([extCollection instance].find([insertBefore])
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
-const insert = (extCollection, elem, insertBeforeElem) => {
-  const firstElem = extCollection.first();
-  
-  if (!firstElem) {
-    return extCollection;
-  }
+const prepend = (extCollection, elem) => {
 
-  if (insertBeforeElem) {
-    // noinspection JSIncompatibleTypesComparison
-    insertBeforeElem = insertBeforeElem.constructor === String
-      ? firstElem.querySelector(insertBeforeElem)
-      : insertBeforeElem.isJQL
-        ? insertBeforeElem.first()
-        : insertBeforeElem;
-  } else {
-    insertBeforeElem = firstElem.childNodes[0];
-  }
+  if (elem && !extCollection.isEmpty()) {
 
-  // noinspection JSIncompatibleTypesComparison
-  if (elem.isJQL) {
-    elem = elem.first();
-  }
+    if (elem.constructor === String) {
+      elem = new extCollection.constructor(elem);
+    }
 
-  firstElem.insertBefore(elem, insertBeforeElem);
+    if (elem.isJQL) {
+      loop(elem, elem2Insert =>
+        loop(extCollection, el => el.insertAdjacentElement(insertPositions.AfterBegin, elem2Insert))
+      );
+    }
+
+    if (elem instanceof HTMLElement || elem instanceof Comment) {
+      loop(extCollection, el => el.insertAdjacentElement(insertPositions.AfterBegin, elem));
+    }
+
+  }
 
   return extCollection;
 };
@@ -539,7 +536,7 @@ const ON = (extCollection, type, ...callbacks) => {
 
 export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
-    parent, append, appendTo, insert, single, first, first$, find, find$,
+    parent, append, appendTo, prepend, single, first, first$, find, find$,
     computedStyle, dimensions, prop, on, html, outerHtml, htmlFor,
     delegate, ON,
 };
