@@ -81,7 +81,15 @@ const each = (extCollection, lambda) => loop(extCollection, lambda);
  * Remove each collection element from the DOM tree
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  */
-const remove = extCollection => loop(extCollection, el => el.remove());
+const remove = (extCollection, selector) => {
+  const remover = el => el.remove();
+  if (selector) {
+    const selectedElements = extCollection.find$(selector);
+    !selectedElements.isEmpty() && loop(selectedElements, remover);
+    return;
+  }
+  loop(extCollection, remover);
+}
 
 /**
  * Get computed style for a css property of the first element of the ExtendedNodeList instance
@@ -149,12 +157,9 @@ const is = (extCollection, checkValue) => {
  * @returns {boolean} true if one of classNames exists
  */
 const hasClass = (extCollection, ...classNames) => {
-  for (let elem in extCollection.collection) {
-    if ( classNames?.find(name => elem.classList.contains(name)) ) {
-      return true;
-    }
-  }
-  return false;
+  return !extCollection.isEmpty() &&
+    extCollection.collection?.filter(el =>
+      classNames?.find(cn => el.classList.contains(cn))).length > 0;
 };
 
 /**
@@ -215,7 +220,7 @@ const val = (extCollection, value2Set) => {
 
   if (!firstElem) { return; }
 
-  if ([HTMLInputElement, HTMLSelectElement].includes(firstElem?.constructor)) {
+  if ([HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].includes(firstElem?.constructor)) {
     if (value2Set || [String, Number].find(v2s => value2Set.constructor === v2s)) {
       firstElem.value = value2Set;
     }
@@ -225,14 +230,12 @@ const val = (extCollection, value2Set) => {
 };
 
 /**
- * Get the direct parent node of the first element of
- * the ExtendedNodeList instance
+ * Get the direct parent node of the first element of the ExtendedNodeList instance
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
-const parent = extCollection => extCollection.first() &&
-  new extCollection.constructor(extCollection.first().parentNode) ||
-  extCollection;
+const parent = extCollection => !extCollection.isEmpty() && extCollection.first().parentNode &&
+  new extCollection.constructor(extCollection.first().parentNode) || extCollection;
 
 /**
  * Appends one ore more elements to each element of the instance collection (for real, in the DOM tree).
@@ -255,13 +258,12 @@ const append = (extCollection, ...elems2Append) => {
       }
 
       if (elem2Append.isJQL && !elem2Append.isEmpty()) {
-        loop( elem2Append, appendEl =>
-          loop(extCollection, el =>
+        loop( elem2Append, appendEl => loop( extCollection, el =>
             appendEl instanceof Comment
               ? el.appendChild(appendEl)
-              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl))
-        )
+              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl) ) )
       }
+
       if (elem2Append instanceof HTMLElement) {
         loop (extCollection, el => el.appendChild(elem2Append));
       }
@@ -405,8 +407,12 @@ const find = (extCollection, selector) =>
  * @returns {ExtendedNodeList|undefined} a new ExtendedNodeList instance or nothing
  */
 const find$ = (extCollection, selector) => {
-  const firstElem = extCollection.first();
-  return firstElem && selector && new extCollection.constructor(firstElem.querySelector(selector));
+  const found = extCollection.collection.reduce( (acc, el) =>
+    [...acc, [...el.querySelectorAll(selector)]], [])
+    .flat()
+    .filter( el => el && el instanceof HTMLElement);
+
+  return new extCollection.constructor(found);
 };
 
 /**
