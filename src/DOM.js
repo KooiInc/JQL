@@ -6,7 +6,7 @@ import {
   getRestricted,
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
-import {truncate2SingleStr} from "./Helpers.js";
+import {truncate2SingleStr, truncateHtmlStr} from "./Helpers.js";
 
 /**
  * Methods for manipulating the <code>Document Object [Model]</code> (aka <code>DOM</code>)
@@ -62,7 +62,6 @@ const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd)
         root.insertBefore(elem, root.firstElementChild);
       }
 
-       return elem;
     }
   }
 };
@@ -86,8 +85,7 @@ const createElementFromHtmlString = htmlStr => {
   }
   
   if (!nwElem.children.length) {
-      return document.createComment(`JQL element creation error! ${
-        truncate2SingleStr(htmlStr, 100)} => not valid or not allowed`);
+      return createElementFromHtmlString(`<span data-jqlcreationerror="1">${truncateHtmlStr(htmlStr, 60)}</span>`);
   }
 
   return nwElem.children[0];
