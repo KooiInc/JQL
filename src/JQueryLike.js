@@ -134,7 +134,7 @@ const ExtendedNodeList = function (
       !(root instanceof HTMLBRElement) && inject2DOMTree(this.collection, root, position);
       logSystem && Log(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining", logLineLength)}]`);
-      errors.length && console.error(`JQL: illegal html: "${
+      errors.length && console.error(`JQL: not rendered illegal html: "${
         errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
     }
   } catch (error) {
