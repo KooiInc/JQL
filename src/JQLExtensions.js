@@ -258,10 +258,11 @@ const append = (extCollection, ...elems2Append) => {
       }
 
       if (elem2Append.isJQL && !elem2Append.isEmpty()) {
-        loop( elem2Append, appendEl => loop( extCollection, el =>
+        const appendEl = elem2Append.first();
+        loop( extCollection, el =>
             appendEl instanceof Comment
               ? el.appendChild(appendEl)
-              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl) ) )
+              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl) )
       }
 
       if (elem2Append instanceof HTMLElement) {
