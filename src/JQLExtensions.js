@@ -1,7 +1,7 @@
 //noinspection JSUnresolvedFunction,JSUnresolvedVariable,DuplicatedCode,JSValidateJSDoc,JSClosureCompilerSyntax
 
 //#region ExtendedNodeList lambda's
-import {createElementFromHtmlString, insertPositions} from "./DOM.js";
+import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
 import {loop, addHandlerId, isVisible} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 import {randomStringExtension} from "./Helpers.js";
@@ -275,16 +275,14 @@ const append = (extCollection, ...elems2Append) => {
  * <br><b>Note</b>: this returns the extCollection2AppendTo (so, the parent JQL instance).
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param extCollection2AppendTo {ExtendedNodeList} the instance to append to
- * @returns {ExtendedNodeList} initial instance of ExtendedNodeList, so chainable
+ * @returns {ExtendedNodeList} i.c. extCollection2AppendTo
  */
 const appendTo = (extCollection, extCollection2AppendTo) => {
   if (!extCollection2AppendTo.isJQL) {
     extCollection2AppendTo = new extCollection.constructor(extCollection2AppendTo);
   }
 
-  extCollection2AppendTo.append(extCollection);
-
-  return extCollection2AppendTo;
+  return extCollection2AppendTo.append(extCollection);
 };
 
 /**
@@ -299,7 +297,6 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
  */
 const prepend = (extCollection, ...content) => {
   if (content && !extCollection.isEmpty()) {
-    const prependElem = (el, elem2Prepend) => el.insertAdjacentElement(insertPositions.AfterBegin, elem2Prepend)
 
     for (let elem of content) {
       if (elem.constructor === String) {
@@ -308,20 +305,34 @@ const prepend = (extCollection, ...content) => {
 
       if (elem.isJQL && !elem.isEmpty()) {
         loop( elem, appendEl =>
-          loop(extCollection, el =>
-            appendEl instanceof Comment
-              ? el.insertAdjacentHTML(insertPositions.BeforeEnd, `<!--${appendEl.textContent}-->`)
-              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl))
+          loop(extCollection, el => element2DOM(appendEl, el, insertPositions.AfterBegin))
         );
       }
 
       if (elem instanceof HTMLElement) {
-        loop(extCollection, el => prependElem(el, elem));
+        loop(extCollection, el => element2DOM(elem, el, insertPositions.AfterBegin));
       }
     }
   }
 
   return extCollection;
+};
+
+/**
+ * Prepends the collection of one ExtendedNodeList instance to each element of another instance,
+ * so injects the element(s) of [extCollection] to each element of [extCollection2AppendTo]
+ * (for real, injected and visible in the DOM tree).
+ * <br><b>Note</b>: this returns the extCollection2AppendTo (so, the parent JQL instance).
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @param extCollection2PrependTo {ExtendedNodeList} the instance to append to
+ * @returns {ExtendedNodeList} i.c. extCollection2PrependTo
+ */
+const prependTo = (extCollection, extCollection2PrependTo) => {
+  if (!extCollection2PrependTo.isJQL) {
+    extCollection2PrependTo = new extCollection.constructor(extCollection2PrependTo);
+  }
+
+  return extCollection2AppendTo.prepend(extCollection);
 };
 
 /**
@@ -542,7 +553,7 @@ const ON = (extCollection, type, ...callbacks) => {
 
 export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
-    parent, append, appendTo, prepend, single, first, first$, find, find$,
+    parent, append, appendTo, prepend, prependTo, single, first, first$, find, find$,
     computedStyle, dimensions, prop, on, html, outerHtml, htmlFor,
     delegate, ON,
 };
