@@ -132,11 +132,10 @@ const ExtendedNodeList = function (
       const errors = this.collection.filter( el => !(el instanceof Comment) && el.dataset && el.dataset.jqlcreationerror );
       this.collection = this.collection.filter(el => el instanceof Comment || el.dataset && !el.dataset.jqlcreationerror);
       !(root instanceof HTMLBRElement) && inject2DOMTree(this.collection, root, position);
-
       logSystem && Log(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining", logLineLength)}]`);
-      errors.length && console.log(`JQL creation error for:\n${
-        errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}` );
+      errors.length && console.error(`JQL: illegal html: "${
+        errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
     }
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
