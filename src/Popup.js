@@ -270,5 +270,5 @@ function initStyling(setStyle) {
       opacity: 1,
     }
   };
-  Object.entries(styling).forEach( ([selector, rules]) => setStyle(selector, rules, `modalCss`));
+  Object.entries(styling).forEach( ([selector, rules]) => setStyle(selector, rules, `popupCSS`));
 }
