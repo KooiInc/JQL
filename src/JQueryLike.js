@@ -30,7 +30,6 @@ import {
   isHtmlString,
   isArrayOfHtmlStrings,
   inject2DOMTree,
-  isCommentNode,
   ElemArray2HtmlString,
   checkInput,
   setCollectionFromCssSelector,
@@ -69,7 +68,7 @@ customStylesheet.id = `JQLCustomCSS`;
  * <li><code>Array</code> of <code>string</code>
  *  (e.g. <code>['&lt;span>Hello&lt;/span>', '&lt;span>world&lt;/span>']</code>)
  * </ul>
- * @param root {HTMLElement} The root element to which an element to create must be appended or inserted into/before/after
+ * @param root {HTMLElement|ExtendedNodeList} The root element to which an element to create must be appended or inserted into
  * (see [position] parameter)<ul>
  * <li>Defaults to <code>document.body</code>
  * <li>If one or more elements is/are created they will not be inserted into the DOM tree
@@ -130,12 +129,14 @@ const ExtendedNodeList = function (
     }
 
     if (shouldCreateElements && this.collection.length > 0) {
-      this.collection = !(root instanceof HTMLBRElement)
-        ? inject2DOMTree(this.collection, root, position).filter(el => !isCommentNode(el))
-        : this.collection;
+      const errors = this.collection.filter( el => !(el instanceof Comment) && el.dataset && el.dataset.jqlcreationerror );
+      this.collection = this.collection.filter(el => el instanceof Comment || el.dataset && !el.dataset.jqlcreationerror);
+      !(root instanceof HTMLBRElement) && inject2DOMTree(this.collection, root, position);
 
       logSystem && Log(`${logStr}\n  Created (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining", logLineLength)}]`);
+      errors.length && console.log(`JQL creation error for:\n${
+        errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}` );
     }
   } catch (error) {
     const msg = `Caught jql selector or html error:\n${error.stack ? error.stack : error.message}`;
@@ -185,6 +186,7 @@ Object.entries({
    * See [module Styling]{@link module:Styling~changeCssStyleRule}
    * @param selector {string} the selector e.g. <code>#someElem.someClass</code>
    * @param ruleValues {Object} an object containing the rules for the selector
+   * @param cssId {string} optionally the id for the style element (default 'JQLCustomCSS')
    * @example
    * import $ from "JQueryLike.js";
    * $.setStyle(`body`, {font: `normal 12px/15px verdana, arial`, margin: `2em`});
