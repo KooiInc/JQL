@@ -52,9 +52,10 @@ const loop = (extCollection, callback) => {
  * @returns {Array} an Array of injected <code>HTMLElement</code>s, maybe empty
  */
 const inject2DOMTree = (collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
-  collection.reduce((acc, elem) =>
-    elem && (elem instanceof HTMLElement || isCommentNode(elem))
-      ? [...acc, element2DOM(elem, root, position)] : acc, []);
+  collection.reduce((acc, elem) => {
+    const created = elem && (elem instanceof HTMLElement || isCommentNode(elem)) && element2DOM(elem, root, position);
+    return created ? [...acc, created] : acc;
+  }, []);
 
 /**
  * Create a handlerId for Element.
