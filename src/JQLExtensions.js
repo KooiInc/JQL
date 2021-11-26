@@ -142,15 +142,19 @@ const is = (extCollection, checkValue) => {
 };
 
 /**
- * Checks if (one of) [classNames] exist in the first element of the
- * ExtendedNodeList instance
+ * Checks if (one of) [classNames] exist in one of the elements of the
+ * ExtendedNodeList instance element collection
  * @param extCollection {ExtendedNodeList} (implicit) current ExentedNodeList instance
- * @param classNames {...string}
- * @returns {boolean} true if one of classNames exists in the elements' classList
+ * @param classNames {...string} one or more classNames
+ * @returns {boolean} true if one of classNames exists
  */
 const hasClass = (extCollection, ...classNames) => {
-  const firstElem = extCollection.first();
-  return classNames?.find(name => firstElem.classList.contains(name)) || false;
+  for (let elem in extCollection.collection) {
+    if ( classNames?.find(name => elem.classList.contains(name)) ) {
+      return true;
+    }
+  }
+  return false;
 };
 
 /**
