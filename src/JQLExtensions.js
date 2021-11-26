@@ -254,7 +254,7 @@ const append = (extCollection, ...elems2Append) => {
         loop( elem2Append, appendEl =>
           loop(extCollection, el =>
             appendEl instanceof Comment
-              ? el.insertAdjacentHTML(insertPositions.BeforeEnd, `<!--${appendEl.textContent}-->`)
+              ? el.appendChild(appendEl)
               : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl))
         )
       }
@@ -303,16 +303,19 @@ const prepend = (extCollection, ...content) => {
 
     for (let elem of content) {
       if (elem.constructor === String) {
-        elem = new extCollection.constructor(ele);
+        elem = new extCollection.constructor(elem);
       }
 
-      if (elem.isJQL) {
-        loop(elem, elem2Prepend =>
-          loop(extCollection, el => prependElem(el, elem2Prepend))
+      if (elem.isJQL && !elem.isEmpty()) {
+        loop( elem, appendEl =>
+          loop(extCollection, el =>
+            appendEl instanceof Comment
+              ? el.insertAdjacentHTML(insertPositions.BeforeEnd, `<!--${appendEl.textContent}-->`)
+              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl))
         );
       }
 
-      if (elem instanceof HTMLElement || elem instanceof Comment) {
+      if (elem instanceof HTMLElement) {
         loop(extCollection, el => prependElem(el, elem));
       }
     }

@@ -52,9 +52,17 @@ const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd)
     if (elem instanceof HTMLElement) {
       return root.insertAdjacentElement(position, elem);
     }
+
     if (elem instanceof Comment) {
-      root.insertAdjacentHTML(position, `<!--${elem.textContent}-->`);
-      return elem;
+      if (position === adjacents.BeforeEnd) {
+        root.appendChild(elem);
+      }
+
+      if (position === adjacents.AfterBegin) {
+        root.insertBefore(elem, root.firstElementChild);
+      }
+
+       return elem;
     }
   }
 };
