@@ -249,8 +249,6 @@ const parent = extCollection => !extCollection.isEmpty() && extCollection.first(
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
 const append = (extCollection, ...elems2Append) => {
-  elems2Append.length > 1 && console.log(`wat godverdomme toch`, elems2Append);
-
   if (!extCollection.isEmpty() && elems2Append) {
 
     for (let i = 0; i < elems2Append.length; i += 1) {
