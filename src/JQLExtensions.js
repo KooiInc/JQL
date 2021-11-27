@@ -260,7 +260,8 @@ const append = (extCollection, ...elems2Append) => {
       }
 
       if (elem2Append instanceof HTMLElement || elem2Append instanceof Comment) {
-        extCollection.collection.forEach(el => el.appendChild(elem2Append.cloneNode(true)))
+        extCollection.collection.forEach(el =>
+          el.appendChild(elem2Append instanceof Comment ? elem2Append : elem2Append.cloneNode(true)));
         return extCollection;
       }
 
@@ -268,7 +269,8 @@ const append = (extCollection, ...elems2Append) => {
         const elems = elem2Append.collection.slice();
         elem2Append.remove();
         elems.forEach( e2a =>
-          extCollection.collection.forEach(el => el.appendChild(e2a.cloneNode(true))) );
+          extCollection.collection.forEach(el =>
+            el.appendChild(e2a instanceof Comment ? e2a : e2a.cloneNode(true))) );
       }
     }
   }
@@ -412,7 +414,7 @@ const find$ = (extCollection, selector) => {
     [ ...acc, [...el.querySelectorAll(selector)] ], [])
     .flat()
     .filter( el => el && el instanceof HTMLElement);
-  return _$.virtual(found);
+  return found.length && _$.virtual(found);
 };
 
 /**
