@@ -252,17 +252,17 @@ const append = (extCollection, ...elems2Append) => {
 
   if (!extCollection.isEmpty() && elems2Append) {
     for (let elem2Append of elems2Append) {
-
       if (elem2Append.constructor === String) {
         elem2Append = new JQL(elem2Append);
       }
 
       if (elem2Append.isJQL && !elem2Append.isEmpty()) {
-        const appendEl = elem2Append.first();
-        loop( extCollection, el =>
-            appendEl instanceof Comment
-              ? el.appendChild(appendEl)
-              : el.insertAdjacentElement(insertPositions.BeforeEnd, appendEl) )
+        console.log(extCollection, elem2Append);
+        for (let el2Append of elem2Append.collection) {
+          loop(extCollection, el => el2Append instanceof Comment
+            ? el.appendChild(el2Append)
+            : el.insertAdjacentHTML(insertPositions.BeforeEnd, el2Append.outerHTML) );
+        }
       }
 
       if (elem2Append instanceof HTMLElement) {
@@ -288,7 +288,6 @@ const appendTo = (extCollection, extCollection2AppendTo) => {
   if (!extCollection2AppendTo.isJQL) {
     extCollection2AppendTo = new extCollection.constructor(extCollection2AppendTo);
   }
-
   return extCollection2AppendTo.append(extCollection);
 };
 
