@@ -29,6 +29,7 @@ import {
   initializePrototype,
   isHtmlString,
   isArrayOfHtmlStrings,
+  isArrayOfHtmlElements,
   inject2DOMTree,
   ElemArray2HtmlString,
   checkInput,
@@ -102,28 +103,29 @@ const ExtendedNodeList = function (
   }
 
   checkInput(input, this);
+  const isRawElemCollection = isArrayOfHtmlElements(input);
 
-  if (Array.isArray(this.collection)) {
+  if (Array.isArray(this.collection) && !isRawElemCollection) {
     return this;
   }
 
   try {
-    this.collection = [];
+    this.collection = isRawElemCollection ? [...input] : [];
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
-    const shouldCreateElements = isRawHtmlArray || isRawHtml;
+    const shouldCreateElements = isRawHtmlArray || isRawHtml || isRawElemCollection;
 
     if (!shouldCreateElements) {
       const forLog = setCollectionFromCssSelector(input, root, this);
-      logSystem && Log(forLog) ;
+      logSystem && Log(forLog);
       return this;
     }
 
     const logStr = (`(JQL log) raw input: [${
-      truncateHtmlStr(isRawHtmlArray ? input.join(``) : input, logLineLength)}]`);
+      truncateHtmlStr(isRawHtmlArray ? input.join(``) : isRawElemCollection ? input.map(el => el.outerHTML).join(``) : input, logLineLength)}]`);
 
-    if (shouldCreateElements) {
+    if (shouldCreateElements && !isRawElemCollection) {
       [input].flat()
         .forEach(htmlFragment => this.collection.push(createElementFromHtmlString(htmlFragment)));
     }

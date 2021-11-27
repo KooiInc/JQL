@@ -116,9 +116,7 @@ function popupFactory($) {
       return createTimed($(`<b style="color:red">Modal not created: invalid input</b>`), 2);    }
 
     endTimer();
-    popupBox.find$(`[data-modalcontent]`)
-      .empty()
-      .append( message.isJQL ? message : $.virtual(`<div>${message}</div>`) );
+    $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
 

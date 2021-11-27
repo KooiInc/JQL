@@ -20,7 +20,6 @@ const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) =>
 const checkInput = (input, self) =>
   self.collection = !input ? []
     : input instanceof HTMLElement ? [input] : input instanceof NodeList ? [...input]
-    : isArrayOfHtmlElements(input) ? input
     : input instanceof self.constructor ? input.collection : undefined;
 const setCollectionFromCssSelector = (input, root, self) => {
   /** determine the root to query from */
@@ -168,6 +167,7 @@ export {
   addHandlerId,
   isHtmlString,
   isArrayOfHtmlStrings,
+  isArrayOfHtmlElements,
   isCommentNode,
   inject2DOMTree,
   ElemArray2HtmlString,

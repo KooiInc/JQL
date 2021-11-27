@@ -5,6 +5,7 @@ import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.j
 import {loop, addHandlerId, isVisible} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 import {randomStringExtension} from "./Helpers.js";
+import _$ from "./JQueryLike.js";
 randomStringExtension();
 
 /**
@@ -248,28 +249,30 @@ const parent = extCollection => !extCollection.isEmpty() && extCollection.first(
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
 const append = (extCollection, ...elems2Append) => {
-  const JQL = extCollection.constructor;
+  elems2Append.length > 1 && console.log(`wat godverdomme toch`, elems2Append);
 
   if (!extCollection.isEmpty() && elems2Append) {
-    for (let elem2Append of elems2Append) {
+
+    for (let i = 0; i < elems2Append.length; i += 1) {
+      const elem2Append = elems2Append[i];
+
       if (elem2Append.constructor === String) {
-        elem2Append = new JQL(elem2Append);
+        extCollection.collection.forEach(el => el.appendChild(createElementFromHtmlString(elem2Append)))
+        return extCollection;
+      }
+
+      if (elem2Append instanceof HTMLElement || elem2Append instanceof Comment) {
+        extCollection.collection.forEach(el => el.appendChild(elem2Append.cloneNode(true)))
+        return extCollection;
       }
 
       if (elem2Append.isJQL && !elem2Append.isEmpty()) {
-        console.log(extCollection, elem2Append);
-        for (let el2Append of elem2Append.collection) {
-          loop(extCollection, el => el2Append instanceof Comment
-            ? el.appendChild(el2Append)
-            : el.insertAdjacentHTML(insertPositions.BeforeEnd, el2Append.outerHTML) );
-        }
-      }
-
-      if (elem2Append instanceof HTMLElement) {
-        loop (extCollection, el => el.appendChild(elem2Append));
+        const elems = elem2Append.collection.slice();
+        elem2Append.remove();
+        elems.forEach( e2a =>
+          extCollection.collection.forEach(el => el.appendChild(e2a.cloneNode(true))) );
       }
     }
-
   }
 
   return extCollection;
@@ -408,11 +411,10 @@ const find = (extCollection, selector) =>
  */
 const find$ = (extCollection, selector) => {
   const found = extCollection.collection.reduce( (acc, el) =>
-    [...acc, [...el.querySelectorAll(selector)]], [])
+    [ ...acc, [...el.querySelectorAll(selector)] ], [])
     .flat()
     .filter( el => el && el instanceof HTMLElement);
-
-  return new extCollection.constructor(found);
+  return _$.virtual(found);
 };
 
 /**
