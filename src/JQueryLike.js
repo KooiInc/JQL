@@ -131,10 +131,11 @@ const ExtendedNodeList = function (
     }
 
     if (shouldCreateElements && this.collection.length > 0) {
+      const isVirtual = root instanceof HTMLBRElement;
       const errors = this.collection.filter( el => !(el instanceof Comment) && el.dataset && el.dataset.jqlcreationerror );
       this.collection = this.collection.filter(el => el instanceof Comment || el.dataset && !el.dataset.jqlcreationerror);
-      !(root instanceof HTMLBRElement) && inject2DOMTree(this.collection, root, position);
-      logSystem && Log(`${logStr}\n  Created (outerHTML truncated) [${
+      !isVirtual && inject2DOMTree(this.collection, root, position);
+      logSystem && Log(`${logStr}\n  Created ${isVirtual ? `VIRTUAL` : ``}(outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining", logLineLength)}]`);
       errors.length && console.error(`JQL: not rendered illegal html: "${
         errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
