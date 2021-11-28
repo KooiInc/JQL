@@ -13,15 +13,16 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
  */
 // no comment
 const isCommentNode = elem => elem && elem instanceof Comment;
-const isNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c);
+const isNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c) || input instanceof NodeList;
 const isHtmlString = input => input.constructor === String && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => Array.isArray(input) && !input.find(s => !isHtmlString(s));
 const isArrayOfHtmlElements = input => isNode(input) || Array.isArray(input) && !input.find(el => !isNode(el));
 const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
 const checkInput = (input, self) =>
   self.collection = !input ? []
-    : isNode(input) ? [input] : input instanceof NodeList ? [...input]
-    : input instanceof self.constructor ? input.collection : undefined;
+    : input instanceof NodeList ? [...input]
+      : isNode(input) ? [input]
+        : input instanceof self.constructor ? input.collection : undefined;
 const setCollectionFromCssSelector = (input, root, self) => {
   /** determine the root to query from */
   const selectorRoot = root !== document.body && (input.constructor === String && input.toLowerCase() !== "body")
