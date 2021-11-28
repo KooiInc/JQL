@@ -375,6 +375,23 @@ const single = (extCollection, indexOrSelector = "0") => {
 };
 
 /**
+ * retrieve the extCollection instance collection as a Nodelist
+ * @param extCollection (implicit) current ExtendedNodeList instance
+ * @returns {NodeList}
+ */
+const toNodeList = extCollection => {
+  const virtual = document.createElement(`div`);
+  console.log(extCollection.collection);
+
+  for (let elem of extCollection.collection) {
+    const nodeClone = document.importNode(elem, true);
+    virtual.append(nodeClone);
+  }
+  
+  return virtual.childNodes;
+};
+
+/**
  * Retrieve the first element of the ExtendedNodeList instance collection
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param asExtCollection {boolean} if true, return new ExtendedNodeList instance, else HTMLElement
@@ -576,7 +593,7 @@ export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
     parent, append, appendTo, prepend, prependTo, single, first, first$, find, find$,
     computedStyle, dimensions, prop, on, html, outerHtml, htmlFor,
-    delegate, ON,
+    delegate, ON, toNodeList,
 };
 
 //#endregion ExtendedNodeList lambda's
