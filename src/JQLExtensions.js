@@ -403,7 +403,6 @@ const single = (extCollection, indexOrSelector = "0") => {
  */
 const toNodeList = extCollection => {
   const virtual = document.createElement(`div`);
-  console.log(extCollection.collection);
 
   for (let elem of extCollection.collection) {
     const nodeClone = document.importNode(elem, true);

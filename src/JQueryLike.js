@@ -127,7 +127,7 @@ const ExtendedNodeList = function (
   }
 
   try {
-    this.collection = isRawElemCollection ? [input] : [];
+    this.collection = isRawElemCollection ? [...input] : [];
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
