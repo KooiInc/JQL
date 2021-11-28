@@ -279,6 +279,48 @@ const append = (extCollection, ...elems2Append) => {
 };
 
 /**
+ * Injects an element at the start of each element of the collection of an instance of ExtendedNodeList.
+ * <br>When [elem] is a html string, it should be valid html, otherwise nothing is prepended obviously
+ * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
+ * within <code>&lt;p></code>)
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @param elems2Prepend {...(string|HTMLElement|ExtendedNodeList|Comment)} the element(s) to append.
+ * The types may be mixed.
+ * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
+ */
+const prepend = (extCollection, ...elems2Prepend) => {
+  if (!extCollection.isEmpty() && elems2Prepend) {
+
+    for (let i = 0; i < elems2Prepend.length; i += 1) {
+      const elem2Prepend = elems2Prepend[i];
+
+      if (elem2Prepend.constructor === String) {
+        extCollection.collection.forEach(el =>
+          el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
+        return extCollection;
+      }
+
+      if (elem2Prepend instanceof HTMLElement || elem2Prepend instanceof Comment) {
+        extCollection.collection.forEach(el =>
+          el.insertBefore(
+            elem2Prepend instanceof Comment ? elem2Prepend : elem2Prepend.cloneNode(true), el.firstChild));
+        return extCollection;
+      }
+
+      if (elem2Prepend.isJQL && !elem2Prepend.isEmpty()) {
+        const elems = elem2Prepend.collection.slice();
+        elem2Prepend.remove();
+        elems.forEach( e2a =>
+          extCollection.collection.forEach(el =>
+            el && el.insertBefore(e2a instanceof Comment ? e2a : e2a.cloneNode(true), el.firstChild) ) );
+      }
+    }
+  }
+
+  return extCollection;
+};
+
+/**
  * Appends the collection of one ExtendedNodeList instance to another instance,
  * so injects the element(s) of [extCollection] to each element of [extCollection2AppendTo]
  * (for real, injected and visible in the DOM tree).
@@ -289,42 +331,9 @@ const append = (extCollection, ...elems2Append) => {
  */
 const appendTo = (extCollection, extCollection2AppendTo) => {
   if (!extCollection2AppendTo.isJQL) {
-    extCollection2AppendTo = new extCollection.constructor(extCollection2AppendTo);
+    extCollection2AppendTo = _$.virtual(extCollection2AppendTo);
   }
   return extCollection2AppendTo.append(extCollection);
-};
-
-/**
- * Injects an element at the start of each element of the collection of an instance of ExtendedNodeList.
- * <br>When [elem] is a html string, it should be valid html, otherwise nothing is prepended obviously
- * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
- * within <code>&lt;p></code>)
- * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param content {...(string|HTMLElement|ExtendedNodeList|Comment)} the element(s) to append.
- * The types may be mixed.
- * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
- */
-const prepend = (extCollection, ...content) => {
-  if (content && !extCollection.isEmpty()) {
-
-    for (let elem of content) {
-      if (elem.constructor === String) {
-        elem = new extCollection.constructor(elem);
-      }
-
-      if (elem.isJQL && !elem.isEmpty()) {
-        loop( elem, appendEl =>
-          loop(extCollection, el => element2DOM(appendEl, el, insertPositions.AfterBegin))
-        );
-      }
-
-      if (elem instanceof HTMLElement) {
-        loop(extCollection, el => element2DOM(elem, el, insertPositions.AfterBegin));
-      }
-    }
-  }
-
-  return extCollection;
 };
 
 /**
@@ -338,10 +347,10 @@ const prepend = (extCollection, ...content) => {
  */
 const prependTo = (extCollection, extCollection2PrependTo) => {
   if (!extCollection2PrependTo.isJQL) {
-    extCollection2PrependTo = new extCollection.constructor(extCollection2PrependTo);
+    extCollection2PrependTo = _$.virtual(extCollection2PrependTo);
   }
 
-  return extCollection2AppendTo.prepend(extCollection);
+  return extCollection2PrependTo.prepend(extCollection);
 };
 
 /**
