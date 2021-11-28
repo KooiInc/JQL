@@ -2,7 +2,7 @@
 
 //#region ExtendedNodeList lambda's
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import {loop, addHandlerId, isVisible} from "./JQLExtensionHelpers.js";
+import {loop, addHandlerId, isVisible, isNode} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 import {randomStringExtension} from "./Helpers.js";
 import _$ from "./JQueryLike.js";
@@ -244,7 +244,7 @@ const parent = extCollection => !extCollection.isEmpty() && extCollection.first(
  * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
  * within <code>&lt;p></code>)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param elems2Append {...(string|HTMLElement|Comment|ExtendedNodelist)} The element(s) to append.
+ * @param elems2Append {...(string|HTMLElement|Text|Comment|ExtendedNodeList)} The element(s) to append.
  * Types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
@@ -259,7 +259,7 @@ const append = (extCollection, ...elems2Append) => {
         return extCollection;
       }
 
-      if (elem2Append instanceof HTMLElement || elem2Append instanceof Comment) {
+      if (isNode(elem2Append)) {
         extCollection.collection.forEach(el =>
           el.appendChild(elem2Append instanceof Comment ? elem2Append : elem2Append.cloneNode(true)));
         return extCollection;
@@ -284,7 +284,7 @@ const append = (extCollection, ...elems2Append) => {
  * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
  * within <code>&lt;p></code>)
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
- * @param elems2Prepend {...(string|HTMLElement|ExtendedNodeList|Comment)} the element(s) to append.
+ * @param elems2Prepend {...(string|HTMLElement|Text|Comment|ExtendedNodeList)} the element(s) to append.
  * The types may be mixed.
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
@@ -300,7 +300,7 @@ const prepend = (extCollection, ...elems2Prepend) => {
         return extCollection;
       }
 
-      if (elem2Prepend instanceof HTMLElement || elem2Prepend instanceof Comment) {
+      if (isNode(elem2Prepend)) {
         extCollection.collection.forEach(el =>
           el.insertBefore(
             elem2Prepend instanceof Comment ? elem2Prepend : elem2Prepend.cloneNode(true), el.firstChild));

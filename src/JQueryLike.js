@@ -28,7 +28,7 @@ import {setStyle, customStylesheet} from "./Styling.js";
 import {
   initializePrototype,
   isHtmlString,
-  isSingleNode,
+  isNode,
   isArrayOfHtmlStrings,
   isArrayOfHtmlElements,
   inject2DOMTree,
