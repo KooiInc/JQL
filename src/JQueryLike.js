@@ -54,12 +54,17 @@ customStylesheet.id = `JQLCustomCSS`;
  * <code>HTMLElement</code>s (may be empty), for which a number of jquery-like extension methods is
  * available (e.g. <code>[instance].<b style="color:red">addClass</b></code>).<br>When the parameter
  * contains html (e.g. <code>&lt;p class="someClass">Hello wrld>&lt;/p></code>), the element(s) is/are
- * created and by default injected in de DOM tree unless [<code>root</code>] is a <code>HTMLBRElement</code>.
+ * created and by default injected in de DOM tree unless [<code>root</code>] is a <code>HTMLBRElement</code>
+ * (the static method <code>virtual</code> is provided for the latter).
  * <br><b>Note</b>: any html creation triggers checking and sanitizing the html to prevent script injection etc.
  * <br>See also [module JQLExtensionHelpers.initializePrototype]{@link module:JQLExtensionHelpers~initializePrototype}
  * @param input One of<ul>
- * <li><code>Node</code> list
- * <li><code>HtmlElement</code> instance
+ * <li><code>Node</code> Array, Nodelist or single Node of
+ *   <ul>
+ *      <li><code>HtmlElement</code>
+ *      <li><code>Comment</code>
+ *      <li><code>Text</code>
+ *    </ul></li>
  * <li><code>ExtendedNodeList</code> instance
  * <li><code>string</code> css selector (e.g. <code>'#someElem'</code>).<br>
  * <b>Note</b>: up to selectors level 3 for most modern browsers,
@@ -70,7 +75,8 @@ customStylesheet.id = `JQLCustomCSS`;
  * <li><code>Array</code> of <code>string</code>
  *  (e.g. <code>['&lt;span>Hello&lt;/span>', '&lt;span>world&lt;/span>']</code>)
  * </ul>
- * @param root {HTMLElement|ExtendedNodeList} The root element to which an element to create must be appended or inserted into
+ * @param root {HTMLElement|ExtendedNodeList}
+ * The root element to which an element to create must be appended or inserted into
  * (see [position] parameter)<ul>
  * <li>Defaults to <code>document.body</code>
  * <li>If one or more elements is/are created they will not be inserted into the DOM tree
@@ -82,17 +88,27 @@ customStylesheet.id = `JQLCustomCSS`;
  * @example
  * import $ from "JQueryLike.js";
  * // a few examples
+ *
+ * // static methods
+ * const $$ = $.virtual;
+ * $.setStyle(`.done`, {color: `green`, fontWeight: `bold`});
+ *
+ * // ExtendedNodeList instances
  * $(document.querySelectorAll(`p`));
  * $(document.querySelector(`p.something`));
- * $($(`.something`));
+ * $($$(`.something`));
  * $(`.something`);
- * $(`<p class="something" id="ex1">Hi. I am <b>Groot</b><p>`);
- * $([`<p class="something" id="ex2">Hi. I am <b>Groot</b><p>`, `<div id="Groot">Yup, aren't you?</div>`]);
+ * $$(`<p class="something" id="ex1">Hi. I am <b>Groot</b><p>`); // in memory
+ * $(`<p class="something" id="ex1">Hi. I am <b>Groot</b><p>`); // in DOM tree
+ * $([`<p class="something" id="ex2">Hi. I am <b>Groot</b><p>`,
+ *    `<div id="Groot">Yup, aren't you?</div>`]);
+ *
  * // extensions (most are chainable)
  * $(`#ex1`).text(`. Say no more`, true).addClass(`done`);
  * $(`#Groot`)
- *   .css({color: `green`, fontWeight: `bold`})
- *   .html(`<i>You are, really. And it's fine.</i>`, true);
+ *   .css({color: `green`, 'font-weight': `bold`})
+ *   .html(`<i>You are, really. And it's fine.</i>`, true)
+ *   .prepend(document.createElement(`\u2022 `));
  */
 const ExtendedNodeList = function (
   input,
