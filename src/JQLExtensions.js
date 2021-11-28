@@ -375,7 +375,28 @@ const single = (extCollection, indexOrSelector = "0") => {
 };
 
 /**
- * retrieve the extCollection instance collection as a Nodelist
+ * Retrieve the extCollection instance collection as a Nodelist. It may
+ * be a way to duplicate a collection of nodes (see example).
+ * <br><b>Note</b> the list is <b><i>not</b></i> a live Node list.
+ * In other words: the nodes are copies of the original (and do not
+ * exist in the DOM tree).
+ * <br><b>Note</b> if the nodes contain an id, it is removed (element id's
+ * must be unique).
+ * @example
+ * import $ from "JQueryLike.js";
+ * // create 2 nodes in the DOM tree and retrieve the collection as NodeList
+ * const nodes = $([`<div id="some">Hello</div>`, `<div id="thing">World</div>`]).toNodeList();
+ * // change the text of the nodes in the list
+ * for (let node of nodes) {
+ *   node.textContent += `!`;
+ * }
+ * // append the nodes (and colorize)
+ * $(nodes).style({color: `red`});
+ * // result in DOM (classNames are random)
+ * <div id="some">Hello</div>
+ * <div id="thing">World</div>
+ * <div style="color: red;">Hello!</div>
+ * <div style="color: red;">World!</div>
  * @param extCollection (implicit) current ExtendedNodeList instance
  * @returns {NodeList}
  */
@@ -385,9 +406,10 @@ const toNodeList = extCollection => {
 
   for (let elem of extCollection.collection) {
     const nodeClone = document.importNode(elem, true);
+    nodeClone.removeAttribute(`id`);
     virtual.append(nodeClone);
   }
-  
+
   return virtual.childNodes;
 };
 
