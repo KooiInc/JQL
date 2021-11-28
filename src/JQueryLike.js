@@ -38,7 +38,7 @@ import {
 } from "./JQLExtensionHelpers.js";
 
 const logLineLength = 75;
-let logSystem = true;
+let logSystem = false;
 
 customStylesheet.id = `JQLCustomCSS`;
 
