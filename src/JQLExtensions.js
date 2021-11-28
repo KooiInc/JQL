@@ -1,4 +1,4 @@
-//noinspection JSUnresolvedFunction,JSUnresolvedVariable,DuplicatedCode,JSValidateJSDoc,JSClosureCompilerSyntax
+//noinspection JSUnresolvedFunction,JSUnresolvedVariable,DuplicatedCode,JSValidateJSDoc,JSClosureCompilerSyntax,JSCheckFunctionSignatures
 
 //#region ExtendedNodeList lambda's
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
@@ -382,6 +382,7 @@ const single = (extCollection, indexOrSelector = "0") => {
  * exist in the DOM tree).
  * <br><b>Note</b> if the nodes contain an id, it is removed (element id's
  * must be unique).
+ * <br>[See also (ExtendedNodeList instance).duplicate]{@link module:JQLExtensions~duplicate}
  * @example
  * import $ from "JQueryLike.js";
  * // create 2 nodes in the DOM tree and retrieve the collection as NodeList
@@ -397,7 +398,7 @@ const single = (extCollection, indexOrSelector = "0") => {
  * <div id="thing">World</div>
  * <div style="color: red;">Hello!</div>
  * <div style="color: red;">World!</div>
- * @param extCollection (implicit) current ExtendedNodeList instance
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @returns {NodeList}
  */
 const toNodeList = extCollection => {
@@ -412,6 +413,18 @@ const toNodeList = extCollection => {
 
   return virtual.childNodes;
 };
+
+/**
+ * Duplicate an ExtendedNodeList instance (to memory (default) or
+ * to DOM.
+ * @param extCollection  {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @param toDOM {boolean} true: inject the duplicate to DOM, false (default) to memory
+ * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
+ */
+const duplicate = (extCollection, toDOM = false) => {
+  const clonedCollection = extCollection.toNodeList();
+  return toDOM ? _$(clonedCollection) : _$.virtual(clonedCollection);
+}
 
 /**
  * Retrieve the first element of the ExtendedNodeList instance collection
@@ -615,7 +628,7 @@ export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
     parent, append, appendTo, prepend, prependTo, single, first, first$, find, find$,
     computedStyle, dimensions, prop, on, html, outerHtml, htmlFor,
-    delegate, ON, toNodeList,
+    delegate, ON, toNodeList, duplicate
 };
 
 //#endregion ExtendedNodeList lambda's
