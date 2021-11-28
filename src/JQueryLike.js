@@ -38,7 +38,7 @@ import {
 } from "./JQLExtensionHelpers.js";
 
 const logLineLength = 75;
-let logSystem = false;
+let logSystem = true;
 
 customStylesheet.id = `JQLCustomCSS`;
 
@@ -119,9 +119,9 @@ const ExtendedNodeList = function (
     initializePrototype(ExtendedNodeList);
   }
 
-  checkInput(input, this);
   const isRawElemCollection = isArrayOfHtmlElements(input);
-
+  checkInput(input, this);
+  
   if (Array.isArray(this.collection) && !isRawElemCollection) {
     return this;
   }
@@ -140,7 +140,7 @@ const ExtendedNodeList = function (
     }
 
     const logStr = (`(JQL log) raw input: [${
-      truncateHtmlStr(isRawHtmlArray ? input.join(``) : isRawElemCollection ? input.map(el => el.outerHTML).join(``) : input, logLineLength)}]`);
+      truncateHtmlStr(isRawHtmlArray ? input.join(``) : isRawElemCollection ? [...input].map(el => el.outerHTML).join(``) : input, logLineLength)}]`);
 
     if (shouldCreateElements && !isRawElemCollection) {
       [input].flat()
