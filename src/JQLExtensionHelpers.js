@@ -13,13 +13,14 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
  */
 // no comment
 const isCommentNode = elem => elem && elem instanceof Comment;
+const isSingleNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c);
 const isHtmlString = input => input.constructor === String && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => Array.isArray(input) && !input.find(s => !isHtmlString(s));
-const isArrayOfHtmlElements = input => Array.isArray(input) && !input.find(el => !(el instanceof HTMLElement));
+const isArrayOfHtmlElements = input => isSingleNode(input) || Array.isArray(input) && !input.find(el => !(el instanceof HTMLElement));
 const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
 const checkInput = (input, self) =>
   self.collection = !input ? []
-    : input instanceof HTMLElement ? [input] : input instanceof NodeList ? [...input]
+    : isSingleNode(input) ? [input] : input instanceof NodeList ? [...input]
     : input instanceof self.constructor ? input.collection : undefined;
 const setCollectionFromCssSelector = (input, root, self) => {
   /** determine the root to query from */
@@ -166,6 +167,7 @@ export {
   isVisible,
   addHandlerId,
   isHtmlString,
+  isSingleNode,
   isArrayOfHtmlStrings,
   isArrayOfHtmlElements,
   isCommentNode,
