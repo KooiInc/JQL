@@ -38,7 +38,7 @@ const createHandlerForHID = (extCollection, HID, callback) => {
     const target = evt.target.closest(HID);
 
     if (target) {
-      return callback(_$(target), evt);
+      return callback(_$.virtual(target), evt);
     }
   };
 };
