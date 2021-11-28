@@ -6,6 +6,7 @@
  * @exports handlerFactory
  */
 
+import _$ from "./JQueryLike.js";
 let handlers = {};
 
 /**
@@ -37,7 +38,7 @@ const createHandlerForHID = (extCollection, HID, callback) => {
     const target = evt.target.closest(HID);
 
     if (target) {
-      return callback(new extCollection.constructor(target), evt);
+      return callback(_$(target), evt);
     }
   };
 };

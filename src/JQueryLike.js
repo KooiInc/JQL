@@ -121,13 +121,13 @@ const ExtendedNodeList = function (
 
   const isRawElemCollection = isArrayOfHtmlElements(input);
   checkInput(input, this);
-  
+
   if (Array.isArray(this.collection) && !isRawElemCollection) {
     return this;
   }
 
   try {
-    this.collection = isRawElemCollection ? [...input] : [];
+    this.collection = isRawElemCollection ? [input] : [];
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
@@ -140,7 +140,10 @@ const ExtendedNodeList = function (
     }
 
     const logStr = (`(JQL log) raw input: [${
-      truncateHtmlStr(isRawHtmlArray ? input.join(``) : isRawElemCollection ? [...input].map(el => el.outerHTML).join(``) : input, logLineLength)}]`);
+      truncateHtmlStr(isRawHtmlArray 
+        ? input.join(``) 
+        : isRawElemCollection ? [input].map(el => el.outerHTML).join(``) 
+          : input, logLineLength)}]`);
 
     if (shouldCreateElements && !isRawElemCollection) {
       [input].flat()

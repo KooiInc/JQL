@@ -1,4 +1,4 @@
-// noinspection JSUnresolvedVariable
+// noinspection JSUnresolvedVariable,JSValidateJSDoc
 
 /**
  * a small library to create/use (modal) popups
@@ -24,11 +24,14 @@ export default popupFactory;
  *  A normal popup can be closed by clicking a small icon or outside the box.
  *  A 'really modal' popup can only be closed using a handler you define yourself.
  * @param $ {ExtendedNodeList} JQLike constructor
- * @returns {{removeFromModal: removeFromModal, create: (function(*=, *=, *=)), remove: ((function(*): (undefined|*))|*), createTimed: createTimed}}
+ * @returns {Object}
  */
 function popupFactory($) {
+  const wrappedBody = $(document.body);
   initStyling($.setStyle);
   let savedTimer, savedCallback;
+  const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
+  $().delegate( clickOrTouch, `#closer, .between`,  remove );
   const stillOpen = () => {
     alert(`A modal window is still open, make sure it is closed first!`);
     return true;
@@ -39,9 +42,8 @@ function popupFactory($) {
     get isModal() { return this.currentPopupIsModal; },
     isModalActive() { return this.currentPopupIsModal && popupBox.hasClass(`active`) && stillOpen() },
   }
-  const wrappedBody = $(document.body);
-  const positionCloserHandle = () => {
-    if (!closer.hasClass(`active`)) { return; }
+  const positionCloserHandle = _ => {
+    if (!closer || !closer.hasClass(`active`)) { return; }
     const [modalDim, iconDim]  = [popupBox.dimensions(),  closer.dimensions()];
     closer.styleInline({
       position: `fixed`,
@@ -63,8 +65,6 @@ function popupFactory($) {
     return [popupBox, between, closer,];
   };
   const [popupBox, between, closer] = createElements();
-  const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
-  const checkActiveModal = () => currentModalState.isReallyModal && popupBox.hasClass(`active`) && stillOpen();
   const hideModal = () => {
     $(`#closer, .between, .popupBox`).removeClass(`active`);
   };
@@ -148,11 +148,11 @@ function popupFactory($) {
    * use <code>popup.removeModal</code> for that.
    * @name popupFactory_remove
    * @function
-   * @param callback {function|event|undefined} an event (if closed by a click delegate),
+   * @param evtOrCallback {function|event|undefined} an event (if closed by a click delegate),
    * or a callback lambda to execute after the popup is closed (e.g. passed by
    * <code>popup.createTimed</code>. May be empty.
    */
-  const remove = evtOrCallback => {
+  function remove(evtOrCallback) {
     endTimer();
 
     if (currentModalState.isModalActive()) { return; }
@@ -167,7 +167,7 @@ function popupFactory($) {
     hideModal();
     const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
     savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
-  };
+  }
 
   /**
    * Remove a really modal popup
@@ -181,8 +181,6 @@ function popupFactory($) {
     currentModalState.isModal = false;
     remove(callback);
   };
-
-  $().delegate( clickOrTouch, `#closer, .between`,  remove );
 
   return {
     create,
