@@ -416,7 +416,7 @@ const toNodeList = extCollection => {
 /**
  * Duplicate an ExtendedNodeList instance (to memory (default) or
  * to DOM.
- * @param extCollection  {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param toDOM {boolean} true: inject the duplicate to DOM, false (default) to memory
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
  */
@@ -424,6 +424,22 @@ const duplicate = (extCollection, toDOM = false) => {
   const clonedCollection = extCollection.toNodeList();
   return toDOM ? _$(clonedCollection) : _$.virtual(clonedCollection);
 }
+
+/**
+ * Write an instance of ExtendedNodeList to the DOM ([root] or document.body).
+ * <br><b>Note</b>: this works only for virtual instances (so, existing in memory) and
+ * can be done once for such an instance.
+ * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+ * @param root {HTMLElement} the root to which the instance should be appended
+ * @returns {ExtendedNodeList}
+ */
+const toDOM = (extCollection, root = document.body) => {
+  if (extCollection.isVirtual) {
+    extCollection.isVirtual = false;
+    return _$(extCollection.collection);
+  }
+  return extCollection;
+};
 
 /**
  * Retrieve the first element of the ExtendedNodeList instance collection
@@ -627,7 +643,7 @@ export default {
     text, remove, each, getData, isEmpty, is, hasClass, replace, replaceMe, val,
     parent, append, appendTo, prepend, prependTo, single, first, first$, find, find$,
     computedStyle, dimensions, prop, on, html, outerHtml, htmlFor,
-    delegate, ON, toNodeList, duplicate
+    delegate, ON, toNodeList, duplicate, toDOM,
 };
 
 //#endregion ExtendedNodeList lambda's
