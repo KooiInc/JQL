@@ -122,8 +122,8 @@ const ExtendedNodeList = function (
   const isRawElemCollection = isArrayOfHtmlElements(input);
   checkInput(input, this);
 
-  if (Array.isArray(this.collection) && !isRawElemCollection) {
-    return this;
+  if ((Array.isArray(this.collection) || input.isJQL) && !isRawElemCollection) {
+    return input.isJQL && input.toDOM() || this;
   }
 
   try {
