@@ -415,7 +415,30 @@ const toNodeList = extCollection => {
 
 /**
  * Duplicate an ExtendedNodeList instance (to memory (default) or
- * to DOM.
+ * to DOM. The elements within the instance are cloned (and their id's removed)
+ * and the resulting <code>NodeList</code> is converted to a new instance.
+ * <br><b>Note</b> check the cloned nodes classList/properties/attributes: you may want
+ * to change them before injecting to DOM.
+ * @example
+ * import $ from "JQueryLike.js";
+ * const someElem = Object.assign(
+ *    document.createElement(`div`),
+ *    {innerHTML: `hello`, className: `someClass` });
+ * $.setStyle(`.someClass`, {color: `brown`});
+ * $( [...Array(2)].map(_ => someElem.cloneNode(true) ) )
+ *  .append(document.createTextNode(` world!`))
+ *  .prepend(document.createTextNode(`We say: `))
+ *  .each(el =>
+ *    el.setAttribute(`id`, `_${ Math.floor(10000 + Math.random() * 10000).toString(16)}` ))
+ *  // elements are injected to DOM. Now continue with a duplicate
+ *  .duplicate(true)
+ *  .removeClass(`someClass`)
+ *  .text(` That's right folks. Bye!`, true);
+ *  // output
+ *  <div class="someClass" id="_2f03">We say: hello world!</div>
+ *  <div class="someClass" id="_413b">We say: hello world!</div>
+ *  <div class>We say: hello world! That's right folks. Bye!</div>
+ *  <div class>We say: hello world! That's right folks. Bye!</div>
  * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
  * @param toDOM {boolean} true: inject the duplicate to DOM, false (default) to memory
  * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
@@ -436,7 +459,7 @@ const duplicate = (extCollection, toDOM = false) => {
 const toDOM = (extCollection, root = document.body) => {
   if (extCollection.isVirtual) {
     extCollection.isVirtual = false;
-    return _$(extCollection.collection);
+    return _$(extCollection.collection, root);
   }
   return extCollection;
 };

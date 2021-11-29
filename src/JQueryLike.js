@@ -33,7 +33,7 @@ import {
   isArrayOfHtmlElements,
   inject2DOMTree,
   ElemArray2HtmlString,
-  checkInput,
+  input2Collection,
   setCollectionFromCssSelector,
 } from "./JQLExtensionHelpers.js";
 
@@ -119,15 +119,15 @@ const ExtendedNodeList = function (
     initializePrototype(ExtendedNodeList);
   }
 
-  const isRawElemCollection = isArrayOfHtmlElements(input);
-  checkInput(input, this);
+  this.collection = input2Collection(input);
+  const isRawElemCollection = isArrayOfHtmlElements(input instanceof NodeList ? [...input] : input);
 
-  if ((Array.isArray(this.collection) || input.isJQL) && !isRawElemCollection) {
-    return input.isJQL && input.toDOM() || this;
+  if (Array.isArray(this.collection) && !isRawElemCollection) {
+    return this;
   }
 
   try {
-    this.collection = isRawElemCollection ? [...input] : [];
+    this.collection = this.collection || [];
     this.isVirtual = root instanceof HTMLBRElement;
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
