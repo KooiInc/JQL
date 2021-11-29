@@ -292,12 +292,13 @@ Object.entries({
   popup: () => popupFactory(JQL),
 
   /**
-   * Create a textNode (for use as parameter creating a JQL instance)
+   * Utiltity to create a textNode (for use as parameter creating a JQL instance).
+   * Alias for <code>document.createText</code>
    * @example
    * import $ from "JQueryLike.js";
    * $($.text(`HELLO World`));
-   * @param str {string}
-   * @returns {Text}
+   * @param str {string} The content of the Text element
+   * @returns {Text} a Text element (CharacterData)
    */
   text: str => document.createTextNode(str),
 
