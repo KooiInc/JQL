@@ -22,7 +22,7 @@ const checkInput = (input, self) =>
   self.collection = !input ? []
     : input instanceof NodeList ? [...input]
       : isNode(input) ? [input]
-        : input instanceof self.constructor ? input.collection : undefined;
+        : input.isJQL ? input.collection : undefined;
 const setCollectionFromCssSelector = (input, root, self) => {
   /** determine the root to query from */
   const selectorRoot = root !== document.body && (input.constructor === String && input.toLowerCase() !== "body")
