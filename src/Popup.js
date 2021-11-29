@@ -62,7 +62,7 @@ function popupFactory($) {
     const closer = $(`<span id="closer" class="closeHandleIcon"></span>`)
       .prop(`title`, `Click here or anywhere outside the box to close`);
     const between = $(`<div class="between"></div>`);
-    const modalWarner = popupBox.prepend(`<div id="modalWarning">Please close this box first</div>`);
+    popupBox.prepend(`<div id="modalWarning">Please close this box first</div>`);
     const resizeObserver = new ResizeObserver(positionCloserHandle);
     resizeObserver.observe(popupBox.first());
     resizeObserver.observe(wrappedBody.first());
@@ -90,7 +90,10 @@ function popupFactory($) {
    * the popup can only be closed using a method you create (e.g. a button click
    * within the popup). A callback can be used to execute after closing the popup.
    * <br>Exposed as <code>[popup].create</code>
-   * <br><b>Note</b> if a 'really modal' popup is open, you can't create a new popup
+   * <br><b>Note</b> if a 'really modal' popup is open, you can't create a new popup,
+   * or click outside the box to close it,
+   * and the closer icon (upper right corner) is not visible.
+   * (trying to close displays a warning for a short time).
    * @example
    * // assuming 'popup' as name for the (imported and) initialized popupFactory
    * // and JQLike is imported as '$'
@@ -100,7 +103,8 @@ function popupFactory($) {
    * popup.create(`<p>Hello world</p>`);
    * // an ExtendedNodelist instance
    * popup.create($(`<p>Hello world</p>`));
-   * // a really modal popup
+   * // a really modal popup needs a button or something with a click
+   * // handler to close it.
    * const button4Modal = $(`<button>Click me to close!</button>`)
    *    .on(`click`, popup.removeModal(() => popup.createTimed(`<p>Goodbye!</p>`, 2));
    * popup.create(button4Modal, true);
