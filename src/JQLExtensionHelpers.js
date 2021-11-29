@@ -12,12 +12,12 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
  * @module JQLExtensionHelpers
  */
 // no comment
-const isCommentNode = elem => elem && elem instanceof Comment;
+const isCommentOrTextNode = elem => elem && elem instanceof Comment || elem instanceof Text;
 const isNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c);
 const isHtmlString = input => input.constructor === String && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => Array.isArray(input) && !input.find(s => !isHtmlString(s));
-const isArrayOfHtmlElements = input => isNode(input) || Array.isArray(input) && !input.find(el => !isNode(el));
-const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(el.outerHTML), ``);
+const isArrayOfHtmlElements = input => Array.isArray(input) && !input.find(el => !isNode(el));
+const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
 const input2Collection = input => !input ? []
     : input instanceof NodeList ? [...input]
       : isNode(input) ? [input]
@@ -38,8 +38,9 @@ const setCollectionFromCssSelector = (input, root, self) => {
  * @returns {ExtendedNodeList} instance, so chainable
  */
 const loop = (extCollection, callback) => {
-  for (let i = 0; i < extCollection.collection.length; i += 1) {
-    callback(extCollection.collection[i], i);
+  const cleanCollection = extCollection.collection.filter(el => !isCommentOrTextNode(el))
+  for (let i = 0; i < cleanCollection.length; i += 1) {
+    callback(cleanCollection[i], i);
   }
   return extCollection;
 };
@@ -55,7 +56,7 @@ const loop = (extCollection, callback) => {
  */
 const inject2DOMTree = (collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
   collection.reduce((acc, elem) => {
-    const created = elem && (elem instanceof HTMLElement || isCommentNode(elem)) && element2DOM(elem, root, position);
+    const created = elem && isNode(elem) && element2DOM(elem, root, position);
     return created ? [...acc, created] : acc;
   }, []);
 
@@ -171,7 +172,7 @@ export {
   isNode,
   isArrayOfHtmlStrings,
   isArrayOfHtmlElements,
-  isCommentNode,
+  isCommentOrTextNode,
   inject2DOMTree,
   ElemArray2HtmlString,
   input2Collection,

@@ -3,7 +3,6 @@
 /**
  * a small library to create/use (modal) popups
  * @module Popup
- * @exports Popup/popupFactory
  */
 export default popupFactory;
 
@@ -23,7 +22,8 @@ export default popupFactory;
  *  All popups are modal (the background page is inactivated until the popup is closed).
  *  A normal popup can be closed by clicking a small icon or outside the box.
  *  A 'really modal' popup can only be closed using a handler you define yourself.
- * @param $ {ExtendedNodeList} JQLike constructor
+ * @export popupFactory
+ * @param $ {ExtendedNodeList} JQLike instance
  * @returns {Object}
  */
 function popupFactory($) {

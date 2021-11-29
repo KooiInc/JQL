@@ -43,7 +43,7 @@ const htmlToVirtualElement = htmlString => {
 
 /**
  * Add a <code>HTMLElement</code> to the document
- * @param elem {HTMLElement} The element to add
+ * @param elem {HTMLElement}|Comment|Text The element to add
  * @param root {HTMLElement} The root element the element should be added to (default: document.body)
  * @param position {string} the position where the element must end up (default <code>beforeend</code>)
  */
@@ -53,7 +53,7 @@ const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd)
       return root.insertAdjacentElement(position, elem);
     }
 
-    if (elem instanceof Comment) {
+    if (elem && elem instanceof Comment || elem instanceof Text) {
       if (position === adjacents.BeforeEnd) {
         root.appendChild(elem);
       }

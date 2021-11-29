@@ -28,7 +28,6 @@ import {setStyle, customStylesheet} from "./Styling.js";
 import {
   initializePrototype,
   isHtmlString,
-  isNode,
   isArrayOfHtmlStrings,
   isArrayOfHtmlElements,
   inject2DOMTree,
@@ -76,8 +75,10 @@ customStylesheet.id = `JQLCustomCSS`;
  *  (e.g. <code>['&lt;span>Hello&lt;/span>', '&lt;span>world&lt;/span>']</code>)
  * </ul>
  * @param root {HTMLElement|ExtendedNodeList}
- * The root element to which an element to create must be appended or inserted into
- * (see [position] parameter)<ul>
+ * The root element to which an element to create must be appended or inserted into (see [position] parameter)<ul>).
+ * <br>If root is an ExtendedNodeList instance, the first element of that is considered the
+ * root element.
+ *
  * <li>Defaults to <code>document.body</code>
  * <li>If one or more elements is/are created they will not be inserted into the DOM tree
  * when [root] is an instance of <code>HTMLBRElement</code> (so <code>&lt;br></code>)</ul>
@@ -120,7 +121,7 @@ const ExtendedNodeList = function (
   }
 
   this.collection = input2Collection(input);
-  const isRawElemCollection = isArrayOfHtmlElements(input instanceof NodeList ? [...input] : input);
+  const isRawElemCollection = isArrayOfHtmlElements(this.collection);
 
   if (Array.isArray(this.collection) && !isRawElemCollection) {
     return this;
@@ -141,9 +142,9 @@ const ExtendedNodeList = function (
     }
 
     const logStr = (`(JQL log) raw input: [${
-      truncateHtmlStr(isRawHtmlArray 
+      truncateHtmlStr(isRawHtmlArray
         ? input.join(``) 
-        : isRawElemCollection ? [input].map(el => el.outerHTML).join(``) 
+        : isRawElemCollection ? `Element(s): ${this.collection.map(el => el.outerHTML || el.textContent).join(``)}`
           : input, logLineLength)}]`);
 
     if (shouldCreateElements && !isRawElemCollection) {
@@ -152,8 +153,8 @@ const ExtendedNodeList = function (
     }
 
     if (shouldCreateElements && this.collection.length > 0) {
-      const errors = this.collection.filter( el => !(el instanceof Comment) && el.dataset && el.dataset.jqlcreationerror );
-      this.collection = this.collection.filter(el => el instanceof Comment || el.dataset && !el.dataset.jqlcreationerror);
+      const errors = this.collection.filter( el => el.dataset?.jqlcreationerror );
+      this.collection = this.collection.filter(el => !el.dataset?.jqlcreationerror);
       !this.isVirtual && inject2DOMTree(this.collection, root, position);
       logSystem && Log(`${logStr}\n  Created ${this.isVirtual ? `VIRTUAL` : ``}(outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining", logLineLength)}]`);
@@ -278,7 +279,28 @@ Object.entries({
    */
   time,
 
+  /**
+   * <code>JQL.popup</code><br>
+   * A small library for creation of (modal) popup boxes.
+   * Initialize before use
+   * See [module Popup]{@link module:Popup}
+   * @example
+   * import $ from "JQueryLike.js";
+   * const myPopups = $.popup();
+   * myPopups.create(`Hi, I am a popup`);
+   */
   popup: () => popupFactory(JQL),
+
+  /**
+   * Create a textNode (for use as parameter creating a JQL instance)
+   * @example
+   * import $ from "JQueryLike.js";
+   * $($.text(`HELLO World`));
+   * @param str {string}
+   * @returns {Text}
+   */
+  text: str => document.createTextNode(str),
+
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
 export default JQL;
