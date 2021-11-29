@@ -292,15 +292,17 @@ Object.entries({
   popup: () => popupFactory(JQL),
 
   /**
-   * Utiltity to create a textNode (for use as parameter creating a JQL instance).
-   * Alias for <code>document.createText</code>
+   * Utiltity to create a textNode or a comment
+   * (for use as parameter creating a JQL instance).
+   * Alias for <code>document.createText</code> / <code>document.createComment</code
    * @example
    * import $ from "JQueryLike.js";
    * $($.text(`HELLO World`));
    * @param str {string} The content of the Text element
-   * @returns {Text} a Text element (CharacterData)
+   * @param isComment {boolean} false (default) as Text, true as Comment
+   * @returns {Text|Comment} a Text or Comment element (CharacterData)
    */
-  text: str => document.createTextNode(str),
+  text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
 
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
