@@ -14,10 +14,11 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 // no comment
 const isCommentOrTextNode = elem => elem && elem instanceof Comment || elem instanceof Text;
 const isNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c);
-const isHtmlString = input => input.constructor === String && /^<|>$/.test(`${input}`.trim());
-const isArrayOfHtmlStrings = input => Array.isArray(input) && !input.find(s => !isHtmlString(s));
-const isArrayOfHtmlElements = input => Array.isArray(input) && !input.find(el => !isNode(el));
-const ElemArray2HtmlString = elems => elems.filter(el => el).reduce((acc, el) => acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
+const isHtmlString = input => input?.constructor === String && /^<|>$/.test(`${input}`.trim());
+const isArrayOfHtmlStrings = input => Array.isArray(input) && !input?.find(s => !isHtmlString(s));
+const isArrayOfHtmlElements = input => Array.isArray(input) && !input?.find(el => !isNode(el));
+const ElemArray2HtmlString = elems => elems?.filter(el => el)
+  .reduce((acc, el) => acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
 const input2Collection = input => !input ? []
     : input instanceof NodeList ? [...input]
       : isNode(input) ? [input]
@@ -25,8 +26,8 @@ const input2Collection = input => !input ? []
           : input.isJQL ? input.collection : undefined;
 const setCollectionFromCssSelector = (input, root, self) => {
   /** determine the root to query from */
-  const selectorRoot = root !== document.body && (input.constructor === String && input.toLowerCase() !== "body")
-    ? root : document;
+  const selectorRoot = root !== document.body &&
+      (input?.constructor === String && input.toLowerCase() !== "body") ? root : document;
   self.collection = [...selectorRoot.querySelectorAll(input)];
   return `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
