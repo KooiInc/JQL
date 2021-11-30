@@ -11,12 +11,9 @@ import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.
 import {setStyle, customStylesheet} from "./Styling.js";
 import {time} from "./Helpers.js";
 import {isVisible} from "./JQLExtensionHelpers.js";
-
 /**
  * Helpers for logging
- * @type {object}
- * @name debugLog
- * @memberof module:JQL/JQLLog
+ * @type {Object.<key, Function|boolean>} debugLog
  * @property {function} debugLog.isVisible Is the JQLLog box visible?
  * @property {function} debugLog.on Activate logging for JQL.
  * @property {function} debugLog.off Deactivate logging for JQL.

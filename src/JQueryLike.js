@@ -225,15 +225,14 @@ Object.entries({
 
   /**
    * Activate/deactivate/show/hide (debug-)logging.
-   * @function JQL/debugLog
    * See [module JQLLog]{@link module:JQL/JQLLog~debugLog}
+   * @function JQL/debugLog
    */
   debugLog,
 
   /**
-   * Log stuff to the logger ([if activated]{@link module:JQL/JQLLog~debugLog}).
+   * Log stuff to the logger ([if activated]{@link module:JQL/JQLLog~Log}).
    * <br><code>[JQL instance].log</code>,
-   * See [module JQLLog]{@link module:JQL/JQLLog~Log}
    * @function JQL/log
    */
   log: Log,
