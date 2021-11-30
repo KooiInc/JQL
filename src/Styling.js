@@ -6,8 +6,9 @@ let cssId = `customCSS`;
 /**
  * Styling module: add or change style rules in a <code>&lt;style></code> element, added to the
  * header of the enclosing document if not already done so
- * @module Styling
+ * @module JQL/XHelpers/Styling
  */
+
 /**
  * custom stylesheet id helper
  * @type {object}

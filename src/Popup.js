@@ -2,7 +2,7 @@
 
 /**
  * a small library to create/use (modal) popups
- * @module Popup
+ * @module JQL/Popup
  */
 export default popupFactory;
 
@@ -15,14 +15,14 @@ export default popupFactory;
 
 /**
  * This factory delivers 4 methods to create or remove a (modal) popup window in the browser.<ul>
- *   <li>[create]{@link module:Popup~popupFactory_create}
- *   <li>[createTimed]{@link module:Popup~popupFactory_createTimed}
- *   <li>[remove]{@link module:Popup~popupFactory_remove}
- *   <li>[removeModal]{@link module:Popup~popupFactory_removeModal}</ul>
+ *   <li>[create]{@link module:JQL/Popup~create}
+ *   <li>[createTimed]{@link module:JQL/Popup~createTimed}
+ *   <li>[remove]{@link module:JQL/Popup~remove}
+ *   <li>[removeModal]{@link module:JQL/Popup~removeModal}</ul>
  *  All popups are modal (the background page is inactivated until the popup is closed).
  *  A normal popup can be closed by clicking a small icon or outside the box.
  *  A 'really modal' popup can only be closed using a handler you define yourself.
- * @export popupFactory
+ * @memberof module:JQL/Popup
  * @param $ {ExtendedNodeList} JQLike instance
  * @returns {Object}
  */
@@ -84,6 +84,17 @@ function popupFactory($) {
     }
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
+  const doCreate = (message, reallyModal, callback) => {
+    currentModalState.isModal = reallyModal;
+    savedCallback = callback;
+
+    if (!message.isJQL && message.constructor !== String) {
+      return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);    }
+
+    endTimer();
+    $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
+    activate(popupBox, currentModalState.isModal ? undefined : closer);
+  }
 
   /**
    * Create a popup from a string or JQLike instance. If [reallyModal] is true
@@ -110,24 +121,11 @@ function popupFactory($) {
    * popup.create(button4Modal, true);
    * // a popup with a callback
    * popup.create(`<p>Hello world</p>`, false, () => popup.create(`<p>Goodbye!</p>`);
-   * @name popupFactory_create
-   * @function
+   * @function create
    * @param message {string | ExtendedNodeList} a (html) string or a JQLike instance
    * @param reallyModal {boolean} allow default closing behavior or not
    * @param callback {function} a callback lambda to execute after closing the popup
    */
-  const doCreate = (message, reallyModal, callback) => {
-    currentModalState.isModal = reallyModal;
-    savedCallback = callback;
-
-    if (!message.isJQL && message.constructor !== String) {
-      return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);    }
-
-    endTimer();
-    $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
-    activate(popupBox, currentModalState.isModal ? undefined : closer);
-  }
-
   const create = (message, reallyModal = false, callback) =>
     !currentModalState.isModalActive() && doCreate(message, reallyModal, callback);
 
@@ -135,8 +133,7 @@ function popupFactory($) {
    * Create a popup that closes automatically after [closeAfter] seconds
    * <br>Exposed as <code>[popup].createTimed</code>
    * <br><b>Note</b> if a 'really modal' popup is open, you can't create a new popup
-   * @name popupFactory_createTimed
-   * @function
+   * @function createTimed
    * @param message {string | ExtendedNodeList} a (html) string or a JQLike instance
    * @param closeAfter {number} the time (seconds, default 2) after which the popup should close
    * @param callback {function} a callback lambda to execute after the popup is closed
@@ -154,8 +151,7 @@ function popupFactory($) {
    * <br>Exposed as <code>[popup].remove</code>
    * <br><b>Note</b> if the popup is 'really modal', you can't remove it with this,
    * use <code>popup.removeModal</code> for that.
-   * @name popupFactory_remove
-   * @function
+   * @function remove
    * @param evtOrCallback {function|event|undefined} an event (if closed by a click delegate),
    * or a callback lambda to execute after the popup is closed (e.g. passed by
    * <code>popup.createTimed</code>. May be empty.
@@ -180,8 +176,7 @@ function popupFactory($) {
   /**
    * Remove a really modal popup
    * <br>Exposed as <code>[popup].removeModal</code>
-   * @name popupFactory_removeModal
-   * @function
+   * @function removeModal
    * @param callback {function|undefined} a callback lambda to execute after the popup is closed, may
    * be empty
    */

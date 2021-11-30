@@ -2,7 +2,7 @@
 /**
  * A factory to create, wrap and store event handler lambda's for
  * elements in the enclosing document
- * @module HandlerFactory
+ * @module JQL/XHelpers/HandlerFactory
  * @exports handlerFactory
  */
 

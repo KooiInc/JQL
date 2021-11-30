@@ -1,7 +1,7 @@
 /**
  * Clean/sanitize html. It uses definitions from
- * [HTMLTags]{@link module:HtmlTags} and [Attributes]{@link module:Attributes}
- * @module HtmlCleanup
+ * [HTMLTags]{@link module:JQL/XHelpers/HtmlTags} and [Attributes]{@link module:JQL/XHelpers/Attributes}
+ * @module JQL/XHelpers/HtmlCleanup
  */
 import {truncate2SingleStr} from "./Helpers.js";
 import * as ATTRS from "./Attributes.js";
@@ -10,7 +10,7 @@ let logElementCreationErrors2Console = false;
 
 /**
  * set allowance for unknown HTML tags, exposed as <code>JQL.allowUnknownHtmlTags</code>
- * <br>See also [module HtmlTags]{@link module:HtmlTags}
+ * <br>See also [module HtmlTags]{@link module:JQL/XHelpers/HtmlTags}
  * @typedef allowUnknownHtmlTags
  * @property {function} on Allow unknown HTML tags
  * @property {function} off Do not allow unknown HTML tags (default)
@@ -81,7 +81,7 @@ const getRestricted = emphasizeTag =>
       acc, []);
 
 /**
- * Set permissions for specific tags. See [module HtmlTags]{@link module:HtmlTags}
+ * Set permissions for specific tags. See [module HtmlTags]{@link module:JQL/XHelpers/HtmlTags}
  * <br>Exposed as <code>JQL.setTagPermission</code>.
  * @function
  * @name setTagPermission

@@ -1,8 +1,8 @@
 // nicked from https://github.com/cure53/DOMPurify
 
 /**
- * The set of allowed attributes, as used in [module HtmlCleanup]{@link module:HtmlCleanup}
- * @module Attributes
+ * The set of allowed attributes, as used in [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup}
+ * @module JQL/XHelpers/Attributes
  */
 const freeze = Object;
 

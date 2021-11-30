@@ -10,7 +10,7 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 //#region common helpers
 /**
  * Some helpers for JQL (module, extensions).
- * @module JQLExtensionHelpers
+ * @module JQL/XHelpers/ExtensionHelpers
  */
 // no comment
 const isCommentOrTextNode = elem => elem && elem instanceof Comment || elem instanceof Text;

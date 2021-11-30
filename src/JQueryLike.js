@@ -209,7 +209,7 @@ Object.entries({
    * <li>You can use pseudo selectors. In case of creating a rule with the <code>content</code> property
    * be sure to quote the text value (see example)</ul>
    * <code>[JQL instance].setStyle</code>,
-   * See [module Styling]{@link module:Styling~changeCssStyleRule}
+   * See [module Styling]{@link module:JQL/XHelpers/Styling~changeCssStyleRule}
    * @function JQL/setStyle
    * @param selector {string} the selector e.g. <code>#someElem.someClass</code>
    * @param ruleValues {Object} an object containing the rules for the selector
@@ -240,7 +240,7 @@ Object.entries({
 
   /**
    * Allow/disallow the use of certain HTML tags when creating elements using JQL.
-   * See [module HtmlTags]{@link module:HtmlTags~setTagPermission}
+   * See [module HtmlTags]{@link module:JQL/XHelpers/HtmlTags~setTagPermission}
    * @function JQL/setTagPermission
    */
   setTagPermission,
@@ -248,7 +248,7 @@ Object.entries({
   /**
    * Allow/disallow unknown HTML tags.
    * * <br><code>[JQL instance].allowUnknownHtmlTags</code>,
-   * See [module HtmlCleanup]{@link module:HtmlCleanup~allowUnknownHtmlTags}
+   * See [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup~allowUnknownHtmlTags}
    * @function JQL/allowUnknownHtmlTags
 
    */
@@ -256,7 +256,7 @@ Object.entries({
 
   /**
    * Positions for use in insertAdjacentHTML(-Element).
-   * See [module DOM.adjacents]{@link module:DOM~adjacents}
+   * See [module DOM.adjacents]{@link module:JQL/XHelpers/DOM~adjacents}
    * @function JQL/insertPositions
 
    */
@@ -265,7 +265,7 @@ Object.entries({
   /**
    * Activate/deactivate logging of element creation errors (in the console)
    * <br><code>[JQL instance].logElementCreationErrors</code>,
-   * See [module HtmlCleanup]{@link module:HtmlCleanup~logElementCreationErrors}
+   * See [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup~logElementCreationErrors}
    * @function JQL/logElementCreationErrors
    */
   logElementCreationErrors,
@@ -289,7 +289,7 @@ Object.entries({
   /**
    * <code>JQL.time</code><br>
    * Current time helper.
-   * See [module Helpers]{@link module:Helpers~time}
+   * See [module Helpers]{@link module:JQL/XHelpers/GenericHelpers~time}
    * @function JQL/time
    */
   time,
@@ -298,7 +298,7 @@ Object.entries({
    * <code>JQL.popup</code><br>
    * A small library for creation of (modal) popup boxes.
    * Initialize before use
-   * See [module Popup]{@link module:Popup}
+   * See [module Popup]{@link module:JQL/Popup}
    * @example
    * import $ from "JQueryLike.js";
    * const myPopups = $.popup();

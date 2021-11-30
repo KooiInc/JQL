@@ -10,7 +10,7 @@ import {truncate2SingleStr, truncateHtmlStr} from "./Helpers.js";
 
 /**
  * Methods for manipulating the <code>Document Object [Model]</code> (aka <code>DOM</code>)
- * @Module DOM
+ * @Module JQL/XHelpers/DOM
  */
 
 /**

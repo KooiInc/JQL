@@ -2,7 +2,7 @@
 
 /**
  * Generic helper and utility methods
- * @module Helpers
+ * @module JQL/XHelpers/GenericHelpers
  */
 
 import {setTagPermission} from "./DOMCleanup.js";

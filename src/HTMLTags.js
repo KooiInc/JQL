@@ -1,6 +1,6 @@
 /**
  * The initial set of tags and allowances for HTML cleanup, as used in DOMCleanup
- * @module HtmlTags
+ * @module JQL/XHelpers/HtmlTags
  */
 let isLenient = false;
 const rawTags = {
@@ -127,7 +127,7 @@ export default {
   },
   /**
    * Check if a given element is allowed
-   * <br>Used by [module HtmlCleanup]{@link module:HtmlCleanup}
+   * <br>Used by [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup}
    * @param elem {HTMLElement} the element to check
    */
   isAllowed(elem) {
@@ -139,7 +139,7 @@ export default {
   /**
    * Set/unset permission for creation of a specific tag, e.g. <code>iframe</code>.
    * <br><b>Note</b>: when the tag is not defined in <code>cleanupTagInfo</code>, nothing happens.
-   * <br>See also [module HtmlCleanup]{@link module:HtmlCleanup}
+   * <br>See also [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup}
    * @member setTagPermission
    * @function
    * @param tagName {string} the tag to set allowance for, e.g. <code>link</code> or <code>iframe</code>.
