@@ -1,4 +1,4 @@
-// noinspection JSUnresolvedVariable,JSValidateJSDoc
+// noinspection JSUnresolvedVariable,JSValidateJSDoc,JSValidateTypes
 
 /**
  * a small library to create/use (modal) popups
@@ -48,7 +48,7 @@ function popupFactory($) {
   const positionCloserHandle = _ => {
     if (!closer || !closer.hasClass(`active`)) { return; }
     const [modalDim, iconDim]  = [popupBox.dimensions(),  closer.dimensions()];
-    closer.styleInline({
+    closer.style({
       position: `fixed`,
       top: `${modalDim.top - (iconDim.height/2)}px`,
       left: `${modalDim.right - (iconDim.width/2)}px`,
@@ -74,9 +74,9 @@ function popupFactory($) {
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
-    popupBox.styleInline({height: `auto`, width: `auto`});
+    popupBox.style({height: `auto`, width: `auto`});
     const [betweenH, bodyDim] = [between.dimensions().height, wrappedBody.addClass(`popupActive`).dimensions()];
-    between.styleInline( {bottom: betweenH <= bodyDim.height ? `-${bodyDim.bottom}px` : 0 } );
+    between.style( {bottom: betweenH <= bodyDim.height ? `-${bodyDim.bottom}px` : 0 } );
 
     if (closeHndl) {
       closeHndl.addClass(`active`);

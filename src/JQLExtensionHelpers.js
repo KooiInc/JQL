@@ -1,8 +1,9 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
 
 import {randomStringExtension} from "./Helpers.js";
-import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
-import ExtendedNodeListLambdas from "./JQLExtensions.js";
+//import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
+//import ExtendedNodeListLambdas from "./JQLExtensions.js";
+import allLambdas from "./JQLMethods.js"
 import {element2DOM, insertPositions} from "./DOM.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 
@@ -114,7 +115,7 @@ const getAllDataAttributeValues = el => {
 const initializePrototype = ctor => {
   // noinspection JSUnresolvedVariable
   const proto = ctor.prototype;
-  Object.entries(ExtendedNodeListLambdas)
+  Object.entries(allLambdas.instanceExtensions)
     .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
         proto[key] = function (...args) {
@@ -122,7 +123,7 @@ const initializePrototype = ctor => {
         };
       }
     });
-  Object.entries(extendedNodeListCollectionLamdas)
+  Object.entries(allLambdas.straigthLoops)
     .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
         proto[key] = function (...args) {
