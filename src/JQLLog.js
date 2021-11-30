@@ -83,7 +83,7 @@ const debugLog = {
 
 /**
  * The default styling to use for the logbox. This is used by [setStyling4Log]{@link module:JQL/JQLLog~setStyling4Log}.
- * @type {Object.<string, Object.<string, string|number>>} stylingDefault4Log
+ * @const {Object.<string, Object.<string, string|number>>} stylingDefault4Log
  * @memberof module:JQL/JQLLog
  */
 let stylingDefault4Log = {
