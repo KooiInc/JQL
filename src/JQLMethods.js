@@ -12,7 +12,7 @@ randomStringExtension();
 /**
  * All extension methods for <code>ExtendedNodeList</code>.
  * These methods end up being part of the JQL prototype
- * ([See JQLExtensionHelpers/initializePrototype]{@link module:JQLExtensionHelpers~initializePrototype})
+ * ([See JQLExtensionHelpers/initializePrototype]{@link module:JQL/XHelpers/ExtensionHelpers~initializePrototype})
  * <p><b>Notes</b></p>
  *  <ul><li>Most methods are <i>chainable</i>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
@@ -138,7 +138,7 @@ export default {
      * Toggle individual style properties for each element of the element collection of the ExtendedNodeList.
      * Properties must be key-value pairs
      * Note: this may fail, because browsers may reformat style values in their own way.
-     * For colors, hex values are converted (see the [color helper]{@link module:JQLExtensionHelpers~hex2RGBA}).
+     * For colors, hex values are converted (see the [color helper]{@link module:JQL/XHelpers/ExtensionHelpers~hex2RGBA}).
      * @memberof module:JQL/JQLMethods
      * @param keyValuePairs {Object} e.g. &#123;marginRight: '12px'&#125;
      */
@@ -641,7 +641,7 @@ export default {
      * exist in the DOM tree).
      * <br><b>Note</b> if the nodes contain an id, it is removed (element id's
      * must be unique).
-     * <br>[See also (ExtendedNodeList instance).duplicate]{@link module:JQLMethods~duplicate}
+     * <br>[See also (ExtendedNodeList instance).duplicate]{@link module:JQL/JQLMethods~duplicate}
      * @memberof module:JQL/JQLMethods
      * @example
      * import $ from "JQueryLike.js";
@@ -821,7 +821,7 @@ export default {
      * collection of [extCollection] or set html for each
      * element of the collection.
      * Overwrites current html of the elements, or appends the value to it.
-     * Note: the html is always sanitized (see [module HtmlCleanup]{@link: module:HtmlCleanup})
+     * Note: the html is always sanitized (see [module HtmlCleanup]{@link: module:JQL/XHelpers/HtmlCleanup})
      * @memberof module:JQL/JQLMethods
      * @param htmlValue {ExtendedNodeList|string|undefined} JQL instance, html string or nothing
      * @param append {boolean} appends the html if true, otherwise destructive

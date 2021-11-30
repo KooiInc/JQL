@@ -56,7 +56,7 @@ customStylesheet.id = `JQLCustomCSS`;
  * created and by default injected in de DOM tree unless [<code>root</code>] is a <code>HTMLBRElement</code>
  * (the static method <code>virtual</code> is provided for the latter).
  * <br><b>Note</b>: any html creation triggers checking and sanitizing the html to prevent script injection etc.
- * <br>See also [module JQLExtensionHelpers.initializePrototype]{@link module:JQLExtensionHelpers~initializePrototype}
+ * <br>See also [module JQLExtensionHelpers.initializePrototype]{@link module:JQL/XHelpers/ExtensionHelpers~initializePrototype}
  * @param input One of<ul>
  * <li><code>Node</code> Array, Nodelist or single Node of
  *   <ul>
