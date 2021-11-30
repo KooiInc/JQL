@@ -1,11 +1,11 @@
 // noinspection DuplicatedCode,JSUnresolvedVariable,JSUnusedGlobalSymbols
 
+import _$ from "./JQueryLike.js";
 import {randomStringExtension, isObjectAndNotArray,} from "./Helpers.js"
 import {setStyle} from "./Styling.js";
 import {createElementFromHtmlString} from "./DOM.js";
 import {hex2RGBA, loop, addHandlerId, isVisible, isNode} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
-import _$ from "./JQueryLike.js";
 
 randomStringExtension();
 
@@ -344,9 +344,11 @@ export default {
      * @example
      * $(`#somediv`).each( (el, i) => ...);
      * // where $ = the alias for the ExtendedNodeList constructor
+     * @param extCollection {ExtendedNodeList} (implicit) current ExtendedNodeList instance
+     * @param cb {function} lambda to execute on each element of the collection
      */
-    each: loop,
-
+    each: (extCollection, cb) => loop(extCollection, cb),
+    
     /**
      * Remove each collection element from the DOM tree
      * @memberOf module:JQLMethods
