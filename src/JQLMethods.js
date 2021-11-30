@@ -10,9 +10,9 @@ import handlerFactory from "./HandlerFactory.js";
 randomStringExtension();
 
 /**
- * All extension methods for <code>ExtendedNodeList</code> where looping may not be
- * an option. The methods end up in the JQL prototype
- * ([See JQLExtensionHelpers]{@link module:JQLExtensionHelpers~initializePrototype})
+ * All extension methods for <code>ExtendedNodeList</code>.
+ * These methods end up being part of the JQL prototype
+ * ([See JQLExtensionHelpers/initializePrototype]{@link module:JQLExtensionHelpers~initializePrototype})
  * <p><b>Notes</b></p>
  *  <ul><li>Most methods are <i>chainable</i>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
@@ -33,20 +33,20 @@ randomStringExtension();
  *  .css({className: `okRed`, color: `red`});
  *  // result (class names are partly random):
  *  // <div id="helloworld" class="JQLCreated_YZ5XnwbCEGxH">Example: hello ... world<span class="okRed"> OK</span></div>
- * @module JQLMethods
+ * @module JQL/JQLMethods
  */
 
 /* region multiple use */
 /**
  * Remove content for each element of the element collection of the ExtendedNodeList.
- * @memberOf module:JQLMethods
+ * @memberOf module:JQL/JQLMethods
  */
 const empty = el => el && (el.textContent = "");
 
 /**
  * Set data-attribute for each element of the element collection of the ExtendedNodeList.
  * The attributes must be key-value pairs.
- * @memberOf module:JQLMethods
+ * @memberof module:JQL/JQLMethods
  * @param keyValuePairs {Object.<string, string>} Object e.g. &#123;isSet: 'true'&#125;
  * <br><b>Note</b> do <i>not</i> use dashed keys but camelcase if you
  * need to split up the dataset. <b>wrong</b>: <code>no-code</code>, <b>right</b>: <code>noCode</code>.
@@ -72,7 +72,7 @@ const setData = (el, keyValuePairs) => {
  * // use your own class name
  * $(`<p>`).css({className: `leftRedBorder`, marginLeft: `12px`, color: `green`, borderLeft: `2px solid red`});
  * // the document will now contain <p class="leftRedBorder"></p>
- * @memberOf module:JQLMethods
+ * @memberof module:JQL/JQLMethods
  * @param keyOrKvPairs {Object.<string, string>|string} Object or string e.g. <code>&#123;marginRight: '12px'&#125;</code>
  * or <code>'margin-right'</code>
  * <br>key or string may be: `paddingRight` or `"padding-right"`
@@ -102,7 +102,7 @@ const css = (el, keyOrKvPairs, value) => {
 /**
  * Set attribute or property values for each element of the element collection of the ExtendedNodeList.
  * of the ExtendedNodeList instance
- * @memberOf module:JQLMethods
+ * @memberof module:JQL/JQLMethods
  * @param keyValuePairs {Object} Object e.g. &#123;title: 'I am Groot'&#125;
  */
 const assignAttrValues = (el, keyValuePairs) => {
@@ -127,7 +127,7 @@ export default {
   straigthLoops: {
     /**
      * toggle className (on/off) for each element of the element collection of the ExtendedNodeList.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param className {string} the class name to toggle (eg 'hidden')
      */
     toggleClass: (el, className) => {
@@ -139,7 +139,7 @@ export default {
      * Properties must be key-value pairs
      * Note: this may fail, because browsers may reformat style values in their own way.
      * For colors, hex values are converted (see the [color helper]{@link module:JQLExtensionHelpers~hex2RGBA}).
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param keyValuePairs {Object} e.g. &#123;marginRight: '12px'&#125;
      */
     toggleStyleFragments: (el, keyValuePairs) =>
@@ -159,7 +159,7 @@ export default {
 
     /**
      * Remove some attribute from each element of the element collection of the ExtendedNodeList.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      * @param name {string} the attribute name
      */
@@ -167,7 +167,7 @@ export default {
 
     /**
      * Toggle attribute [name] with [value] for each element of the element collection of the ExtendedNodeList.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      * @param name {string} attribute name (e.g. 'title')
      * @param value {string} attribute value to set
@@ -181,14 +181,14 @@ export default {
 
     /**
      * Alias for empty
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      */
     clear: empty,
 
     /**
      * Swap [classname] with [...nwClassnames] for each element of the element collection of the ExtendedNodeList.
      * Enables replacing a class name with one or more class name(s)
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      * @param className {string} the className to replace
      * @param nwClassNames {...string} the class name(s) to replace [className] with
@@ -201,7 +201,7 @@ export default {
     /**
      * Remove [classNames] from for each element of the element collection of the ExtendedNodeList.
      * Class names can be one or more strings.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      * @param classNames {...string} one or more class names
      */
@@ -211,7 +211,7 @@ export default {
     /**
      * Add [classNames] to each element of the element collection of the ExtendedNodeList.
      * Class names can be one or more strings
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      * @param classNames {...string} one or more class names
      */
@@ -220,14 +220,14 @@ export default {
 
     /**
      * Show each element of the element collection of the ExtendedNodeList.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      */
     show: el => el.style.display = ``,
 
     /**
      * Hide each element of the element collection of the ExtendedNodeList.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      */
     hide: el => el.style.display = `none`,
@@ -241,7 +241,7 @@ export default {
      * of the ExtendedNodeList instance
      * attributes must be key-value pairs
      * style and data-attributes must also be key-value pairs
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
 
      * @param keyOrObj {string|Object} Object e.g. &#123;color: '#c0c0c0'&#125;
      * @param value {string} some value
@@ -283,7 +283,7 @@ export default {
      * Style each element of the element collection of the ExtendedNodeList <i>inline</i>,
      * so <code>&lt;div style="[the style from parameters]"></code>.
      * Preferably use key-value pairs
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param keyOrKvPairs {Object|string} Object e.g. <code>&#123;marginRight: '12px'&#125</code>,
      * or string e.g. <code>"marginRight"</code>
      * <br>key may be: `paddingRight` or `"padding-right"`
@@ -311,7 +311,7 @@ export default {
      * overwrites current textContent of the first element,
      * or appends the text to it.
      * <br><b>Note</b>: uses textContent, so no html here
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param textValue {string|undefined} the text to inject. No value returns the property value.
      * @param append {boolean} appends textValue if true, otherwise destructive
      * @returns {ExtendedNodeList|string} ExtendedNodeList instance
@@ -332,7 +332,7 @@ export default {
     },
     /**
      * Alias for loop
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @example
      * $(`#somediv`).each( (el, i) => ...);
      * // where $ = the alias for the ExtendedNodeList constructor
@@ -342,7 +342,7 @@ export default {
 
     /**
      * Remove each collection element from the DOM tree
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param selector {string}
      */
     remove: (extCollection, selector) => {
@@ -357,7 +357,7 @@ export default {
 
     /**
      * Get computed style for a css property of the first element of the ExtendedNodeList instance
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param property {string} the css property (e.g. <code>left</code> or <code>display</code>)
      * @returns {CSSStyleDeclaration}
      */
@@ -365,7 +365,7 @@ export default {
 
     /**
      * Get the value of a data-attribute for the first element of the ExtendedNodeList instance
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param dataAttribute {string} some attribute, e.q. 'initial'
      * @param valueWhenFalsy {*} value when the attribute does not exist
      * @returns {string|number|undefined}
@@ -375,7 +375,7 @@ export default {
 
     /**
      * Is the collection of the current (implicit) ExtendedNodeList instance empty?
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @returns {boolean}
      */
     isEmpty: extCollection => extCollection.collection.length < 1,
@@ -383,7 +383,7 @@ export default {
     /**
      * Checks the values of pseudo selectors :hidden, :visible or :disabled
      * <br><b>Todo</b>: really useful?
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param checkValue {string} one of :visibile, :hidden, :disabled
      * @returns {string|boolean}
      */
@@ -410,7 +410,7 @@ export default {
     /**
      * Checks if (one of) [classNames] exist in one of the elements of the
      * ExtendedNodeList instance element collection
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param classNames {...string} one or more classNames
      * @returns {boolean} true if one of classNames exists
      */
@@ -423,7 +423,7 @@ export default {
     /**
      * Replace a child in the collection of an ExtendedNodeList instance
      * with something else
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param oldChild {HTMLElement|string} <code>HTMLElement</code> or selector string
      * @param newChild {HTMLElement} <code>HTMLElement</code> or
      * <code>ExtendedNodeList</code> instance
@@ -453,7 +453,7 @@ export default {
 
     /**
      * Replace the collection of an ExtendedNodeList instance with something else
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param newChild {HTMLElement|ExtendedNodeList} <code>HTMLElement</code> or
      * <code>ExtendedNodeList</code> instance
      * @returns {ExtendedNodeList} <code>ExtendedNodeList</code> instance, so chainable
@@ -469,7 +469,7 @@ export default {
      * Get or set the value of (the first element of)
      * the ExtendedNodeList instance, where the first
      * element is one of input or select HTMLElement
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param value2Set {string|undefined} string or nothing
      * @returns {string|undefined}
      */
@@ -491,7 +491,7 @@ export default {
 
     /**
      * Get the direct parent node of the first element of the ExtendedNodeList instance
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
      */
     parent: extCollection => !extCollection.isEmpty() && extCollection.first().parentNode &&
@@ -502,7 +502,7 @@ export default {
      * <br>If elems2Append consists of html string(s), they should contain <i>valid</i> html
      * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
      * within <code>&lt;p></code>)
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param elems2Append {...(string|HTMLElement|Text|Comment|ExtendedNodeList)} The element(s) to append.
      * Types may be mixed.
      * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
@@ -542,7 +542,7 @@ export default {
      * <br>When [elem] is a html string, it should be valid html, otherwise nothing is prepended obviously
      * (e.g., no flow content in in elements expecting phrasing content, so for example no <code>&lt;h1></code>
      * within <code>&lt;p></code>)
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param elems2Prepend {...(string|HTMLElement|Text|Comment|ExtendedNodeList)} the element(s) to append.
      * The types may be mixed.
      * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
@@ -584,7 +584,7 @@ export default {
      * so injects the element(s) of [extCollection] to each element of [extCollection2AppendTo]
      * (for real, injected and visible in the DOM tree).
      * <br><b>Note</b>: this returns the extCollection2AppendTo (so, the parent JQL instance).
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param extCollection2AppendTo {ExtendedNodeList} the instance to append to
      * @returns {ExtendedNodeList} i.c. extCollection2AppendTo
      */
@@ -600,7 +600,7 @@ export default {
      * so injects the element(s) of [extCollection] to each element of [extCollection2AppendTo]
      * (for real, injected and visible in the DOM tree).
      * <br><b>Note</b>: this returns the extCollection2AppendTo (so, the parent JQL instance).
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param extCollection2PrependTo {ExtendedNodeList} the instance to append to
      * @returns {ExtendedNodeList} i.c. extCollection2PrependTo
      */
@@ -615,7 +615,7 @@ export default {
     /**
      * Retrieves a single element from an instance of ExtendedNodeList
      * and returns a new ExtendedNodeList instance from that element
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param indexOrSelector {number|string}the index of the instance collection
      * @returns {ExtendedNodeList} instance of ExtendedNodeList, so chainable
      */
@@ -642,7 +642,7 @@ export default {
      * <br><b>Note</b> if the nodes contain an id, it is removed (element id's
      * must be unique).
      * <br>[See also (ExtendedNodeList instance).duplicate]{@link module:JQLMethods~duplicate}
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @example
      * import $ from "JQueryLike.js";
      * // create 2 nodes in the DOM tree and retrieve the collection as NodeList
@@ -678,7 +678,7 @@ export default {
      * and the resulting <code>NodeList</code> is converted to a new instance.
      * <br><b>Note</b> check the cloned nodes classList/properties/attributes: you may want
      * to change them before injecting to DOM.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @example
      * import $ from "JQueryLike.js";
      * const someElem = Object.assign(
@@ -711,7 +711,7 @@ export default {
      * Write an instance of ExtendedNodeList to the DOM ([root] or document.body).
      * <br><b>Note</b>: this works only for virtual instances (so, existing in memory) and
      * can be done once for such an instance.
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param root {HTMLElement} the root to which the instance should be appended
      * @returns {ExtendedNodeList}
      */
@@ -725,7 +725,7 @@ export default {
 
     /**
      * Retrieve the first element of the ExtendedNodeList instance collection
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param asExtCollection {boolean} if true, return new ExtendedNodeList instance, else HTMLElement
      * true => return as new ExtendedNodeList instance, false: as raw HTMLElement
      * @returns {ExtendedNodeList|HTMLElement|undefined} ExtendedNodeList instance, HTMLElement or nothing
@@ -743,7 +743,7 @@ export default {
      * Retrieve first [el] from the collection of the ExtendedNodeList instance
      * and return it as a new ExtendedNodeList instance
      * (if it exists, otherwise undefined)
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param indexOrSelector {number} the collection index
      * @returns {ExtendedNodeList|undefined} ExtendedNodeList instance or nothing
      */
@@ -752,7 +752,7 @@ export default {
     /**
      * Find one or more elements within the ExtendedNodeList instance collection
      * using a css query (e.g. '.someClass')
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param selector {string} css selector
      * @returns {Array|NodeListOf}
      */
@@ -764,7 +764,7 @@ export default {
      * Find one or more elements within the ExtendedNodeList instance collection
      * using a css query (e.g. '.someClass') and return a new ExtendedNodeList instance
      * from it's result
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param selector {string} css selector
      * @returns {ExtendedNodeList|undefined} a new ExtendedNodeList instance or nothing
      */
@@ -782,7 +782,7 @@ export default {
      * the collection
      * TODO: only existing properties, which is quite secure, but may be annonying
      * <br>maybe this should be done via DOMCleanup (weed out forbidden properties)
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param property {string} (e.g. 'title')
      * @param value {string|undefined} If it has a value, then set the property value
      * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable
@@ -802,7 +802,7 @@ export default {
     /**
      * Add handler lambda for an ExtendedNodeList instance.
      * <br>A handler id is created if applicable (addHandlerId)
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param type {string} event type (e.g. 'click')
      * @param callback {function} handler lambda
      * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable
@@ -822,7 +822,7 @@ export default {
      * element of the collection.
      * Overwrites current html of the elements, or appends the value to it.
      * Note: the html is always sanitized (see [module HtmlCleanup]{@link: module:HtmlCleanup})
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param htmlValue {ExtendedNodeList|string|undefined} JQL instance, html string or nothing
      * @param append {boolean} appends the html if true, otherwise destructive
      * @returns {string|ExtendedNodeList} current ExtendedNodeList instance or
@@ -849,7 +849,7 @@ export default {
 
     /**
      * Retrieves outer html for the first element of the ExtendedNodeList instance
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @returns {string|undefined}
      */
     outerHtml: extCollection => (extCollection.first() || {outerHTML: undefined}).outerHTML,
@@ -857,7 +857,7 @@ export default {
     /**
      * Sets/adds/removes html for an element within the collection
      * of the ExtendedNodeList instance (identified with a css query).
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param forQuery {string} a css query (e.g. `#someId`)
      * @param htmlString {string} the html string to replace or append to exististing.
      * <br><b>Note</b>: if the string is empty, the html is removed
@@ -885,14 +885,14 @@ export default {
 
     /**
      * retrieve the current dimensions of the first element in the collection
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @returns {DOMRect | undefined}
      */
     dimensions: extCollection => extCollection.first()?.getBoundingClientRect(),
 
     /**
      * Create event handler lambda(s)
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * <br><b>Note</b>: may be empty
      * @param type {string} event type (e.g. 'click')
      * @param cssSelector {string} e.g. '#someId'
@@ -909,7 +909,7 @@ export default {
     /**
      * Add one or multiple handler lambda(s) for event [type] and
      * the ExtendedNodeList instance
-     * @memberOf module:JQLMethods
+     * @memberof module:JQL/JQLMethods
      * @param type {string} event type (e.g. 'click')
      * @param callbacks {...functions} one or more lambda functions
      * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable

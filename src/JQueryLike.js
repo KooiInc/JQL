@@ -172,6 +172,7 @@ const JQL = (...args) => new ExtendedNodeList(...args);
 Object.entries({
   /**
    * alias for <code>document.querySelector</code>
+   * @function JQL/node
    * @param selector {string} a css selector
    * @returns {HTMLElement|null}
    */
@@ -179,6 +180,7 @@ Object.entries({
 
   /**
    * Alias for <code>document.querySelectorAll</code>
+   * @function JQL/nodes
    * @param selector {string} a css selector
    * @returns {NodeListOf<*>}
    */
@@ -187,6 +189,7 @@ Object.entries({
   /**
    * Create an ExtendedNodeList instance without injecting elements (so, collection elements in memory)
    * <code>[JQL instance].virtual</code>,
+   * @function JQL/virtual
    * @example
    * import $ from "JQueryLike.js";
    * const inMemoryParagraph = $.virtual(`<p>I am and I am not</p>`);
@@ -207,6 +210,7 @@ Object.entries({
    * be sure to quote the text value (see example)</ul>
    * <code>[JQL instance].setStyle</code>,
    * See [module Styling]{@link module:Styling~changeCssStyleRule}
+   * @function JQL/setStyle
    * @param selector {string} the selector e.g. <code>#someElem.someClass</code>
    * @param ruleValues {Object} an object containing the rules for the selector
    * @param cssId {string} optionally the id for the style element (default 'JQLCustomCSS')
@@ -221,33 +225,40 @@ Object.entries({
 
   /**
    * Activate/deactivate/show/hide (debug-)logging.
-   * See [module JQLLog]{@link module:JQLLog~debugLog}
+   * @function JQL/debugLog
+   * See [module JQLLog]{@link module:JQL/JQLLog~debugLog}
    */
   debugLog,
 
   /**
-   * Log stuff to the logger ([if activated]{@link module:JQLLog~debugLog}).
+   * Log stuff to the logger ([if activated]{@link module:JQL/JQLLog~debugLog}).
    * <br><code>[JQL instance].log</code>,
-   * See [module JQLLog]{@link module:JQLLog~Log}
+   * See [module JQLLog]{@link module:JQL/JQLLog~Log}
+   * @function JQL/log
    */
   log: Log,
 
   /**
    * Allow/disallow the use of certain HTML tags when creating elements using JQL.
    * See [module HtmlTags]{@link module:HtmlTags~setTagPermission}
+   * @function JQL/setTagPermission
    */
   setTagPermission,
 
   /**
    * Allow/disallow unknown HTML tags.
-   * <br><code>[JQL instance].allowUnknownHtmlTags</code>,
+   * * <br><code>[JQL instance].allowUnknownHtmlTags</code>,
    * See [module HtmlCleanup]{@link module:HtmlCleanup~allowUnknownHtmlTags}
+   * @function JQL/allowUnknownHtmlTags
+
    */
   allowUnknownHtmlTags,
 
   /**
    * Positions for use in insertAdjacentHTML(-Element).
    * See [module DOM.adjacents]{@link module:DOM~adjacents}
+   * @function JQL/insertPositions
+
    */
   insertPositions,
 
@@ -255,19 +266,22 @@ Object.entries({
    * Activate/deactivate logging of element creation errors (in the console)
    * <br><code>[JQL instance].logElementCreationErrors</code>,
    * See [module HtmlCleanup]{@link module:HtmlCleanup~logElementCreationErrors}
+   * @function JQL/logElementCreationErrors
    */
   logElementCreationErrors,
 
   /**
    * Set the styling for the logger element (<code>#logBox</code>).
    * <br><code>[JQL instance].setStyling4Log</code>
-   * See [module Log]{@link module:JQLLog~setStyling4Log}
+   * See [module Log]{@link module:JQL/JQLLog~setStyling4Log}
+   * @function JQL/setStyling4Log
    */
   setStyling4Log,
 
   /**
    * Activate or deactive logging of system messages. Default: false
    * <br><code>[JQL instance].setSystemLogActiveState</code>
+   * @function JQL/setSystemLogActiveState
    * @param activeState {boolean} on (true) or off (default false)
    */
   setSystemLogActiveState: activeState => logSystem = activeState,
@@ -276,6 +290,7 @@ Object.entries({
    * <code>JQL.time</code><br>
    * Current time helper.
    * See [module Helpers]{@link module:Helpers~time}
+   * @function JQL/time
    */
   time,
 
@@ -288,6 +303,7 @@ Object.entries({
    * import $ from "JQueryLike.js";
    * const myPopups = $.popup();
    * myPopups.create(`Hi, I am a popup`);
+   * @function JQL/popup
    */
   popup: () => popupFactory(JQL),
 
@@ -295,9 +311,10 @@ Object.entries({
    * Utiltity to create a textNode or a comment
    * (for use as parameter creating a JQL instance).
    * Alias for <code>document.createText</code> / <code>document.createComment</code
+   * @function text
    * @example
    * import $ from "JQueryLike.js";
-   * $($.text(`HELLO World`));
+   * $($.txt(`HELLO World`));
    * @param str {string} The content of the Text element
    * @param isComment {boolean} false (default) as Text, true as Comment
    * @returns {Text|Comment} a Text or Comment element (CharacterData)

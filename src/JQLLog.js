@@ -5,7 +5,7 @@
  * <br>Every line logged is preceded by the time it is logged (granularity: milliseconds)
  * The styling of the logbox happens via a <code>&lt;style></code> element, added to the
  * header of the enclosing document.
- * @module JQLLog
+ * @module JQL/JQLLog
  */
 import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import {setStyle, customStylesheet} from "./Styling.js";
@@ -16,6 +16,7 @@ import {isVisible} from "./JQLExtensionHelpers.js";
  * Helpers for logging
  * @type {object}
  * @name debugLog
+ * @memberof module:JQL/JQLLog
  * @property {function} debugLog.isVisible Is the JQLLog box visible?
  * @property {function} debugLog.on Activate logging for JQL.
  * @property {function} debugLog.off Deactivate logging for JQL.
@@ -52,8 +53,7 @@ const debugLog = {
    * <br>Exposed as: <code>debugLog.toConsole</code>
    * <br><b>Note</b>: this possibly destroys an alreay created
    * <code>div#logBox</code> in the document if set to true.
-   * @static
-   * @method debugLog[toConsole]
+   * @memberof module:JQL/JQLLog
    * @param console {boolean} log to browser console (true) or not (false, default)
    */
   toConsole(console = false) {
@@ -70,8 +70,7 @@ const debugLog = {
   /**
    * Change direction of log entries
    * <br>Exposed as: <code>debugLog.reversed</code>
-   * @static
-   * @method debugLog[reversed]
+   * @memberof module:JQL/JQLLog
    * @param reverse {boolean} latest last (false) or latest first (true) (default true)
    */
   reversed(reverse = true) {
@@ -87,6 +86,11 @@ const debugLog = {
   }
 };
 
+/**
+ * The default styling to use for the logbox. This is used by [setStyling4Log]{@link module:JQL/JQLLog~setStyling4Log}.
+ * @type {Object.<string, Object.<string, string>>} stylingDefault4Log
+ * @memberof module:JQL/JQLLog
+ */
 let stylingDefault4Log = {
   "#logBox": {
     minWidth: `0px`,
