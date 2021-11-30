@@ -12,18 +12,16 @@ import {setStyle, customStylesheet} from "./Styling.js";
 import {time} from "./Helpers.js";
 import {isVisible} from "./JQLExtensionHelpers.js";
 /**
- * Helpers for logging
- * @type {Object.<key, Function|boolean>} debugLog
+ * Some utility methods for logging
+ * @inner {Object.<key, Function|boolean>} debugLog
  * @property {function} debugLog.isVisible Is the JQLLog box visible?
  * @property {function} debugLog.on Activate logging for JQL.
  * @property {function} debugLog.off Deactivate logging for JQL.
  * @property {function} debugLog.remove Deactivate logging for JQL and remove <code>div#logBox</code>.
  * @property {function} debugLog.hide Hide the JQLLog box.
  * @property {function} debugLog.show Show the JQLLog box.
- * @property {function} debugLog.toConsole Log to console
- *  (see <a href="#.debugLog%255BtoConsole%255D">debugLog[toConsole]</a>).
- * @property {function} debugLog.reversed Log top to bottom or latest first
- *  (see <a href="#.debugLog%255Breversed%255D">debugLog[reversed]</a>).
+ * @property {function} debugLog.toConsole Log to console.
+ * @property {function} debugLog.reversed Log top to bottom or latest first.
  * @property {function} debugLog.clear the log box.
  * @property {boolean} debugLog.isOn (getter) is logging on?
  */
