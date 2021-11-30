@@ -1,6 +1,6 @@
 {
   "name": "jqlmodule",
-  "version": "1.3.3",
+  "version": "1.3.35",
   "private": false,
   "description": "A JQuery alike module",
   "keywords": ["JQuery", "JQuerySubset", "JQueryAlike", "ES20xx"],
