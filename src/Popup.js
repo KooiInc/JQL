@@ -70,7 +70,7 @@ function popupFactory($) {
   };
   const [popupBox, between, closer, modalWarner] = createElements();
   const hideModal = () => {
-    $(`#closer, .between, .popupBox`).removeClass(`active`);
+    $(`#closer, .between, .popupBox, #modalWarning`).removeClass(`active`);
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
@@ -266,7 +266,7 @@ function initStyling(setStyle) {
       maxWidth: 0,
       width: 0,
       marginTop: `-3rem`,
-      transition: `all ease 0.4s`,
+      transition: `all ease 0.25s`,
     },
     '#modalWarning.active': {
       opacity: 1,
