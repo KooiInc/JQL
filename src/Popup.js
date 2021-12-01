@@ -36,7 +36,7 @@ function popupFactory($) {
     endTimer();
     modalWarner.hasClass(`active`) && modalWarner.removeClass(`active`);
     modalWarner.addClass(`active`);
-    savedTimer = setTimeout(() => modalWarner.removeClass(`active`), 2500);
+    savedTimer = setTimeout(() => modalWarner.removeClass(`active`), 1500);
     return true;
   }
   const currentModalState = {
