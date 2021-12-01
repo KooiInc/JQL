@@ -408,8 +408,8 @@ export default {
      */
     hasClass: (extCollection, ...classNames) => {
       const firstElem = extCollection.first();
-      return extCollection.isEmpty()
-        ? false : classNames.find(cn => firstElem.classList?.contains(cn)) || false;
+      return extCollection.isEmpty() || !firstElem.classList.length
+        ? false : classNames.find(cn => firstElem.classList.contains(cn)) || false;
     },
 
     /**
