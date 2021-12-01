@@ -7,7 +7,7 @@
  * header of the enclosing document.
  * @module JQL/JQLLog
  */
-import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
+import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
 import {setStyle, customStylesheet} from "./Styling.js";
 import {time, isVisible} from "./JQLExtensionHelpers.js";
 /**
