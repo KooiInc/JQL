@@ -1,5 +1,4 @@
 // noinspection DuplicatedCode,JSUnresolvedVariable,JSUnusedGlobalSymbols
-
 import _$ from "./JQueryLike.js";
 import {setStyle} from "./Styling.js";
 import {createElementFromHtmlString} from "./DOM.js";
@@ -13,7 +12,7 @@ import handlerFactory from "./HandlerFactory.js";
  * <p><b>Notes</b></p>
  *  <ul><li>Most methods are <i>chainable</i>.
  *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
- * @module
+ * @module JQL/JQLMethods
  * @example
  * import $ from "JQueryLike.js";
  * // chainability means:
@@ -30,12 +29,11 @@ import handlerFactory from "./HandlerFactory.js";
  *  .css({className: `okRed`, color: `red`});
  *  // result (class names are partly random):
  *  // <div id="helloworld" class="JQLCreated_YZ5XnwbCEGxH">Example: hello ... world<span class="okRed"> OK</span></div>
- * @module JQL/JQLMethods
  */
 
 /**
  * Remove content for each element of the element collection of the ExtendedNodeList.
- * @memberOf module:JQL/JQLMethods
+ * @memberof module:JQL/JQLMethods
  */
 const empty = el => el && (el.textContent = "");
 
