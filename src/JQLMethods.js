@@ -9,9 +9,7 @@ import handlerFactory from "./HandlerFactory.js";
  * All extension methods for <code>ExtendedNodeList</code>.
  * These methods end up being part of the JQL prototype
  * ([See JQLExtensionHelpers/initializePrototype]{@link module:JQL/XHelpers/ExtensionHelpers~initializePrototype})
- * <p><b>Notes</b></p>
- *  <ul><li>Most methods are <i>chainable</i>.
- *  <li><code>(implicit)</code> means the parameter should not be provided in the caller</ul>
+ * <br><b>Note/b>: Most methods are <i>chainable</i> (see example).
  * @module JQL/JQLMethods
  * @example
  * import $ from "JQueryLike.js";
@@ -402,16 +400,16 @@ export default {
     },
 
     /**
-     * Checks if (one of) [classNames] exist in one of the elements of the
-     * ExtendedNodeList instance element collection
+     * Checks if (one of) [classNames] is assigned to the first
+     * element of the ExtendedNodeList instance
      * @memberof module:JQL/JQLMethods
      * @param classNames {...string} one or more classNames
      * @returns {boolean} true if one of classNames exists
      */
     hasClass: (extCollection, ...classNames) => {
-      return !extCollection.isEmpty() &&
-        extCollection.collection?.filter(el =>
-          classNames?.find(cn => el.classList.contains(cn))).length > 0;
+      const firstElem = extCollection.first();
+      return extCollection.isEmpty()
+        ? false : classNames.find(cn => firstElem.classList?.contains(cn)) || false;
     },
 
     /**
@@ -734,8 +732,8 @@ export default {
     },
 
     /**
-     * Retrieve first [el] from the collection of the ExtendedNodeList instance
-     * and return it as a new ExtendedNodeList instance
+     * Retrieve first element from the collection of the ExtendedNodeList instance
+     * and return that as a new ExtendedNodeList instance
      * (if it exists, otherwise undefined)
      * @memberof module:JQL/JQLMethods
      * @param indexOrSelector {number} the collection index
