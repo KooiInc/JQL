@@ -234,6 +234,7 @@ const hex2RGBA = function (hex, opacity = 100) {
 };
 
 //#endregion style color toggling helpers
+
 export {
   loop,
   hex2RGBA,
