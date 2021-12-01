@@ -33,7 +33,6 @@ import handlerFactory from "./HandlerFactory.js";
  * @module JQL/JQLMethods
  */
 
-/* region multiple use */
 /**
  * Remove content for each element of the element collection of the ExtendedNodeList.
  * @memberOf module:JQL/JQLMethods
@@ -908,7 +907,7 @@ export default {
      * the ExtendedNodeList instance
      * @memberof module:JQL/JQLMethods
      * @param type {string} event type (e.g. 'click')
-     * @param callbacks {...functions} one or more lambda functions
+     * @param callbacks {...Function} one or more lambda functions
      * @returns {ExtendedNodeList} ExtendedNodeList instance, so chainable
      */
     ON: (extCollection, type, ...callbacks) => {
