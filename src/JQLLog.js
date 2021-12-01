@@ -208,5 +208,5 @@ const Log = (...args) => {
     );
 };
 
-const setStylingId4Log = id => defaultStylingId = id;
+const setStylingId4Log = (id = customStylesheet.id) => customStylesheet.id = id;
 export { Log, debugLog, setStyling4Log };
