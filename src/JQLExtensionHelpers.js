@@ -1,8 +1,4 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
-
-import {randomStringExtension} from "./Helpers.js";
-//import extendedNodeListCollectionLamdas from "./JQLCollectionExtensions.js";
-//import ExtendedNodeListLambdas from "./JQLExtensions.js";
 import allLambdas from "./JQLMethods.js"
 import {element2DOM, insertPositions} from "./DOM.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
@@ -13,6 +9,7 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
  * @module JQL/XHelpers/ExtensionHelpers
  */
 // no comment
+const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
 const isCommentOrTextNode = elem => elem && elem instanceof Comment || elem instanceof Text;
 const isNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c);
 const isHtmlString = input => input?.constructor === String && /^<|>$/.test(`${input}`.trim());
@@ -32,6 +29,44 @@ const setCollectionFromCssSelector = (input, root, self) => {
   self.collection = [...selectorRoot.querySelectorAll(input)];
   return `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
+const randomString = (() => {
+  const characters = [...Array(26)]
+    .map((x, i) => String.fromCharCode(i + 65))
+    .concat([...Array(26)].map((x, i) => String.fromCharCode(i + 97)))
+    .concat([...Array(10)].map((x, i) => `${i}`));
+  const getCharacters = excludes =>
+    excludes && characters.filter(c => !~excludes.indexOf(c)) || characters;
+  const random = (len = 12, excludes = []) => {
+    const chars = getCharacters(excludes);
+    return [...Array(len)]
+      .map(() => chars[Math.floor(Math.random() * chars.length)])
+      .join("");
+  };
+
+  return {
+    random,
+    // html element-id's can not start with a number
+    randomHtmlElementId: (len = 12, excludes = []) => {
+      const charsWithoutNumbers = getCharacters(excludes.concat('0123456789'.split("")));
+      const firstChr = charsWithoutNumbers[Math.floor(Math.random() * charsWithoutNumbers.length)];
+      return firstChr.concat(random(len - 1, excludes));
+    },
+  };
+})();
+
+/**
+ * Convert a camel-cased term to dashed string, e.g. for style rule keys
+ * @example
+ * toDashedNotation(`marginRight`); //=> `margin-right`
+ * toDashedNotation(`borderTopLeftRadius`); //=> `border-top-left-radius`
+ * @param str2Convert {string} The (property)string to convert
+ * @returns {string}
+ */
+const toDashedNotation = str2Convert =>
+  str2Convert
+    .replace(/[A-Z]/g, a => `-${a.toLowerCase()}`)
+    .replace(/^-|-$/, ``);
+
 /**
  * iterator used for most extendedNodeListCollectionExtensions.
  * Also exposed as '[ExtCollection].each'
@@ -70,8 +105,7 @@ const inject2DOMTree = (collection = [], root = document.body, position = insert
  * @returns {string} a css selector for the handler id
  */
 const addHandlerId = extCollection => {
-  !("getRandom" in String) && randomStringExtension();
-  const handleId = extCollection.first().dataset.hid || String.getRandom(8);
+  const handleId = extCollection.first().dataset.hid || randomString.random(8);
   extCollection.setData({hid: handleId});
   return `[data-hid="${handleId}"]`;
 };
@@ -134,6 +168,42 @@ const initializePrototype = ctor => {
   proto.isJQL = true;
 };
 
+/**
+ * Trunctate a html string (e.g. from <code>[element]outerHTML</code>)
+ * to a single line with a maximum length
+ * @param str {string} The html string
+ * @param maxLength {Number} The length to truncate to (default: 120)
+ * @returns {string}
+ */
+const truncateHtmlStr = (str, maxLength = 120) => str.trim()
+  .substr(0, maxLength)
+  .replace(/>\s+</g, `><`)
+  .replace(/</g, `&lt;`)
+  .replace(/\s{2,}/g, ` `)
+  .replace(/\n/g, `\\n`) + (str.length > maxLength ? `&hellip;` : ``).trim();
+
+const truncate2SingleStr = (str, maxLength = 120) =>
+  truncateHtmlStr(str, maxLength).replace(/&lt;/g, `<`).replace(/&hellip;/g, `...`);
+
+/**
+ * Returns the current time, including milliseconds enclosed in square brackets,
+ * e.q. <code>[12:32:34.346]</code>.
+ * @returns {string}
+ */
+const time = () => ((d) =>
+  `[${pad0(d.getHours())}:${pad0(d.getMinutes())}:${
+    pad0(d.getSeconds())}.${pad0(d.getMilliseconds(), 3)}]`)(new Date());
+
+/**
+ * Is [obj] really an object (and not a <code>Date</code> or <code>Array</code>)?
+ * @param obj {Object}
+ * @returns {boolean|false|number}
+ */
+const isObjectAndNotArray = obj =>
+  (obj.constructor !== Date &&
+    !Array.isArray(obj) && JSON.stringify(obj) === "{}") ||
+  obj.constructor !== String && Object.keys(obj).length;
+
 //#endregion common helpers */
 
 //#region style color toggling helpers
@@ -167,11 +237,15 @@ const hex2RGBA = function (hex, opacity = 100) {
 export {
   loop,
   hex2RGBA,
+  isObjectAndNotArray,
   initializePrototype,
   isVisible,
   addHandlerId,
   isHtmlString,
   isNode,
+  time,
+  toDashedNotation,
+  randomString,
   isArrayOfHtmlStrings,
   isArrayOfHtmlElements,
   isCommentOrTextNode,
@@ -179,4 +253,6 @@ export {
   ElemArray2HtmlString,
   input2Collection,
   setCollectionFromCssSelector,
+  truncateHtmlStr,
+  truncate2SingleStr,
 };

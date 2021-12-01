@@ -6,7 +6,7 @@ import {
   getRestricted,
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
-import {truncate2SingleStr, truncateHtmlStr} from "./Helpers.js";
+import {truncateHtmlStr} from "./JQLExtensionHelpers.js";
 
 /**
  * Methods for manipulating the <code>Document Object [Model]</code> (aka <code>DOM</code>)

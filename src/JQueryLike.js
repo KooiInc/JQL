@@ -8,11 +8,6 @@ import {
 import popupFactory from "./Popup.js";
 
 import {
-  time,
-  truncateHtmlStr,
-} from "./Helpers.js";
-
-import {
   setTagPermission,
   allowUnknownHtmlTags,
   logElementCreationErrors,
@@ -34,6 +29,8 @@ import {
   ElemArray2HtmlString,
   input2Collection,
   setCollectionFromCssSelector,
+  time,
+  truncateHtmlStr,
 } from "./JQLExtensionHelpers.js";
 
 const logLineLength = 75;

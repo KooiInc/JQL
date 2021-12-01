@@ -9,8 +9,7 @@
  */
 import {createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import {setStyle, customStylesheet} from "./Styling.js";
-import {time} from "./Helpers.js";
-import {isVisible} from "./JQLExtensionHelpers.js";
+import {time, isVisible} from "./JQLExtensionHelpers.js";
 /**
  * Some utility methods for logging
  * @inner {Object.<key, Function|boolean>} debugLog

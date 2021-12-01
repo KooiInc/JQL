@@ -1,13 +1,10 @@
 // noinspection DuplicatedCode,JSUnresolvedVariable,JSUnusedGlobalSymbols
 
 import _$ from "./JQueryLike.js";
-import {randomStringExtension, isObjectAndNotArray,} from "./Helpers.js"
 import {setStyle} from "./Styling.js";
 import {createElementFromHtmlString} from "./DOM.js";
-import {hex2RGBA, loop, addHandlerId, isVisible, isNode} from "./JQLExtensionHelpers.js";
+import {hex2RGBA, loop, addHandlerId, isVisible, isNode, isObjectAndNotArray, randomString} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
-
-randomStringExtension();
 
 /**
  * All extension methods for <code>ExtendedNodeList</code>.
@@ -94,7 +91,7 @@ const css = (el, keyOrKvPairs, value) => {
   }
 
   const classExists = ([...el.classList].find(c => c.startsWith(`JQLCreated`) || nwClass && c === nwClass));
-  nwClass = classExists || nwClass || `JQLCreated_${String.createRandomHtmlElementId(12)}`;
+  nwClass = classExists || nwClass || `JQLCreated_${randomString.randomHtmlElementId(12)}`;
   setStyle(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };

@@ -3,7 +3,7 @@
  * [HTMLTags]{@link module:JQL/XHelpers/HtmlTags} and [Attributes]{@link module:JQL/XHelpers/Attributes}
  * @module JQL/XHelpers/HtmlCleanup
  */
-import {truncate2SingleStr} from "./Helpers.js";
+import {truncate2SingleStr} from "./JQLExtensionHelpers.js";
 import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
 let logElementCreationErrors2Console = false;
