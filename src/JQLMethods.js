@@ -9,7 +9,7 @@ import handlerFactory from "./HandlerFactory.js";
  * All extension methods for <code>ExtendedNodeList</code>.
  * These methods end up being part of the JQL prototype
  * ([See JQLExtensionHelpers/initializePrototype]{@link module:JQL/XHelpers/ExtensionHelpers~initializePrototype})
- * <br><b>Note/b>: Most methods are <i>chainable</i> (see example).
+ * <br><b>Note</b>: Most methods are <i>chainable</i> (see example).
  * @module JQL/JQLMethods
  * @example
  * import $ from "JQueryLike.js";
