@@ -1,5 +1,4 @@
 // derived from https://testbed.nicon.nl/showFiddle/ehd2710f
-// noinspection JSValidateJSDoc, JSUnresolvedVariable
 import {toDashedNotation} from "./JQLExtensionHelpers.js";
 let cssId = `customCSS`;
 

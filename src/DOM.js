@@ -1,5 +1,5 @@
 // some DOM plumbing
-// noinspection JSUnresolvedVariable,JSCheckFunctionSignatures
+// noinspection
 
 import {
   cleanupHtml,
@@ -45,11 +45,12 @@ const htmlToVirtualElement = htmlString => {
  * Add a <code>HTMLElement</code> to the document
  * @param elem {HTMLElement}|Comment|Text The element to add
  * @param root {HTMLElement} The root element the element should be added to (default: document.body)
- * @param position {string} the position where the element must end up (default <code>beforeend</code>)
+ * @param position {string|adjacents} the position where the element must end up (default <code>"beforeend"</code>)
  */
 const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd) => {
   if (elem) {
     if (elem instanceof HTMLElement) {
+      // noinspection JSCheckFunctionSignatures
       return root.insertAdjacentElement(position, elem);
     }
 

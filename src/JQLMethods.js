@@ -1,4 +1,5 @@
-// noinspection DuplicatedCode,JSUnresolvedVariable,JSUnusedGlobalSymbols
+// noinspection JSUnresolvedVariable,JSUnusedGlobalSymbols,GrazieInspection
+
 import _$ from "./JQueryLike.js";
 import {setStyle} from "./Styling.js";
 import {createElementFromHtmlString} from "./DOM.js";
@@ -60,7 +61,7 @@ const setData = (el, keyValuePairs) => {
  * @example
  * // presume $ is the alias for ExtendedNodeList
  * $(`<p>`).css({marginLeft: `12px`, color: `green`, borderLeft: `2px solid red`})
- * // the document will now contain <p class="JQLCreated_[a random string]]"></p>
+ * // the document will now contain <p class="JQLCreated_[a random string]"></p>
  * // use your own class name
  * $(`<p>`).css({className: `leftRedBorder`, marginLeft: `12px`, color: `green`, borderLeft: `2px solid red`});
  * // the document will now contain <p class="leftRedBorder"></p>
@@ -472,7 +473,7 @@ export default {
         return;
       }
 
-      if ([HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].includes(firstElem?.constructor)) {
+      if ([HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].includes(firstElem["constructor"])) {
         if (value2Set || [String, Number].find(v2s => value2Set.constructor === v2s)) {
           firstElem.value = value2Set;
         }

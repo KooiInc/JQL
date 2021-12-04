@@ -1,5 +1,3 @@
-// noinspection JSValidateJSDoc,JSUnresolvedVariable,JSUnusedGlobalSymbols
-
 /**
  * A small module for logging in a fixed positioned JQLLog box
  * <br>Every line logged is preceded by the time it is logged (granularity: milliseconds)
@@ -31,7 +29,7 @@ const debugLog = {
     useLogging = true;
     if (!log2Console) {
       logBox = document.querySelector("#jql_logger") || createLogElement();
-      logBox.parentNode.classList.add(`visible`);
+      logBox.parentNode["classList"].add(`visible`);
     }
     Log(`Logging started (to ${log2Console ? `console` : `document`})`);
   },
@@ -161,8 +159,7 @@ let logBox = undefined;
 /**
  * Add style classes for the JQLLog box to a custom css style element.
  * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
- * Default styles are in <code>stylingDefault4Log</code>
- * header of the document in which JQL is used). Default is 'JQLCustomCSS'.
+ * Default styles are in <code>stylingDefault4Log</code>.
  */
 const setStyling4Log = (styles = stylingDefault4Log) =>
   Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, customStylesheet.id));
@@ -208,5 +205,4 @@ const Log = (...args) => {
     );
 };
 
-const setStylingId4Log = (id = customStylesheet.id) => customStylesheet.id = id;
 export { Log, debugLog, setStyling4Log };

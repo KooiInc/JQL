@@ -1,5 +1,3 @@
-// noinspection JSUnresolvedVariable,JSValidateJSDoc,JSValidateTypes
-
 /**
  * a small library to create/use (modal) popups
  * @module JQL/Popup
@@ -74,9 +72,9 @@ function popupFactory($) {
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
-    popupBox.style({height: `auto`, width: `auto`});
+    popupBox["style"]({height: `auto`, width: `auto`});
     const [betweenH, bodyDim] = [between.dimensions().height, wrappedBody.addClass(`popupActive`).dimensions()];
-    between.style( {bottom: betweenH <= bodyDim.height ? `-${bodyDim.bottom}px` : 0 } );
+    between["style"]( {bottom: betweenH <= bodyDim.height ? `-${bodyDim.bottom}px` : 0 } );
 
     if (closeHndl) {
       closeHndl.addClass(`active`);
@@ -141,7 +139,7 @@ function popupFactory($) {
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isModalActive()) { return; }
     hideModal();
-    create(message);
+    create(message, false, callback);
     const remover = callback ? () => remove(callback) : remove;
     savedTimer = setTimeout(remover, closeAfter * 1000);
   };

@@ -1,4 +1,5 @@
-// noinspection JSCheckFunctionSignatures,JSUnresolvedVariable,JSUnusedGlobalSymbols,ES6UnusedImports,JSUnresolvedFunction,JSUnusedLocalSymbols
+// noinspection JSUnusedLocalSymbols
+
 import allLambdas from "./JQLMethods.js"
 import {element2DOM, insertPositions} from "./DOM.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
@@ -88,7 +89,7 @@ const loop = (extCollection, callback) => {
  * @param collection {Array} array of <code>HTMLElement</code>s (in memory),
  * i.e. the collection of the instance to return
  * @param root {HTMLElement} The root element to wich the collection should be injected to
- * @param position {insertPositions} The position to inject the element(s)
+ * @param position {string} The position to inject the element(s)
  * @returns {Array} an Array of injected <code>HTMLElement</code>s, maybe empty
  */
 const inject2DOMTree = (collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
@@ -130,6 +131,7 @@ const isVisible = function (el) {
 /**
  * Retrieves key-value pairs from data-attributes
  * if applicable.
+ * @private
  * @param el {HTMLElement} the html element
  * @returns {Object|undefined} key value-pairs
  */
@@ -147,7 +149,6 @@ const getAllDataAttributeValues = el => {
  * @param ctor {ExtendedNodeList} The ExtendedNodeList constructor
  */
 const initializePrototype = ctor => {
-  // noinspection JSUnresolvedVariable
   const proto = ctor.prototype;
   Object.entries(allLambdas.instanceExtensions)
     .forEach(([key, lambda]) => {
