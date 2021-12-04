@@ -311,6 +311,7 @@ export const svg = freeze([
   'zoomandpan',
 ]);
 
+// noinspection JSUnusedGlobalSymbols
 export const mathMl = freeze([
   'accent',
   'accentunder',
