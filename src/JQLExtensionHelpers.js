@@ -1,4 +1,3 @@
-
 import allLambdas from "./JQLMethods.js"
 import {element2DOM, insertPositions} from "./DOM.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
@@ -132,7 +131,6 @@ const isObjectAndNotArray = obj =>
     !Array.isArray(obj) && JSON.stringify(obj) === "{}") ||
   obj.constructor !== String && Object.keys(obj).length;
 
-
 const hex2Full = hex => {
   hex = (hex.trim().startsWith("#") ? hex.slice(1) : hex).trim();
   return hex.length === 3 ? [...hex].map(v => v + v).join("") : hex;
@@ -146,7 +144,6 @@ const hex2RGBA = function (hex, opacity = 100) {
     parseInt(hex.slice(2, 4), 16)}, ${
     parseInt(hex.slice(-2), 16)}${op ? `, ${opacity / 100}` : ""})`;
 };
-
 
 export {
   loop,
@@ -169,4 +166,4 @@ export {
   setCollectionFromCssSelector,
   truncateHtmlStr,
   truncate2SingleStr,
-};
+};

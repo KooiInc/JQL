@@ -1,4 +1,3 @@
-
 const freeze = Object;
 
 export const html = freeze([

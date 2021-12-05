@@ -3,7 +3,7 @@ require('esbuild')
       entryPoints: ['./src/JQueryLike.js'],
       bundle: true,
       outfile: './lib/JQLBundle.js',
-      sourcemap: true,
+      sourcemap: false,
       minify: true,
       format: 'esm',
       target: ['esnext'],

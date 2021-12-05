@@ -1,4 +1,3 @@
-
 import {
   debugLog,
   Log,
@@ -108,9 +107,7 @@ Object.entries({
 
   setTagPermission,
 
-
   allowUnknownHtmlTags,
-
 
   insertPositions,
 

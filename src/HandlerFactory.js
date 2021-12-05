@@ -1,4 +1,3 @@
-
 import _$ from "./JQueryLike.js";
 let handlers = {};
 

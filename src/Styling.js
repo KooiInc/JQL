@@ -1,7 +1,6 @@
 import {toDashedNotation} from "./JQLExtensionHelpers.js";
 let cssId = `customCSS`;
 
-
 const customStylesheet = {
   set id(nwId) { cssId = nwId; },
   get id() { return cssId; },
