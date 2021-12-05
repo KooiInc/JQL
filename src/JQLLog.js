@@ -3,43 +3,42 @@ import {setStyle, customStylesheet} from "./Styling.js";
 import {time, isVisible} from "./JQLExtensionHelpers.js";
 const debugLog = {
   get isOn() { return useLogging; },
-  isVisible: () => logBox && isVisible(logBox),
+  isVisible: () => isVisible(logBox()),
   on() {
     useLogging = true;
     if (!log2Console) {
-      logBox = document.querySelector("#jql_logger") || createLogElement();
-      logBox.parentNode["classList"].add(`visible`);
+      const box = logBox() || createLogElement();
+      box?.parentNode["classList"].add(`visible`);
     }
     Log(`Logging started (to ${log2Console ? `console` : `document`})`);
   },
   off() {
-    if (logBox) {
+    if (logBox()) {
       Log(`Logging stopped`);
-      logBox && logBox.parentNode.classList.remove(`visible`);
+      logBox()?.parentNode.classList.remove(`visible`);
     }
     useLogging = false;
   },
   toConsole(console = false) {
     log2Console = console;
     useLogging = console;
-    console && logBox && logBox.parentNode.remove();
+    console && document.querySelector(`#logBox`)?.remove();
   },
   remove: () => {
     useLogging = false;
     document.querySelector(`#logBox`).remove();
   },
-  hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
-  show: () => logBox && logBox.parentNode.classList.add(`visible`),
+  hide: () => logBox()?.parentNode.classList.remove(`visible`),
+  show: () => logBox()?.parentNode.classList.add(`visible`),
   reversed(reverse = true) {
     reverseLogging = reverse;
     Log(`Reverse logging reset: now logging ${
       reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
   },
   clear() {
-    if (logBox) {
-      logBox.textContent = ``;
-      Log(`Cleared`);
-    }
+    const box = logBox();
+    box && (box.textContent = ``);
+    Log(`Cleared`);
   }
 };
 
@@ -114,7 +113,7 @@ let stylingDefault4Log = {
 let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
-let logBox = undefined;
+let logBox = () => document.querySelector(`#jql_logger`);
 
 const setStyling4Log = (styles = stylingDefault4Log) =>
   Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, customStylesheet.id));
@@ -141,13 +140,13 @@ const decodeForConsole = something => something.constructor === String &&
 
 const Log = (...args) => {
     if (!useLogging) { return; }
-    if (!log2Console && !logBox) {
+    if (!log2Console && !logBox()) {
       createLogElement();
     }
     const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => log2Console
       ? console.log(decodeForConsole(arg))
-      : logBox.insertAdjacentHTML(
+      : logBox().insertAdjacentHTML(
           reverseLogging ? `afterbegin` : `beforeend`,
           `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );

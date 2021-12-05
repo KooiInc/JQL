@@ -1,3 +1,5 @@
+// noinspection JSAnnotator
+
 /**
  * A small module for logging in a fixed positioned JQLLog box
  * <br>Every line logged is preceded by the time it is logged (granularity: milliseconds)
@@ -24,19 +26,19 @@ import {time, isVisible} from "./JQLExtensionHelpers.js";
  */
 const debugLog = {
   get isOn() { return useLogging; },
-  isVisible: () => logBox && isVisible(logBox),
+  isVisible: () => isVisible(logBox()),
   on() {
     useLogging = true;
     if (!log2Console) {
-      logBox = document.querySelector("#jql_logger") || createLogElement();
-      logBox.parentNode["classList"].add(`visible`);
+      const box = logBox() || createLogElement();
+      box?.parentNode["classList"].add(`visible`);
     }
     Log(`Logging started (to ${log2Console ? `console` : `document`})`);
   },
   off() {
-    if (logBox) {
+    if (logBox()) {
       Log(`Logging stopped`);
-      logBox && logBox.parentNode.classList.remove(`visible`);
+      logBox()?.parentNode.classList.remove(`visible`);
     }
     useLogging = false;
   },
@@ -51,14 +53,14 @@ const debugLog = {
   toConsole(console = false) {
     log2Console = console;
     useLogging = console;
-    console && logBox && logBox.parentNode.remove();
+    console && document.querySelector(`#logBox`)?.remove();
   },
   remove: () => {
     useLogging = false;
     document.querySelector(`#logBox`).remove();
   },
-  hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
-  show: () => logBox && logBox.parentNode.classList.add(`visible`),
+  hide: () => logBox()?.parentNode.classList.remove(`visible`),
+  show: () => logBox()?.parentNode.classList.add(`visible`),
   /**
    * Change direction of log entries
    * <br>Exposed as: <code>debugLog.reversed</code>
@@ -71,10 +73,9 @@ const debugLog = {
       reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
   },
   clear() {
-    if (logBox) {
-      logBox.textContent = ``;
-      Log(`Cleared`);
-    }
+    const box = logBox();
+    box && (box.textContent = ``);
+    Log(`Cleared`);
   }
 };
 
@@ -154,7 +155,7 @@ let stylingDefault4Log = {
 let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
-let logBox = undefined;
+let logBox = () => document.querySelector(`#jql_logger`);
 
 /**
  * Add style classes for the JQLLog box to a custom css style element.
@@ -193,13 +194,13 @@ const decodeForConsole = something => something.constructor === String &&
  */
 const Log = (...args) => {
     if (!useLogging) { return; }
-    if (!log2Console && !logBox) {
+    if (!log2Console && !logBox()) {
       createLogElement();
     }
     const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => log2Console
       ? console.log(decodeForConsole(arg))
-      : logBox.insertAdjacentHTML(
+      : logBox().insertAdjacentHTML(
           reverseLogging ? `afterbegin` : `beforeend`,
           `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
