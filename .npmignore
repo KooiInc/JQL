@@ -1,0 +1,12 @@
+/.idea/*
+/node_modules/*
+build.cmd
+buildJQ.js
+/buildx.cmd
+/runDocumenter.cmd
+/JQLcompile.js
+/buildCommitAndPushDocs.cmd
+/package-lock.json
+/src_with_documentation/*
+/unDocumentAndBuild.js
+/startDocumenter.cmd
