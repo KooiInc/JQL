@@ -1,7 +1,3 @@
-/**
- * The initial set of tags and allowances for HTML cleanup, as used in DOMCleanup
- * @module JQL/XHelpers/HtmlTags
- */
 let isLenient = false;
 const rawTags = {
   a: {elem: HTMLAnchorElement, allowed: true},
@@ -115,36 +111,15 @@ const rawTags = {
 };
 const tags = Object.values(rawTags);
 export default {
-  /**
-   * <code>setter</code>
-   * <br>If <i>lenient</i> is on, unknown custom elements are allowed
-   * <br>Handle with care!
-   * @example
-   * [instance].lenient = true; //=> allow unknown elements
-   */
   set lenient(value) {
     isLenient = value;
   },
-  /**
-   * Check if a given element is allowed
-   * <br>Used by [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup}
-   * @param elem {HTMLElement} the element to check
-   */
   isAllowed(elem) {
     const tagInSet = tags
       .find(tag => tag.elem && elem instanceof tag.elem ||
         (elem.nodeName || "").toLowerCase() === tag.name);
     return (tagInSet && tagInSet.allowed) || isLenient && !tagInSet;
   },
-  /**
-   * Set/unset permission for creation of a specific tag, e.g. <code>iframe</code>.
-   * <br><b>Note</b>: when the tag is not defined in <code>cleanupTagInfo</code>, nothing happens.
-   * <br>See also [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup}
-   * @member setTagPermission
-   * @function
-   * @param tagName {string} the tag to set allowance for, e.g. <code>link</code> or <code>iframe</code>.
-   * @param allowed {boolean} true: can use tag, false: can not use tag.
-   */
   setTagPermission(tagName, allowed = false) {
     tagName = tagName.toLowerCase();
 

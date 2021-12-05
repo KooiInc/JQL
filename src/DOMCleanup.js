@@ -1,20 +1,8 @@
-/**
- * Clean/sanitize html. It uses definitions from
- * [HTMLTags]{@link module:JQL/XHelpers/HtmlTags} and [Attributes]{@link module:JQL/XHelpers/Attributes}
- * @module JQL/XHelpers/HtmlCleanup
- */
 import {truncate2SingleStr} from "./JQLExtensionHelpers.js";
 import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
 let logElementCreationErrors2Console = false;
 
-/**
- * set allowance for unknown HTML tags, exposed as <code>JQL.allowUnknownHtmlTags</code>
- * <br>See also [module HtmlTags]{@link module:JQL/XHelpers/HtmlTags}
- * @typedef allowUnknownHtmlTags
- * @property {function} on Allow unknown HTML tags
- * @property {function} off Do not allow unknown HTML tags (default)
- */
 const allowUnknownHtmlTags = {
   on: () => cleanupTagInfo.lenient = true,
   off: () => cleanupTagInfo.lenient = false,
@@ -33,7 +21,6 @@ const logContingentErrors = elCreationInfo => {
     console.info(`JQL HTML creation errors:\n`,msgs);
   }
 };
-// cleanup a given html element
 const cleanupHtml = elem => {
   const template = document.createElement("template");
   const elCreationInfo = {
@@ -70,8 +57,6 @@ const cleanupHtml = elem => {
   return el2Clean.children[0];
 };
 
-// get restricted tags
-// optionally emphasize a tag in the reporting [emphasizeTag]
 const emphasize = str => `***${str}***`;
 const getRestricted = emphasizeTag =>
   Object.entries(cleanupTagInfo)
@@ -80,20 +65,8 @@ const getRestricted = emphasizeTag =>
       [...acc, (emphasizeTag && key === emphasizeTag ? emphasize(key) : key)] ||
       acc, []);
 
-/**
- * Set permissions for specific tags. See [module HtmlTags]{@link module:JQL/XHelpers/HtmlTags}
- * <br>Exposed as <code>JQL.setTagPermission</code>.
- * @function
- * @name setTagPermission
- * @param tagName {string} the tag to set allowance for, e.g. <code>link</code> or <code>iframe</code>.
- * @param allowed {boolean} true: can use tag, false: can not use tag.
- */
 const setTagPermission = cleanupTagInfo.setTagPermission;
 
-/**
- * Activate/Deactivate logging of element creation errors to console.
- * @param onOff {boolean} Activate (true) or deactivate (false). Off by default.
- */
 const logElementCreationErrors = onOff => logElementCreationErrors2Console = onOff;
 
 export { cleanupHtml, getRestricted, setTagPermission, allowUnknownHtmlTags, logElementCreationErrors, };

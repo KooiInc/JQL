@@ -1,27 +1,6 @@
-/**
- * A small module for logging in a fixed positioned JQLLog box
- * <br>Every line logged is preceded by the time it is logged (granularity: milliseconds)
- * The styling of the logbox happens via a <code>&lt;style></code> element, added to the
- * header of the enclosing document.
- * @module JQL/JQLLog
- */
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
 import {setStyle, customStylesheet} from "./Styling.js";
 import {time, isVisible} from "./JQLExtensionHelpers.js";
-/**
- * Some utility methods for logging
- * @inner {Object.<key, Function|boolean>} debugLog
- * @property {function} debugLog.isVisible Is the JQLLog box visible?
- * @property {function} debugLog.on Activate logging for JQL.
- * @property {function} debugLog.off Deactivate logging for JQL.
- * @property {function} debugLog.remove Deactivate logging for JQL and remove <code>div#logBox</code>.
- * @property {function} debugLog.hide Hide the JQLLog box.
- * @property {function} debugLog.show Show the JQLLog box.
- * @property {function} debugLog.toConsole Log to console.
- * @property {function} debugLog.reversed Log top to bottom or latest first.
- * @property {function} debugLog.clear the log box.
- * @property {boolean} debugLog.isOn (getter) is logging on?
- */
 const debugLog = {
   get isOn() { return useLogging; },
   isVisible: () => logBox && isVisible(logBox),
@@ -40,14 +19,6 @@ const debugLog = {
     }
     useLogging = false;
   },
-  /**
-   * Log everything to the browser console
-   * <br>Exposed as: <code>debugLog.toConsole</code>
-   * <br><b>Note</b>: this possibly destroys an alreay created
-   * <code>div#logBox</code> in the document if set to true.
-   * @memberof module:JQL/JQLLog
-   * @param console {boolean} log to browser console (true) or not (false, default)
-   */
   toConsole(console = false) {
     log2Console = console;
     useLogging = console;
@@ -59,12 +30,6 @@ const debugLog = {
   },
   hide: () => logBox && logBox.parentNode.classList.remove(`visible`),
   show: () => logBox && logBox.parentNode.classList.add(`visible`),
-  /**
-   * Change direction of log entries
-   * <br>Exposed as: <code>debugLog.reversed</code>
-   * @memberof module:JQL/JQLLog
-   * @param reverse {boolean} latest last (false) or latest first (true) (default true)
-   */
   reversed(reverse = true) {
     reverseLogging = reverse;
     Log(`Reverse logging reset: now logging ${
@@ -78,11 +43,6 @@ const debugLog = {
   }
 };
 
-/**
- * The default styling to use for the logbox. This is used by [setStyling4Log]{@link module:JQL/JQLLog~setStyling4Log}.
- * @const {Object.<string, Object.<string, string|number>>} stylingDefault4Log
- * @memberof module:JQL/JQLLog
- */
 let stylingDefault4Log = {
   "#logBox": {
     minWidth: `0px`,
@@ -156,11 +116,6 @@ let log2Console = false;
 let reverseLogging = true;
 let logBox = undefined;
 
-/**
- * Add style classes for the JQLLog box to a custom css style element.
- * @param styles {Object} style rules Object, e.g. <code>&#123;margin: `0`, color: `green`&#125;</code>.
- * Default styles are in <code>stylingDefault4Log</code>.
- */
 const setStyling4Log = (styles = stylingDefault4Log) =>
   Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, customStylesheet.id));
 
@@ -184,13 +139,6 @@ const decodeForConsole = something => something.constructor === String &&
   Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
   something;
 
-/**
- * Create JQLLog entry/entries, preceded with the time of logging (millisecond granularity).
- * <br>If the local [useLogging] boolean is false, nothing is logged
- * <br> in JQL exposed as <code>JQL.log</code>
- * @param args {...(string|Object)} string(s) or Object(s) to print in the JQLLog box
- * <br><b>Note</b> Objects are converted to JSON representation
- */
 const Log = (...args) => {
     if (!useLogging) { return; }
     if (!log2Console && !logBox) {

@@ -1,15 +1,6 @@
-// nicked from https://github.com/cure53/DOMPurify
 
-/**
- * The set of allowed attributes, as used in [module HtmlCleanup]{@link module:JQL/XHelpers/HtmlCleanup}
- * @module JQL/XHelpers/Attributes
- */
 const freeze = Object;
 
-/**
- * The set of allowed html attributes
- * @type {string[]}
- */
 export const html = freeze([
   'accept',
   'action',
@@ -123,10 +114,6 @@ export const html = freeze([
   'slot',
 ]);
 
-/**
- * the set of allowed svg attributes
- * @type {string[]}
- */
 export const svg = freeze([
   'accent-height',
   'accumulate',
@@ -311,7 +298,6 @@ export const svg = freeze([
   'zoomandpan',
 ]);
 
-// noinspection JSUnusedGlobalSymbols
 export const mathMl = freeze([
   'accent',
   'accentunder',

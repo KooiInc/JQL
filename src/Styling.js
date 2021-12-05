@@ -1,26 +1,7 @@
-// derived from https://testbed.nicon.nl/showFiddle/ehd2710f
 import {toDashedNotation} from "./JQLExtensionHelpers.js";
 let cssId = `customCSS`;
 
-/**
- * Styling module: add or change style rules in a <code>&lt;style></code> element, added to the
- * header of the enclosing document if not already done so
- * @module JQL/XHelpers/Styling
- */
 
-/**
- * custom stylesheet id helper
- * @type {object}
- * @property id {getter/setter} The id to use for a custom style sheet
- * <br>default value: "customCSS"
- * @property getSheet {getter} retrieve the custom style sheet
- * <br><b>Note</b>: the stylesheet will be created if it doesn't exist
- * @example
- * customStylesheet.id = "mySheet";
- * console.log(custumStylesheet.id); //=> 'mySheet'
- * console.log(custumStylesheet.getSheet.outerHTML);
- * //=> <style type="text/css" id="mySheet></style>"
- */
 const customStylesheet = {
   set id(nwId) { cssId = nwId; },
   get id() { return cssId; },
@@ -55,32 +36,6 @@ const checkParams = (selector, styleValues) => selector &&
     styleValues.constructor === Object &&
     Object.keys(styleValues).length;
 
-/**
- * Change or create some css rule in an existing or dynamically created stylesheet (id: cssId) in the document
- * <br><br>A @media rule can also be inserted. Use a media rule for the selector (e.g.<code>@media print</code>)
- * and set the style rules for it for one or more selectors using an object with one key: <i>mediaSelectors</i>, e.g.:
- * <br><code>{mediaSelectors: { "div#x": {display: `none`}, "div#y": color: `green`} }</code>
- * @todo: buggy, make it better
- * @param selector {string} the (css) selectorText, like <code>ul li.inActive</code>, <code>.someClass</code> etc.
- * @param rules {Object} an object with CSSStyleDeclarations
- * <br><b>Note</b>: enclose a string value of `content` in quotes (e.g. <code>&#123;content: `'Some string'`&#125;</code>)
- * <br><b>Note</b>: rule keys should be valid (e.g. <code>&#123;marginRight: `0.3rem`&#125;</code>
- * or <code>&#123;"margin-right": `0.3rem`&#125;</code>)
- * @param customCssId {string|undefined} id of the css stylesheet (to create or retrieve), default "customCSS"
- * @example
- * // assume changeRuleset is imported as setStyleRule
- * setStyleRule(".myClass", {color: "#c0c0c0", padding: "0 4px 0 15px"}, "YesItsMyCss");
- * //           ^ someRule   ^                                            ^
- * //                        ^ css rules                                  ^
- * //                                                                     ^ id of the stylesheet
- * //
- * // set a @media rule
- * setStyleRule( "@media(max-width: 1200px)",
- * //             ^ @media rule
- *               { mediaSelectors: {".myClass": {maxWidth: `75vw`}, "#someDiv": {color: red}} } )
- * //                                ^ selector  ^
- * //                                            ^ css rule(s)
- */
 function changeCssStyleRule(selector, rules = {}, customCssId = customStylesheet.id) {
   if ( !checkParams(selector, rules) ) { return; }
 
