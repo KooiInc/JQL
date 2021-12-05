@@ -1,11 +1,9 @@
-
 import {
   cleanupHtml,
   getRestricted,
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
 import {truncateHtmlStr} from "./JQLExtensionHelpers.js";
-
 
 const adjacents = {
   BeforeBegin: "beforebegin",
@@ -63,4 +61,4 @@ export {
   cleanupHtml,
   allowUnknownHtmlTags,
   adjacents as insertPositions,
-};
+};
