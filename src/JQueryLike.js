@@ -1,3 +1,4 @@
+
 import {
   debugLog,
   Log,
@@ -41,9 +42,7 @@ const ExtendedNodeList = function (
   root = document.body,
   position = insertPositions.BeforeEnd ) {
 
-  if (ExtendedNodeList.prototype.isJQL === undefined) {
-    initializePrototype(ExtendedNodeList);
-  }
+  if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
 
   this.collection = input2Collection(input);
   const isRawElemCollection = isArrayOfHtmlElements(this.collection);
