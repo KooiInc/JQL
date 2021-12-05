@@ -10,3 +10,4 @@ buildJQ.js
 /src_with_documentation/*
 /unDocumentAndBuild.js
 /startDocumenter.cmd
+/lib/JQLBundle.js.map
