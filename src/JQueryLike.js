@@ -36,11 +36,7 @@ let logSystem = false;
 
 customStylesheet.id = `JQLCustomCSS`;
 
-const ExtendedNodeList = function (
-  input,
-  root = document.body,
-  position = insertPositions.BeforeEnd ) {
-
+const ExtendedNodeList = function ( input, root = document.body, position = insertPositions.BeforeEnd ) {
   if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
 
   this.collection = input2Collection(input);

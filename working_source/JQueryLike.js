@@ -108,11 +108,7 @@ customStylesheet.id = `JQLCustomCSS`;
  *   .html(`<i>You are, really. And it's fine.</i>`, true)
  *   .prepend(document.createElement(`\u2022 `));
  */
-const ExtendedNodeList = function (
-  input,
-  root = document.body,
-  position = insertPositions.BeforeEnd ) {
-
+const ExtendedNodeList = function ( input, root = document.body, position = insertPositions.BeforeEnd ) {
   if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
 
   this.collection = input2Collection(input);
