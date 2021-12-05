@@ -117,6 +117,7 @@ const addHandlerId = extCollection => {
  * @returns {boolean} true if visible, false if not
  */
 const isVisible = function (el) {
+  if (!el) { return false; }
   const elStyle = el.style;
   const computedStyle = getComputedStyle(el);
   const invisible = [elStyle.visibility, computedStyle.visibility].includes("hidden");
