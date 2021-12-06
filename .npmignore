@@ -9,7 +9,6 @@ buildJQ.js
 /buildCommitAndPushDocs.cmd
 /package-lock.json
 /working-source/*
-/working-source/Readme.md
 /unDocumentAndBuild.js
 /startDocumenter.cmd
 /lib/JQLBundle.js.map
