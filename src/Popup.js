@@ -27,6 +27,7 @@ function popupFactory($) {
       top: `${modalDim.top - (iconDim.height/2)}px`,
       left: `${modalDim.right - (iconDim.width/2)}px`,
     });
+    between["style"]( { top: `${scrollY}px` } );
   };
   const createElements = _ => {
     const popupBox =
@@ -43,14 +44,15 @@ function popupFactory($) {
     return [popupBox, between, closer, popupBox.find$(`#modalWarning`)];
   };
   const [popupBox, between, closer, modalWarner] = createElements();
-  const hideModal = () => {
-    $(`#closer, .between, .popupBox, #modalWarning`).removeClass(`active`);
+  const deActivate = () => {
+    $(`.between`).removeClass(`active`).style({top: 0});
+    $(`#closer, .popupBox, #modalWarning`).removeClass(`active`);
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
-    popupBox["style"]({height: `auto`, width: `auto`});
-    const [betweenH, bodyDim] = [between.dimensions().height, wrappedBody.addClass(`popupActive`).dimensions()];
-    between["style"]( {bottom: betweenH <= bodyDim.height ? `-${bodyDim.bottom}px` : 0 } );
+    popupBox["style"]( { height: `auto`, width: `auto` } );
+    between["style"]( { top: `${scrollY}px` } );
+    wrappedBody.addClass(`popupActive`);
 
     if (closeHndl) {
       closeHndl.addClass(`active`);
@@ -75,7 +77,7 @@ function popupFactory($) {
 
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isModalActive()) { return; }
-    hideModal();
+    deActivate();
     create(message, false, callback);
     const remover = callback ? () => remove(callback) : remove;
     savedTimer = setTimeout(remover, closeAfter * 1000);
@@ -93,7 +95,7 @@ function popupFactory($) {
       return callback();
     }
 
-    hideModal();
+    deActivate();
     const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
     savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
   }
@@ -120,17 +122,16 @@ function initStyling(setStyle) {
     '.between': {
       position: 'absolute',
       zIndex: '-1',
-      left: '0',
-      right: '0',
-      top: '0',
-      bottom: '0',
-      margin: '0',
       overflow: 'hidden',
       backgroundColor: 'white',
+      width: 0,
+      height: 0,
       opacity: 0,
       transition: 'all ease 0.3s',
     },
     '.between.active': {
+      height: `100vh`,
+      width: `100vw`,
       zIndex: 2,
       opacity: 0.5,
     },
