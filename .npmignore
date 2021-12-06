@@ -1,4 +1,5 @@
 /.idea/*
+/.github/*
 /node_modules/*
 build.cmd
 buildJQ.js
@@ -7,7 +8,7 @@ buildJQ.js
 /JQLcompile.js
 /buildCommitAndPushDocs.cmd
 /package-lock.json
-/working_source/*
+/working-source/*
 /unDocumentAndBuild.js
 /startDocumenter.cmd
 /lib/JQLBundle.js.map
