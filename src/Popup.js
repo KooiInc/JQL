@@ -127,13 +127,12 @@ function initStyling(setStyle) {
       width: 0,
       height: 0,
       opacity: 0,
-      transition: 'all ease 0.3s',
     },
     '.between.active': {
       height: `100vh`,
       width: `100vw`,
       zIndex: 2,
-      opacity: 0.5,
+      opacity: 0.7,
     },
     '.popupBox': {
       position: 'fixed',
