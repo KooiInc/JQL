@@ -45,11 +45,9 @@ const assignAttrValues = (el, keyValuePairs) => {
   });
 };
 
-export default {
+const allMethods = {
   straigthLoops: {
-    toggleClass: (el, className) => {
-      el.classList.toggle(className);
-    },
+    toggleClass: (el, className) => el.classList.toggle(className),
 
     toggleStyleFragments: (el, keyValuePairs) =>
       el && Object.entries(keyValuePairs).forEach(([key, value]) => {
@@ -85,8 +83,7 @@ export default {
     removeClass: (el, ...classNames) =>
       classNames.forEach(cn => el.classList.remove(cn)),
 
-    addClass: (el, ...classNames) =>
-      el && classNames.forEach(cn => el.classList.add(cn)),
+    addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
 
     show: el => el.style.display = ``,
 
@@ -460,4 +457,6 @@ export default {
       return extCollection;
     },
   },
-};
+};
+
+export default allMethods;
