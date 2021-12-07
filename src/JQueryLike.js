@@ -90,35 +90,20 @@ const JQL = (...args) => new ExtendedNodeList(...args);
 
 Object.entries({
   node: selector => document.querySelector(selector),
-
   nodes: selector => document.querySelectorAll(selector),
-
   virtual: html => new ExtendedNodeList(html, document.createElement("br")),
-
   setStyle: (selector, ruleValues, cssId) => setStyle(selector, ruleValues, cssId),
-
   debugLog,
-
   log: Log,
-
   setTagPermission,
-
   allowUnknownHtmlTags,
-
   insertPositions,
-
   logElementCreationErrors,
-
   setStyling4Log,
-
   setSystemLogActiveState: activeState => logSystem = activeState,
-
   time,
-
   popup: () => popupFactory(JQL),
-
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-
 }).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
 export default JQL;
