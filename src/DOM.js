@@ -4,7 +4,6 @@ import {
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
 import {truncateHtmlStr} from "./JQLExtensionHelpers.js";
-
 const adjacents = {
   BeforeBegin: "beforebegin",
   AfterBegin: "afterbegin",
