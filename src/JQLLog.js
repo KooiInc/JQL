@@ -41,7 +41,6 @@ const debugLog = {
     Log(`Cleared`);
   }
 };
-
 let stylingDefault4Log = {
   "#logBox": {
     minWidth: `0px`,
@@ -114,12 +113,9 @@ let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
 let logBox = () => document.querySelector(`#jql_logger`);
-
 const setStyling4Log = (styles = stylingDefault4Log) =>
   Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, customStylesheet.id));
-
 let useHtml = true;
-
 const createLogElement = () => {
   setStyling4Log();
   const jql_logger_element = useHtml ? `div` : `pre`;
@@ -133,11 +129,9 @@ const createLogElement = () => {
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
   return document.querySelector(`#jql_logger`);
 };
-
 const decodeForConsole = something => something.constructor === String &&
   Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
   something;
-
 const Log = (...args) => {
     if (!useLogging) { return; }
     if (!log2Console && !logBox()) {

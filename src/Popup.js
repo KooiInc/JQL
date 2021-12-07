@@ -71,10 +71,8 @@ function popupFactory($) {
     $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
-
   const create = (message, reallyModal = false, callback) =>
     !currentModalState.isModalActive() && doCreate(message, reallyModal, callback);
-
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isModalActive()) { return; }
     deActivate();
@@ -82,7 +80,6 @@ function popupFactory($) {
     const remover = callback ? () => remove(callback) : remove;
     savedTimer = setTimeout(remover, closeAfter * 1000);
   };
-
   function remove(evtOrCallback) {
     endTimer();
 
@@ -99,7 +96,6 @@ function popupFactory($) {
     const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
     savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
   }
-
   const removeModal = callback => {
     currentModalState.isModal = false;
     remove(callback);

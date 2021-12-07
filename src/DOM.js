@@ -9,7 +9,6 @@ const adjacents = {
   AfterBegin: "afterbegin",
   BeforeEnd: "beforeend",
   AfterEnd: "afterend" };
-
 const htmlToVirtualElement = htmlString => {
   const placeholder = Object.assign(document.createElement("div"), { id:"placeholder", innerHTML: htmlString.trim() });
 
@@ -17,7 +16,6 @@ const htmlToVirtualElement = htmlString => {
     ? cleanupHtml(placeholder)
     : undefined;
 };
-
 const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd) => {
   if (elem) {
     if (elem instanceof HTMLElement) {
@@ -36,7 +34,6 @@ const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd)
     }
   }
 };
-
 const createElementFromHtmlString = htmlStr => {
   htmlStr = htmlStr.trim();
   let nwElem = htmlToVirtualElement(htmlStr);

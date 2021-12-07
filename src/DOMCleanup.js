@@ -2,7 +2,6 @@ import {truncate2SingleStr} from "./JQLExtensionHelpers.js";
 import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
 let logElementCreationErrors2Console = false;
-
 const allowUnknownHtmlTags = {
   on: () => cleanupTagInfo.lenient = true,
   off: () => cleanupTagInfo.lenient = false,
@@ -56,7 +55,6 @@ const cleanupHtml = elem => {
   logContingentErrors(elCreationInfo);
   return el2Clean.children[0];
 };
-
 const emphasize = str => `***${str}***`;
 const getRestricted = emphasizeTag =>
   Object.entries(cleanupTagInfo)
@@ -64,9 +62,7 @@ const getRestricted = emphasizeTag =>
       !value.allowed &&
       [...acc, (emphasizeTag && key === emphasizeTag ? emphasize(key) : key)] ||
       acc, []);
-
 const setTagPermission = cleanupTagInfo.setTagPermission;
-
 const logElementCreationErrors = onOff => logElementCreationErrors2Console = onOff;
 
 export { cleanupHtml, getRestricted, setTagPermission, allowUnknownHtmlTags, logElementCreationErrors, };

@@ -1,7 +1,6 @@
 import allLambdas from "./JQLMethods.js"
 import {element2DOM, insertPositions} from "./DOM.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
-
 const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
 const isCommentOrTextNode = elem => elem && elem instanceof Comment || elem instanceof Text;
 const isNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c);
@@ -44,12 +43,10 @@ const randomString = (() => {
     },
   };
 })();
-
 const toDashedNotation = str2Convert =>
   str2Convert
     .replace(/[A-Z]/g, a => `-${a.toLowerCase()}`)
     .replace(/^-|-$/, ``);
-
 const loop = (extCollection, callback) => {
   const cleanCollection = extCollection.collection.filter(el => !isCommentOrTextNode(el))
   for (let i = 0; i < cleanCollection.length; i += 1) {
@@ -57,20 +54,18 @@ const loop = (extCollection, callback) => {
   }
   return extCollection;
 };
-
 const inject2DOMTree = (collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
   collection.reduce((acc, elem) => {
     const created = elem && isNode(elem) && element2DOM(elem, root, position);
     return created ? [...acc, created] : acc;
   }, []);
-
 const addHandlerId = extCollection => {
   const handleId = extCollection.first().dataset.hid || randomString.random(8);
   extCollection.setData({hid: handleId});
   return `[data-hid="${handleId}"]`;
 };
-
 const isVisible = function (el) {
+  if (!el) { return false; }
   const elStyle = el.style;
   const computedStyle = getComputedStyle(el);
   const invisible = [elStyle.visibility, computedStyle.visibility].includes("hidden");
@@ -81,7 +76,6 @@ const isVisible = function (el) {
   const noOpacity = +computedStyle.opacity === 0 || +(elStyle.opacity || 1) === 0;
   return !(offscreen || noOpacity || noDisplay || invisible);
 };
-
 const getAllDataAttributeValues = el => {
   const getKey = attr => attr.nodeName.slice(attr.nodeName.indexOf(`-`) + 1);
   const data = [...el.attributes]
@@ -90,7 +84,6 @@ const getAllDataAttributeValues = el => {
       ({...acc, [getKey(val)]: val.nodeValue}), {});
   return Object.keys(data).length && data || undefined;
 };
-
 const initializePrototype = ctor => {
   const proto = ctor.prototype;
   Object.entries(allLambdas.instanceExtensions)
@@ -111,7 +104,6 @@ const initializePrototype = ctor => {
     });
   proto.isJQL = true;
 };
-
 const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .substr(0, maxLength)
   .replace(/>\s+</g, `><`)
@@ -121,21 +113,17 @@ const truncateHtmlStr = (str, maxLength = 120) => str.trim()
 
 const truncate2SingleStr = (str, maxLength = 120) =>
   truncateHtmlStr(str, maxLength).replace(/&lt;/g, `<`).replace(/&hellip;/g, `...`);
-
 const time = () => ((d) =>
   `[${pad0(d.getHours())}:${pad0(d.getMinutes())}:${
     pad0(d.getSeconds())}.${pad0(d.getMilliseconds(), 3)}]`)(new Date());
-
 const isObjectAndNotArray = obj =>
   (obj.constructor !== Date &&
     !Array.isArray(obj) && JSON.stringify(obj) === "{}") ||
   obj.constructor !== String && Object.keys(obj).length;
-
 const hex2Full = hex => {
   hex = (hex.trim().startsWith("#") ? hex.slice(1) : hex).trim();
   return hex.length === 3 ? [...hex].map(v => v + v).join("") : hex;
 };
-
 const hex2RGBA = function (hex, opacity = 100) {
   hex = hex2Full(hex.slice(1));
   const op = opacity % 100 !== 0;

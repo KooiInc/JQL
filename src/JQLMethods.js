@@ -5,12 +5,10 @@ import {hex2RGBA, loop, addHandlerId, isVisible, isNode, isObjectAndNotArray, ra
 import handlerFactory from "./HandlerFactory.js";
 
 const empty = el => el && (el.textContent = "");
-
 const setData = (el, keyValuePairs) => {
   el && isObjectAndNotArray(keyValuePairs) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
 };
-
 const css = (el, keyOrKvPairs, value) => {
   if (value && keyOrKvPairs.constructor === String) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
@@ -28,7 +26,6 @@ const css = (el, keyOrKvPairs, value) => {
   setStyle(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
-
 const assignAttrValues = (el, keyValuePairs) => {
   el && Object.entries(keyValuePairs).forEach(([key, value]) => {
     if (key.startsWith(`data`)) {
@@ -44,11 +41,9 @@ const assignAttrValues = (el, keyValuePairs) => {
     }
   });
 };
-
 const allMethods = {
   straigthLoops: {
     toggleClass: (el, className) => el.classList.toggle(className),
-
     toggleStyleFragments: (el, keyValuePairs) =>
       el && Object.entries(keyValuePairs).forEach(([key, value]) => {
         if (value instanceof Function) {
@@ -72,7 +67,6 @@ const allMethods = {
         : el.setAttribute(name, value),
 
     empty,
-
     clear: empty,
 
     replaceClass: (el, className, ...nwClassNames) => {
@@ -88,9 +82,7 @@ const allMethods = {
     show: el => el.style.display = ``,
 
     hide: el => el.style.display = `none`,
-
     setData,
-
     assignAttrValues,
 
     attr(el, keyOrObj, value) {
@@ -124,7 +116,6 @@ const allMethods = {
         return el.setAttribute(key, value);
       });
     },
-
     style: (el, keyOrKvPairs, value) => {
       if (value && keyOrKvPairs.constructor === String) {
         keyOrKvPairs = {[keyOrKvPairs]: value || "none"};
@@ -152,7 +143,6 @@ const allMethods = {
       return loop(extCollection, cb);
     },
     each: (extCollection, cb) => loop(extCollection, cb),
-
     remove: (extCollection, selector) => {
       const remover = el => el.remove();
       if (selector) {
@@ -162,14 +152,10 @@ const allMethods = {
       }
       loop(extCollection, remover);
     },
-
     computedStyle: (extCollection, property) => extCollection.first() && getComputedStyle(extCollection.first())[property],
-
     getData: (extCollection, dataAttribute, valueWhenFalsy) => extCollection.first() &&
       extCollection.first().dataset && extCollection.first().dataset[dataAttribute] || valueWhenFalsy,
-
     isEmpty: extCollection => extCollection.collection.length < 1,
-
     is: (extCollection, checkValue) => {
       const firstElem = extCollection.first();
 
@@ -189,13 +175,11 @@ const allMethods = {
           return true;
       }
     },
-
     hasClass: (extCollection, ...classNames) => {
       const firstElem = extCollection.first();
       return extCollection.isEmpty() || !firstElem.classList.length
         ? false : classNames.find(cn => firstElem.classList.contains(cn)) || false;
     },
-
     replace: (extCollection, oldChild, newChild) => {
       const firstElem = extCollection.first();
 
@@ -217,13 +201,11 @@ const allMethods = {
 
       return extCollection;
     },
-
     replaceMe: (extCollection, newChild) => {
       newChild = newChild instanceof HTMLElement ? new extCollection.constructor(newChild) : newChild;
       extCollection.parent().replace(extCollection, newChild)
       return newChild;
     },
-
     val: (extCollection, value2Set) => {
       const firstElem = extCollection.first();
 
@@ -239,10 +221,8 @@ const allMethods = {
         return firstElem.value;
       }
     },
-
     parent: extCollection => !extCollection.isEmpty() && extCollection.first().parentNode &&
       new extCollection.constructor(extCollection.first().parentNode) || extCollection,
-
     append: (extCollection, ...elems2Append) => {
       if (!extCollection.isEmpty() && elems2Append) {
 
@@ -272,7 +252,6 @@ const allMethods = {
 
       return extCollection;
     },
-
     prepend: (extCollection, ...elems2Prepend) => {
       if (!extCollection.isEmpty() && elems2Prepend) {
 
@@ -304,14 +283,12 @@ const allMethods = {
 
       return extCollection;
     },
-
     appendTo: (extCollection, extCollection2AppendTo) => {
       if (!extCollection2AppendTo.isJQL) {
         extCollection2AppendTo = _$.virtual(extCollection2AppendTo);
       }
       return extCollection2AppendTo.append(extCollection);
     },
-
     prependTo: (extCollection, extCollection2PrependTo) => {
       if (!extCollection2PrependTo.isJQL) {
         extCollection2PrependTo = _$.virtual(extCollection2PrependTo);
@@ -319,7 +296,6 @@ const allMethods = {
 
       return extCollection2PrependTo.prepend(extCollection);
     },
-
     single: (extCollection, indexOrSelector = "0") => {
       if (extCollection.collection.length > 0) {
         if (isNaN(+indexOrSelector) && extCollection.find(indexOrSelector)) {
@@ -333,7 +309,6 @@ const allMethods = {
         return extCollection;
       }
     },
-
     toNodeList: extCollection => {
       const virtual = document.createElement(`div`);
 
@@ -345,12 +320,10 @@ const allMethods = {
 
       return virtual.childNodes;
     },
-
     duplicate: (extCollection, toDOM = false) => {
       const clonedCollection = extCollection.toNodeList();
       return toDOM ? _$(clonedCollection) : _$.virtual(clonedCollection);
     },
-
     toDOM: (extCollection, root = document.body) => {
       if (extCollection.isVirtual) {
         extCollection.isVirtual = false;
@@ -358,7 +331,6 @@ const allMethods = {
       }
       return extCollection;
     },
-
     first: (extCollection, asExtCollection = false) => {
       if (extCollection.collection.length > 0) {
         return asExtCollection
@@ -367,9 +339,7 @@ const allMethods = {
       }
       return undefined;
     },
-
     first$: (extCollection, indexOrSelector) => extCollection.single(indexOrSelector),
-
     find: (extCollection, selector) =>
       extCollection.first()?.querySelectorAll(selector) || [],
 
@@ -380,7 +350,6 @@ const allMethods = {
         .filter(el => el && el instanceof HTMLElement);
       return found.length && _$.virtual(found);
     },
-
     prop: (extCollection, property, value) => {
       if (value === undefined) {
         return !extCollection.isEmpty ? extCollection.first()[property] : undefined;
@@ -392,7 +361,6 @@ const allMethods = {
 
       return extCollection;
     },
-
     on: (extCollection, type, callback) => {
       if (extCollection.collection.length) {
         const cssSelector = addHandlerId(extCollection);
@@ -401,7 +369,6 @@ const allMethods = {
 
       return extCollection;
     },
-
     html: (extCollection, htmlValue, append) => {
       if (htmlValue === undefined) {
         return extCollection.first()?.innerHTML;
@@ -419,9 +386,7 @@ const allMethods = {
 
       return extCollection;
     },
-
     outerHtml: extCollection => (extCollection.first() || {outerHTML: undefined}).outerHTML,
-
     htmlFor: (extCollection, forQuery, htmlString = "", append = false) => {
       if (forQuery && extCollection.collection.length) {
         const el2Change = extCollection.find$(forQuery);
@@ -439,16 +404,13 @@ const allMethods = {
       }
       return extCollection;
     },
-
     dimensions: extCollection => extCollection.first()?.getBoundingClientRect(),
-
     delegate: (extCollection, type, cssSelector, ...callbacks) => {
       callbacks.forEach(callback =>
         handlerFactory(extCollection, type, cssSelector, callback));
 
       return extCollection;
     },
-
     ON: (extCollection, type, ...callbacks) => {
       if (extCollection.collection.length) {
         callbacks.forEach(cb => extCollection.on(type, cb));
