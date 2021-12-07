@@ -1,6 +1,6 @@
 {
   "name": "jqlmodule",
-  "version": "1.3.60",
+  "version": "1.3.61",
   "private": false,
   "description": "A JQuery alike es20xx module",
   "keywords": ["JQuery", "JQuerySubset", "JQueryAlike", "ES20xx"],
@@ -19,5 +19,6 @@
   },
   "scripts": {
     "build": "node JQLcompile"
-  }
+  },
+  "browser": "./lib/JQLBundle.js"
 }
