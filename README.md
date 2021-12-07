@@ -9,9 +9,12 @@ It is *not* a replacement for [JQuery](https://github.com/jquery/jquery).
 Consider it a subset of JQuery <i>alike</i> methods for (collections of) HTML elements within a HTML document. 
 
 To use the module in your browser script use:
+
 ```
 <script type="module">
   import $ from "https://cdn.jsdelivr.net/gh/KooiInc/JQL@master/lib/JQLBundle.js";
+  // or (Note: jsdelivr source map is useless)
+  import $ from "https://cdn.jsdelivr.net/npm/jqlmodule@latest/lib/JQLBundle.min.js";
   // or (note: JQueryLike.min.js will *not* work)
   import $ from "https://cdn.jsdelivr.net/gh/KooiInc/JQL@master/src/JQueryLike.js";
 </script>
