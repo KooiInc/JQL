@@ -10,7 +10,7 @@ Consider it a subset of JQuery <i>alike</i> methods for (collections of) HTML el
 
 To use the module in your browser script use:
 
-```
+```html
 <script type="module">
   import $ from "https://cdn.jsdelivr.net/gh/KooiInc/JQL@master/lib/JQLBundle.js";
   // or (Note: jsdelivr source map is useless)
