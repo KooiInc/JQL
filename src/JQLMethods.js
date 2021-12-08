@@ -3,7 +3,6 @@ import {setStyle} from "./Styling.js";
 import {createElementFromHtmlString} from "./DOM.js";
 import {hex2RGBA, loop, addHandlerId, isVisible, isNode, isObjectAndNotArray, randomString} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
-
 const empty = el => el && (el.textContent = "");
 const setData = (el, keyValuePairs) => {
   el && isObjectAndNotArray(keyValuePairs) &&
@@ -58,33 +57,25 @@ const allMethods = {
 
         el.style[key] = `${el.style[key]}` === `${value}` ? "" : value;
       }),
-
     removeAttr: (el, name) => el && el.removeAttribute(name),
 
     toggleAttr: (el, name, value) =>
       el && el.hasAttribute(name)
         ? el.removeAttribute(name)
         : el.setAttribute(name, value),
-
     empty,
     clear: empty,
-
     replaceClass: (el, className, ...nwClassNames) => {
       el.classList.remove(className);
       nwClassNames.forEach(name => el.classList.add(name))
     },
-
     removeClass: (el, ...classNames) =>
       classNames.forEach(cn => el.classList.remove(cn)),
-
     addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
-
     show: el => el.style.display = ``,
-
     hide: el => el.style.display = `none`,
     setData,
     assignAttrValues,
-
     attr(el, keyOrObj, value) {
       if (!el) {
         return true;
@@ -125,7 +116,6 @@ const allMethods = {
         Object.entries(keyOrKvPairs).forEach(([key, value]) => el.style[key] = value);
       }
     },
-
     css,
   },
   instanceExtensions: {
