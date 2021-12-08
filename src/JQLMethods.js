@@ -58,7 +58,6 @@ const allMethods = {
         el.style[key] = `${el.style[key]}` === `${value}` ? "" : value;
       }),
     removeAttr: (el, name) => el && el.removeAttribute(name),
-
     toggleAttr: (el, name, value) =>
       el && el.hasAttribute(name)
         ? el.removeAttribute(name)
@@ -330,9 +329,7 @@ const allMethods = {
       return undefined;
     },
     first$: (extCollection, indexOrSelector) => extCollection.single(indexOrSelector),
-    find: (extCollection, selector) =>
-      extCollection.first()?.querySelectorAll(selector) || [],
-
+    find: (extCollection, selector) => extCollection.first()?.querySelectorAll(selector) || [],
     find$: (extCollection, selector) => {
       const found = extCollection.collection.reduce((acc, el) =>
         [...acc, [...el.querySelectorAll(selector)]], [])
@@ -396,8 +393,7 @@ const allMethods = {
     },
     dimensions: extCollection => extCollection.first()?.getBoundingClientRect(),
     delegate: (extCollection, type, cssSelector, ...callbacks) => {
-      callbacks.forEach(callback =>
-        handlerFactory(extCollection, type, cssSelector, callback));
+      callbacks.forEach(callback => handlerFactory(extCollection, type, cssSelector, callback));
 
       return extCollection;
     },
@@ -410,5 +406,4 @@ const allMethods = {
     },
   },
 };
-
 export default allMethods;
