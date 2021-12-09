@@ -85,11 +85,11 @@ const getAllDataAttributeValues = el => {
   return Object.keys(data).length && data || undefined;
 };
 const initializePrototype = ctor => {
-  const proto = ctor.prototype;
+  const proto = ctor[`prototype`];
   Object.entries(allLambdas.instanceExtensions)
     .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
-        proto[key] = function (...args) {
+        proto[key] = function(...args) {
           return lambda(this, ...args);
         };
       }
@@ -97,7 +97,7 @@ const initializePrototype = ctor => {
   Object.entries(allLambdas.straigthLoops)
     .forEach(([key, lambda]) => {
       if (lambda instanceof Function) {
-        proto[key] = function (...args) {
+        proto[key] = function(...args) {
           return loop(this, el => lambda(el, ...args));
         };
       }
