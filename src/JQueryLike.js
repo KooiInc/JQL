@@ -52,7 +52,11 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
-    const shouldCreateElements = isRawHtmlArray || isRawHtml || isRawElemCollection;
+    const shouldCreateElements = isRawHtmlArray || isRawHtml;
+
+    if (isRawElemCollection) {
+      return this;
+    }
 
     if (!shouldCreateElements) {
       const forLog = setCollectionFromCssSelector(input, root, this);
@@ -74,9 +78,14 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
     if (shouldCreateElements && this.collection.length > 0) {
       const errors = this.collection.filter( el => el.dataset?.jqlcreationerror );
       this.collection = this.collection.filter(el => !el.dataset?.jqlcreationerror);
-      !this.isVirtual && inject2DOMTree(this.collection, root, position);
-      logSystem && Log(`${logStr}\n  Created ${this.isVirtual ? `VIRTUAL` : ``}(outerHTML truncated) [${
-        truncateHtmlStr(ElemArray2HtmlString(this.collection) || "sanitized: no elements remaining", logLineLength)}]`);
+
+      if (!this.isVirtual) {
+        inject2DOMTree(this.collection, root, position);
+      }
+      logSystem && Log(`${logStr}\n  Created ${this.isVirtual ? ` VIRTUAL` : ``} (outerHTML truncated) [${
+        truncateHtmlStr(ElemArray2HtmlString(this.collection) || 
+          "sanitized: no elements remaining", logLineLength)}]`);
+
       errors.length && console.error(`JQL: not rendered illegal html: "${
         errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
     }
@@ -87,7 +96,6 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
 }
 
 const JQL = (...args) => new ExtendedNodeList(...args);
-
 Object.entries({
   node: selector => document.querySelector(selector),
   nodes: selector => document.querySelectorAll(selector),
