@@ -42,7 +42,7 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
   this.collection = input2Collection(input);
   const isRawElemCollection = isArrayOfHtmlElements(this.collection);
 
-  if (Array.isArray(this.collection)|| isRawElemCollection) {
+  if (Array.isArray(this.collection) || isRawElemCollection) {
     return this;
   }
 

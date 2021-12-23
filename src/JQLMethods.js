@@ -233,7 +233,7 @@ const allMethods = {
 
           if (isNode(elem2Append)) {
             extCollection.collection.forEach(el =>
-              el.appendChild(elem2Append instanceof Comment ? elem2Append : elem2Append.cloneNode(true)));
+              el.appendChild(elem2Append instanceof Comment || elem2Append instanceof Text ? elem2Append : elem2Append.cloneNode(true)));
             return extCollection;
           }
 
