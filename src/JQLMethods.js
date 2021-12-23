@@ -1,7 +1,15 @@
 import _$ from "./JQueryLike.js";
 import {setStyle} from "./Styling.js";
 import {createElementFromHtmlString} from "./DOM.js";
-import {hex2RGBA, loop, addHandlerId, isVisible, isNode, isObjectAndNotArray, randomString} from "./JQLExtensionHelpers.js";
+import {
+  hex2RGBA,
+  loop,
+  addHandlerId,
+  isVisible,
+  isNode,
+  isObjectAndNotArray,
+  randomString,
+  inject2DOMTree} from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 const empty = el => el && (el.textContent = "");
 const setData = (el, keyValuePairs) => {
@@ -314,9 +322,10 @@ const allMethods = {
       return toDOM ? _$(clonedCollection) : _$.virtual(clonedCollection);
     },
     toDOM: (extCollection, root = document.body) => {
+      console.log(`ehr`, extCollection.collection, extCollection.isVirtual);
       if (extCollection.isVirtual) {
         extCollection.isVirtual = false;
-        return _$(extCollection.collection, root);
+        inject2DOMTree(extCollection.collection, root);
       }
       return extCollection;
     },

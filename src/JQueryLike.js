@@ -38,7 +38,7 @@ customStylesheet.id = `JQLCustomCSS`;
 
 const ExtendedNodeList = function ( input, root = document.body, position = insertPositions.BeforeEnd ) {
   if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
-
+  this.isVirtual = root instanceof HTMLBRElement;
   this.collection = input2Collection(input);
   const isRawElemCollection = isArrayOfHtmlElements(this.collection);
 
@@ -48,7 +48,6 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
 
   try {
     this.collection = this.collection || [];
-    this.isVirtual = root instanceof HTMLBRElement;
     root = root instanceof ExtendedNodeList ? root.first() : root;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
