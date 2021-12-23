@@ -322,7 +322,6 @@ const allMethods = {
       return toDOM ? _$(clonedCollection) : _$.virtual(clonedCollection);
     },
     toDOM: (extCollection, root = document.body) => {
-      console.log(`ehr`, extCollection.collection, extCollection.isVirtual);
       if (extCollection.isVirtual) {
         extCollection.isVirtual = false;
         inject2DOMTree(extCollection.collection, root);
