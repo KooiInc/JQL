@@ -17,7 +17,13 @@ const input2Collection = input => !input ? []
 const setCollectionFromCssSelector = (input, root, self) => {
   const selectorRoot = root !== document.body &&
       (input?.constructor === String && input.toLowerCase() !== "body") ? root : document;
-  self.collection = [...selectorRoot.querySelectorAll(input)];
+
+  try {
+    self.collection = [...selectorRoot.querySelectorAll(input)];
+  } catch (err) {
+    self.collection = [document.createTextNode(input)];
+  }
+
   return `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
 const randomString = (() => {
