@@ -16,18 +16,18 @@ const htmlToVirtualElement = htmlString => {
     ? cleanupHtml(placeholder)
     : undefined;
 };
-const element2DOM = (elem, root = document.body, position = adjacents.BeforeEnd) => {
+const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {
   if (elem) {
     if (elem instanceof HTMLElement) {
       return root.insertAdjacentElement(position, elem);
     }
 
     if (elem && elem instanceof Comment || elem instanceof Text) {
-      if (position === adjacents.BeforeEnd) {
+      if (position === insertPositions.BeforeEnd) {
         root.appendChild(elem);
       }
 
-      if (position === adjacents.AfterBegin) {
+      if (position === insertPositions.AfterBegin) {
         root.insertBefore(elem, root.firstElementChild);
       }
 
