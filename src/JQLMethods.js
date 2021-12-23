@@ -1,6 +1,6 @@
 import _$ from "./JQueryLike.js";
 import {setStyle} from "./Styling.js";
-import {createElementFromHtmlString} from "./DOM.js";
+import {createElementFromHtmlString, insertPositions} from "./DOM.js";
 import {
   hex2RGBA,
   loop,
@@ -321,10 +321,10 @@ const allMethods = {
       const clonedCollection = extCollection.toNodeList();
       return toDOM ? _$(clonedCollection) : _$.virtual(clonedCollection);
     },
-    toDOM: (extCollection, root = document.body) => {
+    toDOM: (extCollection, root = document.body, position = insertPositions.BeforeEnd) => {
       if (extCollection.isVirtual) {
         extCollection.isVirtual = false;
-        inject2DOMTree(extCollection.collection, root);
+        inject2DOMTree(extCollection.collection, root, position);
       }
       return extCollection;
     },
