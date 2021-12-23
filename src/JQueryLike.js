@@ -42,7 +42,7 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
   this.collection = input2Collection(input);
   const isRawElemCollection = isArrayOfHtmlElements(this.collection);
 
-  if (Array.isArray(this.collection) && !isRawElemCollection) {
+  if (Array.isArray(this.collection)|| isRawElemCollection) {
     return this;
   }
 
@@ -53,10 +53,6 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const shouldCreateElements = isRawHtmlArray || isRawHtml;
-
-    if (isRawElemCollection) {
-      return this;
-    }
 
     if (!shouldCreateElements) {
       const forLog = setCollectionFromCssSelector(input, root, this);
