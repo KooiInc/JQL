@@ -42,9 +42,7 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
   this.collection = input2Collection(input);
   const isRawElemCollection = isArrayOfHtmlElements(this.collection);
 
-  if (Array.isArray(this.collection) || isRawElemCollection) {
-    return this;
-  }
+  if (Array.isArray(this.collection) || isRawElemCollection) { return this; }
 
   try {
     this.collection = this.collection || [];
@@ -65,7 +63,7 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
         : isRawElemCollection ? `Element(s): ${this.collection.map(el => el.outerHTML || el.textContent).join(``)}`
           : input, logLineLength)}]`);
 
-    if (shouldCreateElements && !isRawElemCollection) {
+    if (shouldCreateElements) {
       [input].flat()
         .forEach(htmlFragment => this.collection.push(createElementFromHtmlString(htmlFragment)));
     }
