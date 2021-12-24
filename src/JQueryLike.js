@@ -77,6 +77,7 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
       if (!this.isVirtual) {
         inject2DOMTree(this.collection, root, position);
       }
+
       logSystem && Log(`${logStr}\n  Created ${this.isVirtual ? ` VIRTUAL` : ``} (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(this.collection) || 
           "sanitized: no elements remaining", logLineLength)}]`);

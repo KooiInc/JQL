@@ -21,7 +21,7 @@ const setCollectionFromCssSelector = (input, root, self) => {
   try {
     self.collection = [...selectorRoot.querySelectorAll(input)];
   } catch (err) {
-    self.collection = [document.createTextNode(input)];
+    return `CSS selector error. [${input}] not valid`;
   }
 
   return `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
