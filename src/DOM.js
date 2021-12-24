@@ -4,7 +4,7 @@ import {
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
 import {truncateHtmlStr} from "./JQLExtensionHelpers.js";
-const adjacents = {
+const insertPositions = {
   BeforeBegin: "beforebegin",
   AfterBegin: "afterbegin",
   BeforeEnd: "beforeend",
@@ -23,6 +23,7 @@ const element2DOM = (elem, root = document.body, position = insertPositions.Befo
     }
 
     if (elem && elem instanceof Comment || elem instanceof Text) {
+
       if (position === insertPositions.BeforeEnd) {
         root.appendChild(elem);
       }
@@ -56,5 +57,5 @@ export {
   element2DOM,
   cleanupHtml,
   allowUnknownHtmlTags,
-  adjacents as insertPositions,
+  insertPositions,
 };
