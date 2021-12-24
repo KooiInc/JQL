@@ -17,14 +17,16 @@ const input2Collection = input => !input ? []
 const setCollectionFromCssSelector = (input, root, self) => {
   const selectorRoot = root !== document.body &&
       (input?.constructor === String && input.toLowerCase() !== "body") ? root : document;
+  let errorStr = undefined;
 
   try {
     self.collection = [...selectorRoot.querySelectorAll(input)];
   } catch (err) {
-    return `CSS selector error. [${input}] not valid`;
+    errorStr =  `Invalid CSS querySelector. [${input}]`;
   }
 
-  return `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
+  return errorStr ||
+    `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
 const randomString = (() => {
   const characters = [...Array(26)]
