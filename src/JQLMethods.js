@@ -9,7 +9,7 @@ import {
   isNode,
   isObjectAndNotArray,
   randomString,
-  inject2DOMTree} from "./JQLExtensionHelpers.js";
+  inject2DOMTree } from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 const empty = el => el && (el.textContent = "");
 const setData = (el, keyValuePairs) => {
