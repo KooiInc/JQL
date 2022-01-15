@@ -11,6 +11,7 @@ import {
   randomString,
   inject2DOMTree } from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
+
 const empty = el => el && (el.textContent = "");
 const setData = (el, keyValuePairs) => {
   el && isObjectAndNotArray(keyValuePairs) &&
@@ -346,7 +347,7 @@ const allMethods = {
       return found.length && _$.virtual(found);
     },
     prop: (extCollection, property, value) => {
-      if (value === undefined) {
+      if (value !== undefined) {
         return !extCollection.isEmpty ? extCollection.first()[property] : undefined;
       }
 
