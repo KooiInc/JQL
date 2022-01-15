@@ -348,10 +348,10 @@ const allMethods = {
     },
     prop: (extCollection, property, value) => {
       if (!value) {
-        return !extCollection.isEmpty ? extCollection.first()[property] : undefined;
+        return !extCollection.isEmpty() ? extCollection.first()[property] : undefined;
       }
 
-      if (!extCollection.isEmpty) {
+      if (!extCollection.isEmpty()) {
         loop(extCollection, el => el[property] = value);
       }
 
