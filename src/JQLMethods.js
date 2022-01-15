@@ -347,7 +347,7 @@ const allMethods = {
       return found.length && _$.virtual(found);
     },
     prop: (extCollection, property, value) => {
-      if (value !== undefined) {
+      if (!value) {
         return !extCollection.isEmpty ? extCollection.first()[property] : undefined;
       }
 
