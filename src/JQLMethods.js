@@ -365,6 +365,7 @@ const allMethods = {
 
       return extCollection;
     },
+
     html: (extCollection, htmlValue, append) => {
       if (htmlValue === undefined) {
         return extCollection.first()?.innerHTML;
@@ -403,7 +404,6 @@ const allMethods = {
     dimensions: extCollection => extCollection.first()?.getBoundingClientRect(),
     delegate: (extCollection, type, cssSelector, ...callbacks) => {
       callbacks.forEach(callback => handlerFactory(extCollection, type, cssSelector, callback));
-
       return extCollection;
     },
     ON: (extCollection, type, ...callbacks) => {
