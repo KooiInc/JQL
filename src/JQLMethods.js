@@ -210,9 +210,9 @@ const allMethods = {
       if (!firstElem) {
         return;
       }
-
+      
       if ([HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].includes(firstElem["constructor"])) {
-        if (value2Set || [String, Number].find(v2s => value2Set.constructor === v2s)) {
+        if (value2Set && [String, Number].find(v2s => value2Set.constructor === v2s)) {
           firstElem.value = value2Set;
         }
 
