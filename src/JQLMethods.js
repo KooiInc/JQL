@@ -17,6 +17,9 @@ const setData = (el, keyValuePairs) => {
   el && isObjectAndNotArray(keyValuePairs) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
 };
+
+const inputElems = [HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement];
+
 const css = (el, keyOrKvPairs, value) => {
   if (value && keyOrKvPairs.constructor === String) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
@@ -211,13 +214,17 @@ const allMethods = {
         return;
       }
 
-      if ([HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement].includes(firstElem["constructor"])) {
+      if (value2Set === undefined) {
+        return firstElem.value;
+      }
+
+      if (inputElems.includes(firstElem["constructor"])) {
         if (value2Set && [String, Number].find(v2s => value2Set.constructor === v2s) ) {
           firstElem.value = `${value2Set}`.trim();
         }
-
-        return firstElem.value;
       }
+
+      return undefined;
     },
     parent: extCollection => !extCollection.isEmpty() && extCollection.first().parentNode &&
       new extCollection.constructor(extCollection.first().parentNode) || extCollection,
