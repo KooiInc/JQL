@@ -210,21 +210,17 @@ const allMethods = {
     val: (extCollection, value2Set) => {
       const firstElem = extCollection.first();
 
-      if (!firstElem) {
-        return;
+      if (!firstElem || !inputElems.includes(firstElem["constructor"])) {
+        return extCollection;
       }
 
       if (value2Set === undefined) {
         return firstElem.value;
       }
 
-      if (inputElems.includes(firstElem["constructor"])) {
-        if (value2Set && [String, Number].find(v2s => value2Set.constructor === v2s) ) {
-          firstElem.value = value2Set;
-        }
-      }
+      firstElem.value = `${value2Set}`.length < 1 ? "" : value2Set;
 
-      return undefined;
+      return extCollection;
     },
     parent: extCollection => !extCollection.isEmpty() && extCollection.first().parentNode &&
       new extCollection.constructor(extCollection.first().parentNode) || extCollection,
