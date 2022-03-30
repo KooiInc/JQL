@@ -91,8 +91,8 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
 
 const JQL = (...args) => new ExtendedNodeList(...args);
 Object.entries({
-  node: selector => document.querySelector(selector),
-  nodes: selector => document.querySelectorAll(selector),
+  node: (selector, root = document)  => root.querySelector(selector),
+  nodes: (selector, root = document) => root.querySelectorAll(selector),
   virtual: html => new ExtendedNodeList(html, document.createElement("br")),
   setStyle: (selector, ruleValues, cssId) => setStyle(selector, ruleValues, cssId),
   debugLog,
