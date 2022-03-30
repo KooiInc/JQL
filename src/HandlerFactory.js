@@ -5,11 +5,8 @@ const metaHandler = evt => handlers[evt.type].forEach(handler => handler(evt));
 
 const createHandlerForHID = (extCollection, HID, callback) => {
   return evt => {
-    const target = evt.target.closest(HID);
-
-    if (target) {
-      return callback(_$.virtual(target), evt);
-    }
+    const target = evt.target.closest(HID)
+    return target && callback(evt, _$.virtual(target));
   };
 };
 
