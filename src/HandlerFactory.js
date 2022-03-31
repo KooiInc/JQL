@@ -11,12 +11,11 @@ const createHandlerForHID = (extCollection, HID, callback) => {
 };
 
 const addListenerIfNotExisting = type =>
-  !Object.keys(handlers).find(registeredType => registeredType === type) &&
-  document.addEventListener(type, metaHandler);
+  !Object.keys(handlers).find(registeredType => registeredType === type) && document.addEventListener(type, metaHandler);
 
 export default (extCollection, type, HIDselector, callback) => {
   addListenerIfNotExisting(type);
-  const fn = createHandlerForHID(extCollection, HIDselector, callback);
+  const fn = !HIDselector ? callback : createHandlerForHID(extCollection, HIDselector, callback);
   handlers = handlers[type]
     ? {...handlers, [type]: handlers[type].concat(fn)}
     : {...handlers, [type]: [fn]};

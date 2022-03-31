@@ -93,6 +93,15 @@ const JQL = (...args) => new ExtendedNodeList(...args);
 Object.entries({
   node: (selector, root = document)  => root.querySelector(selector),
   nodes: (selector, root = document) => [...root.querySelectorAll(selector)],
+  delegate: (type, origin, ...handlers) => {
+    const dummy = new ExtendedNodeList(null);
+
+    if (!origin || origin instanceof Function) {
+      origin instanceof Function && handlers.push(origin);
+      return dummy.delegate(type, null, ...handlers);
+    }
+    return dummy.delegate(type, origin, ...handlers);
+  },
   virtual: html => new ExtendedNodeList(html, document.createElement("br")),
   setStyle: (selector, ruleValues, cssId) => setStyle(selector, ruleValues, cssId),
   debugLog,
