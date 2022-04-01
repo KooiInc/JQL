@@ -88,8 +88,8 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
     debugLog.isOn && logSystem && (Log(msg) || console.log(msg));
   }
 }
-
 const JQL = (...args) => new ExtendedNodeList(...args);
+
 Object.entries({
   node: (selector, root = document)  => root.querySelector(selector),
   nodes: (selector, root = document) => [...root.querySelectorAll(selector)],
