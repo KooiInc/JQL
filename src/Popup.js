@@ -47,6 +47,7 @@ function popupFactory($) {
   const deActivate = () => {
     $(`.between`).removeClass(`active`).style({top: 0});
     $(`#closer, .popupBox, #modalWarning`).removeClass(`active`);
+    $(`[data-modalcontent]`).empty();
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupBox`).addClass(`active`);
