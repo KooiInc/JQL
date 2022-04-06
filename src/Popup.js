@@ -133,7 +133,7 @@ function initStyling(setStyle) {
     '.between.active': {
       height: `100vh`,
       width: `100vw`,
-      zIndex: 2,
+      zIndex: 9,
       opacity: 0.7,
     },
     '.popupBox': {
