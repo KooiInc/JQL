@@ -108,7 +108,6 @@ function initStyling(setStyle) {
       maxHeight: `40vh`,
       opacity: `0`,
       border: `1px solid transparent`,
-      transition: 'opacity ease 0.4s',
       display: `flex`,
       flexDirection: `row-reverse`,
     },
@@ -135,6 +134,7 @@ function initStyling(setStyle) {
       width: `100vw`,
       zIndex: 9,
       opacity: 0.7,
+      transition: `opacity ease-in 0.4s`,
     },
     '.popupBox': {
       minWidth: '150px',
@@ -150,8 +150,9 @@ function initStyling(setStyle) {
       padding: `0.4rem`,
     },
     '[data-modalcontent]': {
-      padding: '0.4rem',
-      minHeight: '1.5rem',
+      padding: '0.5rem',
+      minHeight: '1rem',
+      verticalAlign: `middle`,
     },
     "@media screen and (min-width: 320px) and (max-width: 1200px)": {
       mediaSelectors: {
