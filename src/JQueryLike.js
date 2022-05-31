@@ -91,8 +91,8 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
 const JQL = (...args) => new ExtendedNodeList(...args);
 
 Object.entries({
-  node: (selector, root = document)  => root.querySelector(selector),
-  nodes: (selector, root = document) => [...root.querySelectorAll(selector)],
+  node: (selector, root = document.body)  => new ExtendedNodeList(selector, root).first(),
+  nodes: (selector, root = document.body) => new ExtendedNodeList(selector, root).collection,
   delegate: (type, origin, ...handlers) => {
     const dummy = new ExtendedNodeList(null);
 
