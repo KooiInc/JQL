@@ -347,7 +347,7 @@ const allMethods = {
         [...acc, [...el.querySelectorAll(selector)]], [])
         .flat()
         .filter(el => el && el instanceof HTMLElement);
-      return found.length && _$.virtual(found);
+      return found.length && _$.virtual(found) || _.virtual();
     },
     prop: (extCollection, property, value) => {
       if (!value) {
