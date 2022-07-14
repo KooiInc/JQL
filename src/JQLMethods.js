@@ -416,6 +416,13 @@ const allMethods = {
 
       return extCollection;
     },
+    trigger: (extCollection, evtType) => {
+      if (extCollection.collection.length) {
+        const evObj = new Event(evtType,  { bubbles: true });
+        extCollection.each(elem => elem.dispatchEvent(evObj));
+      }
+      return extCollection;
+    },
   },
 };
 export default allMethods;
