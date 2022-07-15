@@ -416,9 +416,9 @@ const allMethods = {
 
       return extCollection;
     },
-    trigger: (extCollection, evtType) => {
+    trigger: (extCollection, evtType, specifiedEvent = Event, options = {}) => {
       if (extCollection.collection.length) {
-        const evObj = new Event(evtType,  { bubbles: true });
+        const evObj = new specifiedEvent( etype, { ...options, bubbles: true} );
         extCollection.each(elem => elem.dispatchEvent(evObj));
       }
       return extCollection;
