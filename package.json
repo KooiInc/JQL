@@ -14,7 +14,7 @@
     "url": "https://github.com/KooiInc/JQL/issues"
   },
   "devDependencies": {
-    "esbuild": "~0.14.35",
+    "esbuild": "~0.15.3",
     "chokidar": "^3.5.2"
   },
   "scripts": {
