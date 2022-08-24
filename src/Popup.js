@@ -68,21 +68,21 @@ function popupFactory($) {
     const remover = callback ? () => remove(callback) : remove;
     savedTimer = setTimeout(remover, closeAfter * 1000);
   };
+  const transitionTime = _ => parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
   function remove(evtOrCallback) {
     endTimer();
 
     if (currentModalState.isModalActive()) { return; }
 
-    const callback = evtOrCallback instanceof Function ? evtOrCallback : savedCallback;
+    const callback = evtOrCallback && evtOrCallback instanceof Function ? evtOrCallback : savedCallback;
 
     if (callback && callback instanceof Function) {
       savedCallback = undefined;
-      return callback();
+      callback();
     }
 
     deActivate();
-    const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
-    savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
+    savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), transitionTime());
   }
   const removeModal = callback => {
     currentModalState.isModal = false;
