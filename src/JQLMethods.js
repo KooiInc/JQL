@@ -1,5 +1,4 @@
 import _$ from "./JQueryLike.js";
-import {setStyle} from "./Styling.js";
 import {createElementFromHtmlString, insertPositions} from "./DOM.js";
 import {
   hex2RGBA,
@@ -34,7 +33,7 @@ const css = (el, keyOrKvPairs, value) => {
 
   const classExists = ([...el.classList].find(c => c.startsWith(`JQLCreated`) || nwClass && c === nwClass));
   nwClass = classExists || nwClass || `JQLCreated_${randomString.randomHtmlElementId(12)}`;
-  setStyle(`.${nwClass}`, keyOrKvPairs);
+  _$.setStyle(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
 const assignAttrValues = (el, keyValuePairs) => {
@@ -347,7 +346,7 @@ const allMethods = {
         [...acc, [...el.querySelectorAll(selector)]], [])
         .flat()
         .filter(el => el && el instanceof HTMLElement);
-      return found.length && _$.virtual(found) || _$.virtual();
+      return found.length && _$.virtual(found);
     },
     prop: (extCollection, property, value) => {
       if (!value) {
@@ -414,13 +413,6 @@ const allMethods = {
         callbacks.forEach(cb => extCollection.on(type, cb));
       }
 
-      return extCollection;
-    },
-    trigger: (extCollection, evtType, SpecifiedEvent = Event, options = {}) => {
-      if (extCollection.collection.length) {
-        const evObj = new SpecifiedEvent( evtType, { ...options, bubbles: options.bubbles??true} );
-        for( let elem of extCollection.collection ) { elem.dispatchEvent(evObj); }
-      }
       return extCollection;
     },
   },

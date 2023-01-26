@@ -1,6 +1,7 @@
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import {setStyle, customStylesheet} from "./Styling.js";
+import lifeStyleFactory from "./LifeStylingModule.js";
 import {time, isVisible} from "./JQLExtensionHelpers.js";
+const setStyle = lifeStyleFactory({createWithId: "JQLLogStyle"});
 const debugLog = {
   get isOn() { return useLogging; },
   isVisible: () => isVisible(logBox()),
@@ -114,7 +115,7 @@ let log2Console = false;
 let reverseLogging = true;
 let logBox = () => document.querySelector(`#jql_logger`);
 const setStyling4Log = (styles = stylingDefault4Log) =>
-  Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style, customStylesheet.id));
+  Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style));
 let useHtml = true;
 const createLogElement = () => {
   setStyling4Log();

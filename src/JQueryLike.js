@@ -16,7 +16,7 @@ import {
   insertPositions,
 } from "./DOM.js";
 
-import {setStyle, customStylesheet} from "./Styling.js";
+import lifeStyleFactory from "./LifeStylingModule.js";
 
 import {
   initializePrototype,
@@ -33,8 +33,7 @@ import {
 
 const logLineLength = 75;
 let logSystem = false;
-
-customStylesheet.id = `JQLCustomCSS`;
+const setLifeStyle = lifeStyleFactory({createWithId:`JQLCustomCSS`});
 
 const ExtendedNodeList = function ( input, root = document.body, position = insertPositions.BeforeEnd ) {
   if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
@@ -103,14 +102,13 @@ Object.entries({
     return dummy.delegate(type, origin, ...handlers);
   },
   virtual: html => new ExtendedNodeList(html, document.createElement("br")),
-  setStyle: (selector, ruleValues, cssId) => setStyle(selector, ruleValues, cssId),
+  setStyle: (selectorOrRuleString, ruleValues) => setLifeStyle(selectorOrRuleString, ruleValues),
   debugLog,
   log: Log,
   setTagPermission,
   allowUnknownHtmlTags,
   insertPositions,
   logElementCreationErrors,
-  setStyling4Log,
   setSystemLogActiveState: activeState => logSystem = activeState,
   time,
   popup: () => popupFactory(JQL),

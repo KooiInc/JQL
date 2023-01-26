@@ -1,9 +1,14 @@
 {
   "name": "jqlmodule",
-  "version": "1.3.86",
+  "version": "1.4.0",
   "private": false,
   "description": "A JQuery alike es20xx module",
-  "keywords": ["JQuery", "JQuerySubset", "JQueryAlike", "ES20xx"],
+  "keywords": [
+    "JQuery",
+    "JQuerySubset",
+    "JQueryAlike",
+    "ES20xx"
+  ],
   "author": "KooiInc",
   "license": "GNU General Public License v3.0",
   "repository": {
@@ -14,8 +19,9 @@
     "url": "https://github.com/KooiInc/JQL/issues"
   },
   "devDependencies": {
+    "chokidar": "^3.5.2",
     "esbuild": "~0.17.2",
-    "chokidar": "^3.5.2"
+    "jsdoc": "^4.0.0"
   },
   "scripts": {
     "build": "node JQLcompile"

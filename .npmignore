@@ -10,5 +10,7 @@ buildJQ.js
 /package-lock.json
 /working-source/*
 /unDocumentAndBuild.js
+/build*.*
+/Build*.js
 /startDocumenter.cmd
 /lib/JQLBundle.js.map
