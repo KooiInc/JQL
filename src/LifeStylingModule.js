@@ -44,13 +44,15 @@ function lifeStyleFactory({styleSheet, createWithId}) {
       setRules(selector, cssRule, mediaCssRule) ); };
 
   const cssRuleFromText = rule => {
-    return rule[0].split(`\n`).map(r => r.trim()).filter(v => v && !/}/.test(v.trim()))
-      .reduce( (acc, v) => {
-        const [key, value] = [
-          v.slice(0, v.indexOf(`:`)).trim(),
-          v.slice(v.indexOf(`:`) + 1).trim().replace(/;$|;.+(?=\/*).+\/$/, ``)];
-        return key && value ? {...acc, [key]: value} : acc; }, {} );
-  }
+    let rules = rule[0].trim().replace(/}|{/, ``).split(`\n`).map(r => r.trim())
+      .filter(v => v);
+    return rules.reduce( (acc, v) => {
+      const [key, value] = [
+        v.slice(0, v.indexOf(`:`)).trim(),
+        v.slice(v.indexOf(`:`) + 1).trim().replace(/;$|;.+(?=\/*).+\/$/, ``)];
+      return key && value ? {...acc, [key]: value} : acc; }, {} );
+  };
+
   const mediaRuleFromText = selector => {
     const rules = selector.slice( selector.indexOf(`{`) + 1, selector.lastIndexOf(`}`) );
     return rules.split(/}/).filter( r => r.trim().length ).map(r => r.trim())
