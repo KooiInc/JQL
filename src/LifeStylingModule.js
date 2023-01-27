@@ -57,8 +57,8 @@ function lifeStyleFactory({styleSheet, createWithId}) {
     const rules = selector.slice( selector.indexOf(`{`) + 1, selector.lastIndexOf(`}`) );
     return rules.split(/}/).filter( r => r.trim().length ).map(r => r.trim())
       .reduce( (acc, v) => {
-        const [key, rule] = v.split(`{`).map(v => v.trim());
-        return key && !/}/.test(rule) ? {...acc, [key]: cssRuleFromText([rule])} : acc; }, {} ); };
+        const [key, rule] = v.split(`{`).map(v => v?.trim()?.replace(/}/, ``));
+        return key && rule ? {...acc, [key]: cssRuleFromText([rule])} : acc; }, {} ); };
 
   const styleFromObject = (selector, rulesObj) =>
     selector.trim().startsWith(`@media`)
