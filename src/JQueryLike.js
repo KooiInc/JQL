@@ -103,6 +103,7 @@ Object.entries({
   },
   virtual: html => new ExtendedNodeList(html, document.createElement("br")),
   setStyle: (selectorOrRuleString, ruleValues) => setLifeStyle(selectorOrRuleString, ruleValues),
+  createStyleSheet: id => LifeStyleFactory({createWithId: id}),
   debugLog,
   log: Log,
   setTagPermission,
