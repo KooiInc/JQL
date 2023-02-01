@@ -1,7 +1,8 @@
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import lifeStyleFactory from "./LifeStylingModule.js";
+import styleFactory from "./LifeStylingModule.js";
 import {time, isVisible} from "./JQLExtensionHelpers.js";
-const setStyle = lifeStyleFactory({createWithId: "JQLLogStyle"});
+const setStyle = styleFactory({createWithId: `JQLLogCSS`});
+
 const debugLog = {
   get isOn() { return useLogging; },
   isVisible: () => isVisible(logBox()),
@@ -74,13 +75,10 @@ let stylingDefault4Log = {
     resize: `both`,
   },
   "@media screen and (min-width: 320px) and (max-width: 1024px)": {
-    mediaSelectors: {
       "#logBox.visible": {
-        maxWidth: `90vw`,
-        width: `90vw`,
-        resize: `none` },
-    }
-  },
+          maxWidth: `90vw`,
+          width: `90vw`,
+          resize: `none` }, },
   "#logBox .legend": {
     textAlign: `center`,
     position: `absolute`,
