@@ -1,8 +1,8 @@
-import lifeStyleFactory from "./LifeStylingModule.js";
+import LifeStyleFactory from "./LifeStylingModule.js";
 export default popupFactory;
 function popupFactory($) {
   const wrappedBody = $(document.body);
-  const setStyle = lifeStyleFactory({createWithId: "JQLPopupCSS"});
+  const setStyle = LifeStyleFactory({createWithId: "JQLPopupCSS"});
   initStyling(setStyle);
   let savedTimer, savedCallback;
   const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
@@ -156,10 +156,16 @@ function initStyling(setStyle) {
       min-height: 1rem;
       vertical-align: middle;
     }`,
-    `@media screen and(min-width: 320px) and (max-width: 1200px) {
+    `@media screen and (width < 1200px) {
       .popupContainer {
         max-width: 75vw;
-        max-height: 30vh;
+        max-height: 40vh;
+      }
+    }`,
+    `@media screen and (width < 640px) {
+      .popupContainer {
+        max-width: 90vw;
+        max-height: 60vh;
       }
     }`,
     `#modalWarning {

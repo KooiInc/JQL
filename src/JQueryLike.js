@@ -16,7 +16,7 @@ import {
   insertPositions,
 } from "./DOM.js";
 
-import lifeStyleFactory from "./LifeStylingModule.js";
+import LifeStyleFactory from "./LifeStylingModule.js";
 
 import {
   initializePrototype,
@@ -33,7 +33,7 @@ import {
 
 const logLineLength = 75;
 let logSystem = false;
-const setLifeStyle = lifeStyleFactory({createWithId:`JQLCustomCSS`});
+const setLifeStyle = LifeStyleFactory({createWithId:`JQLCustomCSS`});
 
 const ExtendedNodeList = function ( input, root = document.body, position = insertPositions.BeforeEnd ) {
   if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
