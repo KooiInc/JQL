@@ -22,7 +22,7 @@ To use the module in your browser script use:
 
 The module can also be installed from npm using `npm install jqlmodule`.
 
-Explore this <a href="https://testbed.nicon.nl/JQLDemo/" target="_blank">demo/example</a>, 
+Explore this <a href="https://kooi.dev/JQLDemo/" target="_blank">demo/example</a>, 
 or explore the <a href="https://kooiinc.github.io/JQLDoc" target="_blank">the code documentation</a>.
 
 **Have fun!**
