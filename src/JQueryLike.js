@@ -16,7 +16,7 @@ import {
   insertPositions,
 } from "./DOM.js";
 
-import LifeStyleFactory from "./LifeStylingModule.js";
+import LifeStyleFactory from "../LifeCSS/index.js";
 
 import {
   initializePrototype,
@@ -33,8 +33,7 @@ import {
 
 const logLineLength = 75;
 let logSystem = false;
-const setLifeStyle = LifeStyleFactory({createWithId:`JQLCustomCSS`});
-
+const setStyle = LifeStyleFactory(`JQLCustomCSS`);
 const ExtendedNodeList = function ( input, root = document.body, position = insertPositions.BeforeEnd ) {
   if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
   this.isVirtual = root instanceof HTMLBRElement;
@@ -89,7 +88,7 @@ const ExtendedNodeList = function ( input, root = document.body, position = inse
 }
 const JQL = (...args) => new ExtendedNodeList(...args);
 
-Object.entries({
+const extensions = {
   node: (selector, root = document.body)  => new ExtendedNodeList(selector, root).first(),
   nodes: (selector, root = document.body) => new ExtendedNodeList(selector, root).collection,
   delegate: (type, origin, ...handlers) => {
@@ -102,8 +101,8 @@ Object.entries({
     return dummy.delegate(type, origin, ...handlers);
   },
   virtual: html => new ExtendedNodeList(html, document.createElement("br")),
-  setStyle: (selectorOrRuleString, ruleValues) => setLifeStyle(selectorOrRuleString, ruleValues),
-  createStyleSheet: id => LifeStyleFactory({createWithId: id}),
+  setStyle: (selectorOrRuleString, ruleValues) => setStyle(selectorOrRuleString, ruleValues),
+  createStyleSheet: id => LifeStyleFactory(id),
   debugLog,
   log: Log,
   setTagPermission,
@@ -114,6 +113,8 @@ Object.entries({
   time,
   popup: () => popupFactory(JQL),
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-}).forEach(([methodKey, method]) => JQL[methodKey] = method);
+};
+
+Object.entries(extensions).forEach(([methodKey, method]) => JQL[methodKey] = method);
 
 export default JQL;
