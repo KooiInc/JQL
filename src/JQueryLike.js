@@ -33,7 +33,7 @@ import {
 
 const logLineLength = 75;
 let logSystem = false;
-const setStyle = LifeStyleFactory(`JQLCustomCSS`);
+const setStyle = LifeStyleFactory({createWithId: `JQLCustomCSS`});
 const ExtendedNodeList = function ( input, root = document.body, position = insertPositions.BeforeEnd ) {
   if (ExtendedNodeList.prototype.isJQL === undefined) { initializePrototype(ExtendedNodeList); }
   this.isVirtual = root instanceof HTMLBRElement;

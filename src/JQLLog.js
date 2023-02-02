@@ -1,7 +1,7 @@
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import styleFactory from "./LifeStylingModule.js";
+import styleFactory from "../LifeCSS/index.js"; // submodule
 import {time, isVisible} from "./JQLExtensionHelpers.js";
-const setStyle = styleFactory({createWithId: `JQLLogCSS`});
+const setStyle = styleFactory({createWithId:`JQLLogCSS`});
 
 const debugLog = {
   get isOn() { return useLogging; },

@@ -1,8 +1,8 @@
-import LifeStyleFactory from "./LifeStylingModule.js";
+import LifeStyleFactory from "../LifeCSS/index.js"; // submodule
 export default popupFactory;
 function popupFactory($) {
   const wrappedBody = $(document.body);
-  const setStyle = LifeStyleFactory({createWithId: "JQLPopupCSS"});
+  const setStyle = LifeStyleFactory({createWithId: `JQLPopupCSS`});
   initStyling(setStyle);
   let savedTimer, savedCallback;
   const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
