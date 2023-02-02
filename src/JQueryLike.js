@@ -102,7 +102,7 @@ const extensions = {
   },
   virtual: html => new ExtendedNodeList(html, document.createElement("br")),
   setStyle: (selectorOrRuleString, ruleValues) => setStyle(selectorOrRuleString, ruleValues),
-  createStyleSheet: id => LifeStyleFactory(id),
+  createStyleSheet: id => LifeStyleFactory({createWithId: id}),
   debugLog,
   log: Log,
   setTagPermission,
