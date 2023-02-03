@@ -113,7 +113,7 @@ const initializePrototype = ctor => {
   proto.isJQL = true;
 };
 const truncateHtmlStr = (str, maxLength = 120) => str.trim()
-  .substr(0, maxLength)
+  .slice(0, maxLength)
   .replace(/>\s+</g, `><`)
   .replace(/</g, `&lt;`)
   .replace(/\s{2,}/g, ` `)
