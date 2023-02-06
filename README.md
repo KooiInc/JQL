@@ -25,4 +25,6 @@ The module can also be installed from npm using `npm install jqlmodule`.
 Explore this <a href="https://kooi.dev/JQLDemo/" target="_blank">demo/example</a>, 
 or explore the <a href="https://kooiinc.github.io/JQLDoc" target="_blank">the code documentation</a>.
 
+[Here](https://github.com/KooiInc/JQLClassFree) is a *class free object orientated* version.
+
 **Have fun!**
