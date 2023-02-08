@@ -1,7 +1,7 @@
 import {
   debugLog,
   Log,
-  setStyling4Log } from "./JQLLog.js";
+} from "./JQLLog.js";
 
 import popupFactory from "./Popup.js";
 
