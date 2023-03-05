@@ -1,22 +1,23 @@
-import _$ from "./JQueryLike.js";
 let handlers = {};
+export default $ => {
+  const metaHandler = evt => handlers[evt.type].forEach(handler => handler(evt));
 
-const metaHandler = evt => handlers[evt.type].forEach(handler => handler(evt));
-
-const createHandlerForHID = (extCollection, HID, callback) => {
-  return evt => {
-    const target = evt.target.closest(HID)
-    return target && callback(evt, _$.virtual(target));
+  const createHandlerForHID = (HID, callback) => {
+    return evt => {
+      const target = evt.target.closest(HID);
+      return target && callback(evt, $(target));
+    };
   };
-};
 
-const addListenerIfNotExisting = type =>
-  !Object.keys(handlers).find(registeredType => registeredType === type) && document.addEventListener(type, metaHandler);
+  const addListenerIfNotExisting = type =>
+    !Object.keys(handlers).find(registeredType => registeredType === type) &&
+      document.addEventListener(type, metaHandler);
 
-export default (extCollection, type, HIDselector, callback) => {
-  addListenerIfNotExisting(type);
-  const fn = !HIDselector ? callback : createHandlerForHID(extCollection, HIDselector, callback);
-  handlers = handlers[type]
-    ? {...handlers, [type]: handlers[type].concat(fn)}
-    : {...handlers, [type]: [fn]};
-};
+  return (/*NODOC*/self, type, HIDselector, callback) => {
+    addListenerIfNotExisting(type);
+    const fn = !HIDselector ? callback : createHandlerForHID(HIDselector, callback);
+    handlers = handlers[type]
+      ? {...handlers, [type]: handlers[type].concat(fn)}
+      : {...handlers, [type]: [fn]};
+  };
+}

@@ -1,26 +1,28 @@
-import _$ from "./JQueryLike.js";
 import {createElementFromHtmlString, insertPositions} from "./DOM.js";
 import {
+  IS,
   hex2RGBA,
   loop,
   addHandlerId,
   isVisible,
   isNode,
-  isObjectAndNotArray,
   randomString,
   inject2DOMTree } from "./JQLExtensionHelpers.js";
-import handlerFactory from "./HandlerFactory.js";
+import {ATTRS} from "./EmbedResources.js";
+import jql from "../index.js";
 
 const empty = el => el && (el.textContent = "");
+const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
 const setData = (el, keyValuePairs) => {
-  el && isObjectAndNotArray(keyValuePairs) &&
+  el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
 };
-
-const inputElems = [HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement];
+const checkProp = prop => ATTRS.html.find(attr => prop === attr);
 
 const css = (el, keyOrKvPairs, value) => {
-  if (value && keyOrKvPairs.constructor === String) {
+  const { setStyle } = jql;
+
+  if (value && IS(keyOrKvPairs, String)) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
   }
 
@@ -32,8 +34,8 @@ const css = (el, keyOrKvPairs, value) => {
   }
 
   const classExists = ([...el.classList].find(c => c.startsWith(`JQLCreated`) || nwClass && c === nwClass));
-  nwClass = classExists || nwClass || `JQLCreated_${randomString.randomHtmlElementId(12)}`;
-  _$.setStyle(`.${nwClass}`, keyOrKvPairs);
+  nwClass = classExists || nwClass || `JQLCreated${randomString()}`;
+  setStyle(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
 const assignAttrValues = (el, keyValuePairs) => {
@@ -42,11 +44,11 @@ const assignAttrValues = (el, keyValuePairs) => {
       setData(el, {[key]: value});
     }
 
-    if (key.toLowerCase() === "class") {
+    if (compareCI(key, `class`)) {
       value.split(/\s+/).forEach(v => el.classList.add(`${v}`))
     }
 
-    if (value.constructor === String) {
+    if (IS(value, String) && checkProp(key)) {
       el[key] = value;
     }
   });
@@ -54,9 +56,9 @@ const assignAttrValues = (el, keyValuePairs) => {
 const allMethods = {
   straigthLoops: {
     toggleClass: (el, className) => el.classList.toggle(className),
-    toggleStyleFragments: (el, keyValuePairs) =>
+    toggleStyleFragments: (/*NODOC*/ el, keyValuePairs) =>
       el && Object.entries(keyValuePairs).forEach(([key, value]) => {
-        if (value instanceof Function) {
+        if (IS(value, Function)) {
           value = value(el);
         }
 
@@ -69,12 +71,20 @@ const allMethods = {
         el.style[key] = `${el.style[key]}` === `${value}` ? "" : value;
       }),
     removeAttr: (el, name) => el && el.removeAttribute(name),
-    toggleAttr: (el, name, value) =>
-      el && el.hasAttribute(name)
-        ? el.removeAttribute(name)
-        : el.setAttribute(name, value),
+    toggleAttr: (el, name) => {
+      if (el.hasAttribute(name)) {
+        if (!el.dataset[`previous${name}`]) {
+          el.dataset[`previous${name}`] = el.getAttribute(name);
+        }
+        return el.removeAttribute(name);
+      }
+
+      if (el.dataset[`previous${name}`]) {
+        return el.setAttribute(name, el.dataset[`previous${name}`]);
+      }
+    },
     empty,
-    clear: empty,
+    clear:  empty,
     replaceClass: (el, className, ...nwClassNames) => {
       el.classList.remove(className);
       nwClassNames.forEach(name => el.classList.add(name))
@@ -82,35 +92,39 @@ const allMethods = {
     removeClass: (el, ...classNames) =>
       classNames.forEach(cn => el.classList.remove(cn)),
     addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
-    show: el => el.style.display = ``,
+    show: el => {
+      el.style.display = ``;
+      el.style.visibility = ``;
+      el.style.opacity = `1`;
+    },
     hide: el => el.style.display = `none`,
-    setData,
-    assignAttrValues,
+    setData: setData,
+    assignAttrValues: assignAttrValues,
     attr(el, keyOrObj, value) {
       if (!el) {
         return true;
       }
 
-      if (value !== undefined) {
-        keyOrObj = {[keyOrObj]: value};
+      if (IS(keyOrObj, String) && value !== undefined) {
+        keyOrObj = { [keyOrObj]: value };
       }
 
-      if (!value && keyOrObj.constructor === String) {
+      if (!value && IS(keyOrObj, String)) {
         return el.getAttribute(keyOrObj);
       }
 
       Object.entries(keyOrObj).forEach(([key, value]) => {
-        const keyCompare = key.toLowerCase().trim();
+        if (!checkProp(key)) { return false; }
 
-        if (keyCompare === `style`) {
+        if (compareCI(key, `style`)) {
           return css(el, value, undefined);
         }
 
-        if (keyCompare === `data`) {
+        if (compareCI(key, `data`)) {
           return setData(el, value);
         }
 
-        if (value instanceof Object) {
+        if (IS(value, Object)) {
           return assignAttrValues(el, value);
         }
 
@@ -118,46 +132,46 @@ const allMethods = {
       });
     },
     style: (el, keyOrKvPairs, value) => {
-      if (value && keyOrKvPairs.constructor === String) {
-        keyOrKvPairs = {[keyOrKvPairs]: value || "none"};
+      if (value && IS(keyOrKvPairs, String)) {
+        keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
       }
 
-      if (!Array.isArray((keyOrKvPairs)) && keyOrKvPairs.constructor === Object) {
+      if (IS(keyOrKvPairs, Object)) {
         Object.entries(keyOrKvPairs).forEach(([key, value]) => el.style[key] = value);
       }
     },
     css,
   },
   instanceExtensions: {
-    text: (extCollection, textValue, append) => {
-      if (extCollection.isEmpty()) {
-        return extCollection;
+    text: (self, textValue, append = false) => {
+      if (self.isEmpty()) {
+        return self;
       }
 
       const cb = el => el.textContent = append ? el.textContent + textValue : textValue;
 
-      if (!textValue) {
-        return extCollection.first().textContent;
+      if (!IS(textValue, String)) {
+        return self.first().textContent;
       }
 
-      return loop(extCollection, cb);
+      return loop(self, cb);
     },
-    each: (extCollection, cb) => loop(extCollection, cb),
-    remove: (extCollection, selector) => {
+    each: (self, cb) => loop(self, cb),
+    remove: (self, selector) => {
       const remover = el => el.remove();
       if (selector) {
-        const selectedElements = extCollection.find$(selector);
+        const selectedElements = self.find$(selector);
         !selectedElements.isEmpty() && loop(selectedElements, remover);
         return;
       }
-      loop(extCollection, remover);
+      loop(self, remover);
     },
-    computedStyle: (extCollection, property) => extCollection.first() && getComputedStyle(extCollection.first())[property],
-    getData: (extCollection, dataAttribute, valueWhenFalsy) => extCollection.first() &&
-      extCollection.first().dataset && extCollection.first().dataset[dataAttribute] || valueWhenFalsy,
-    isEmpty: extCollection => extCollection.collection.length < 1,
-    is: (extCollection, checkValue) => {
-      const firstElem = extCollection.first();
+    computedStyle: (self, property) => self.first() && getComputedStyle(self.first())[property],
+    getData: (self, dataAttribute, valueWhenFalsy) => self.first() &&
+      self.first().dataset?.[dataAttribute] || valueWhenFalsy,
+    isEmpty: self => self.collection.length < 1,
+    is: (self, checkValue) => {
+      const firstElem = self.first();
 
       if (!firstElem) {
         return true;
@@ -175,20 +189,20 @@ const allMethods = {
           return true;
       }
     },
-    hasClass: (extCollection, ...classNames) => {
-      const firstElem = extCollection.first();
-      return extCollection.isEmpty() || !firstElem.classList.length
+    hasClass: (self, ...classNames) => {
+      const firstElem = self.first();
+      return self.isEmpty() || !firstElem.classList.length
         ? false : classNames.find(cn => firstElem.classList.contains(cn)) || false;
     },
-    replace: (extCollection, oldChild, newChild) => {
-      const firstElem = extCollection.first();
+    replace: (self, oldChild, newChild) => {
+      const firstElem = self.first();
 
       if (newChild.isJQL) {
         newChild = newChild.first();
       }
 
       if (firstElem && oldChild) {
-        oldChild = oldChild.constructor === String
+        oldChild = IS(oldChild, String)
           ? firstElem.querySelector(oldChild)
           : oldChild.isJQL
             ? oldChild.first()
@@ -199,120 +213,117 @@ const allMethods = {
         }
       }
 
-      return extCollection;
+      return self;
     },
-    replaceMe: (extCollection, newChild) => {
-      newChild = newChild instanceof HTMLElement ? new extCollection.constructor(newChild) : newChild;
-      extCollection.parent().replace(extCollection, newChild)
-      return newChild;
+    replaceMe: (self, newChild) => {
+      newChild = IS(newChild, HTMLElement) ? jql(newChild) : newChild;
+      self.parent().replace(self, newChild)
+      return jql(newChild);
     },
-    val: (extCollection, value2Set) => {
-      const firstElem = extCollection.first();
+    val: (self, newValue) => {
+      const firstElem = self.first();
 
-      if (!firstElem || !inputElems.includes(firstElem["constructor"])) {
-        return extCollection;
+      if (!firstElem || !IS(firstElem, HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement)) {
+        return self;
       }
 
-      if (value2Set === undefined) {
+      if (newValue === undefined) {
         return firstElem.value;
       }
 
-      firstElem.value = `${value2Set}`.length < 1 ? "" : value2Set;
+      firstElem.value = `${newValue}`.length < 1 ? "" : newValue;
 
-      return extCollection;
+      return self;
     },
-    parent: extCollection => !extCollection.isEmpty() && extCollection.first().parentNode &&
-      new extCollection.constructor(extCollection.first().parentNode) || extCollection,
-    append: (extCollection, ...elems2Append) => {
-      if (!extCollection.isEmpty() && elems2Append) {
-
-        for (let i = 0; i < elems2Append.length; i += 1) {
-          const elem2Append = elems2Append[i];
-
-          if (elem2Append.constructor === String) {
-            extCollection.collection.forEach(el => el.appendChild(createElementFromHtmlString(elem2Append)))
-            return extCollection;
+    parent: self => self.collection.length && self.first().parentNode &&
+      jql(self.first().parentNode) || self,
+    append: (self, ...elems2Append) => {
+      if (!self.isEmpty() && elems2Append.length) {
+        for (const elem of elems2Append) {
+          if (IS(elem, String)) {
+            self.collection.forEach(el => el.appendChild(createElementFromHtmlString(elem)));
           }
 
-          if (isNode(elem2Append)) {
-            extCollection.collection.forEach(el =>
-              el.appendChild(elem2Append instanceof Comment ? elem2Append : elem2Append.cloneNode(true)));
-            return extCollection;
+          if (isNode(elem)) {
+            self.collection.forEach( el =>
+              el.appendChild(IS(elem, Comment) ? elem : elem.cloneNode(true)));
           }
 
-          if (elem2Append.isJQL && !elem2Append.isEmpty()) {
-            const elems = elem2Append.collection.slice();
-            elem2Append.remove();
-            elems.forEach(e2a =>
-              extCollection.collection.forEach(el =>
-                el.appendChild(e2a instanceof Comment ? e2a : e2a.cloneNode(true))));
+          if (elem.isJQL && elem.collection.length) {
+            if (elem.isVirtual) { elem.toDOM(); }
+            const elems = elem.collection;
+            elem.remove();
+            elems.forEach( e2a =>
+              self.collection.forEach( el =>
+                el.appendChild( IS(e2a, Comment) ? e2a : e2a.cloneNode(true) ) ) );
           }
         }
       }
 
-      return extCollection;
+      return self;
     },
-    prepend: (extCollection, ...elems2Prepend) => {
-      if (!extCollection.isEmpty() && elems2Prepend) {
+    prepend: (self, ...elems2Prepend) => {
+      // todo: maybe better to only prepend to root element!
+      if (!self.isEmpty() && elems2Prepend) {
 
         for (let i = 0; i < elems2Prepend.length; i += 1) {
           const elem2Prepend = elems2Prepend[i];
 
-          if (elem2Prepend.constructor === String) {
-            extCollection.collection.forEach(el =>
+          if (IS(elem2Prepend, String)) {
+            self.collection.forEach(el =>
               el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
-            return extCollection;
+            return self;
           }
 
           if (isNode(elem2Prepend)) {
-            extCollection.collection.forEach(el =>
+            self.collection.forEach(el =>
               el.insertBefore(
-                elem2Prepend instanceof Comment ? elem2Prepend : elem2Prepend.cloneNode(true), el.firstChild));
-            return extCollection;
+                IS(elem2Prepend, Comment) ? elem2Prepend : elem2Prepend.cloneNode(true), el.firstChild));
+            return self;
           }
 
           if (elem2Prepend.isJQL && !elem2Prepend.isEmpty()) {
             const elems = elem2Prepend.collection.slice();
             elem2Prepend.remove();
             elems.forEach(e2a =>
-              extCollection.collection.forEach(el =>
-                el && el.insertBefore(e2a instanceof Comment ? e2a : e2a.cloneNode(true), el.firstChild)));
+              self.collection.forEach(el =>
+                el && el.insertBefore(IS(e2a, Comment) ? e2a : e2a.cloneNode(true), el.firstChild)));
           }
         }
       }
 
-      return extCollection;
+      return self;
     },
-    appendTo: (extCollection, extCollection2AppendTo) => {
-      if (!extCollection2AppendTo.isJQL) {
-        extCollection2AppendTo = _$.virtual(extCollection2AppendTo);
+    appendTo: (self, appendTo) => {
+      if (!appendTo.isJQL) {
+        appendTo = self.virtual(appendTo);
       }
-      return extCollection2AppendTo.append(extCollection);
+      return appendTo.append(self);
     },
-    prependTo: (extCollection, extCollection2PrependTo) => {
-      if (!extCollection2PrependTo.isJQL) {
-        extCollection2PrependTo = _$.virtual(extCollection2PrependTo);
+    prependTo: (self, prependTo) => {
+      if (!prependTo.isJQL) {
+        prependTo = self.virtual(prependTo);
       }
 
-      return extCollection2PrependTo.prepend(extCollection);
+      return prependTo.prepend(self);
     },
-    single: (extCollection, indexOrSelector = "0") => {
-      if (extCollection.collection.length > 0) {
-        if (isNaN(+indexOrSelector) && extCollection.find(indexOrSelector)) {
-          return extCollection.find$(indexOrSelector);
+    single: (self, indexOrSelector = "0") => {
+      if (self.collection.length > 0) {
+        if (isNaN(+indexOrSelector) && self.find(indexOrSelector)) {
+          return self.find$(indexOrSelector);
         }
         const index = +indexOrSelector;
-        return index < extCollection.collection.length
-          ? _$(extCollection.collection[indexOrSelector])
-          : _$(extCollection.collection.slice(-1));
+        return index < self.collection.length
+          ? jql(self.collection[indexOrSelector])
+          : jql(self.collection.slice(-1));
       } else {
-        return extCollection;
+        return self;
       }
     },
-    toNodeList: extCollection => {
+    toNodeList: self => {
       const virtual = document.createElement(`div`);
 
-      for (let elem of extCollection.collection) {
+      for (const elem of self.collection) {
         const nodeClone = document.importNode(elem, true);
         nodeClone.removeAttribute(`id`);
         virtual.append(nodeClone);
@@ -320,107 +331,110 @@ const allMethods = {
 
       return virtual.childNodes;
     },
-    duplicate: (extCollection, toDOM = false) => {
-      const clonedCollection = extCollection.toNodeList();
-      return toDOM ? _$(clonedCollection) : _$.virtual(clonedCollection);
+    duplicate: (self, toDOM = false, root = document.body) => {
+      const clonedCollection = jql.virtual([...self.toNodeList()]);
+      return toDOM ? clonedCollection.toDOM(root) : clonedCollection;
     },
-    toDOM: (extCollection, root = document.body, position = insertPositions.BeforeEnd) => {
-      if (extCollection.isVirtual) {
-        extCollection.isVirtual = false;
-        inject2DOMTree(extCollection.collection, root, position);
+    toDOM: (self, root = document.body, position = insertPositions.BeforeEnd) => {
+      if (self.isVirtual) {
+        self.isVirtual = false;
+        inject2DOMTree(self.collection, root, position);
       }
-      return extCollection;
+      return self;
     },
-    first: (extCollection, asExtCollection = false) => {
-      if (extCollection.collection.length > 0) {
-        return asExtCollection
-          ? extCollection.single()
-          : extCollection.collection[0];
+    first: (self, asself = false) => {
+      if (self.collection.length > 0) {
+        return asself
+          ? self.single()
+          : self.collection[0];
       }
       return undefined;
     },
-    first$: (extCollection, indexOrSelector) => extCollection.single(indexOrSelector),
-    find: (extCollection, selector) => extCollection.first()?.querySelectorAll(selector) || [],
-    find$: (extCollection, selector) => {
-      const found = extCollection.collection.reduce((acc, el) =>
+    first$: (self, indexOrSelector) => self.single(indexOrSelector),
+    find: (self, selector) => self.first()?.querySelectorAll(selector) || [],
+    find$: (self, selector) => {
+      const found = self.collection.reduce((acc, el) =>
         [...acc, [...el.querySelectorAll(selector)]], [])
         .flat()
-        .filter(el => el && el instanceof HTMLElement);
-      return found.length && _$.virtual(found);
+        .filter(el => IS(el, HTMLElement));
+      return found.length && jql(found[0]) || jql();
     },
-    prop: (extCollection, property, value) => {
+    prop: (self, property, value) => {
+      if (value && !checkProp(property)) {
+        return self;
+      }
+
       if (!value) {
-        return !extCollection.isEmpty() ? extCollection.first()[property] : undefined;
+        return self.collection.length ? self.first()[property] : self;
       }
 
-      if (!extCollection.isEmpty()) {
-        loop(extCollection, el => el[property] = value);
+      if (self.collection.length) {
+        return loop(self, el => el[property] = value);
       }
 
-      return extCollection;
+      return self;
     },
-    on: (extCollection, type, callback) => {
-      if (extCollection.collection.length) {
-        const cssSelector = addHandlerId(extCollection);
-        handlerFactory(extCollection, type, cssSelector, callback);
+    on: (self, type, callback) => {
+      if (self.collection.length) {
+        const cssSelector = addHandlerId(self);
+        jql.handle(self, type, cssSelector, callback);
       }
 
-      return extCollection;
+      return self;
     },
-
-    html: (extCollection, htmlValue, append) => {
+    html: (self, htmlValue, append) => {
       if (htmlValue === undefined) {
-        return extCollection.first()?.innerHTML;
+        return self.first()?.innerHTML;
       }
 
-      if (!extCollection.isEmpty()) {
+      if (!self.isEmpty()) {
         const nwElement = htmlValue.isJQL
           ? htmlValue.first() : createElementFromHtmlString(`<div>${htmlValue}</div>`);
 
-        if (!(nwElement instanceof Comment)) {
+        if (!IS(nwElement, Comment)) {
           const cb = el => el.innerHTML = append ? el.innerHTML + nwElement.innerHTML : nwElement.innerHTML;
-          return loop(extCollection, cb);
+          return loop(self, cb);
         }
       }
 
-      return extCollection;
+      return self;
     },
-    outerHtml: extCollection => (extCollection.first() || {outerHTML: undefined}).outerHTML,
-    htmlFor: (extCollection, forQuery, htmlString = "", append = false) => {
-      if (forQuery && extCollection.collection.length) {
-        const el2Change = extCollection.find$(forQuery);
+    outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
+    htmlFor: (self, forQuery, htmlString = "", append = false) => {
+      if (forQuery && self.collection.length) {
+        const el2Change = self.find$(forQuery);
         if (!el2Change) {
-          return extCollection;
+          return self;
         }
 
         if (`{htmlValue}`.trim().length < 1) {
           el2Change.textContent = "";
-          return extCollection;
+          return self;
         }
 
         const nwElement = createElementFromHtmlString(`<div>${htmlString}</div>`);
         nwElement && el2Change.html(nwElement.innerHTML, append);
       }
-      return extCollection;
+      return self;
     },
-    dimensions: extCollection => extCollection.first()?.getBoundingClientRect(),
-    delegate: (extCollection, type, cssSelector, ...callbacks) => {
-      callbacks.forEach(callback => handlerFactory(extCollection, type, cssSelector, callback));
-      return extCollection;
+    dimensions: self => self.first()?.getBoundingClientRect(),
+    delegate: (/*NODOC*/self, type, cssSelector, ...callbacks) => {
+      callbacks.forEach(callback => jql.handle(self, type, cssSelector, callback));
+      return self;
     },
-    ON: (extCollection, type, ...callbacks) => {
-      if (extCollection.collection.length) {
-        callbacks.forEach(cb => extCollection.on(type, cb));
+    ON: (self, type, ...callbacks) => {
+      if (self.collection.length) {
+        callbacks.forEach(cb => self.on(type, cb));
       }
 
-      return extCollection;
+      return self;
     },
-    trigger: (extCollection, evtType, SpecifiedEvent = Event, options = {}) => {
-      if (extCollection.collection.length) {
+    trigger: (self, evtType, SpecifiedEvent = Event, options = {}) => {
+      if (self.collection.length) {
         const evObj = new SpecifiedEvent( evtType, { ...options, bubbles: options.bubbles??true} );
-        for( let elem of extCollection.collection ) { elem.dispatchEvent(evObj); }
+        for( let elem of self.collection ) { elem.dispatchEvent(evObj); }
       }
-      return extCollection;
+      return self;
     },
   },
 };

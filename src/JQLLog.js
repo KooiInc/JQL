@@ -1,148 +1,124 @@
+import jql from "../index.js";
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import styleFactory from "../LifeCSS/index.js"; // submodule
-import {time, isVisible} from "./JQLExtensionHelpers.js";
-const setStyle = styleFactory({createWithId:`JQLLogCSS`});
-
-const debugLog = {
-  get isOn() { return useLogging; },
-  isVisible: () => isVisible(logBox()),
-  on() {
-    useLogging = true;
-    if (!log2Console) {
-      const box = logBox() || createLogElement();
-      box?.parentNode["classList"].add(`visible`);
-    }
-    Log(`Logging started (to ${log2Console ? `console` : `document`})`);
-  },
-  off() {
-    if (logBox()) {
-      Log(`Logging stopped`);
-      logBox()?.parentNode.classList.remove(`visible`);
-    }
-    useLogging = false;
-  },
-  toConsole(console = false) {
-    log2Console = console;
-    useLogging = console;
-    console && document.querySelector(`#logBox`)?.remove();
-  },
-  remove: () => {
-    useLogging = false;
-    document.querySelector(`#logBox`).remove();
-  },
-  hide: () => logBox()?.parentNode.classList.remove(`visible`),
-  show: () => logBox()?.parentNode.classList.add(`visible`),
-  reversed(reverse = true) {
-    reverseLogging = reverse;
-    Log(`Reverse logging reset: now logging ${
-      reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
-  },
-  clear() {
-    const box = logBox();
-    box && (box.textContent = ``);
-    Log(`Cleared`);
-  }
-};
-let stylingDefault4Log = {
-  "#logBox": {
-    minWidth: `0px`,
-    maxWidth: `0px`,
-    minHeight: `0px`,
-    maxHeight: `0px`,
-    width: `0`,
-    height: `0`,
-    zIndex: -1,
-    border: `none`,
-    padding: `0px`,
-    overflow: `hidden`,
-    transition: `all 0.3s ease`,
-    position: `fixed`,
-  },
-  "#logBox.visible": {
-    backgroundColor: `rgb(255, 255, 224)`,
-    zIndex: 1,
-    position: `static`,
-    border: `1px dotted rgb(153, 153, 153)`,
-    maxWidth: `33vw`,
-    minWidth: `30vw`,
-    minHeight: `10vh`,
-    maxHeight: `90vh`,
-    overflow: `auto`,
-    width: `50vw`,
-    height: `20vh`,
-    margin: `1rem 0px`,
-    padding: `0px 8px 19px`,
-    resize: `both`,
-  },
-  "@media screen and (min-width: 320px) and (max-width: 1024px)": {
-      "#logBox.visible": {
-          maxWidth: `90vw`,
-          width: `90vw`,
-          resize: `none` }, },
-  "#logBox .legend": {
-    textAlign: `center`,
-    position: `absolute`,
-    marginTop: `-1em`,
-    width: `inherit`,
-    maxWidth: `inherit`,
-  },
-  "#logBox .legend div": {
-    textAlign: `center`,
-    display: `inline-block`,
-    maxWidth: `inherit`,
-    height: `1.2rem`,
-    backgroundColor: `rgb(119, 119, 119)`,
-    padding: `2px 10px`,
-    color: `rgb(255, 255, 255)`,
-    boxShadow: `rgb(119 119 119) 2px 1px 10px`,
-    borderRadius: `4px`,
-  },
-  "#logBox .legend div:before": {
-    content: `"JQL Logging"`,
-  },
-  "#logBox #jql_logger": {
-    marginTop: `0.7rem`,
-    lineHeight: `1.4em`,
-    fontFamily: `consolas, monospace`,
-    whiteSpace: `pre-wrap`,
-    maxWidth: `inherit`,
-  }
-};
+import {IS, logTime, isVisible} from "./JQLExtensionHelpers.js";
+import {logStyling} from "./EmbedResources.js";
+let logSystem = false;
 let useLogging = false;
-let log2Console = false;
-let reverseLogging = true;
-let logBox = () => document.querySelector(`#jql_logger`);
-const setStyling4Log = (styles = stylingDefault4Log) =>
-  Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style));
+let log2Console = true;
+let reverseLogging = false;
 let useHtml = true;
+const logBoxId = `#jql_logger`;
+const setStyling4Log = setStyle => { logStyling?.forEach(selector => setStyle(selector)); };
 const createLogElement = () => {
-  setStyling4Log();
-  const jql_logger_element = useHtml ? `div` : `pre`;
-  const loggingFieldSet = `
-    <div id="logBox">
-      <div class="legend">
-        <div></div>
-      </div>
-      <${jql_logger_element} id="jql_logger"></${jql_logger_element}>
-    </div>`;
+  if (logStyling) {
+    setStyling4Log(jql.createStyle(`JQLLogCSS`));
+  }
+  const jql_logger_element_name = useHtml ? `div` : `pre`;
+  const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
+    jql_logger_element_name} id="jql_logger"></${jql_logger_element_name}></div>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
-  return document.querySelector(`#jql_logger`);
+  return jql.node(logBoxId);
 };
-const decodeForConsole = something => something.constructor === String &&
+const decodeForConsole = something => IS(something, String) &&
   Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
   something;
 const Log = (...args) => {
     if (!useLogging) { return; }
-    if (!log2Console && !logBox()) {
+    if (!log2Console && !jql.node(`#jql_logger`)) {
       createLogElement();
     }
-    const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
+    const logLine = arg => `${IS(arg, Object) ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => log2Console
       ? console.log(decodeForConsole(arg))
-      : logBox().insertAdjacentHTML(
+      : jql.node(`#jql_logger`).insertAdjacentHTML(
           reverseLogging ? `afterbegin` : `beforeend`,
-          `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
+          `${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
 };
+const logActive = {
+  on() {  useLogging = true; Log(`Logging activated`); },
+  off() { useLogging = false; console.log(`Logging deactivated`) },
+}
+const setSystemLog = {
+  on() { logSystem = true; },
+  off() { logSystem = false; },
+};
+const systemLog = (...logTxt) => logSystem && Log(...logTxt);
+let debugLog = {};
+debugLog = {...debugLog,
+  isOn: () => useLogging,
+  isVisible: () => jql(`#jql_logger`).is(`:visible`), //isVisible(logBox()),
+  on: () => {
+    logActive.on();
+    setSystemLog.on();
+    if (!log2Console) {
+      const box = jql.node(logBoxId) || createLogElement();
+      box?.parentNode["classList"].add(`visible`);
+    }
+    Log(`Debug logging started. Every call to [jql instance] is logged (${
+      reverseLogging ? `ascending: latest last` : `descending: latest first`}).`);
+    return debugLog;
+  },
+  off: () => {
+    const logBox = jql(logBoxId);
+    if (!logBox.isEmpty) {
+      setSystemLog.off();
+      Log(`Debug logging stopped`);
+      logBox.parent().removeClass(`visible`);
+    }
+    logActive.off();
+    return debugLog;
+  },
+  toConsole: {
+    on: () => {
+      log2Console = true;
+      Log(`Debug logging to console activated`);
+      return debugLog;
+    },
+    off() {
+      log2Console = false;
+      Log(`Debug logging to document activated`);
+      return debugLog;
+    }
+  },
+  remove: () => {
+    logActive.off();
+    setSystemLog.off();
+    jql(logBoxId)?.remove();
+    console?.clear();
+    console.log(`${logTime()} logging completely disabled and all entries removed`);
+    return debugLog;
+  },
+  log: (...args) => {
+    Log(...args);
+    return debugLog;
+  },
+  hide: () => {
+    jql(logBoxId)?.parent()?.removeClass(`visible`);
+    return debugLog;
+  },
+  show: () => {
+    jql(logBoxId)?.parent()?.addClass(`visible`);
+    return debugLog;
+  },
+  reversed: {
+    on: () => {
+      reverseLogging = true;
+      Log(`Reverse logging reset: now logging bottom to top (latest first)`);
+      return debugLog;
+    },
+    off: () => {
+      reverseLogging = false;
+      Log(`Reverse logging reset: now logging top to bottom (latest last)`);
+      return debugLog;
+    },
+  },
+  clear: () => {
+    jql(logBoxId)?.text(``);
+    console.clear();
+    Log(`Logging cleared`);
+    return debugLog;
+  }
+};
 
-export { Log, debugLog, setStyling4Log };
+export { Log, debugLog, systemLog };
