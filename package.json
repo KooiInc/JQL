@@ -1,7 +1,8 @@
 {
   "name": "jqlmodule",
-  "version": "1.5.3",
+  "version": "2.0.0",
   "private": false,
+  "type": "module",
   "description": "A JQuery alike es20xx module",
   "keywords": [
     "JQuery",
@@ -19,12 +20,10 @@
     "url": "https://github.com/KooiInc/JQL/issues"
   },
   "devDependencies": {
-    "chokidar": "^3.5.2",
-    "esbuild": "~0.17.2",
-    "jsdoc": "^4.0.0"
+    "esbuild": "^0.17.5"
   },
   "scripts": {
-    "build": "node JQLcompile"
+    "build": "node build"
   },
-  "browser": "./lib/JQLBundle.js"
+  "browser": "./Bundle/jql.min.js"
 }
