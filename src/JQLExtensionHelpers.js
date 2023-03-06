@@ -77,6 +77,8 @@ const defaultStaticMethods = {
   debugLog,
   log: Log,
   insertPositions,
+  setStyle: styleFactory( { createWithId: `JQLStylesheet` } ),
+  createStyle: id => styleFactory( { createWithId: id } ),
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
   node: (selector, root = document.body) => root.querySelector(selector, root),
   nodes: (selector, root = document.body) => [...root.querySelectorAll(selector, root)],
@@ -84,8 +86,6 @@ const defaultStaticMethods = {
 let static4Docs;
 const addJQLStatics = $ => {
   const virtual = html => $(html, document.createElement("br"));
-  const setStyle = styleFactory( { createWithId: `JQLStylesheet` } );
-  const createStyle = id => styleFactory( { createWithId: id } );
   const handle = HandleFactory($);
   const delegate = (type, origin, ...handlers) => {
     if (IS(origin, Function)) {
@@ -96,8 +96,6 @@ const addJQLStatics = $ => {
   };
   const staticMethods = {
     ...defaultStaticMethods,
-    setStyle,
-    createStyle,
     virtual,
     handle,
     popup: () => PopupFactory($),
