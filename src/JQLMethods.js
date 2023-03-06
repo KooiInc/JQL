@@ -38,7 +38,7 @@ const css = (el, keyOrKvPairs, value) => {
   setStyle(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
-const assignAttrValues = (el, keyValuePairs) => {
+const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
   el && Object.entries(keyValuePairs).forEach(([key, value]) => {
     if (key.startsWith(`data`)) {
       setData(el, {[key]: value});
@@ -99,38 +99,6 @@ const allMethods = {
     },
     hide: el => el.style.display = `none`,
     setData: setData,
-    assignAttrValues: assignAttrValues,
-    attr(el, keyOrObj, value) {
-      if (!el) {
-        return true;
-      }
-
-      if (IS(keyOrObj, String) && value !== undefined) {
-        keyOrObj = { [keyOrObj]: value };
-      }
-
-      if (!value && IS(keyOrObj, String)) {
-        return el.getAttribute(keyOrObj);
-      }
-
-      Object.entries(keyOrObj).forEach(([key, value]) => {
-        if (!checkProp(key)) { return false; }
-
-        if (compareCI(key, `style`)) {
-          return css(el, value, undefined);
-        }
-
-        if (compareCI(key, `data`)) {
-          return setData(el, value);
-        }
-
-        if (IS(value, Object)) {
-          return assignAttrValues(el, value);
-        }
-
-        return el.setAttribute(key, value);
-      });
-    },
     style: (el, keyOrKvPairs, value) => {
       if (value && IS(keyOrKvPairs, String)) {
         keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
@@ -232,6 +200,36 @@ const allMethods = {
       }
 
       firstElem.value = `${newValue}`.length < 1 ? "" : newValue;
+
+      return self;
+    },
+    attr(self, keyOrObj, value) {
+      if (!value && IS(keyOrObj, String)) {
+        console.log(`nou lekker hoor ... ${keyOrObj}, ${self[0].getAttribute(keyOrObj)}`);
+        return self[0].getAttribute(keyOrObj);
+      }
+
+      if (IS(keyOrObj, String) && value) {
+        keyOrObj = { [keyOrObj]: value };
+      }
+
+      Object.entries(keyOrObj).forEach(([key, value]) => {
+        if (!checkProp(key)) { return false; }
+
+        if (compareCI(key, `style`)) {
+          return css(self[0], value, undefined);
+        }
+
+        if (compareCI(key, `data`)) {
+          return setData(self[0], value);
+        }
+
+        if (IS(value, Object)) {
+          return assignAttrValues(self[0], value);
+        }
+
+        self[0].setAttribute(key, value);
+      });
 
       return self;
     },
