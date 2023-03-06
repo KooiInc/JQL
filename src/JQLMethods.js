@@ -40,16 +40,16 @@ const css = (el, keyOrKvPairs, value) => {
 };
 const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
   el && Object.entries(keyValuePairs).forEach(([key, value]) => {
-    if (key.startsWith(`data`)) {
-      setData(el, {[key]: value});
+    if (key.toLowerCase().startsWith(`data`)) {
+      return setData(el, value);
     }
 
     if (compareCI(key, `class`)) {
-      value.split(/\s+/).forEach(v => el.classList.add(`${v}`))
+      return value.split(/,/).forEach(v => el.classList.add(`${v.trim()}`));
     }
 
     if (IS(value, String) && checkProp(key)) {
-      el[key] = value;
+      return el[key] = value;
     }
   });
 };
@@ -205,7 +205,9 @@ const allMethods = {
     },
     attr(self, keyOrObj, value) {
       if (!value && IS(keyOrObj, String)) {
-        console.log(`nou lekker hoor ... ${keyOrObj}, ${self[0].getAttribute(keyOrObj)}`);
+        if (keyOrObj === `class`) {
+          return [...self[0].classList].join(` `);
+        }
         return self[0].getAttribute(keyOrObj);
       }
 
@@ -213,23 +215,9 @@ const allMethods = {
         keyOrObj = { [keyOrObj]: value };
       }
 
-      Object.entries(keyOrObj).forEach(([key, value]) => {
-        if (!checkProp(key)) { return false; }
-
-        if (compareCI(key, `style`)) {
-          return css(self[0], value, undefined);
-        }
-
-        if (compareCI(key, `data`)) {
-          return setData(self[0], value);
-        }
-
-        if (IS(value, Object)) {
-          return assignAttrValues(self[0], value);
-        }
-
-        self[0].setAttribute(key, value);
-      });
+      if (IS(keyOrObj, Object)) {
+        assignAttrValues(self[0], keyOrObj);
+      }
 
       return self;
     },
