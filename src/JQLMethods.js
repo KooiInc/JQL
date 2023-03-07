@@ -293,15 +293,17 @@ const allMethods = {
 
       return prependTo.prepend(self);
     },
-    single: (self, indexOrSelector = "0") => {
+    single: (self, indexOrSelector) => {
       if (self.collection.length > 0) {
-        if (isNaN(+indexOrSelector) && self.find(indexOrSelector)) {
+        if (IS(indexOrSelector, String)) {
           return self.find$(indexOrSelector);
         }
-        const index = +indexOrSelector;
-        return index < self.collection.length
-          ? jql(self.collection[indexOrSelector])
-          : jql(self.collection.slice(-1));
+
+        if (IS(indexOrSelector, Number)) {
+          return jql(self.collection[indexOrSelector]);
+        }
+
+        return jql(self.collection[0]);
       }
 
       return self;
@@ -328,9 +330,9 @@ const allMethods = {
       }
       return self;
     },
-    first: (self, asself = false) => {
+    first: (self, asJQLInstance = false) => {
       if (self.collection.length > 0) {
-        return asself
+        return asJQLInstance
           ? self.single()
           : self.collection[0];
       }

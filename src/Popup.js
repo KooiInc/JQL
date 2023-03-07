@@ -38,7 +38,7 @@ function PopupFactory($) {
   const deActivate = () => {
     $(`.between`).removeClass(`active`).style({top: 0});
     $(`#closer, .popupContainer, #modalWarning`).removeClass(`active`);
-    $(`[data-modalcontent]`).empty();
+    $(`[data-modalcontent]`).clear();
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupContainer`).addClass(`active`);
@@ -65,8 +65,8 @@ function PopupFactory($) {
       return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);    }
 
     endTimer();
-    $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
-    activate(popupBox, currentModalState.isModal ? undefined : closer);
+    $(`[data-modalcontent]`).clear().append( message.isJQL ? message : $(`<div>${message}</div>`) );
+    return activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
   const create = (message, isModal = false, callback = undefined, modalWarning = ``) =>
     !currentModalState.isActive && doCreate({message, isModal, callback, modalWarning});
@@ -80,16 +80,16 @@ function PopupFactory($) {
   function remove(/*NODOC*/evtOrCallback) {
     endTimer();
     if (currentModalState.isActive) { return; }
+
     const callback = IS(evtOrCallback, Function) ? evtOrCallback : savedCallback;
-
-    if (IS(callback, Function)) {
-      savedCallback = undefined;
-      callback();
-    }
-
     deActivate();
     const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
     savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
+
+    if (IS(callback, Function)) {
+      savedCallback = undefined;
+      return callback();
+    }
   }
   const removeModal = callback => {
     currentModalState.isModal = false;
