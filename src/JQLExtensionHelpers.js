@@ -38,7 +38,7 @@ const proxify = instance => {
   const runExt = method => (...args) => IS(method, Function) && method(proxify(instance), ...args);
   const runLoop = method => (...args) => IS(method, Function) && loop(proxify(instance), el => method(el, ...args));
   const check = name => loops[name] && runLoop(loops[name]) || exts[name] && runExt(exts[name]);
-  const proxyMe = { get: (obj, name) => check(name) ?? (!isNaN(+name) ? obj.collection?.[name] : obj[name]) };
+  const proxyMe = { get: (obj, name) => check(name) ?? (/^\d+$/.test(`${name}`) ? obj.collection?.[name] : obj[name]) };
   return new Proxy( instance, proxyMe );
 };
 const inject2DOMTree = (
