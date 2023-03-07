@@ -54,7 +54,7 @@ function PopupFactory($) {
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
   const doCreate = ({message, isModal, callback, modalWarning}) => {
-    currentModalState.isModal = {state: isModal};
+    currentModalState.isModal = {state: isModal ?? false};
     savedCallback = callback;
 
     if (isModal && IS(modalWarning, String)) {
@@ -84,7 +84,7 @@ function PopupFactory($) {
 
     if (IS(callback, Function)) {
       savedCallback = undefined;
-      return callback();
+      callback();
     }
 
     deActivate();
