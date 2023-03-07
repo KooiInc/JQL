@@ -302,9 +302,9 @@ const allMethods = {
         return index < self.collection.length
           ? jql(self.collection[indexOrSelector])
           : jql(self.collection.slice(-1));
-      } else {
-        return self;
       }
+
+      return self;
     },
     toNodeList: self => {
       const virtual = document.createElement(`div`);
