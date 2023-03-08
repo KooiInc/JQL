@@ -9,6 +9,19 @@ function PopupFactory($) {
   initStyling(setStyle);
   let savedTimer, savedCallback;
   const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
+  const remove = (/*NODOC*/evtOrCallback) => {
+    if (currentModalState.isActive) { return; }
+    endTimer();
+    const callback = IS(evtOrCallback, Function) ? evtOrCallback : savedCallback;
+    deActivate();
+    const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
+    savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
+
+    if (IS(callback, Function)) {
+      savedCallback = undefined;
+      return callback();
+    }
+  };
   $.delegate( clickOrTouch, `#closer, .between`,  remove );
   const stillOpen = () => {
     endTimer();
@@ -53,9 +66,9 @@ function PopupFactory($) {
     }
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
-  const doCreate = ({message, isModal, callback, modalWarning}) => {
+  const doCreate = ({message, isModal, modalCallback, modalWarning}) => {
     currentModalState.isModal = {state: isModal ?? false};
-    savedCallback = callback;
+    savedCallback = modalCallback;
 
     if (isModal && IS(modalWarning, String)) {
       setStyle(`#modalWarning.active:after{content:"${modalWarning}";}`);
@@ -68,8 +81,15 @@ function PopupFactory($) {
     $(`[data-modalcontent]`).clear().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     return activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
-  const create = (message, isModal = false, callback = undefined, modalWarning = ``) =>
-    !currentModalState.isActive && doCreate({message, isModal, callback, modalWarning});
+  const create = (message, isModalOrCallback, modalCallback, modalWarning) => {
+    if (currentModalState.isActive) { return; }
+
+    if (IS(isModalOrCallback, Function)) {
+      return doCreate( { message, isModal: false, isModalOrCallback } );
+    }
+
+    return doCreate( { message, isModal: !!isModalOrCallback, modalCallback, modalWarning } );
+  };
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isActive) { return; }
     deActivate();
@@ -77,20 +97,6 @@ function PopupFactory($) {
     const remover = () => remove(callback);
     savedTimer = setTimeout(remover, closeAfter * 1000);
   };
-  function remove(/*NODOC*/evtOrCallback) {
-    endTimer();
-    if (currentModalState.isActive) { return; }
-
-    const callback = IS(evtOrCallback, Function) ? evtOrCallback : savedCallback;
-    deActivate();
-    const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
-    savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
-
-    if (IS(callback, Function)) {
-      savedCallback = undefined;
-      return callback();
-    }
-  }
   const removeModal = callback => {
     currentModalState.isModal = false;
     remove(callback);
