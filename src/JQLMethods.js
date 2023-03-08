@@ -160,7 +160,7 @@ const allMethods = {
     hasClass: (self, ...classNames) => {
       const firstElem = self.first();
       return self.isEmpty() || !firstElem.classList.length
-        ? false : classNames.find(cn => firstElem.classList.contains(cn)) || false;
+        ? false : classNames.find(cn => firstElem.classList.contains(cn)) && true || false;
     },
     replace: (self, oldChild, newChild) => {
       const firstElem = self.first();
