@@ -66,9 +66,9 @@ function PopupFactory($) {
     }
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
-  const doCreate = ({message, isModal, modalCallback, modalWarning}) => {
+  const doCreate = ({message, isModal, callback, modalWarning}) => {
     currentModalState.isModal = {state: isModal ?? false};
-    savedCallback = modalCallback;
+    savedCallback = callback;
 
     if (isModal && IS(modalWarning, String)) {
       setStyle(`#modalWarning.active:after{content:"${modalWarning}";}`);
@@ -85,10 +85,10 @@ function PopupFactory($) {
     if (currentModalState.isActive) { return; }
 
     if (IS(isModalOrCallback, Function)) {
-      return doCreate( { message, isModal: false, isModalOrCallback } );
+      return doCreate( { message, isModal: false, callback: isModalOrCallback } );
     }
 
-    return doCreate( { message, isModal: !!isModalOrCallback, modalCallback, modalWarning } );
+    return doCreate( { message, isModal: !!isModalOrCallback, callback: modalCallback, modalWarning } );
   };
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isActive) { return; }
