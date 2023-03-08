@@ -1,4 +1,4 @@
-# JQLClassFree
+# JQL
 
 This module (<b>JQ</b>uery<b>L</b>ike) was inspired by the idea that some JQuery was too good <a target="_blank" href="http://youmightnotneedjquery.com/" rel="nofollow">to ditch</a>.
 
