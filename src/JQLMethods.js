@@ -185,7 +185,12 @@ const allMethods = {
     },
     replaceMe: (self, newChild) => {
       newChild = IS(newChild, HTMLElement) ? jql(newChild) : newChild;
-      self.parent().replace(self, newChild)
+
+      if (newChild.isVirtual) {
+        newChild.toDOM();
+      }
+
+      self.parent().replace(self, newChild);
       return jql(newChild);
     },
     val: (self, newValue) => {
