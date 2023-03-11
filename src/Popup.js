@@ -25,8 +25,12 @@ function PopupFactory($) {
   $.delegate( clickOrTouch, `#closer, .between`,  remove );
   const stillOpen = () => {
     endTimer();
-    modalWarner.hasClass(`active`) && modalWarner.removeClass(`active`);
-    modalWarner.addClass(`active`);
+
+    if (modalWarner.getData(`warn`) === "1") {
+      modalWarner.hasClass(`active`) && modalWarner.removeClass(`active`);
+      modalWarner.addClass(`active`);
+    }
+
     savedTimer = setTimeout(() => modalWarner.removeClass(`active`), 2500);
     return true;
   }
@@ -42,7 +46,7 @@ function PopupFactory($) {
     const popupBox = $(`<div class="popupContainer">`)
       .append( $(`<span id="closer" class="closeHandleIcon"></span>`)
         .prop(`title`, `Click here or anywhere outside the box to close`))
-      .append(`<div class="popupBox"><div id="modalWarning"></div><div data-modalcontent></div></div>`);
+      .append(`<div class="popupBox"><div id="modalWarning" data-warn="0"></div><div data-modalcontent></div></div>`);
     const closer = $(`#closer`);
     const between = $(`<div class="between"></div>`);
     return [popupBox, between, closer, $(`#modalWarning`)];
@@ -52,6 +56,7 @@ function PopupFactory($) {
     $(`.between`).removeClass(`active`).style({top: 0});
     $(`#closer, .popupContainer, #modalWarning`).removeClass(`active`);
     $(`[data-modalcontent]`).clear();
+    modalWarner.setData({warn: 0});
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupContainer`).addClass(`active`);
@@ -72,6 +77,7 @@ function PopupFactory($) {
 
     if (isModal && IS(modalWarning, String)) {
       setStyle(`#modalWarning.active:after{content:"${modalWarning}";}`);
+      modalWarner.setData({warn: 1});
     }
 
     if (!message.isJQL && !IS(message, String)) {
@@ -80,7 +86,7 @@ function PopupFactory($) {
     endTimer();
     $(`[data-modalcontent]`).clear().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     return activate(popupBox, currentModalState.isModal ? undefined : closer);
-  }
+  };
   const create = (message, isModalOrCallback, modalCallback, modalWarning) => {
     if (currentModalState.isActive) { return; }
 
@@ -98,6 +104,7 @@ function PopupFactory($) {
     savedTimer = setTimeout(remover, closeAfter * 1000);
   };
   const removeModal = callback => {
+    modalWarner.setData({warn: 0});
     currentModalState.isModal = false;
     remove(callback);
   };
