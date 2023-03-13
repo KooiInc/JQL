@@ -89,8 +89,7 @@ const allMethods = {
       el.classList.remove(className);
       nwClassNames.forEach(name => el.classList.add(name))
     },
-    removeClass: (el, ...classNames) =>
-      classNames.forEach(cn => el.classList.remove(cn)),
+    removeClass: (el, ...classNames) => classNames.forEach(cn => el.classList.remove(cn)),
     addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
     show: el => {
       el.style.display = ``;
