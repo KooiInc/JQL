@@ -1,4 +1,5 @@
 import $ from "../index.js";
+
 if (location.host.startsWith(`dev`)) {
   document.title += ` DEV`;
 }
@@ -10,7 +11,7 @@ const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 
 // activate logging all JQL events (hidden)
 debugLog.on().toConsole.off().hide();
-const apiLinkPrefix = `https://kooiinc.github.io/JQLDoc/`;
+const apiLinkPrefix = `//kooi.dev/JQLDoc/`;
 
 // Some methods used in handler delegates
 const logActivation = (logBttn, active = true) => {
@@ -100,41 +101,34 @@ cssPopupBttn.on(`click`, () => showStyling(`JQLPopupCSS`, cssDefaultBttn));
 cssDefaultBttn.on(`click`, () => showStyling(`JQLStylesheet`, cssPopupBttn));
 
 const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
-    $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
-    $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, debugLog.clear),
-    $$(`<button id="showComments">Show document comments</button>`)
-      .prop(`title`, `Show content of comment elements in a popup`),
-    $$(`<button id="showCSS">Show custom CSS</button>`)
-      .prop(`title`, `Show the dynamically created styling in a popup`)
-      .on(`click`, _ => showStyling(`JQLStylesheet`, cssPopupBttn)),
-    $$(`<button>Modal popup demo</button`).on(`click`, modalDemo),
-    $$(`<button>Github</button>`)
-      .on(`click`, () => {
-          popup.create( $(`
+  $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
+  $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, debugLog.clear),
+  $$(`<button id="showComments">Show document comments</button>`)
+    .prop(`title`, `Show content of comment elements in a popup`),
+  $$(`<button id="showCSS">Show custom CSS</button>`)
+    .prop(`title`, `Show the dynamically created styling in a popup`)
+    .on(`click`, _ => showStyling(`JQLStylesheet`, cssPopupBttn)),
+  $$(`<button>Modal popup demo</button`).on(`click`, modalDemo),
+  $$(`<button>Github</button>`)
+    .on(`click`, () => {
+        popup.create( $(`
           <p>
             The repository can be found  @${
-              createExternalLink(`https://github.com/KooiInc/JQLClassFree`,
-                                 `github.com/KooiInc/JQLClassFree`).outerHtml()}<br>
+          createExternalLink(`https://github.com/KooiInc/JQL`,
+            `github.com/KooiInc/JQL`).outerHtml()}<br>
             The documentation resides @${
-              createExternalLink(apiLinkPrefix, `kooiinc.github.io/JQLDoc`).outerHtml()}
+          createExternalLink(apiLinkPrefix, `kooi.dev/JQLDoc`).outerHtml()}
           </p>`));
-        }
-      )])
+      }
+    )])
   .appendTo(JQLRoot);
 
 $(`button`)
   .style({marginRight: `4px`})
   .each( (btn, i) => btn.dataset.index = `bttn-${i}` ); // each demo
 
-// Documentation links
-// -------------------
-// styled via intermediate class
-// create link to documentation root
-const apiLink = createExternalLink(apiLinkPrefix, `JQL Api documentation`).appendTo(JQLRoot);
-$$(`
-  <div>
-    cf the first example in the 
-  </div>`)
+// styled via named class .exampleText
+$$(`<div>styling`)
   .css({
     className: `exampleText`,
     borderTop: `2px dotted #999`,
@@ -144,12 +138,11 @@ $$(`
     maxWidth: `800px`,
     'margin-top': `1rem`,
     'padding-top': `0.2rem`, })
-  .prepend($.virtual(`<span>Next element</span>`))
-  .append(createExternalLink(`${apiLinkPrefix}/module-JQL.html`, `documentation`))
-  .html(` for module <code>JQLExtensions</code><br>`, true)
+  .prepend($$(`<span>Some </span>`))
+  .html(` examples`, true)
   .appendTo(JQLRoot);
 
-// example from ExtendedNodelistLambdas api doc
+// styled with intermediate class
 $$(`<div id="helloworld"/>`)
   .text(`Example: hello ... world`)
   .append($(`<span> OK</span>`))
@@ -172,7 +165,7 @@ $$(`<!--Hi, I am a multiline HTML-comment.
 
 
 // a comment can also be appended using append/appendTo/prepend/prependTo
-$$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
+  $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
 $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
 // comment insertion test
@@ -195,8 +188,7 @@ popup.createTimed(`Page done, enjoy 😎!`, 2);
 function modalDemo() {
   const closeBttn = $$(`<button id="modalCloseTest">Close me</button>`)
     .css({marginTop: `0.5rem`})
-    .delegate(`click`, `#modalCloseTest`,
-      _ => popup.removeModal(() => popup.createTimed(`Modal closed, you're ok, bye.`, 2)));
+    .delegate(`click`, `#modalCloseTest`, () => popup.removeModal());
   const tryOpenAnotherBttn =  $$(`<button id="secondModalTest">Try to open another popup</button>`)
     .css({marginTop: `0.5rem`})
     .delegate(`click`, `#secondModalTest`, _ => popup.create(`No. You can't`));
@@ -208,7 +200,8 @@ function modalDemo() {
       <br>Also, while this popup is open, you can't open another (second button
         or click outside the popup).
       <br>${closeBttn.outerHtml()} ${tryOpenAnotherBttn.outerHtml()}
-    </p>`, true);
+    </p>`, true, () => popup.createTimed(`Modal closed, you're ok, bye.`, 2),
+    `There's only 1 escape`);
 }
 
 // create a few style rules in <style id="JQLCreatedCSS">
@@ -236,32 +229,32 @@ function getDelegates4Document() {
         },
       ]
     },
-    {
-      target: `#logBttn`,
-      handlers: [(_, self) => logActivation(self, !+(self.getData(`on`, 1))),],
-    }, {
-      target: `#showComments`,
-      handlers: [
-        _ => popup.create(`<h3>*All Comments in this document:</h3>${
-          allComments([...document.childNodes]).join(``)}`), ]
-    }, {
-      target: `.codeVwr`,
-      handlers: [
-        (_, self) => {
-          const codeElem = $(`#${self.getData(`forid`)}`);
+      {
+        target: `#logBttn`,
+        handlers: [(_, self) => logActivation(self, !+(self.getData(`on`, 1))),],
+      }, {
+        target: `#showComments`,
+        handlers: [
+          _ => popup.create(`<h3>*All Comments in this document:</h3>${
+            allComments([...document.childNodes]).join(``)}`), ]
+      }, {
+        target: `.codeVwr`,
+        handlers: [
+          (_, self) => {
+            const codeElem = $(`#${self.getData(`forid`)}`);
 
-          if (!+self.getData(`hidden`)) {
-            codeElem.removeClass(`down`);
-            return $(self).setData({updown: '\u25bc View ', hidden: 1})
+            if (!+self.getData(`hidden`)) {
+              codeElem.removeClass(`down`);
+              return $(self).setData({updown: '\u25bc View ', hidden: 1})
+            }
+
+            $(`.down`).each(el => el.classList.remove(`down`));
+            $(`[data-forid]`).setData({updown: '\u25bc View ', hidden: 1});
+            codeElem.addClass(`down`);
+            $(self).setData({updown: '\u25b2 Hide ', hidden: 0});
           }
-
-          $(`.down`).each(el => el.classList.remove(`down`));
-          $(`[data-forid]`).setData({updown: '\u25bc View ', hidden: 1});
-          codeElem.addClass(`down`);
-          $(self).setData({updown: '\u25b2 Hide ', hidden: 0});
-        }
-      ]
-    }]
+        ]
+      }]
   });
 }
 
@@ -295,10 +288,10 @@ function allComments(root, result = []) {
 async function injectCode() {
   const source = await fetch("./index.js").then(r => r.text());
   $(`#JQLRoot`)
-  .append( $(`
+    .append( $(`
     <div class="upDownFader" id="code">
       <pre class="language-javascript"><code class="language-javascript js line-numbers">${
-        source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`)}</code></pre>
+      source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`)}</code></pre>
     </div>`));
 }
 
