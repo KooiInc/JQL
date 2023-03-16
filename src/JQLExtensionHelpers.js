@@ -73,12 +73,15 @@ const getAllDataAttributeValues = el => {
       ({...acc, [getKey(val)]: val.nodeValue}), {});
   return Object.keys(data).length && data || undefined;
 };
+const createCssRule = styleFactory( { createWithId: `JQLStylesheet` } );
 const defaultStaticMethods = {
   debugLog,
   log: Log,
   insertPositions,
-  setStyle: styleFactory( { createWithId: `JQLStylesheet` } ),
+  setStyle: createCssRule,
+  createCssRule,
   createStyle: id => styleFactory( { createWithId: id } ),
+  removeCssRule: rule => createCssRule(rule, {removeRule: 1}),
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
   node: (selector, root = document.body) => root.querySelector(selector, root),
   nodes: (selector, root = document.body) => [...root.querySelectorAll(selector, root)],
