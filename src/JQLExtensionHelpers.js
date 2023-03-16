@@ -79,7 +79,7 @@ const defaultStaticMethods = {
   log: Log,
   insertPositions,
   setStyle: createCssRule,
-  createCssRule,
+  editCssRule: createCssRule,
   createStyle: id => styleFactory( { createWithId: id } ),
   removeCssRule: rule => createCssRule(rule, {removeRule: 1}),
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
