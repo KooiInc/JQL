@@ -74,6 +74,7 @@ const getAllDataAttributeValues = el => {
   return Object.keys(data).length && data || undefined;
 };
 const editCssRule = styleFactory( { createWithId: `JQLStylesheet` } );
+const documentHtmlElement = document.querySelector(`html`);
 const defaultStaticMethods = {
   debugLog,
   log: Log,
@@ -83,8 +84,8 @@ const defaultStaticMethods = {
   createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
   removeCssRule: rule => editCssRule(rule, {removeRule: 1}),
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-  node: (selector, root = document.body) => root.querySelector(selector, root),
-  nodes: (selector, root = document.body) => [...root.querySelectorAll(selector, root)],
+  node: (selector, root = documentHtmlElement) => root.querySelector(selector, root),
+  nodes: (selector, root = documentHtmlElement) => [...root.querySelectorAll(selector, root)],
 };
 let static4Docs;
 const addJQLStatics = $ => {
