@@ -71,18 +71,6 @@ const allMethods = {
         el.style[key] = `${el.style[key]}` === `${value}` ? "" : value;
       }),
     removeAttr: (el, name) => el && el.removeAttribute(name),
-    toggleAttr: (el, name) => {
-      if (el.hasAttribute(name)) {
-        if (!el.dataset[`previous${name}`]) {
-          el.dataset[`previous${name}`] = el.getAttribute(name);
-        }
-        return el.removeAttribute(name);
-      }
-
-      if (el.dataset[`previous${name}`]) {
-        return el.setAttribute(name, el.dataset[`previous${name}`]);
-      }
-    },
     empty,
     clear:  empty,
     replaceClass: (el, className, ...nwClassNames) => {
