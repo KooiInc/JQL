@@ -73,15 +73,15 @@ const getAllDataAttributeValues = el => {
       ({...acc, [getKey(val)]: val.nodeValue}), {});
   return Object.keys(data).length && data || undefined;
 };
-const createCssRule = styleFactory( { createWithId: `JQLStylesheet` } );
+const editCssRule = styleFactory( { createWithId: `JQLStylesheet` } );
 const defaultStaticMethods = {
   debugLog,
   log: Log,
   insertPositions,
-  setStyle: createCssRule,
-  editCssRule: createCssRule,
-  createStyle: id => styleFactory( { createWithId: id } ),
-  removeCssRule: rule => createCssRule(rule, {removeRule: 1}),
+  editCssRule,
+  setStyle: editCssRule,
+  createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
+  removeCssRule: rule => editCssRule(rule, {removeRule: 1}),
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
   node: (selector, root = document.body) => root.querySelector(selector, root),
   nodes: (selector, root = document.body) => [...root.querySelectorAll(selector, root)],
