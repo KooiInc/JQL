@@ -20,7 +20,7 @@ const setData = (el, keyValuePairs) => {
 const checkProp = prop => ATTRS.html.find(attr => prop === attr);
 
 const css = (el, keyOrKvPairs, value) => {
-  const { setStyle } = jql;
+  const { editCssRule } = jql;
 
   if (value && IS(keyOrKvPairs, String)) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
@@ -33,9 +33,9 @@ const css = (el, keyOrKvPairs, value) => {
     delete keyOrKvPairs.className;
   }
 
-  const classExists = ([...el.classList].find(c => c.startsWith(`JQLCreated`) || nwClass && c === nwClass));
-  nwClass = classExists || nwClass || `JQLCreated${randomString()}`;
-  setStyle(`.${nwClass}`, keyOrKvPairs);
+  const classExists = ([...el.classList].find(c => c.startsWith(`JQLClass-`) || nwClass && c === nwClass));
+  nwClass = classExists || nwClass || `JQLClass-${randomString().slice(1)}`;
+  editCssRule(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
 const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
