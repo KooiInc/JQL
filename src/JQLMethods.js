@@ -79,11 +79,7 @@ const allMethods = {
     },
     removeClass: (el, ...classNames) => classNames.forEach(cn => el.classList.remove(cn)),
     addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
-    show: el => {
-      el.style.display = ``;
-      el.style.visibility = ``;
-      el.style.opacity = `1`;
-    },
+    show: el => el.style.display = `revert-layer`,
     hide: el => el.style.display = `none`,
     setData: setData,
     style: (el, keyOrKvPairs, value) => {
@@ -358,7 +354,7 @@ const allMethods = {
       if (self.collection.length) {
         callback?.forEach(cb => {
           const cssSelector = addHandlerId(self);
-          jql.handle(self, type, cssSelector, callback);
+          jql.handle(self, type, cssSelector, cb);
         })
       }
 
