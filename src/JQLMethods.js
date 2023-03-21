@@ -400,11 +400,6 @@ const allMethods = {
       return self;
     },
     dimensions: self => self.first()?.getBoundingClientRect(),
-    delegate: (self, type, cssSelector, ...callbacks) => {
-      /*NODOC*/
-      callbacks.forEach(callback => jql.handle(self, type, cssSelector, callback));
-      return self;
-    },
     trigger: (self, evtType, SpecifiedEvent = Event, options = {}) => {
       if (self.collection.length) {
         const evObj = new SpecifiedEvent( evtType, { ...options, bubbles: options.bubbles??true} );
