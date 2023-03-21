@@ -354,10 +354,12 @@ const allMethods = {
 
       return self;
     },
-    on: (self, type, callback) => {
+    on: (self, type, ...callback) => {
       if (self.collection.length) {
-        const cssSelector = addHandlerId(self);
-        jql.handle(self, type, cssSelector, callback);
+        callback?.forEach(cb => {
+          const cssSelector = addHandlerId(self);
+          jql.handle(self, type, cssSelector, callback);
+        })
       }
 
       return self;
@@ -398,15 +400,9 @@ const allMethods = {
       return self;
     },
     dimensions: self => self.first()?.getBoundingClientRect(),
-    delegate: (/*NODOC*/self, type, cssSelector, ...callbacks) => {
+    delegate: (self, type, cssSelector, ...callbacks) => {
+      /*NODOC*/
       callbacks.forEach(callback => jql.handle(self, type, cssSelector, callback));
-      return self;
-    },
-    ON: (self, type, ...callbacks) => {
-      if (self.collection.length) {
-        callbacks.forEach(cb => self.on(type, cb));
-      }
-
       return self;
     },
     trigger: (self, evtType, SpecifiedEvent = Event, options = {}) => {
