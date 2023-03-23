@@ -74,47 +74,44 @@ const getAllDataAttributeValues = el => {
   return Object.keys(data).length && data || undefined;
 };
 const editCssRule = styleFactory( { createWithId: `JQLStylesheet` } );
-const documentHtmlElement = document.querySelector(`html`);
-const defaultStaticMethods = {
-  debugLog,
-  log: Log,
-  insertPositions,
-  editCssRule,
-  setStyle: editCssRule,
-  createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
-  removeCssRule: rule => editCssRule(rule, {removeRule: 1}),
-  text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-  node: (selector, root = documentHtmlElement) => root.querySelector(selector, root),
-  nodes: (selector, root = documentHtmlElement) => [...root.querySelectorAll(selector, root)],
-};
 let static4Docs;
-const addJQLStatics = $ => {
-  const virtual = html => $(html, document.createElement("br"));
-  const handle = HandleFactory($);
+const addJQLStatics = jql => {
+  const staticMethods = defaultStaticMethodsFactory(jql);
+  Object.entries(staticMethods).forEach(([name, method]) => jql[name] = method);
+  static4Docs = staticMethods;
+  return jql;
+};
+
+function defaultStaticMethodsFactory(jql) {
+  const documentHtmlElement = document.querySelector(`html`);
+  const virtual = html => jql(html, document.createElement("br"));
+  const handle = HandleFactory();
   const delegate = (type, origin, ...handlers) => {
     if (IS(origin, Function)) {
       handlers.push(origin);
-      return handle(null, type, null, ...handlers);
+      origin = undefined;
     }
-    return handle(null, type, origin, ...handlers);
+
+    return handlers.forEach(handler => handle(type, origin, handler));
   };
-  const staticMethods = {
-    ...defaultStaticMethods,
+
+  return {
+    debugLog,
+    log: Log,
+    insertPositions,
+    editCssRule,
+    setStyle: editCssRule,
+    delegate,
     virtual,
-    handle,
-    popup: () => PopupFactory($),
-    delegate: (type, origin, ...handlers) => {
-      if (IS(origin, Function)) {
-        handlers.push(origin);
-        return handle(null, type, null, ...handlers);
-      }
-      return handle(null, type, origin, ...handlers);
-    },
+    IS,
+    popup: () => PopupFactory(jql),
+    createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
+    removeCssRule: rule => editCssRule(rule, {removeRule: 1}),
+    text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
+    node: (selector, root = documentHtmlElement) => root.querySelector(selector, root),
+    nodes: (selector, root = documentHtmlElement) => [...root.querySelectorAll(selector, root)],
   };
-  Object.entries(staticMethods).forEach(([name, method]) => $[name] = method);
-  static4Docs = staticMethods;
-  return $;
-};
+}
 
 export {
   loop,
