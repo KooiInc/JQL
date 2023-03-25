@@ -191,7 +191,7 @@ const allMethods = {
 
       return self;
     },
-    attr(self, keyOrObj, value) {
+    attr: (self, keyOrObj, value) => {
       if (!value && IS(keyOrObj, String)) {
         if (keyOrObj === `class`) {
           return [...self[0].classList].join(` `);
