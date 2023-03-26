@@ -6,7 +6,7 @@ const invalid = `Invalid parameter(s)`;
 const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
 const ISOneOf = (obj, ...params) => !!params.find( param => IS(obj, param) );
 const randomNr = (max, min = 0) => {
-  [max, min] = [Math.floor(max), min = Math.ceil(min)];
+  [max, min] = [Math.floor(max), Math.ceil(min)];
   return Math.floor( ([...crypto.getRandomValues(new Uint32Array(1))].shift() / 2 ** 32 ) * (max - min + 1) + min );
 };
 const shuffle = array => {
