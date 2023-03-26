@@ -209,7 +209,7 @@ const allMethods = {
 
       return self;
     },
-    parent: self => self.collection.length && self.first().parentNode &&
+    parent: self => self.collection.length && self.first()?.parentNode &&
       jql(self.first().parentNode) || self,
     append: (self, ...elems2Append) => {
       if (!self.isEmpty() && elems2Append.length) {
