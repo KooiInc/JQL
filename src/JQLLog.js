@@ -1,6 +1,6 @@
 import jql from "../index.js";
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import {IS, logTime, isVisible} from "./JQLExtensionHelpers.js";
+import {IS, logTime,} from "./JQLExtensionHelpers.js";
 import {logStyling} from "./EmbedResources.js";
 let logSystem = false;
 let useLogging = false;
@@ -47,7 +47,7 @@ const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 let debugLog = {};
 debugLog = {...debugLog,
   isOn: () => useLogging,
-  isVisible: () => jql(`#jql_logger`).is(`:visible`), //isVisible(logBox()),
+  isVisible: () => jql(`#jql_logger`).is(`visible`),
   on: () => {
     logActive.on();
     setSystemLog.on();

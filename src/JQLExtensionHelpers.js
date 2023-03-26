@@ -54,17 +54,6 @@ const addHandlerId = instance => {
   instance.setData({hid: handleId});
   return `[data-hid="${handleId}"]`;
 };
-const isVisible = function (el) {
-  if (!el) { return false; }
-  const elStyle = el.style;
-  const computedStyle = getComputedStyle(el);
-  const invisible = [elStyle.visibility, computedStyle.visibility].includes("hidden");
-  const noDisplay = [elStyle.display, computedStyle.display].includes("none");
-  const offscreen = el.offsetTop < 0 || (el.offsetLeft + el.offsetWidth) < 0
-    || el.offsetLeft > document.body.offsetWidth;
-  const noOpacity = +computedStyle.opacity === 0 || +(elStyle.opacity || 1) === 0;
-  return !(offscreen || noOpacity || noDisplay || invisible);
-};
 const getAllDataAttributeValues = el => {
   const getKey = attr => attr.nodeName.slice(attr.nodeName.indexOf(`-`) + 1);
   const data = [...el.attributes]
@@ -116,7 +105,6 @@ function defaultStaticMethodsFactory(jql) {
 export {
   loop,
   hex2RGBA,
-  isVisible,
   addHandlerId,
   isHtmlString,
   isNode,

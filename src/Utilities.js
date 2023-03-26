@@ -1,3 +1,4 @@
+import jql from "../index.js";
 const characters4RandomString = [...Array(26)]
   .map((x, i) => String.fromCharCode(i + 65))
   .concat([...Array(26)].map((x, i) => String.fromCharCode(i + 97)))
@@ -51,6 +52,45 @@ const hex2RGBA = function (hex, opacity = 100) {
     parseInt(hex.slice(-2), 16)}${op ? `, ${opacity / 100}` : ""})`;
 };
 
+function ExamineElementFeatureFactory() {
+  const isVisible = function (el) {
+    if (!el) { return undefined; }
+    const elStyle = el.style;
+    const computedStyle = getComputedStyle(el);
+    const invisible = [elStyle.visibility, computedStyle.visibility].includes("hidden");
+    const noDisplay = [elStyle.display, computedStyle.display].includes("none");
+    const offscreen = el.offsetTop < 0 || (el.offsetLeft + el.offsetWidth) < 0
+      || el.offsetLeft > document.body.offsetWidth;
+    const noOpacity = +computedStyle.opacity === 0 || +(elStyle.opacity || 1) === 0;
+    return !(offscreen || noOpacity || noDisplay || invisible);
+  };
+  const isWritable = function(elem) {
+    return !!jql.nodes(`:is(:read-write)`, elem.parentNode).find(el => el === elem);
+  };
+  const isModal = function(elem) {
+    return !!jql.nodes(`:is(:modal)`, elem.parentNode).find(el => el === elem);
+  }
+  return elem => {
+    return {
+      get writable() {
+        return isWritable(elem);
+      },
+      get modal() {
+        return isModal(elem);
+      },
+      get open() {
+        return elem.open;
+      },
+      get visible() {
+        return isVisible(elem);
+      },
+      get disabled() {
+        return elem.hasAttribute("readonly") || elem.hasAttribute("disabled")
+      }
+    };
+  };
+}
+
 export {
   IS,
   randomString,
@@ -59,4 +99,5 @@ export {
   truncate2SingleStr,
   logTime,
   hex2RGBA,
+  ExamineElementFeatureFactory,
 };

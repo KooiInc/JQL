@@ -4,12 +4,13 @@ import {
   hex2RGBA,
   loop,
   addHandlerId,
-  isVisible,
   isNode,
   randomString,
   inject2DOMTree } from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
+import {ExamineElementFeatureFactory} from "./Utilities.js";
+const isIt = ExamineElementFeatureFactory();
 
 const empty = el => el && (el.textContent = "");
 const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
@@ -121,24 +122,16 @@ const allMethods = {
     getData: (self, dataAttribute, valueWhenFalsy) => self.first() &&
       self.first().dataset?.[dataAttribute] || valueWhenFalsy,
     isEmpty: self => self.collection.length < 1,
-    is: (self, checkValue) => {
-      const firstElem = self.first();
-
-      if (!firstElem) {
-        return true;
+    is: (self, isWhat) => {
+      if (!self.collection.length) {
+        return undefined;
       }
 
-      switch (checkValue) {
-        case ":visible": {
-          return isVisible(firstElem); // TODO
-        }
-        case ":hidden":
-          return !isVisible(firstElem);
-        case ":disabled":
-          return firstElem.getAttribute("readonly") || firstElem.getAttribute("disabled");
-        default:
-          return true;
+      if (!isWhat) {
+        return isIt(self[0]);
       }
+
+      return isIt(self[0])[isWhat.startsWith(`:`) ? isWhat.slice(1) : isWhat];
     },
     hasClass: (self, ...classNames) => {
       const firstElem = self.first();
