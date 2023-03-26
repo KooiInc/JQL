@@ -2,10 +2,6 @@ import { truncate2SingleStr, IS } from "./JQLExtensionHelpers.js";
 import cleanupTagInfo from "./HTMLTags.js";
 import {ATTRS} from "./EmbedResources.js";
 let logElementCreationErrors2Console = false;
-const allowUnknownHtmlTags = {
-  on: () => cleanupTagInfo.lenient = true,
-  off: () => cleanupTagInfo.lenient = false,
-};
 const attrRegExpStore = {
   data: /data-[\-\w.\p{L}]/ui, // data-* minimal 1 character after dash
   validURL: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
@@ -62,7 +58,6 @@ const getRestricted = emphasizeTag =>
       !value.allowed &&
       [...acc, (emphasizeTag && key === emphasizeTag ? emphasize(key) : key)] ||
       acc, []);
-const setTagPermission = cleanupTagInfo.setTagPermission;
 const logElementCreationErrors = onOff => logElementCreationErrors2Console = onOff;
 
-export { cleanupHtml, getRestricted, setTagPermission, allowUnknownHtmlTags, logElementCreationErrors, };
+export { cleanupHtml, getRestricted, logElementCreationErrors, };

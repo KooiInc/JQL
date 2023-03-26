@@ -30,7 +30,7 @@ const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .replace(/\s{2,}/g, ` `)
   .replace(/\n/g, `\\n`) + (str.length > maxLength ? ` &hellip;` : ``).trim();
 const toDashedNotation = str2Convert =>str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`).replace(/^-|-$/, ``);
-const IS = (obj, ...shouldBe) => {
+const IS = (obj, ...shouldBe) => { /*NODOC*/
   if (shouldBe.length > 1) { return ISOneOf(obj, ...shouldBe); }
   shouldBe = shouldBe.shift();
   const self = obj === 0 ? Number : obj === `` ? String : !obj ? {name: invalid} :

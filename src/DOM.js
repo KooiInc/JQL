@@ -1,8 +1,6 @@
 import {
   cleanupHtml,
-  getRestricted,
-  setTagPermission,
-  allowUnknownHtmlTags } from "./DOMCleanup.js";
+  getRestricted, } from "./DOMCleanup.js";
 import { truncateHtmlStr, IS } from "./JQLExtensionHelpers.js";
 const insertPositions = {
   BeforeBegin: "beforebegin",
@@ -47,10 +45,8 @@ const createElementFromHtmlString = htmlStr => {
 
 export {
   getRestricted,
-  setTagPermission,
   createElementFromHtmlString,
   element2DOM,
   cleanupHtml,
-  allowUnknownHtmlTags,
   insertPositions,
 };

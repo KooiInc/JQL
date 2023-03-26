@@ -4,6 +4,7 @@ import allMethods from "./JQLMethods.js";
 import PopupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import styleFactory from "../LifeCSS/index.js";
+import tagLib from "./HTMLTags.js";
 import { randomString, toDashedNotation, IS, truncateHtmlStr,
   truncate2SingleStr, logTime, hex2RGBA, } from "./Utilities.js";
 const exts = allMethods.instanceExtensions;
@@ -92,6 +93,9 @@ function defaultStaticMethodsFactory(jql) {
     setStyle: editCssRule,
     delegate,
     virtual,
+    allowTag: tagLib.allowTag,
+    prohibitTag: tagLib.prohibitTag,
+    lenient: () => tagLib.allowUnknownHtmlTags,
     IS,
     popup: () => PopupFactory(jql),
     createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
