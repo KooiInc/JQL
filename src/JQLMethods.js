@@ -9,7 +9,7 @@ import {
   inject2DOMTree } from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
-import {ExamineElementFeatureFactory} from "./Utilities.js";
+import {ExamineElementFeatureFactory, toDashedNotation} from "./Utilities.js";
 const isIt = ExamineElementFeatureFactory();
 
 const empty = el => el && (el.textContent = "");
@@ -89,7 +89,15 @@ const allMethods = {
       }
 
       if (IS(keyOrKvPairs, Object)) {
-        Object.entries(keyOrKvPairs).forEach(([key, value]) => el.style[key] = value);
+        Object.entries(keyOrKvPairs).forEach(([key, value]) => {
+          let priority;
+          if (/!important/i.test(value)) {
+            value = value.slice(0, value.indexOf(`!`)).trim();
+            priority = 'important';
+          }
+
+          el.style.setProperty(toDashedNotation(key), value, priority)
+        } );
       }
     },
     css,
