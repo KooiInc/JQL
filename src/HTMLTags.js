@@ -12,6 +12,6 @@ export default {
     const tag = allTags[nodeName];
     return !!tag;
   },
-  allowTag(tag) { allTags[tag.toLowerCase()] = true; },
-  prohibitTag(tag) { allTags[tag.toLowerCase()] = false; }
+  allowTag: tag2Allow => allTags[tag2Allow.toLowerCase()] = true,
+  prohibitTag: tag2Prohibit => allTags[tag.toLowerCase()] = false,
 };
