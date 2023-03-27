@@ -188,10 +188,10 @@ popup.createTimed(`Page done, enjoy 😎!`, 2);
 function modalDemo() {
   const closeBttn = $$(`<button id="modalCloseTest">Close me</button>`)
     .css({marginTop: `0.5rem`})
-    .delegate(`click`, `#modalCloseTest`, () => popup.removeModal());
+    .on(`click`, () => popup.removeModal());
   const tryOpenAnotherBttn =  $$(`<button id="secondModalTest">Try to open another popup</button>`)
     .css({marginTop: `0.5rem`})
-    .delegate(`click`, `#secondModalTest`, _ => popup.create(`No. You can't`));
+    .on(`click`, _ => popup.create(`No. You can't`));
   popup.create(`
     <p>
       Hi. This box is <i>really</i> modal.

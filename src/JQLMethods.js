@@ -1,7 +1,6 @@
 import {createElementFromHtmlString, insertPositions} from "./DOM.js";
 import {
   IS,
-  hex2RGBA,
   loop,
   addHandlerId,
   isNode,
