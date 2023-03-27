@@ -54,6 +54,19 @@ const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
     }
   });
 };
+const applyStyle = (el, rules) => {
+  if (IS(rules, Object)) {
+    Object.entries(rules).forEach(([key, value]) => {
+      let priority;
+      if (/!important/i.test(value)) {
+        value = value.slice(0, value.indexOf(`!`)).trim();
+        priority = 'important';
+      }
+
+      el.style.setProperty(toDashedNotation(key), value, priority)
+    } );
+  }
+}
 const allMethods = {
   straigthLoops: {
     toggleClass: (el, className) => el.classList.toggle(className),
@@ -66,41 +79,24 @@ const allMethods = {
     },
     removeClass: (el, ...classNames) => classNames.forEach(cn => el.classList.remove(cn)),
     addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
-    show: el => el.style.display = `revert-layer`,
-    hide: el => el.style.display = `none`,
+    show: el => applyStyle(el, {display: `revert-layer !important`}),
+    hide: el => applyStyle(el, {display: `none !important`}),
     setData: setData,
     style: (el, keyOrKvPairs, value) => {
       if (value && IS(keyOrKvPairs, String)) {
         keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
       }
 
-      if (IS(keyOrKvPairs, Object)) {
-        Object.entries(keyOrKvPairs).forEach(([key, value]) => {
-          let priority;
-          if (/!important/i.test(value)) {
-            value = value.slice(0, value.indexOf(`!`)).trim();
-            priority = 'important';
-          }
-
-          el.style.setProperty(toDashedNotation(key), value, priority)
-        } );
-      }
+      applyStyle(el, keyOrKvPairs);
     },
     css,
   },
   instanceExtensions: {
     text: (self, textValue, append = false) => {
-      if (self.isEmpty()) {
-        return self;
-      }
-
-      const cb = el => el.textContent = append ? el.textContent + textValue : textValue;
-
-      if (!IS(textValue, String)) {
-        return self.first().textContent;
-      }
-
-      return loop(self, cb);
+      if (self.isEmpty()) { return self; }
+      if (!IS(textValue, String)) { return self.first().textContent; }
+      const loopCollectionLambda = el => el.textContent = append ? el.textContent + textValue : textValue;
+      return loop(self, loopCollectionLambda);
     },
     each: (self, cb) => loop(self, cb),
     remove: (self, selector) => {
