@@ -94,6 +94,9 @@ function ExamineElementFeatureFactory() {
       get empty() {
         return self.collection.length < 1;
       },
+      get virtual() {
+        return self.isVirtual;
+      }
     } : noElements;
   };
 }
