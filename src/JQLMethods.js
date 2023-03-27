@@ -57,20 +57,6 @@ const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
 const allMethods = {
   straigthLoops: {
     toggleClass: (el, className) => el.classList.toggle(className),
-    toggleStyleFragments: (/*NODOC*/ el, keyValuePairs) =>
-      el && Object.entries(keyValuePairs).forEach(([key, value]) => {
-        if (IS(value, Function)) {
-          value = value(el);
-        }
-
-        if (/color/i.test(key)) {
-          value = value.startsWith(`#`)
-            ? hex2RGBA(value)
-            : value.replace(/(,|,\s{2,})(\w)/g, (...args) => `, ${args[2]}`);
-        }
-
-        el.style[key] = `${el.style[key]}` === `${value}` ? "" : value;
-      }),
     removeAttr: (el, name) => el && el.removeAttribute(name),
     empty,
     clear:  empty,
