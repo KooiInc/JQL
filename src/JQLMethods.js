@@ -68,6 +68,7 @@ const applyStyle = (el, rules) => {
 const allMethods = {
   factoryExtensions: {
     is: self => featured(self),
+    length: self => self.collection.length,
   },
   instanceExtensions: {
     isEmpty: self => self.collection.length < 1,
