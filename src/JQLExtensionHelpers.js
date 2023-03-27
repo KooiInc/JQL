@@ -7,8 +7,8 @@ import styleFactory from "../LifeCSS/index.js";
 import tagLib from "./HTMLTags.js";
 import { randomString, toDashedNotation, IS, truncateHtmlStr,
   truncate2SingleStr, logTime, hex2RGBA, } from "./Utilities.js";
-const exts = allMethods.instanceExtensions;
-const loops = allMethods.straigthLoops;
+const instanceMethods = allMethods.instanceExtensions;
+const instanceGetters = allMethods.factoryExtensions;
 const isCommentOrTextNode = elem => IS(elem, Comment, Text);
 const isNode = input => IS(input, Text, HTMLElement, Comment);
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
@@ -37,8 +37,16 @@ const loop = (instance, callback) => {
 };
 const proxify = instance => {
   const runExt = method => (...args) => IS(method, Function) && method(proxify(instance), ...args);
-  const runLoop = method => (...args) => IS(method, Function) && loop(proxify(instance), el => method(el, ...args));
-  const check = name => loops[name] && runLoop(loops[name]) || exts[name] && runExt(exts[name]);
+  const runGet = method => (...args) => {
+    if (IS(method, Function)) {
+      return { tmpKey: method(proxify(instance), ...args) };
+    }
+    return { tmpKey: undefined };
+  };
+  const check = name => {
+    if (instanceGetters[name]) { return runGet(instanceGetters[name])().tmpKey;  }
+    return instanceMethods[name] && runExt(instanceMethods[name]);
+  }
   const proxyMe = { get: (obj, name) => check(name) ?? (/^\d+$/.test(`${name}`) ? obj.collection?.[name] : obj[name]) };
   return new Proxy( instance, proxyMe );
 };

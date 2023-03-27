@@ -11,7 +11,6 @@ import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
 import {ExamineElementFeatureFactory, toDashedNotation} from "./Utilities.js";
 const isIt = ExamineElementFeatureFactory();
-
 const empty = el => el && (el.textContent = "");
 const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
 const setData = (el, keyValuePairs) => {
@@ -19,10 +18,7 @@ const setData = (el, keyValuePairs) => {
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
 };
 const checkProp = prop => ATTRS.html.find(attr => prop === attr);
-
 const css = (el, keyOrKvPairs, value) => {
-  const { editCssRule } = jql;
-
   if (value && IS(keyOrKvPairs, String)) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
   }
@@ -36,7 +32,7 @@ const css = (el, keyOrKvPairs, value) => {
 
   const classExists = ([...el.classList].find(c => c.startsWith(`JQLClass-`) || nwClass && c === nwClass));
   nwClass = classExists || nwClass || `JQLClass-${randomString().slice(1)}`;
-  editCssRule(`.${nwClass}`, keyOrKvPairs);
+  jql.editCssRule(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
 const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
@@ -54,6 +50,7 @@ const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
     }
   });
 };
+const featured = self => /*NODOC*/ isIt(self);
 const applyStyle = (el, rules) => {
   if (IS(rules, Object)) {
     Object.entries(rules).forEach(([key, value]) => {
@@ -66,38 +63,45 @@ const applyStyle = (el, rules) => {
       el.style.setProperty(toDashedNotation(key), value, priority)
     } );
   }
-}
-const allMethods = {
-  straigthLoops: {
-    toggleClass: (el, className) => el.classList.toggle(className),
-    removeAttr: (el, name) => el && el.removeAttribute(name),
-    empty,
-    clear:  empty,
-    replaceClass: (el, className, ...nwClassNames) => {
-      el.classList.remove(className);
-      nwClassNames.forEach(name => el.classList.add(name))
-    },
-    removeClass: (el, ...classNames) => classNames.forEach(cn => el.classList.remove(cn)),
-    addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
-    show: el => applyStyle(el, {display: `revert-layer !important`}),
-    hide: el => applyStyle(el, {display: `none !important`}),
-    setData: setData,
-    style: (el, keyOrKvPairs, value) => {
-      if (value && IS(keyOrKvPairs, String)) {
-        keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
-      }
+};
 
-      applyStyle(el, keyOrKvPairs);
-    },
-    css,
+const allMethods = {
+  factoryExtensions: {
+    is: self => featured(self),
   },
   instanceExtensions: {
+    isEmpty: self => self.collection.length < 1,
+    replaceClass: (self, className, ...nwClassNames) =>
+      loop( self, el => {
+        el.classList.remove(className);
+        nwClassNames.forEach(name => el.classList.add(name));
+      } ),
+    removeClass: (self, ...classNames) => loop(self, el => el && classNames.forEach(cn => el.classList.remove(cn))),
+    addClass: (self, ...classNames) => loop(self, el => el && classNames.forEach(cn => el.classList.add(cn))),
+    setData: (self, keyValuePairs) => loop(self, el => setData(el, keyValuePairs)),
+    show: self => loop(self, el => applyStyle(el, {display: `revert-layer !important`})),
+    hide: self => loop(self, el => applyStyle(el, {display: `none !important`})),
+    empty: self => loop(self, empty),
+    clear: self => loop(self, empty),
+    style: (self, keyOrKvPairs, value) => {
+      const loopCollectionLambda = el => {
+        if (value && IS(keyOrKvPairs, String)) {
+           keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
+        }
+
+        applyStyle(el, keyOrKvPairs);
+      };
+      return loop(self, loopCollectionLambda);
+    },
+    toggleClass: (self, className) => loop(self, el => el.classList.toggle(className)),
+    css: (self, keyOrKvPairs, value) => loop(self, el => css(el, keyOrKvPairs, value)),
     text: (self, textValue, append = false) => {
       if (self.isEmpty()) { return self; }
       if (!IS(textValue, String)) { return self.first().textContent; }
       const loopCollectionLambda = el => el.textContent = append ? el.textContent + textValue : textValue;
       return loop(self, loopCollectionLambda);
     },
+    removeAttribute: (self, attrName) => loop(self, el => el.removeAttribute(attrName)),
     each: (self, cb) => loop(self, cb),
     remove: (self, selector) => {
       const remover = el => el.remove();
@@ -111,18 +115,6 @@ const allMethods = {
     computedStyle: (self, property) => self.first() && getComputedStyle(self.first())[property],
     getData: (self, dataAttribute, valueWhenFalsy) => self.first() &&
       self.first().dataset?.[dataAttribute] || valueWhenFalsy,
-    isEmpty: self => self.collection.length < 1,
-    is: (self, isWhat) => {
-      if (!self.collection.length) {
-        return undefined;
-      }
-
-      if (!isWhat) {
-        return isIt(self[0]);
-      }
-
-      return isIt(self[0])[isWhat.startsWith(`:`) ? isWhat.slice(1) : isWhat];
-    },
     hasClass: (self, ...classNames) => {
       const firstElem = self.first();
       return self.isEmpty() || !firstElem.classList.length

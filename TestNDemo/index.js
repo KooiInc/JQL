@@ -15,7 +15,7 @@ const apiLinkPrefix = `//kooi.dev/JQLDoc/`;
 
 // Some methods used in handler delegates
 const logActivation = (logBttn, active = true) => {
-  if (!logBttn.isEmpty()) {
+  if (!logBttn.is.empty) {
     logBttn.setData({on: +active});
     debugLog[active ? `show` : `hide`]();
   }
@@ -297,7 +297,7 @@ async function injectCode() {
 
 function showStyling(styleId, bttn) {
   const theStyle = $(`style#${styleId}`);
-  if (theStyle.isEmpty()) { return; }
+  if (theStyle.is.empty) { return; }
   const getMediaRuleSelector = rule => rule.cssText.split(/\{/).shift().trim();
   const rules = theStyle[0].sheet.cssRules;
   const mapRule = (rule, selector) => `${selector} {\n  ${

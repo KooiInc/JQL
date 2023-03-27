@@ -53,7 +53,7 @@ const hex2RGBA = function (hex, opacity = 100) {
 };
 
 function ExamineElementFeatureFactory() {
-  const isVisible = function (el) {
+  const isVisible = function(el) {
     if (!el) { return undefined; }
     const elStyle = el.style;
     const computedStyle = getComputedStyle(el);
@@ -69,25 +69,32 @@ function ExamineElementFeatureFactory() {
   };
   const isModal = function(elem) {
     return !!jql.nodes(`:is(:modal)`, elem.parentNode).find(el => el === elem);
-  }
-  return elem => {
-    return {
+  };
+  const notApplicable = `n/a`;
+  const noElements = { writable: notApplicable, modal: notApplicable, empty: true, open: notApplicable, visible: notApplicable, };
+
+  return self => {
+    const firstElem = self[0];
+    return firstElem ? {
       get writable() {
-        return isWritable(elem);
+        return isWritable(firstElem);
       },
       get modal() {
-        return isModal(elem);
+        return isModal(firstElem);
       },
       get open() {
-        return elem.open;
+        return firstElem.open;
       },
       get visible() {
-        return isVisible(elem);
+        return isVisible(firstElem);
       },
       get disabled() {
-        return elem.hasAttribute("readonly") || elem.hasAttribute("disabled")
-      }
-    };
+        return firstElem.hasAttribute("readonly") || firstElem.hasAttribute("disabled")
+      },
+      get empty() {
+        return self.collection.length < 1;
+      },
+    } : noElements;
   };
 }
 
