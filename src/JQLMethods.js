@@ -68,6 +68,7 @@ const allMethods = {
   factoryExtensions: {
     is: self => featured(self),
     length: self => self.collection.length,
+    dimensions: self => self.first()?.getBoundingClientRect(),
   },
   instanceExtensions: {
     isEmpty: self => self.collection.length < 1,
@@ -370,7 +371,6 @@ const allMethods = {
       }
       return self;
     },
-    dimensions: self => self.first()?.getBoundingClientRect(),
     trigger: (self, evtType, SpecifiedEvent = Event, options = {}) => {
       if (self.collection.length) {
         const evObj = new SpecifiedEvent( evtType, { ...options, bubbles: options.bubbles??true} );
