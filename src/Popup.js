@@ -59,19 +59,19 @@ function PopupFactory($) {
     modalWarner.setData({warn: 0});
   };
   const activate = (theBox, closeHndl) => {
+    scrollTo(savedPosition.x, savedPosition.y);
+    const scrTop = savedPosition.y;
     $(`.between, .popupContainer`).addClass(`active`);
-    const scrTop = $(`html`)[0].scrollTop;
     between.style( { top: `${scrTop}px` } );
     const boxTop = scrTop + (0.5 * between[0].offsetHeight);
     popupBox.style( { height: `auto`, width: `auto`, top: `${ boxTop }px` } );
     wrappedBody.addClass(`popupActive`);
 
-    if (closeHndl) {
-      closeHndl.addClass(`active`);
-    }
+    if (closeHndl) { closeHndl.addClass(`active`); }
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
   const doCreate = ({message, isModal, callback, modalWarning}) => {
+    savedPosition = { x: scrollX, y: scrollY };
     currentModalState.isModal = {state: isModal ?? false};
     savedCallback = callback;
 
@@ -81,9 +81,11 @@ function PopupFactory($) {
     }
 
     if (!message.isJQL && !IS(message, String)) {
-      return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);    }
+      return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);
+    }
 
     endTimer();
+
     $(`[data-modalcontent]`).clear().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     return activate(popupBox, currentModalState.isModal ? undefined : closer);
   };
