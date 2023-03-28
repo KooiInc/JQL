@@ -109,8 +109,8 @@ function defaultStaticMethodsFactory(jql) {
     createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
     removeCssRule: rule => editCssRule(rule, {removeRule: 1}),
     text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-    node: (selector, root = documentHtmlElement) => root.querySelector(selector, root),
-    nodes: (selector, root = documentHtmlElement) => [...root.querySelectorAll(selector, root)],
+    node: (selector, root = document) => root.querySelector(selector, root),
+    nodes: (selector, root = document) => [...root.querySelectorAll(selector, root)],
   };
 }
 
