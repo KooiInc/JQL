@@ -10,4 +10,4 @@ The module is written in a <i>classfree object oriented</i> fashion, inspired by
 Documentation can be found @[kooiinc.github.io/JQL/Docs/](https://kooiinc.github.io/JQL/Docs/).
 
 ## Demo and test
-A test and demo of this module can be found [here](https://kooi.dev/JQLDemo/).
+A test and demo of this module can be found @[kooiinc.github.io/JQL/TestNDemo](https://kooiinc.github.io/JQL/TestNDemo/).

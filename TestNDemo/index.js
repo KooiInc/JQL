@@ -11,7 +11,7 @@ const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 
 // activate logging all JQL events (hidden)
 debugLog.on().toConsole.off().hide();
-const apiLinkPrefix = `//kooi.dev/JQLDoc/`;
+const apiLinkPrefix = `//github.com/KooiInc/JQL`;
 
 // Some methods used in handler delegates
 const logActivation = (logBttn, active = true) => {
@@ -114,10 +114,10 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
         popup.create( $(`
           <p>
             The repository can be found  @${
-          createExternalLink(`https://github.com/KooiInc/JQL`,
+          createExternalLink(`${apiLinkPrefix}`,
             `github.com/KooiInc/JQL`).outerHtml()}<br>
             The documentation resides @${
-          createExternalLink(apiLinkPrefix, `kooi.dev/JQLDoc`).outerHtml()}
+          createExternalLink(`//kooiinc.github.io/JQL/Docs`, `kooiinc.github.io/JQL/Docs`).outerHtml()}
           </p>`));
       }
     )])
