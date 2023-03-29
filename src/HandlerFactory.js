@@ -17,7 +17,7 @@ export default () => {
 
   const addListenerIfNotExisting = (eventType, capture) => {
     if (!handlers[eventType]) {
-      document.addEventListener(eventType, metaHandler, getCapture(eventType));
+      addEventListener(eventType, metaHandler, getCapture(eventType));
     }
   };
 
