@@ -111,14 +111,16 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
   $$(`<button>Modal popup demo</button`).on(`click`, modalDemo),
   $$(`<button>Github</button>`)
     .on(`click`, () => {
-        popup.create( $(`
+        popup.show({
+         content: $$(`
           <p>
             The repository can be found  @${
           createExternalLink(`${apiLinkPrefix}`,
             `github.com/KooiInc/JQL`).outerHtml()}<br>
             The documentation resides @${
           createExternalLink(`//kooiinc.github.io/JQL/Docs`, `kooiinc.github.io/JQL/Docs`).outerHtml()}
-          </p>`));
+          </p>`) }
+        );
       }
     )])
   .appendTo(JQLRoot);
@@ -183,31 +185,31 @@ $$(`<div>code used in this example (index.js)</div>`)
 // append actual code to document
 injectCode().then(_ => Prism.highlightAll());
 
-popup.createTimed(`Page done, enjoy 😎!`, 2);
+popup.show({content: `Page done, enjoy 😎!`, closeAfter: 2 });
 
 function modalDemo() {
+  const callbackAfterClose = () => popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
   const closeBttn = $$(`<button id="modalCloseTest">Close me</button>`)
-    .css({marginTop: `0.5rem`})
-    .on(`click`, () => popup.removeModal());
-  const tryOpenAnotherBttn =  $$(`<button id="secondModalTest">Try to open another popup</button>`)
-    .css({marginTop: `0.5rem`})
-    .on(`click`, _ => popup.create(`No. You can't`));
-  popup.create(`
-    <p>
-      Hi. This box is <i>really</i> modal.
-      <br>There is no close icon and clicking outside this box does nothing.
-      <br>In other words: you can only close this using the button below.
-      <br>Also, while this popup is open, you can't open another (second button
-        or click outside the popup).
-      <br>${closeBttn.outerHtml()} ${tryOpenAnotherBttn.outerHtml()}
-    </p>`, true, () => popup.createTimed(`Modal closed, you're ok, bye.`, 2),
-    `There's only 1 escape`);
+    .css({marginTop: `0.5rem`}).on(`click`, () => popup.removeModal());
+  popup.show({
+      content: `
+        <p>
+          Hi. This box is <i>really</i> modal.
+          <br>There is no close icon and clicking outside this box does nothing.
+          <br>In other words: you can only close this using the button below.
+          <br>Also, while this popup is open, you can't open another (second button
+            or click outside the popup).
+          <br>${closeBttn.outerHtml()}
+        </p>`,
+      modal: true,
+      callback: callbackAfterClose,
+      warnMessage: `There's only 1 escape`
+  });
 }
 
 // create a few style rules in <style id="JQLCreatedCSS">
 function initStyling() {
-  const setStyleRule = $.setStyle;
-  styleRules().forEach(rule => setStyleRule(rule));
+  styleRules().forEach(rule => $.editCssRule(rule));
 }
 
 // create a few delegated handler methods
@@ -235,8 +237,8 @@ function getDelegates4Document() {
       }, {
         target: `#showComments`,
         handlers: [
-          _ => popup.create(`<h3>*All Comments in this document:</h3>${
-            allComments([...document.childNodes]).join(``)}`), ]
+          _ => popup.show({content: `<h3>*All Comments in this document:</h3>${
+            allComments([...document.childNodes]).join(``)}` }), ]
       }, {
         target: `.codeVwr`,
         handlers: [
@@ -318,8 +320,8 @@ function showStyling(styleId, bttn) {
       : `${mapRule(rule, selectr)}`;
   }
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
-  return popup.create($$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
-    .prepend($$(`<p/>`).append(bttn)));
+  return popup.show({ content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
+    .prepend($$(`<p/>`).append(bttn)) });
 }
 
 function styleRules() {
