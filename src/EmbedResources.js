@@ -1,3 +1,4 @@
+const svgImg = `url('data:image/svg+xml\\3butf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20version%3D%221.1%22%20id%3D%22Layer_1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%20128%20128%22%20style%3D%22enable-background%3Anew%200%200%20128%20128%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Crect%20x%3D%22-368%22%20y%3D%226%22%20style%3D%22display%3Anone%3Bfill%3A%23E0E0E0%3B%22%20width%3D%22866%22%20height%3D%221018%22%2F%3E%3Ccircle%20style%3D%22fill%3A%23FFFFFF%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2248%22%2F%3E%3Ccircle%20style%3D%22fill%3A%238CCFB9%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2239%22%2F%3E%3Ccircle%20style%3D%22fill%3Anone%3Bstroke%3A%23444B54%3Bstroke-width%3A6%3Bstroke-miterlimit%3A10%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2248%22%2F%3E%3Cpolyline%20style%3D%22fill%3Anone%3Bstroke%3A%23FFFFFF%3Bstroke-width%3A6%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%22%20points%3D%2242%2C69%2055.55%2C81%20%20%2086%2C46%20%22%2F%3E%3C%2Fsvg%3E')`;
 let logStyling = getLogStyling();
 let popupStyling = getPopupStyling();
 const ATTRS = getAttrs();
@@ -29,21 +30,15 @@ function getLogStyling() {
 }
 
 function getPopupStyling() {
-  const svgImg = `url('data:image/svg+xml\\3butf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20version%3D%221.1%22%20id%3D%22Layer_1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%20128%20128%22%20style%3D%22enable-background%3Anew%200%200%20128%20128%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Crect%20x%3D%22-368%22%20y%3D%226%22%20style%3D%22display%3Anone%3Bfill%3A%23E0E0E0%3B%22%20width%3D%22866%22%20height%3D%221018%22%2F%3E%3Ccircle%20style%3D%22fill%3A%23FFFFFF%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2248%22%2F%3E%3Ccircle%20style%3D%22fill%3A%238CCFB9%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2239%22%2F%3E%3Ccircle%20style%3D%22fill%3Anone%3Bstroke%3A%23444B54%3Bstroke-width%3A6%3Bstroke-miterlimit%3A10%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2248%22%2F%3E%3Cpolyline%20style%3D%22fill%3Anone%3Bstroke%3A%23FFFFFF%3Bstroke-width%3A6%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%22%20points%3D%2242%2C69%2055.55%2C81%20%20%2086%2C46%20%22%2F%3E%3C%2Fsvg%3E')`;
   return [
-    ".popupContainer{top:50%;left:50%;transform:translate(-50%, -50%);position:absolute;max-width:40vw;max-height:40vh;opacity:0;border:1px solid transparent;display:flex;flex-direction:row-reverse;}",
-    ".popupContainer.active{z-index:10;opacity:1;resize:vertical;}",
-    "body.popupActive{overflow:hidden;transition:all 0.6s linear 0s;}",
-    ".between{position:absolute;z-index:-1;overflow:hidden;width:0px;height:0px;left:-10000px;background:transparent;}",
-    ".between.active{height:100%;width:100%;z-index:9;left:0;right:0;background:rgba(0, 0, 0, 0.1);transition:background-color 0.4s ease-in 0s;}",
-    ".popupBox{min-width:150px;max-width:inherit;max-height:inherit;background-color:white;box-shadow:rgb(119, 119, 119) 3px 2px 12px;border-radius:6px;overflow:auto;font:12px / 15px Verdana, Arial, sans-serif;min-height:1.5rem;z-index:10;padding:0.4rem;}",
-    "[data-modalcontent]{padding:0.5rem;min-height:1rem;vertical-align:middle;}",
-    "@media screen and (width < 1200px){.popupContainer{max-width:75vw;max-height:40vh;}}",
-    "@media screen and (width < 640px){.popupContainer{max-width:90vw;max-height:60vh;}}",
-    "#modalWarning{color:red;background-color:rgb(255, 255, 240);font-weight:bold;border:3px solid red;padding:1rem;margin:0px auto 0.5em;text-align:center;opacity:0;max-height:0px;position:absolute;box-shadow:rgb(153, 153, 153) 2px 2px 8px;transition:all 0.5s ease 0s;top:50%;left:50%;transform:translate(-50%, -50%);}",
-    "#modalWarning.active:after{content:'Requires action first!';}",
-    "#modalWarning.active{opacity:1;max-height:100%;max-width:100%;height:auto;z-index:12;}",
-    `.closeHandleIcon{opacity:0;z-index:-1;cursor:pointer;width:32px;height:32px;background:${svgImg} no-repeat;}`,
-    ".closeHandleIcon.active{z-index:12;opacity:1;position:absolute;margin-right:-16px;margin-top:-16px;};"
+    ".popupContainer{position:fixed;inset:-100px;opacity:0;height:0;width:0;background:rgba(0,0,0,0.1);transition:opacity 0.6s ease-in-out 0s;}",
+    ".popupContainer.active{opacity:1;inset:0;height:auto;width:auto;}",
+    ".popupContainer .content{box-shadow:rgba(0,0,0,0.5) 2px 2px 8px;border-radius:3px;min-width:125px;max-width:40vw;max-height:40vh;padding:8px;overflow:auto;background:#FFF;opacity:1;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}",
+    ".popupContainer .content .warn{position:relative;padding:3px 8px 0 8px;color:red;border-top:1px dashed rgb(0,0,0);margin:6px -8px -4px -8px;text-align:center;display:none;}",
+    ".popupContainer .content.warnActive .warn{display:block;}",
+    `.closeHandleIcon{z-index:1;position:absolute;opacity:0;cursor:pointer;width:32px;height:32px;background:${svgImg} no-repeat;}`,
+    ".closeHandleIcon.active{opacity:1;}",
+    "@media screen and (width < 1200px){.popupContainer .content{max-width:75vw;}}",
+    "@media screen and (width < 640px){.popupContainer .content{max-width:90vw;max-height:60vw;}}",
   ];
 }

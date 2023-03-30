@@ -1,124 +1,117 @@
-import {IS} from "./JQLExtensionHelpers.js";
-import {popupStyling} from "./EmbedResources.js";
-export default PopupFactory;
+import { popupStyling } from "./EmbedResources.js";
+export default newPopupFactory;
 
-function PopupFactory($) {
-  let savedPosition = 0;
-  const wrappedBody = $(document.body);
-  const setStyle = $.createStyle(`JQLPopupCSS`);
-  initStyling(setStyle);
-  let savedTimer, savedCallback;
-  const clickOrTouch =  "ontouchstart" in document.documentElement ? "touchend" : "click";
-  const remove = (/*NODOC*/evtOrCallback) => {
-    if (currentModalState.isActive) { return; }
-    endTimer();
-    const callback = IS(evtOrCallback, Function) ? evtOrCallback : savedCallback;
-    deActivate();
-    const time2Wait = parseFloat(popupBox.computedStyle(`transitionDuration`)) * 1000;
-    savedTimer = setTimeout(() => wrappedBody.removeClass(`popupActive`), time2Wait);
-
-    if (IS(callback, Function)) {
-      savedCallback = undefined;
-      return callback();
-    }
+function newPopupFactory($) {
+  let isModal = false;
+  let callbackOnClose = false;
+  let modalWarning = ``;
+  const warnQ = `.popupContainer .content .warn`;
+  const warnTemplate = $.virtual(`<div class="warn"></div>`);
+  setStyling();
+  const popupContainer = $(`
+    <div class="popupContainer">
+      <span class="closeHandleIcon"></span>
+      <div class="content"></div>
+    </div>`);
+  const txtBox = $(`.popupContainer .content`).append(warnTemplate.duplicate());
+  const closer = $(`.popupContainer .closeHandleIcon`);
+  const positionCloser = () => {
+    if (!closer.hasClass(`active`)) { return; }
+    const {x, y, width} = txtBox.dimensions;
+    closer.style({top: `${y - 16}px`, left: `${x + width - 16}px`});
   };
-  $.delegate( clickOrTouch, `#closer, .between`,  remove );
-  const stillOpen = () => {
-    endTimer();
-
-    if (modalWarner.getData(`warn`) === "1") {
-      modalWarner.hasClass(`active`) && modalWarner.removeClass(`active`);
-      modalWarner.addClass(`active`);
-    }
-
-    savedTimer = setTimeout(() => modalWarner.removeClass(`active`), 2500);
-    return true;
-  }
-  const currentModalState = (() =>{
-    let currentPopupIsModal = false;
-    return {
-      set isModal({state = false}) { currentPopupIsModal = state; },
-      get isModal() { return currentPopupIsModal; },
-      get isActive() { return currentPopupIsModal && popupBox.hasClass(`active`) && stillOpen() },
-    };
-  })();
-  const createElements = _ => {
-    const popupBox = $(`<div class="popupContainer">`)
-      .append( $(`<span id="closer" class="closeHandleIcon"></span>`)
-        .prop(`title`, `Click here or anywhere outside the box to close`))
-      .append(`<div class="popupBox"><div id="modalWarning" data-warn="0"></div><div data-modalcontent></div></div>`);
-    const closer = $(`#closer`);
-    const between = $(`<div class="between"></div>`);
-    return [popupBox, between, closer, $(`#modalWarning`)];
+  const setPopupZIndex = maxDocumentZIndex => {
+    popupContainer.style({zIndex: maxDocumentZIndex + 10});
+    closer.style({zIndex: maxDocumentZIndex + 11});
   };
-  const [popupBox, between, closer, modalWarner] = createElements();
-  const deActivate = () => {
-    $(`.between`).removeClass(`active`).style({top: 0});
-    $(`#closer, .popupContainer, #modalWarning`).removeClass(`active`);
-    $(`[data-modalcontent]`).clear();
-    modalWarner.setData({warn: 0});
+  const isValidOrigin = origin => !origin.closest(`.content`) &&
+    origin.closest(`.popupContainer, .closeHandleIcon`);
+  const warn = () => {
+    modalWarning && $(warnQ).text(``).append($(`<div>${modalWarning}</div>`));
+    txtBox.addClass(`warnActive`);
   };
-  const activate = (theBox, closeHndl) => {
-    scrollTo(savedPosition.x, savedPosition.y);
-    const scrTop = savedPosition.y;
-    $(`.between, .popupContainer`).addClass(`active`);
-    between.style( { top: `${scrTop}px` } );
-    const boxTop = scrTop + (0.5 * between[0].offsetHeight);
-    popupBox.style( { height: `auto`, width: `auto`, top: `${ boxTop }px` } );
-    wrappedBody.addClass(`popupActive`);
-
-    if (closeHndl) { closeHndl.addClass(`active`); }
+  const modalRemover = () => {
+    isModal = false;
+    remove(closer[0]);
   };
-  const endTimer = () => savedTimer && clearTimeout(savedTimer);
-  const doCreate = ({message, isModal, callback, modalWarning}) => {
-    savedPosition = { x: scrollX, y: scrollY };
-    currentModalState.isModal = {state: isModal ?? false};
-    savedCallback = callback;
 
-    if (isModal && IS(modalWarning, String)) {
-      setStyle(`#modalWarning.active:after{content:"${modalWarning}";}`);
-      modalWarner.setData({warn: 1});
-    }
-
-    if (!message.isJQL && !IS(message, String)) {
-      return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);
-    }
-
-    endTimer();
-
-    $(`[data-modalcontent]`).clear().append( message.isJQL ? message : $(`<div>${message}</div>`) );
-    return activate(popupBox, currentModalState.isModal ? undefined : closer);
-  };
-  const create = (message, isModalOrCallback, modalCallback, modalWarning) => {
-    if (currentModalState.isActive) { return; }
-
-    if (IS(isModalOrCallback, Function)) {
-      return doCreate( { message, isModal: false, callback: isModalOrCallback } );
-    }
-
-    return doCreate( { message, isModal: !!isModalOrCallback, callback: modalCallback, modalWarning } );
-  };
-  const createTimed = (message, closeAfter = 2, callback = null ) => {
-    if (currentModalState.isActive) { return; }
-    deActivate();
-    create(message, false, callback);
-    const remover = () => remove(callback);
-    savedTimer = setTimeout(remover, closeAfter * 1000);
-  };
-  const removeModal = callback => {
-    modalWarner.setData({warn: 0});
-    currentModalState.isModal = false;
-    remove(callback);
-  };
+  // handling
+  $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
+  $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`warnActive`));
+  $.delegate(`resize`, positionCloser);
 
   return {
-    create,
-    createTimed,
-    remove,
-    removeModal,
+    show: create,
+    create: (message, isModalOrCallback, modalCallback, modalWarning) => { /*legacy*/
+      create({
+        content: message,
+        modal: $.IS(isModalOrCallback, Boolean) ? isModalOrCallback : false,
+        callback: $.IS(modalCallback, Function) ? modalCallback : undefined,
+        warnMessage: modalWarning,
+      });
+    },
+    createTimed: (message, closeAfter, callback) => create({content: message, closeAfter, callback}), /*legacy*/
+    removeModal: modalRemover
   };
-}
 
-function initStyling(setStyle) {
-  popupStyling.forEach(declaration => setStyle(declaration));
+  function create( { content, modal, closeAfter, callback, warnMessage } ) {
+    if (content) {
+      txtBox.clear();
+      setPopupZIndex(getCurrentMaxZIndex());
+
+      if (modal === true) {
+        isModal = modal;
+        txtBox.append(warnTemplate.duplicate());
+      }
+
+      modalWarning = warnMessage ?? ``;
+      txtBox.prepend(content.isJQL ? content : $(`<div>${content}</div>`));
+      popupContainer.addClass(`active`);
+
+      if (!modal) {
+        closer.addClass(`active`);
+        positionCloser();
+
+        if ($.IS(+closeAfter, Number)) {
+          return setTimeout( () => {
+            remove(closer[0]);
+            $.IS(callback, Function) && callback();
+            callback = false;
+          }, +closeAfter * 1000 );
+        }
+      }
+
+      return callbackOnClose = callback;
+    }
+
+    return console.error(`Popup creation needs at least some text to show`);
+  }
+
+  function remove(origin) {
+    if (!isModal && isValidOrigin(origin)) {
+      txtBox.clear().append(warnTemplate.duplicate());
+      [popupContainer, closer].forEach(jqlEl => jqlEl.removeClass(`active`));
+
+      if ($.IS(callbackOnClose, Function)) {
+        callbackOnClose();
+      }
+
+      return callbackOnClose = false;
+    }
+
+    return isModal && warn();
+  }
+
+  function getCurrentMaxZIndex() {
+    return Math.max(
+      ...$.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
+        .map( node => +getComputedStyle(node).zIndex )
+        .filter( zi => $.IS(zi, Number) ) );
+  }
+
+  function setStyling() {
+    const editRule = $.createStyle(`JQLPopupCSS`);
+    const editCssRules = (...rules) => rules.forEach( rule => editRule(rule) );
+    editCssRules(...popupStyling);
+  }
 }
