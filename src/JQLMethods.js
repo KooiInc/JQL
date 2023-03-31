@@ -309,7 +309,7 @@ const allMethods = {
         [...acc, [...el.querySelectorAll(selector)]], [])
         .flat()
         .filter(el => IS(el, HTMLElement));
-      return found.length && jql(found[0]) || jql();
+      return found.length && jql(found) || jql();
     },
     prop: (self, property, value) => {
       if (value && !checkProp(property)) {
