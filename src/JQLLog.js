@@ -64,7 +64,7 @@ debugLog = {...debugLog,
     if (!logBox.isEmpty) {
       setSystemLog.off();
       Log(`Debug logging stopped`);
-      logBox.parent().removeClass(`visible`);
+      logBox.parent.removeClass(`visible`);
     }
     logActive.off();
     return debugLog;
@@ -94,11 +94,11 @@ debugLog = {...debugLog,
     return debugLog;
   },
   hide: () => {
-    jql(logBoxId)?.parent()?.removeClass(`visible`);
+    jql(logBoxId)?.parent?.removeClass(`visible`);
     return debugLog;
   },
   show: () => {
-    jql(logBoxId)?.parent()?.addClass(`visible`);
+    jql(logBoxId)?.parent?.addClass(`visible`);
     return debugLog;
   },
   reversed: {

@@ -69,6 +69,8 @@ const allMethods = {
     is: self => featured(self),
     length: self => self.collection.length,
     dimensions: self => self.first()?.getBoundingClientRect(),
+    parent: self => self.collection.length && jql(self.first()?.parentNode) || self,
+    outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
   },
   instanceExtensions: {
     isEmpty: self => self.collection.length < 1,
@@ -185,8 +187,6 @@ const allMethods = {
 
       return self;
     },
-    parent: self => self.collection.length && self.first()?.parentNode &&
-      jql(self.first().parentNode) || self,
     append: (self, ...elems2Append) => {
       if (!self.isEmpty() && elems2Append.length) {
         for (const elem of elems2Append) {
@@ -353,7 +353,6 @@ const allMethods = {
 
       return self;
     },
-    outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
     htmlFor: (self, forQuery, htmlString = "", append = false) => {
       if (forQuery && self.collection.length) {
         const el2Change = self.find$(forQuery);
