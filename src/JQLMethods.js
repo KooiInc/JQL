@@ -196,7 +196,7 @@ const allMethods = {
 
           if (isNode(elem)) {
             self.collection.forEach( el =>
-              el.appendChild(IS(elem, Comment) ? elem : elem.cloneNode(true)));
+              el.appendChild(elem));
           }
 
           if (elem.isJQL && elem.collection.length) {
@@ -205,7 +205,7 @@ const allMethods = {
             elem.remove();
             elems.forEach( e2a =>
               self.collection.forEach( el =>
-                el.appendChild( IS(e2a, Comment) ? e2a : e2a.cloneNode(true) ) ) );
+                el.appendChild( e2a)  ));
           }
         }
       }
