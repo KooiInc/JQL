@@ -53,7 +53,7 @@ function newPopupFactory($) {
       txtBox.clear();
       setPopupZIndex(getCurrentMaxZIndex());
       isModal = modal ?? false;
-      modalWarning = warnMessage ?? ``;
+      modalWarning = `${warnMessage}`.trim().length ? warnMessage : ``;
       txtBox.append(content.isJQL ? content : $(`<div>${content}</div>`));
       isModal && txtBox.append(warnTemplate.duplicate());
       popupContainer.addClass(`popup-active`);
