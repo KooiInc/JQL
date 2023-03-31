@@ -2,17 +2,15 @@ import { popupStyling } from "./EmbedResources.js";
 export default newPopupFactory;
 
 function newPopupFactory($) {
+  const editRule = $.createStyle(`JQLPopupCSS`);
+  popupStyling.forEach( rule => editRule(rule) );
   let isModal = false;
   let callbackOnClose = false;
   let modalWarning = ``;
   let timeout;
-  const warnQ = `.popupContainer .content .warn`;
-  const warnTemplate = $.virtual(`<div class="warn"></div>`);
-  const editRule = $.createStyle(`JQLPopupCSS`);
-  popupStyling.forEach( rule => editRule(rule) );
-  const popupContainer = $(`<div class="popupContainer"></div>`)
-    .append(`<span class="closeHandleIcon">`, `<div class="content">`);
-  const [closer, txtBox] = [$(`.popupContainer .closeHandleIcon`), $(`.popupContainer .content`)];
+  const warnTemplate = $.virtual(`<div class="popup-warn"></div>`);
+  const [closer, txtBox] = [$.virtual(`<span class="closeHandleIcon">`), $.virtual(`<div class="content">`)];
+  const popupContainer = $(`<div class="popupContainer"></div>`).append(closer, txtBox);
   const positionCloser = () => {
     if (closer.hasClass(`popup-active`)) {
       const {x, y, width} = txtBox.dimensions;
@@ -21,10 +19,9 @@ function newPopupFactory($) {
   const setPopupZIndex = maxDocumentZIndex => {
     popupContainer.style({zIndex: maxDocumentZIndex + 10});
     closer.style({zIndex: maxDocumentZIndex + 11}); };
-  const isValidOrigin = origin => !origin.closest(`.content`) && origin.closest(`.popupContainer, .closeHandleIcon`);
   const warn = () => {
-    modalWarning && $(warnQ).text(``).append($(`<div>${modalWarning}</div>`));
-    txtBox.addClass(`warnActive`); };
+    modalWarning && $(`.popup-warn`).clear().append($(`<div>${modalWarning}</div>`));
+    txtBox.addClass(`popup-warn-active`); };
   const modalRemover = () => {
     isModal = false;
     remove(closer[0]); };
@@ -38,7 +35,7 @@ function newPopupFactory($) {
       $.IS(callback, Function) && callback();
       callback = false; }, +seconds * 1000 );
   $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
-  $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`warnActive`));
+  $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`popup-warn-active`));
   $.delegate(`resize`, positionCloser);
   return {
     show: createAndShowPupup,
@@ -72,7 +69,7 @@ function newPopupFactory($) {
   }
 
   function remove(origin) {
-    if (!isModal && isValidOrigin(origin)) {
+    if (!isModal && !origin.closest(`.content`)) {
       txtBox.clear();
       $(`.popup-active`).removeClass(`popup-active`);
       $.IS(callbackOnClose, Function) && callbackOnClose();
