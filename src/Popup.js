@@ -5,113 +5,80 @@ function newPopupFactory($) {
   let isModal = false;
   let callbackOnClose = false;
   let modalWarning = ``;
+  let timeout;
   const warnQ = `.popupContainer .content .warn`;
   const warnTemplate = $.virtual(`<div class="warn"></div>`);
-  setStyling();
-  const popupContainer = $(`
-    <div class="popupContainer">
-      <span class="closeHandleIcon"></span>
-      <div class="content"></div>
-    </div>`);
-  const txtBox = $(`.popupContainer .content`).append(warnTemplate.duplicate());
-  const closer = $(`.popupContainer .closeHandleIcon`);
+  const editRule = $.createStyle(`JQLPopupCSS`);
+  popupStyling.forEach( rule => editRule(rule) );
+  const popupContainer = $(`<div class="popupContainer"></div>`)
+    .append(`<span class="closeHandleIcon">`, `<div class="content">`);
+  const [closer, txtBox] = [$(`.popupContainer .closeHandleIcon`), $(`.popupContainer .content`)];
   const positionCloser = () => {
-    if (!closer.hasClass(`active`)) { return; }
-    const {x, y, width} = txtBox.dimensions;
-    closer.style({top: `${y - 16}px`, left: `${x + width - 16}px`});
-  };
+    if (closer.hasClass(`popup-active`)) {
+      const {x, y, width} = txtBox.dimensions;
+      closer.style({top: `${y - 12}px`, left: `${x + width - 12}px`});
+    } };
   const setPopupZIndex = maxDocumentZIndex => {
     popupContainer.style({zIndex: maxDocumentZIndex + 10});
-    closer.style({zIndex: maxDocumentZIndex + 11});
-  };
-  const isValidOrigin = origin => !origin.closest(`.content`) &&
-    origin.closest(`.popupContainer, .closeHandleIcon`);
+    closer.style({zIndex: maxDocumentZIndex + 11}); };
+  const isValidOrigin = origin => !origin.closest(`.content`) && origin.closest(`.popupContainer, .closeHandleIcon`);
   const warn = () => {
     modalWarning && $(warnQ).text(``).append($(`<div>${modalWarning}</div>`));
-    txtBox.addClass(`warnActive`);
-  };
+    txtBox.addClass(`warnActive`); };
   const modalRemover = () => {
     isModal = false;
-    remove(closer[0]);
-  };
-
-  // handling
+    remove(closer[0]); };
+  const getCurrentMaxZIndex = () => Math.max(
+    ...$.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
+      .map( node => +getComputedStyle(node).zIndex )
+      .filter( zi => $.IS(zi, Number) ) );
+  const timed = (seconds, callback) =>
+    timeout = setTimeout( () => {
+      remove(closer[0]);
+      $.IS(callback, Function) && callback();
+      callback = false; }, +seconds * 1000 );
   $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
   $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`warnActive`));
   $.delegate(`resize`, positionCloser);
-
   return {
-    show: create,
+    show: createAndShowPupup,
     create: (message, isModalOrCallback, modalCallback, modalWarning) => { /*legacy*/
-      create({
-        content: message,
-        modal: $.IS(isModalOrCallback, Boolean) ? isModalOrCallback : false,
-        callback: $.IS(modalCallback, Function) ? modalCallback : undefined,
-        warnMessage: modalWarning,
-      });
-    },
-    createTimed: (message, closeAfter, callback) => create({content: message, closeAfter, callback}), /*legacy*/
-    removeModal: modalRemover
-  };
+      createAndShowPupup({
+        content: message, modal: $.IS(isModalOrCallback, Boolean) ? isModalOrCallback : false,
+        callback: $.IS(modalCallback, Function) ? modalCallback : undefined, warnMessage: modalWarning, }); },
+    createTimed: (message, closeAfter, callback) =>
+      createAndShowPupup({content: message, closeAfter, callback}), /*legacy*/
+    removeModal: modalRemover, };
 
-  function create( { content, modal, closeAfter, callback, warnMessage } ) {
+  function createAndShowPupup( { content, modal, closeAfter, callback, warnMessage } ) {
     if (content) {
+      clearTimeout(timeout);
       txtBox.clear();
       setPopupZIndex(getCurrentMaxZIndex());
-
-      if (modal === true) {
-        isModal = modal;
-        txtBox.append(warnTemplate.duplicate());
-      }
-
+      isModal = modal ?? false;
       modalWarning = warnMessage ?? ``;
-      txtBox.prepend(content.isJQL ? content : $(`<div>${content}</div>`));
-      popupContainer.addClass(`active`);
+      txtBox.append(content.isJQL ? content : $(`<div>${content}</div>`));
+      isModal && txtBox.append(warnTemplate.duplicate());
+      popupContainer.addClass(`popup-active`);
 
-      if (!modal) {
-        closer.addClass(`active`);
+      if (!isModal) {
+        closer.addClass(`popup-active`);
         positionCloser();
-
-        if ($.IS(+closeAfter, Number)) {
-          return setTimeout( () => {
-            remove(closer[0]);
-            $.IS(callback, Function) && callback();
-            callback = false;
-          }, +closeAfter * 1000 );
-        }
+        $.IS(+closeAfter, Number) && timed(closeAfter, callback);
       }
-
       return callbackOnClose = callback;
     }
-
     return console.error(`Popup creation needs at least some text to show`);
   }
 
   function remove(origin) {
     if (!isModal && isValidOrigin(origin)) {
-      txtBox.clear().append(warnTemplate.duplicate());
-      [popupContainer, closer].forEach(jqlEl => jqlEl.removeClass(`active`));
-
-      if ($.IS(callbackOnClose, Function)) {
-        callbackOnClose();
-      }
-
+      txtBox.clear();
+      $(`.popup-active`).removeClass(`popup-active`);
+      $.IS(callbackOnClose, Function) && callbackOnClose();
+      modalWarning = ``;
       return callbackOnClose = false;
     }
-
     return isModal && warn();
-  }
-
-  function getCurrentMaxZIndex() {
-    return Math.max(
-      ...$.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
-        .map( node => +getComputedStyle(node).zIndex )
-        .filter( zi => $.IS(zi, Number) ) );
-  }
-
-  function setStyling() {
-    const editRule = $.createStyle(`JQLPopupCSS`);
-    const editCssRules = (...rules) => rules.forEach( rule => editRule(rule) );
-    editCssRules(...popupStyling);
   }
 }
