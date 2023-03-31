@@ -30,11 +30,6 @@ const setCollectionFromCssSelector = (input, root, self) => {
   catch (err) { errorStr =  `Invalid CSS querySelector. [${input}]`; }
   return errorStr ?? `CSS querySelector "${input}", output ${self.collection.length} element(s)`;
 };
-const loop = (instance, callback) => {
-  const cleanCollection = instance.collection.filter(el => !isCommentOrTextNode(el));
-  for (let i = 0; i < cleanCollection.length; i += 1) { callback(cleanCollection[i], i); }
-  return instance;
-};
 const proxify = instance => {
   const runExt = method => (...args) => IS(method, Function) && method(proxify(instance), ...args);
   const runGet = method => (...args) => {
@@ -115,7 +110,6 @@ function defaultStaticMethodsFactory(jql) {
 }
 
 export {
-  loop,
   hex2RGBA,
   addHandlerId,
   isHtmlString,
