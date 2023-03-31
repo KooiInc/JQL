@@ -1,14 +1,20 @@
 import {createElementFromHtmlString, insertPositions} from "./DOM.js";
 import {
   IS,
-  loop,
   addHandlerId,
   isNode,
   randomString,
-  inject2DOMTree } from "./JQLExtensionHelpers.js";
+  inject2DOMTree, isCommentOrTextNode
+} from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
 import {ExamineElementFeatureFactory, toDashedNotation} from "./Utilities.js";
+const loop = (instance, callback) => {
+  const cleanCollection = instance.collection.filter(el => !isCommentOrTextNode(el));
+  for (let i = 0; i < cleanCollection.length; i += 1) {
+    callback(cleanCollection[i], i); }
+  return instance;
+};
 const isIt = ExamineElementFeatureFactory();
 const empty = el => el && (el.textContent = "");
 const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
