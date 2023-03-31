@@ -116,9 +116,9 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
           <p>
             The repository can be found  @${
           createExternalLink(`${apiLinkPrefix}`,
-            `github.com/KooiInc/JQL`).outerHtml()}<br>
+            `github.com/KooiInc/JQL`).outerHtml}<br>
             The documentation resides @${
-          createExternalLink(`//kooiinc.github.io/JQL/Docs`, `kooiinc.github.io/JQL/Docs`).outerHtml()}
+          createExternalLink(`//kooiinc.github.io/JQL/Docs`, `kooiinc.github.io/JQL/Docs`).outerHtml}
           </p>`) }
         );
       }
@@ -199,11 +199,11 @@ function modalDemo() {
           <br>In other words: you can only close this using the button below.
           <br>Also, while this popup is open, you can't open another (second button
             or click outside the popup).
-          <br>${closeBttn.outerHtml()}
+          <br>${closeBttn.outerHtml}
         </p>`,
       modal: true,
       callback: callbackAfterClose,
-      warnMessage: `There's only 1 escape`
+      warnMessage: `There's only <b><i>one</i></b> escape`,
   });
 }
 
