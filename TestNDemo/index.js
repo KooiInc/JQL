@@ -1,5 +1,5 @@
 import $ from "../index.js";
-
+window.jql = $;
 if (location.host.startsWith(`dev`)) {
   document.title += ` DEV`;
 }
