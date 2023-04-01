@@ -4,15 +4,11 @@ export default newPopupFactory;
 function newPopupFactory($) {
   const editRule = $.createStyle(`JQLPopupCSS`);
   popupStyling.forEach( rule => editRule(rule) );
-  let isModal = false;
-  let callbackOnClose = false;
-  let modalWarning = ``;
-  let timeout;
+  let [isModal, callbackOnClose, modalWarning, timeout] = [false, false, ``,];
   const warnTemplate = $.virtual(`<div class="popup-warn"></div>`);
   const [closer, txtBox] = [$.virtual(`<span class="closeHandleIcon">`), $.virtual(`<div class="content">`)];
   const popupContainer = $(`<div class="popupContainer"></div>`).append(closer, txtBox);
-  const positionCloser = () => {
-    if (closer.hasClass(`popup-active`)) {
+  const positionCloser = () => { if (closer.hasClass(`popup-active`)) {
       const {x, y, width} = txtBox.dimensions;
       closer.style({top: `${y - 12}px`, left: `${x + width - 12}px`});
     } };
@@ -22,18 +18,12 @@ function newPopupFactory($) {
   const warn = () => {
     modalWarning && $(`.popup-warn`).clear().append($(`<div>${modalWarning}</div>`));
     txtBox.addClass(`popup-warn-active`); };
-  const modalRemover = () => {
-    isModal = false;
-    remove(closer[0]); };
+  const modalRemover = () => { isModal = false; remove(closer[0]); };
   const getCurrentMaxZIndex = () => Math.max(
     ...$.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
-      .map( node => +getComputedStyle(node).zIndex )
-      .filter( zi => $.IS(zi, Number) ) );
-  const timed = (seconds, callback) =>
-    timeout = setTimeout( () => {
-      remove(closer[0]);
-      $.IS(callback, Function) && callback();
-      callback = false; }, +seconds * 1000 );
+      .map( node => +getComputedStyle(node).zIndex ).filter( zi => $.IS(zi, Number) ) );
+  const timed = (seconds, callback) => timeout = setTimeout( () => {
+    remove(closer[0]); $.IS(callback, Function) && callback(); callback = false; }, +seconds * 1000 );
   $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
   $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`popup-warn-active`));
   $.delegate(`resize`, positionCloser);
@@ -43,8 +33,8 @@ function newPopupFactory($) {
       createAndShowPupup({
         content: message, modal: $.IS(isModalOrCallback, Boolean) ? isModalOrCallback : false,
         callback: $.IS(modalCallback, Function) ? modalCallback : undefined, warnMessage: modalWarning, }); },
-    createTimed: (message, closeAfter, callback) =>
-      createAndShowPupup({content: message, closeAfter, callback}), /*legacy*/
+    createTimed: (message, closeAfter, callback) => /*legacy*/
+      createAndShowPupup({content: message, closeAfter, callback}),
     removeModal: modalRemover, };
 
   function createAndShowPupup( { content, modal, closeAfter, callback, warnMessage } ) {
