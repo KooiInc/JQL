@@ -304,6 +304,7 @@ function showStyling(styleId, bttn) {
   const rules = theStyle[0].sheet.cssRules;
   const mapRule = (rule, selector) => `${selector} {\n  ${
     rule.cssText
+      .replace(/(data:image)(.+[^;])+;/, `$1 [...]");`)
       .split(/[{}]/)[1]
       .split(`;`)
       .join(`;\n  `)
@@ -318,7 +319,7 @@ function showStyling(styleId, bttn) {
         .replace(/;\n/g, `;\n    `)
         .replace(/\n}/, `\n}`)}\n}`
       : `${mapRule(rule, selectr)}`;
-  }
+  };
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
   return popup.show({ content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
     .prepend($$(`<p/>`).append(bttn)) });
@@ -390,13 +391,13 @@ function styleRules() {
     }`,
     `.cmmt { color: #888; }`,
     `.cssView {
-      white-space: pre-wrap;
-      padding-bottom: 1rem;
-      overflow: hidden;
+       white-space: pre;
+       padding-bottom: 1rem;
+       overflow: hidden;
     }`,
     `@media screen and (width < 1400px) {
       #bttnblock button { 
-        margin-top: 0.4rem; 
+       margin-top: 0.4rem; 
       }
     }`,
     `.hidden { display: none; }`,
