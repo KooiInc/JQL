@@ -22,7 +22,7 @@ const logActivation = (logBttn, active = true) => {
 };
 
 const createExternalLink = (href, txt) =>
-  $$(`<a title="opens in new tab/window" target="_blank" class="ExternalLink" href="${href}">${txt}</a>`);
+  $$(`<a title="opens in new tab/window" class="ExternalLink" href="${href}">${txt}</a>`);
 
 // create container for all generated html
 $(`<div id="container">`).css({className: `MAIN`, position: `absolute`, top: 0, left: 0, right: 0, bottom: 0})
