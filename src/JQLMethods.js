@@ -83,10 +83,16 @@ const allMethods = {
     outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
     data: self => ({
       get all() { return new Proxy(self[0]?.dataset ?? {}, dataWeirdnessProxy); },
-      get: key => self.data.all[key],
-      add: (valuesObj = {}) => !self.is.empty && IS(valuesObj, Object) && Object.entries(valuesObj)
-        .forEach( ([key,value]) => self.setData( { [key]: value} ) ),
-      remove: key => self[0]?.removeAttribute(`data-${toDashedNotation(key)}`),
+      get: (key, whenUndefined) => self.data.all[key] ?? whenUndefined,
+      add: (valuesObj = {}) => {
+        !self.is.empty && IS(valuesObj, Object) && Object.entries(valuesObj)
+          .forEach( ([key,value]) => self.setData( { [key]: value} ) );
+        return self;
+      },
+      remove: key => {
+        self[0]?.removeAttribute(`data-${toDashedNotation(key)}`);
+        return self;
+      },
     }),
   },
   instanceExtensions: {
