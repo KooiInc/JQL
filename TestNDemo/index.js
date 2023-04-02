@@ -16,7 +16,7 @@ const apiLinkPrefix = `//github.com/KooiInc/JQL`;
 // Some methods used in handler delegates
 const logActivation = (logBttn, active = true) => {
   if (!logBttn.is.empty) {
-    logBttn.setData({on: +active});
+    logBttn.data.add({on: +active});
     debugLog[active ? `show` : `hide`]();
   }
 };
@@ -71,7 +71,7 @@ $(`<div id="nohandling" onclick="alert('${msg}')"></div>`)
 // script and data attribute will be removed, but you can add data-attributes later
 // styles are inline here
 $([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="delegates">Hi 1</div>`])
-  .setData({hello: "Added post creation"})
+  .data.add({hello: "Added post creation"})
   .html(` [you may <b><i>click</i> me</b>] `, true)
   .style({cursor: `pointer`})
   .appendTo(JQLRoot);
@@ -178,7 +178,7 @@ $(`<!--Comment @ #bttnblock afterbegin (verify it in DOM tree) -->`, $(`#bttnblo
 // display code of this file
 // -------------------------
 $$(`<div>code used in this example (index.js)</div>`)
-  .setData( {updown: `\u25BC View `, forid: `code`, hidden: 1} )
+  .data.add( {updown: `\u25BC View `, forid: `code`, hidden: 1} )
   .addClass(`exampleText`, `codeVwr`)
   .appendTo(JQLRoot);
 
@@ -219,21 +219,21 @@ function getDelegates4Document() {
       target: `#delegates`,
       handlers: [
         (_, self) => {
-          clearTimeout(+self.getData('timer') || 0);
+          clearTimeout(+self.data.get('timer') || 0);
           self.toggleClass(`green`);
           $(`[data-funny]`).remove();
           self.append( self.hasClass(`green`)
             ? `<span class="green" data-funny>now I'm  green</span>`
             : `<span data-funny>now I'm black</span>`
           );
-          $(self).setData({timer: setTimeout(() => self.find$(`[data-funny]`)?.remove(), 2500)});
+          $(self).data.add({timer: setTimeout(() => self.find$(`[data-funny]`)?.remove(), 2500)});
           log(`That's funny ... ${self.find$(`[data-funny]`).html()}`);
         },
       ]
     },
       {
         target: `#logBttn`,
-        handlers: [(_, self) => logActivation(self, !+(self.getData(`on`, 1))),],
+        handlers: [(_, self) => logActivation(self, !+(self.data.get(`on`, 1))),],
       }, {
         target: `#showComments`,
         handlers: [
@@ -243,17 +243,17 @@ function getDelegates4Document() {
         target: `.codeVwr`,
         handlers: [
           (_, self) => {
-            const codeElem = $(`#${self.getData(`forid`)}`);
+            const codeElem = $(`#${self.data.get(`forid`)}`);
 
-            if (!+self.getData(`hidden`)) {
+            if (!+self.data.get(`hidden`)) {
               codeElem.removeClass(`down`);
-              return $(self).setData({updown: '\u25bc View ', hidden: 1})
+              return $(self).data.add({updown: '\u25bc View ', hidden: 1})
             }
 
             $(`.down`).each(el => el.classList.remove(`down`));
-            $(`[data-forid]`).setData({updown: '\u25bc View ', hidden: 1});
+            $(`[data-forid]`).data.add({updown: '\u25bc View ', hidden: 1});
             codeElem.addClass(`down`);
-            $(self).setData({updown: '\u25b2 Hide ', hidden: 0});
+            $(self).data.add({updown: '\u25b2 Hide ', hidden: 0});
           }
         ]
       }]
