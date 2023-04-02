@@ -30,6 +30,11 @@ const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .replace(/\s{2,}/g, ` `)
   .replace(/\n/g, `\\n`) + (str.length > maxLength ? ` &hellip;` : ``).trim();
 const toDashedNotation = str2Convert =>str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`).replace(/^-|-$/, ``);
+const toCamelcase = str2Convert =>
+  IS(str2Convert, String) ? str2Convert.toLowerCase()
+    .split(`-`)
+    .map( (str, i) => i && `${str[0].toUpperCase()}${str.slice(1)}` || str)
+    .join(``) : str2Convert;
 const IS = (obj, ...shouldBe) => { /*NODOC*/
   if (shouldBe.length > 1) { return ISOneOf(obj, ...shouldBe); }
   shouldBe = shouldBe.shift();
@@ -105,6 +110,7 @@ export {
   IS,
   randomString,
   toDashedNotation,
+  toCamelcase,
   truncateHtmlStr,
   truncate2SingleStr,
   logTime,

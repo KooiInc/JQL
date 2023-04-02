@@ -4,11 +4,12 @@ import {
   addHandlerId,
   isNode,
   randomString,
-  inject2DOMTree, isCommentOrTextNode
+  inject2DOMTree,
+  isCommentOrTextNode
 } from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
-import {ExamineElementFeatureFactory, toDashedNotation} from "./Utilities.js";
+import {ExamineElementFeatureFactory, toDashedNotation, toCamelcase} from "./Utilities.js";
 const loop = (instance, callback) => {
   const cleanCollection = instance.collection.filter(el => !isCommentOrTextNode(el));
   for (let i = 0; i < cleanCollection.length; i += 1) {
@@ -20,7 +21,7 @@ const empty = el => el && (el.textContent = "");
 const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
 const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
-  Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
+  Object.entries(keyValuePairs).forEach(([key, value]) => el.setAttribute(`data-${toDashedNotation(key)}`, value));
 };
 const checkProp = prop => ATTRS.html.find(attr => prop === attr);
 const css = (el, keyOrKvPairs, value) => {
@@ -69,6 +70,9 @@ const applyStyle = (el, rules) => {
     } );
   }
 };
+const dataWeirdnessProxy = {
+  get(obj, key) { return obj[toCamelcase(key)] || obj[key]; }
+};
 
 const allMethods = {
   factoryExtensions: {
@@ -77,7 +81,13 @@ const allMethods = {
     dimensions: self => self.first()?.getBoundingClientRect(),
     parent: self => self.collection.length && jql(self.first()?.parentNode) || self,
     outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
-    data: self => self.collection.length && self[0].dataset,
+    data: self => ({
+      get all() { return new Proxy(self[0]?.dataset ?? {}, dataWeirdnessProxy); },
+      get: key => self.data.all[key],
+      add: (valuesObj = {}) => !self.is.empty && IS(valuesObj, Object) && Object.entries(valuesObj)
+        .forEach( ([key,value]) => self.setData( { [key]: value} ) ),
+      remove: key => self[0]?.removeAttribute(`data-${toCamelcase(key)}`),
+    }),
   },
   instanceExtensions: {
     isEmpty: self => self.collection.length < 1,
