@@ -77,6 +77,7 @@ const allMethods = {
     dimensions: self => self.first()?.getBoundingClientRect(),
     parent: self => self.collection.length && jql(self.first()?.parentNode) || self,
     outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
+    data: self => self.collection.length && self[0].dataset,
   },
   instanceExtensions: {
     isEmpty: self => self.collection.length < 1,
