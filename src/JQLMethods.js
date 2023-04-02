@@ -86,7 +86,7 @@ const allMethods = {
       get: key => self.data.all[key],
       add: (valuesObj = {}) => !self.is.empty && IS(valuesObj, Object) && Object.entries(valuesObj)
         .forEach( ([key,value]) => self.setData( { [key]: value} ) ),
-      remove: key => self[0]?.removeAttribute(`data-${toCamelcase(key)}`),
+      remove: key => self[0]?.removeAttribute(`data-${toDashedNotation(key)}`),
     }),
   },
   instanceExtensions: {
