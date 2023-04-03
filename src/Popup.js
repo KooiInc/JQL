@@ -13,16 +13,18 @@ function newPopupFactory($) {
       closer.style({top: `${y - 12}px`, left: `${x + width - 12}px`});
     } };
   const setPopupZIndex = (currentZIndexValues, min = false) => {
-    popupContainer.style({zIndex: min ? currentZIndexValues.min - 100 : currentZIndexValues.max + 10});
-    closer.style({zIndex: min ? currentZIndexValues.min - 101 : currentZIndexValues.max + 11}); };
+    console.log(currentZIndexValues);
+    const zi = min ? currentZIndexValues.min - 100 : currentZIndexValues.max + 10;
+    popupContainer.style({zIndex: zi});
+    closer.style({zIndex: zi + 1}); };
   const warn = () => {
     modalWarning && $(`.popup-warn`).clear().append($(`<div>${modalWarning}</div>`));
     txtBox.addClass(`popup-warn-active`); };
   const modalRemover = () => { isModal = false; remove(closer[0]); };
   const getCurrentZIndexBoundaries = () => {
-    const zIndxs = $.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
-        .map( node => +getComputedStyle(node).zIndex ).filter( zi => $.IS(zi, Number) );
-    return { max: Math.max(...zIndxs), min: Math.min(...zIndxs) };
+    const zIndxs = [0, ...$.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
+        .map( node => +getComputedStyle(node).zIndex ).filter( zi => $.IS(zi, Number) )];
+    return { max: Math.max(...zIndxs) ?? 0, min: Math.min(...zIndxs) ?? 0 };
   };
   const timed = (seconds, callback) => timeout = setTimeout( () => {
     remove(closer[0]); $.IS(callback, Function) && callback(); callback = false; }, +seconds * 1000 );
