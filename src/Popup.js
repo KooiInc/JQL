@@ -13,7 +13,6 @@ function newPopupFactory($) {
       closer.style({top: `${y - 12}px`, left: `${x + width - 12}px`});
     } };
   const setPopupZIndex = (currentZIndexValues, min = false) => {
-    console.log(currentZIndexValues);
     const zi = min ? currentZIndexValues.min - 100 : currentZIndexValues.max + 10;
     popupContainer.style({zIndex: zi});
     closer.style({zIndex: zi + 1}); };
