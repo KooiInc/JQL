@@ -34,9 +34,10 @@ function newPopupFactory($) {
   return {
     show: createAndShowPupup,
     create: (message, isModalOrCallback, modalCallback, modalWarning) => { /*legacy*/
+      const isModal = $.IS(isModalOrCallback, Boolean) ? isModalOrCallback : false;
       createAndShowPupup({
-        content: message, modal: $.IS(isModalOrCallback, Function) ? isModalOrCallback : false,
-        callback: $.IS(modalCallback, Function) ? modalCallback : undefined, warnMessage: modalWarning, }); },
+        content: message, modal: isModal,
+        callback: isModal ? modalCallback : isModalOrCallback, warnMessage: modalWarning, }); },
     createTimed: (message, closeAfter, callback) => /*legacy*/
       createAndShowPupup({content: message, closeAfter, callback}),
     removeModal: modalRemover, };
@@ -67,9 +68,9 @@ function newPopupFactory($) {
     if (!isModal && !origin.closest(`.content`)) {
       txtBox.clear();
       $(`.popup-active`).removeClass(`popup-active`);
+      setPopupZIndex(getCurrentZIndexBoundaries(), true);
       $.IS(callbackOnClose, Function) && callbackOnClose();
       modalWarning = ``;
-      setPopupZIndex(getCurrentZIndexBoundaries(), true);
       return callbackOnClose = false;
     }
     return isModal && warn();
