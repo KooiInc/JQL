@@ -35,7 +35,7 @@ function newPopupFactory($) {
     show: createAndShowPupup,
     create: (message, isModalOrCallback, modalCallback, modalWarning) => { /*legacy*/
       createAndShowPupup({
-        content: message, modal: $.IS(isModalOrCallback, Boolean) ? isModalOrCallback : false,
+        content: message, modal: $.IS(isModalOrCallback, Function) ? isModalOrCallback : false,
         callback: $.IS(modalCallback, Function) ? modalCallback : undefined, warnMessage: modalWarning, }); },
     createTimed: (message, closeAfter, callback) => /*legacy*/
       createAndShowPupup({content: message, closeAfter, callback}),
