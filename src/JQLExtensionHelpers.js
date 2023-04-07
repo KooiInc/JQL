@@ -76,7 +76,6 @@ const addJQLStatics = jql => {
 };
 
 function defaultStaticMethodsFactory(jql) {
-  const documentHtmlElement = document.querySelector(`html`);
   const virtual = html => jql(html, document.createElement("br"));
   const handle = HandleFactory();
   const delegate = (type, origin, ...handlers) => {
