@@ -22,7 +22,6 @@ const hex2Full = hex => {
   hex = (hex.trim().startsWith("#") ? hex.slice(1) : hex).trim();
   return hex.length === 3 ? [...hex].map(v => v + v).join("") : hex;
 };
-// ---
 const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .slice(0, maxLength)
   .replace(/>\s+</g, `><`)
