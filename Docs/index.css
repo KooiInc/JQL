@@ -190,6 +190,10 @@ ul.navGroupItems li {
   margin: -1.8rem 0 1rem 1rem;;
 }
 
+.exRunBttn + div, .exContainer + div {
+  margin-top: -1rem;
+}
+
 code:not(.js) {
   color: green;
   background-color: #EEE;
