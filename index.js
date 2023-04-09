@@ -25,7 +25,7 @@ export default addJQLStatics(JQLFactory());
 function JQLFactory() {
   const logLineLength = 70;
 
-  return function(input, root = document.documentElement, position = insertPositions.BeforeEnd) {
+  return function(input, root = document.body, position = insertPositions.BeforeEnd) {
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const shouldCreateElements = !IS(root, HTMLBRElement) && isRawHtmlArray || isRawHtml;
