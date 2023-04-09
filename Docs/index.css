@@ -163,7 +163,16 @@ ul.navGroupItems li {
 }
 
 .description ul {
-  margin: 0 0 auto -1.2rem;
+  margin: 0 0 -0.4rem -1.2rem;
+}
+
+.description ul ul {
+  margin: 0 0 -1.5rem -1.2rem;
+}
+
+.description ul ul li {
+  list-style: '\2714';
+  margin-left: -0.7rem;
 }
 
 .description ul li {
