@@ -9,7 +9,7 @@ import {
 } from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
-import {ExamineElementFeatureFactory, toDashedNotation, toCamelcase} from "./Utilities.js";
+import {ExamineElementFeatureFactory, toDashedNotation, toCamelcase, escHtml} from "./Utilities.js";
 const loop = (instance, callback) => {
   const cleanCollection = instance.collection.filter(el => !isCommentOrTextNode(el));
   for (let i = 0; i < cleanCollection.length; i += 1) {
@@ -94,6 +94,24 @@ const allMethods = {
         return self;
       },
     }),
+    HTML: self => ({
+      get: (outer, escaped) => {
+        const html = outer ? self.outerHtml : self.html();
+        return escaped ? escHtml(html) : html;
+      },
+      replace: str => {
+        if (!self.is.empty) { self.html(str); }
+        return self;
+      },
+      append: str => {
+        if (!self.is.empty) { self.html(str, true); }
+        return self;
+      },
+      insert: str => {
+        if (!self.is.empty) { self.html(`${str.isJQL ? str.HTML.get(true) : str}${self.HTML.get()}`); }
+        return self;
+      },
+    })
   },
   instanceExtensions: {
     isEmpty: self => self.collection.length < 1,
@@ -361,12 +379,11 @@ const allMethods = {
     },
     html: (self, htmlValue, append) => {
       if (htmlValue === undefined) {
-        return self.first()?.innerHTML;
+        return self[0]?.innerHTML;
       }
 
       if (!self.isEmpty()) {
-        const nwElement = htmlValue.isJQL
-          ? htmlValue.first() : createElementFromHtmlString(`<div>${htmlValue}</div>`);
+        const nwElement = createElementFromHtmlString(`<div>${htmlValue.isJQL ? htmlValue.HTML.get(true) : htmlValue}</div>`);
 
         if (!IS(nwElement, Comment)) {
           const cb = el => el.innerHTML = append ? el.innerHTML + nwElement.innerHTML : nwElement.innerHTML;

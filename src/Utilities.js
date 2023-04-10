@@ -55,6 +55,7 @@ const hex2RGBA = function (hex, opacity = 100) {
     parseInt(hex.slice(2, 4), 16)}, ${
     parseInt(hex.slice(-2), 16)}${op ? `, ${opacity / 100}` : ""})`;
 };
+const escHtml = html => html.replace(/</g, `&lt;`);
 
 function ExamineElementFeatureFactory() {
   const isVisible = function(el) {
@@ -114,5 +115,6 @@ export {
   truncate2SingleStr,
   logTime,
   hex2RGBA,
+  escHtml,
   ExamineElementFeatureFactory,
 };
