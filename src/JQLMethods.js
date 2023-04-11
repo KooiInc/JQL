@@ -94,6 +94,15 @@ const allMethods = {
         return self;
       },
     }),
+    Style: self => ({
+      get computed() { return !self.is.empty ? getComputedStyle(self[0]) : {}; },
+      inline: styleObj => self.style(styleObj),
+      inSheet: styleObj => self.css(styleObj),
+      valueOf: key => {
+        return !self.is.empty ? getComputedStyle(self[0])[toDashedNotation(key)] : undefined;
+      },
+      addRules: (...rules) => jql.editCssRules(...rules),
+    }),
     HTML: self => ({
       get: (outer, escaped) => {
         const html = outer ? self.outerHtml : self.html();

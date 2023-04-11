@@ -115,6 +115,7 @@ export {
   truncateHtmlStr,
   truncate2SingleStr,
   logTime,
+  randomNr,
   hex2RGBA,
   escHtml,
   ExamineElementFeatureFactory,
