@@ -323,7 +323,7 @@ const allMethods = {
       return virtual.childNodes;
     },
     duplicate: (self, toDOM = false, root = document.body) => {
-      const clonedCollection = jql.virtual([...self.toNodeList()]);
+      const clonedCollection = jql.virtual(...self.toNodeList());
       return toDOM ? clonedCollection.toDOM(root) : clonedCollection;
     },
     toDOM: (self, root = document.body, position = insertPositions.BeforeEnd) => {

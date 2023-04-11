@@ -48,7 +48,7 @@ function newPopupFactory($) {
       txtBox.clear();
       setPopupZIndex(getCurrentZIndexBoundaries());
       isModal = modal ?? false;
-      modalWarning = $.IS(warnMessage, String) && `${warnMessage}`.trim().length || warnMessage?.isJQL
+      modalWarning = $.IS(warnMessage, String) && `${warnMessage?.trim()}`.length || warnMessage?.isJQL
         ? warnMessage : undefined;
       txtBox.append(content.isJQL ? content : $(`<div>${content}</div>`));
       isModal && txtBox.append(warnTemplate.duplicate());
