@@ -77,9 +77,10 @@ const addJQLStatics = jql => {
 };
 
 function defaultStaticMethodsFactory(jql) {
+  const breakElement = document.createElement(`br`);
   const editCssRules = (...rules) => rules.forEach(rule => cssRuleEdit(rule));
   const editCssRule = (ruleOrSelector, ruleObject) => cssRuleEdit(ruleOrSelector, ruleObject);
-  const virtual = (...html) => jql(html.length > 1 ? [...html] : html, document.createElement("br"));
+  const virtual = (...html) => jql(html.length > 1 ? [...html] : html, breakElement);
   const handle = HandleFactory();
   const delegate = (type, origin, ...handlers) => {
     if (IS(origin, Function)) {
