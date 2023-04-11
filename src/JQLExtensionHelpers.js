@@ -66,7 +66,8 @@ const getAllDataAttributeValues = el => {
       ({...acc, [getKey(val)]: val.nodeValue}), {});
   return Object.keys(data).length && data || undefined;
 };
-const editCssRule = styleFactory( { createWithId: `JQLStylesheet` } );
+const cssRuleEdit = styleFactory( { createWithId: `JQLStylesheet` } );
+
 let static4Docs;
 const addJQLStatics = jql => {
   const staticMethods = defaultStaticMethodsFactory(jql);
@@ -76,7 +77,9 @@ const addJQLStatics = jql => {
 };
 
 function defaultStaticMethodsFactory(jql) {
-  const virtual = html => jql(html, document.createElement("br"));
+  const editCssRules = (...rules) => rules.forEach(rule => cssRuleEdit(rule));
+  const editCssRule = (ruleOrSelector, ruleObject) => cssRuleEdit(ruleOrSelector, ruleObject);
+  const virtual = (...html) => jql(html.length > 1 ? [...html] : html, document.createElement("br"));
   const handle = HandleFactory();
   const delegate = (type, origin, ...handlers) => {
     if (IS(origin, Function)) {
@@ -91,6 +94,7 @@ function defaultStaticMethodsFactory(jql) {
     debugLog,
     log: Log,
     insertPositions,
+    editCssRules,
     editCssRule,
     setStyle: editCssRule,
     delegate,
@@ -101,7 +105,7 @@ function defaultStaticMethodsFactory(jql) {
     IS,
     popup: () => PopupFactory(jql),
     createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
-    removeCssRule: rule => editCssRule(rule, {removeRule: 1}),
+    removeCssRule: (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
     text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
     node: (selector, root = document) => root.querySelector(selector, root),
     nodes: (selector, root = document) => [...root.querySelectorAll(selector, root)],

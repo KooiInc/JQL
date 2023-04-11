@@ -28,7 +28,7 @@ function JQLFactory() {
   return function(input, root = document.body, position = insertPositions.BeforeEnd) {
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
-    const shouldCreateElements = !IS(root, HTMLBRElement) && isRawHtmlArray || isRawHtml;
+    const shouldCreateElements = isRawHtmlArray || isRawHtml;
     let instance = {
       collection: input2Collection(input) ?? [],
       isVirtual: IS(root, HTMLBRElement),

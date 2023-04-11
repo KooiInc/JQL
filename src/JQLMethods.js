@@ -242,11 +242,9 @@ const allMethods = {
 
           if (elem.isJQL && elem.collection.length) {
             if (elem.isVirtual) { elem.toDOM(); }
-            const elems = elem.collection;
-            elem.remove();
-            elems.forEach( e2a =>
+            [...elem.collection].forEach( e2a =>
               self.collection.forEach( el =>
-                el.appendChild( e2a)  ));
+                el.append( e2a ) ) );
           }
         }
       }
