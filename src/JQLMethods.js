@@ -56,7 +56,6 @@ const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
     }
   });
 };
-const featured = self => /*NODOC*/ isIt(self);
 const applyStyle = (el, rules) => {
   if (IS(rules, Object)) {
     Object.entries(rules).forEach(([key, value]) => {
@@ -76,7 +75,7 @@ const dataWeirdnessProxy = {
 
 const allMethods = {
   factoryExtensions: {
-    is: self => featured(self),
+    is: self => isIt(self),
     length: self => self.collection.length,
     dimensions: self => self.first()?.getBoundingClientRect(),
     parent: self => self.collection.length && jql(self.first()?.parentNode) || self,
