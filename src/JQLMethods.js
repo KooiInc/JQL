@@ -100,7 +100,12 @@ const allMethods = {
       valueOf: key => {
         return !self.is.empty ? getComputedStyle(self[0])[toDashedNotation(key)] : undefined;
       },
-      addRules: (...rules) => jql.editCssRules(...rules),
+      byRule: ({classes2Apply = [], rules = []} = {}) => {
+        if (rules?.length || classes2Apply?.length) {
+          rules?.length && jql.editCssRules(...rules);
+          classes2Apply?.forEach(selector => self.addClass(selector));
+        }
+      },
     }),
     HTML: self => ({
       get: (outer, escaped) => {
