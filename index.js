@@ -26,6 +26,8 @@ function JQLFactory() {
   const logLineLength = 70;
 
   return function(input, root = document.body, position = insertPositions.BeforeEnd) {
+    root = root?.isJQL ? root?.[0] : root;
+    position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const shouldCreateElements = isRawHtmlArray || isRawHtml;

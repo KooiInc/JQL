@@ -262,7 +262,7 @@ const allMethods = {
         }
       }
 
-      return self;
+      return jql(self);
     },
     prepend: (self, ...elems2Prepend) => {
       // todo: maybe better to only prepend to root element!

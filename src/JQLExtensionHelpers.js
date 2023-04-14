@@ -81,6 +81,8 @@ function defaultStaticMethodsFactory(jql) {
   const editCssRules = (...rules) => rules.forEach(rule => cssRuleEdit(rule));
   const editCssRule = (ruleOrSelector, ruleObject) => cssRuleEdit(ruleOrSelector, ruleObject);
   const virtual = (html, root, position) => {
+    root = root?.isJQL ? root?.[0] : root;
+    position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const virtualElem = jql(html, breakElement);
     if (root) {
       virtualElem.collection.forEach(elem =>
