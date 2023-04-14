@@ -95,6 +95,7 @@ function defaultStaticMethodsFactory(jql) {
     debugLog,
     log: Log,
     insertPositions,
+    at: insertPositions,
     editCssRules,
     editCssRule,
     setStyle: editCssRule,
