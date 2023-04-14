@@ -232,8 +232,10 @@ function getDelegates4Document() {
       }, {
         target: `#showComments`,
         handlers: [
-          _ => popup.show({content: `<h3>*All Comments in this document:</h3>${
-            allComments([...document.childNodes]).join(``)}` }), ]
+          _ => popup.show({content: $(`<div>`)
+              .append($(`<h3>*All Comments in this document:</h3>`)
+                .Style.inline({marginTop: 0, marginBottom: `0.5rem`}))
+              .HTML.append(allComments([...document.childNodes]).join(``))  }), ]
       }, {
         target: `.codeVwr`,
         handlers: [
