@@ -200,12 +200,7 @@ const allMethods = {
     },
     replaceMe: (self, newChild) => {
       newChild = IS(newChild, HTMLElement) ? jql(newChild) : newChild;
-
-      if (newChild.isVirtual) {
-        newChild.toDOM();
-      }
-
-      self.parent().replace(self, newChild);
+      self.parent.replace(self, newChild);
       return jql(newChild);
     },
     val: (self, newValue) => {
@@ -241,6 +236,7 @@ const allMethods = {
 
       return self;
     },
+
     append: (self, ...elems2Append) => {
       if (!self.isEmpty() && elems2Append.length) {
         for (const elem of elems2Append) {
@@ -254,15 +250,14 @@ const allMethods = {
           }
 
           if (elem.isJQL && elem.collection.length) {
-            if (elem.isVirtual) { elem.toDOM(); }
-            [...elem.collection].forEach( e2a =>
+            elem.collection.forEach( e2a =>
               self.collection.forEach( el =>
                 el.append( e2a ) ) );
           }
         }
       }
 
-      return jql(self);
+      return self;
     },
     prepend: (self, ...elems2Prepend) => {
       // todo: maybe better to only prepend to root element!
@@ -340,10 +335,8 @@ const allMethods = {
       return toDOM ? clonedCollection.toDOM(root) : clonedCollection;
     },
     toDOM: (self, root = document.body, position = insertPositions.BeforeEnd) => {
-      if (self.isVirtual) {
-        self.isVirtual = false;
-        inject2DOMTree(self.collection, root, position);
-      }
+      self.collection = inject2DOMTree(self.collection, root, position);
+      if (self.isVirtual) { self.isVirtual = false; }
       return self;
     },
     first: (self, asJQLInstance = false) => {

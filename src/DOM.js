@@ -23,7 +23,7 @@ const characterDataElement2DOM = (elem, root, position) => {
   }
 }
 const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {
-  root = root.isJQL ? root[0] : root;
+  root = root?.isJQL ? root?.[0] : root;
   return IS(elem, Comment) ? characterDataElement2DOM(elem, root, position) :
     root.insertAdjacentElement(position, elem);
 };

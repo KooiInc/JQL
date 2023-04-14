@@ -50,22 +50,24 @@ function newPopupFactory($) {
       isModal = modal ?? false;
       modalWarning = $.IS(warnMessage, String) && `${warnMessage?.trim()}`.length || warnMessage?.isJQL
         ? warnMessage : undefined;
-      txtBox.append(content.isJQL ? content : $(`<div>${content}</div>`));
+      txtBox.append(content.isJQL ? content.is.virtual ? content.toDOM() : content : $(`<div>${content}</div>`));
       isModal && txtBox.append(warnTemplate.duplicate());
       popupContainer.addClass(`popup-active`);
+      callbackOnClose = callback
 
       if (!isModal) {
         closer.addClass(`popup-active`);
         positionCloser();
-        $.IS(+closeAfter, Number) && timed(closeAfter, callback);
+        $.IS(+closeAfter, Number) && timed(closeAfter);
       }
-      return callbackOnClose = callback;
+      return;
     }
     return console.error(`Popup creation needs at least some text to show`);
   }
 
   function remove(origin) {
     if (!isModal && !origin.closest(`.content`)) {
+      clearTimeout(timeout);
       txtBox.clear();
       $(`.popup-active`).removeClass(`popup-active`);
       setPopupZIndex(getCurrentZIndexBoundaries(), true);
