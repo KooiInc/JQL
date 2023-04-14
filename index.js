@@ -33,7 +33,7 @@ function JQLFactory() {
       collection: input2Collection(input) ?? [],
       isVirtual: IS(root, HTMLBRElement),
       isJQL: true,
-      insertPositions, };
+    };
 
     const isRawElemCollection = isArrayOfHtmlElements(instance.collection);
     const logStr = `input =&gt; ${
