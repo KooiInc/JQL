@@ -34,7 +34,7 @@ const lb = $(`#logBox`).style({margin: `1rem auto`});
 $(`#container`).prepend(lb);
 
 // initialize styling for logging and a few elements (to create later)
-initStyling();
+$.editCssRules(...getStyleRules())
 
 // create a header
 $(`<div id="StyledPara"></div>`)
@@ -207,11 +207,6 @@ function modalDemo() {
   });
 }
 
-// create a few style rules in <style id="JQLCreatedCSS">
-function initStyling() {
-  styleRules().forEach(rule => $.editCssRule(rule));
-}
-
 // create a few delegated handler methods
 function getDelegates4Document() {
   return Object.entries({
@@ -325,7 +320,7 @@ function showStyling(styleId, bttn) {
     .prepend($$(`<p/>`).append(bttn)) });
 }
 
-function styleRules() {
+function getStyleRules() {
   return [
     `body {
       font: normal 12px/15px verdana, arial;
