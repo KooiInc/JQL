@@ -51,28 +51,28 @@ function JQLFactory() {
     if (shouldCreateElements) {
       [input].flat().forEach(htmlString =>
         instance.collection.push(createElementFromHtmlString(htmlString)));
-    }
 
-    if (shouldCreateElements && instance.collection.length > 0) {
-      const errors = instance.collection.filter( el => el.dataset?.jqlcreationerror );
-      instance.collection = instance.collection.filter(el => !el.dataset?.jqlcreationerror);
+      if (instance.collection.length > 0) {
+        const errors = instance.collection.filter( el => el.dataset?.jqlcreationerror );
+        instance.collection = instance.collection.filter(el => !el.dataset?.jqlcreationerror);
 
-      systemLog(`${logStr}`);
-      systemLog(`*Created ${instance.isVirtual ? `VIRTUAL ` : ``}[${
-        truncateHtmlStr(ElemArray2HtmlString(instance.collection) || 
-          "sanitized: no elements remaining", logLineLength)}]`);
+        systemLog(`${logStr}`);
+        systemLog(`*Created ${instance.isVirtual ? `VIRTUAL ` : ``}[${
+          truncateHtmlStr(ElemArray2HtmlString(instance.collection) ||
+            "sanitized: no elements remaining", logLineLength)}]`);
 
-      if (errors.length) {
-        console.error(`JQL: illegal html, not rendered: "${
-          errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
-      }
+        if (errors.length) {
+          console.error(`JQL: illegal html, not rendered: "${
+            errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
+        }
 
-      if (!instance.isVirtual) {
-        inject2DOMTree(instance.collection, root, position);
+        if (!instance.isVirtual) {
+          inject2DOMTree(instance.collection, root, position);
+        }
       }
 
       return proxify(instance);
-  }
+    }
 
     const forLog = setCollectionFromCssSelector(input, root, instance);
     systemLog(`input => ${forLog}`);

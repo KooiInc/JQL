@@ -80,7 +80,14 @@ function defaultStaticMethodsFactory(jql) {
   const breakElement = document.createElement(`br`);
   const editCssRules = (...rules) => rules.forEach(rule => cssRuleEdit(rule));
   const editCssRule = (ruleOrSelector, ruleObject) => cssRuleEdit(ruleOrSelector, ruleObject);
-  const virtual = (...html) => jql(html.length > 1 ? [...html] : html, breakElement);
+  const virtual = (html, root, position) => {
+    const virtualElem = jql(html, breakElement);
+    if (root) {
+      virtualElem.collection.forEach(elem =>
+        position ? root.insertAdjacentElement(position, elem) : root.append(elem));
+    }
+    return virtualElem;
+  };
   const handle = HandleFactory();
   const delegate = (type, origin, ...handlers) => {
     if (IS(origin, Function)) {
