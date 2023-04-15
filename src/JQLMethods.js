@@ -195,17 +195,14 @@ const allMethods = {
 
       if (firstElem && oldChild) {
         oldChild = IS(oldChild, String)
-          ? firstElem.querySelector(oldChild)
+          ? firstElem.querySelectorAll(oldChild)
           : oldChild.isJQL
-            ? oldChild.first()
+            ? oldChild.collection
             : oldChild;
 
-        if (IS(oldChild, NodeList)) {
-          oldChild = oldChild[0];
-        }
-
-        if (IS(oldChild, HTMLElement) && IS(newChild, HTMLElement)) {
-          oldChild.replaceWith(newChild);
+        if (IS(oldChild, HTMLElement, NodeList, Array) && IS(newChild, HTMLElement)) {
+          (IS(oldChild, HTMLElement) ? [oldChild] : [...oldChild])
+            .forEach(chld => chld.replaceWith(newChild.cloneNode(true)));
         }
       }
 
