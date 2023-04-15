@@ -180,8 +180,17 @@ const allMethods = {
     replace: (self, oldChild, newChild) => {
       const firstElem = self.first();
 
+      if (!oldChild || !newChild) {
+        console.error(`JQL replace: nothing to replace`);
+        return self;
+      }
+
       if (newChild.isJQL) {
         newChild = newChild.first();
+      }
+
+      if (IS(newChild, NodeList)) {
+        newChild = newChild[0];
       }
 
       if (firstElem && oldChild) {
@@ -191,7 +200,11 @@ const allMethods = {
             ? oldChild.first()
             : oldChild;
 
-        if (oldChild && newChild) {
+        if (IS(oldChild, NodeList)) {
+          oldChild = oldChild[0];
+        }
+
+        if (IS(oldChild, HTMLElement) && IS(newChild, HTMLElement)) {
           oldChild.replaceWith(newChild);
         }
       }
