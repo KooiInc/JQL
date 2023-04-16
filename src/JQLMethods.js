@@ -214,7 +214,7 @@ const allMethods = {
       return jql(newChild);
     },
     val: (self, newValue) => {
-      const firstElem = self.first();
+      const firstElem = self[0];
 
       if (!firstElem || !IS(firstElem, HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement)) {
         return self;
@@ -224,7 +224,7 @@ const allMethods = {
         return firstElem.value;
       }
 
-      firstElem.value = `${newValue}`.length < 1 ? "" : newValue;
+      firstElem.value = !IS(newValue, String) ? "" : newValue;
 
       return self;
     },
