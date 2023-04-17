@@ -8,6 +8,7 @@ const {virtual: $$, log, debugLog} = $;
 // initialize popup
 const popup = $.popup();
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
+$.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
 
 // activate logging all JQL events (hidden)
 debugLog.on().toConsole.off().hide();
@@ -22,7 +23,7 @@ const logActivation = (logBttn, active = true) => {
 };
 
 const createExternalLink = (href, txt) =>
-  $$(`<a title="opens in new tab/window" class="ExternalLink" href="${href}">${txt}</a>`);
+  $$(`<a class="ExternalLink" href="${href}">${txt}</a>`).addTitle("opens in new tab/window");
 
 // create container for all generated html
 $(`<div id="container">`).css({className: `MAIN`, position: `absolute`, top: 0, left: 0, right: 0, bottom: 0})
