@@ -105,6 +105,7 @@ const allMethods = {
           rules?.length && jql.editCssRules(...rules);
           classes2Apply?.forEach(selector => self.addClass(selector));
         }
+        return self;
       },
     }),
     HTML: self => ({
@@ -231,16 +232,16 @@ const allMethods = {
     attr: (self, keyOrObj, value) => {
       if (!value && IS(keyOrObj, String)) {
         if (keyOrObj === `class`) {
-          return [...self[0].classList].join(` `);
+          return [...self[0]?.classList]?.join(` `);
         }
-        return self[0].getAttribute(keyOrObj);
+        return self[0]?.getAttribute(keyOrObj);
       }
 
       if (IS(keyOrObj, String) && value) {
         keyOrObj = { [keyOrObj]: value };
       }
 
-      if (IS(keyOrObj, Object)) {
+      if (IS(keyOrObj, Object) && !self.is.empty) {
         assignAttrValues(self[0], keyOrObj);
       }
 
@@ -372,14 +373,10 @@ const allMethods = {
       }
 
       if (!value) {
-        return self.collection.length ? self.first()[property] : self;
+        return self[0]?.[property];
       }
 
-      if (self.collection.length) {
-        return loop(self, el => el[property] = value);
-      }
-
-      return self;
+      return loop(self, el => el[property] = value);
     },
     on: (self, type, ...callback) => {
       if (self.collection.length) {
