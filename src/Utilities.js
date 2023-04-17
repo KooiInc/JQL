@@ -98,7 +98,7 @@ function ExamineElementFeatureFactory() {
         return firstElem.hasAttribute("readonly") || firstElem.hasAttribute("disabled")
       },
       get empty() {
-        return self.collection.length < 1;
+        return false;
       },
       get virtual() {
         return self.isVirtual;

@@ -381,8 +381,8 @@ const allMethods = {
     on: (self, type, ...callback) => {
       if (self.collection.length) {
         callback?.forEach(cb => {
-          const cssSelector = addHandlerId(self);
-          jql.delegate(type, cssSelector, cb);
+          const cssSelector4Handler = addHandlerId(self);
+          jql.delegate(type, cssSelector4Handler, cb);
         });
       }
 
