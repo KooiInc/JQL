@@ -1,7 +1,7 @@
 import {
   cleanupHtml,
   getRestricted, } from "./DOMCleanup.js";
-import { truncateHtmlStr, IS } from "./JQLExtensionHelpers.js";
+import {truncateHtmlStr, IS, randomString, isNode} from "./JQLExtensionHelpers.js";
 const insertPositions = {
   BeforeBegin: "beforebegin",
   AfterBegin: "afterbegin",
@@ -21,7 +21,15 @@ const characterDataElement2DOM = (elem, root, position) => {
     case insertPositions.AfterEnd: root.parentElement?.insertBefore(elem, root.nextElementSibling); break;
     default: root.appendChild(elem); break;
   }
-}
+};
+const inject2DOMTree = (
+  collection = [],
+  root = document.body,
+  position = insertPositions.BeforeEnd ) =>
+  collection.reduce((acc, elem) => {
+    const created = isNode(elem) && element2DOM(elem, root, position);
+    return created ? [...acc, created] : acc;
+  }, []);
 const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {
   root = root?.isJQL ? root?.[0] : root;
   return IS(elem, Comment) ? characterDataElement2DOM(elem, root, position) :
@@ -48,5 +56,6 @@ export {
   createElementFromHtmlString,
   element2DOM,
   cleanupHtml,
+  inject2DOMTree,
   insertPositions,
 };

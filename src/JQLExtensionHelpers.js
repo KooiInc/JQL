@@ -1,4 +1,4 @@
-import { createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
+import { createElementFromHtmlString, element2DOM, insertPositions, inject2DOMTree } from "./DOM.js";
 import { debugLog, Log, systemLog } from "./JQLLog.js";
 import allMethods from "./JQLMethods.js";
 import PopupFactory from "./Popup.js";
@@ -30,6 +30,11 @@ const setCollectionFromCssSelector = (input, root, self) => {
   catch (err) { errorStr =  `Invalid CSS querySelector. [${input}]`; }
   return errorStr ?? `CSS querySelector "${input}", output ${self.collection.length} element(s)`;
 };
+const addHandlerId = instance => {
+  const handleId = instance.first().dataset.hid || `HID${randomString()}`;
+  instance.setData({hid: handleId});
+  return `[data-hid="${handleId}"]`;
+};
 const proxify = instance => {
   const runExt = method => (...args) => IS(method, Function) && method(proxify(instance), ...args);
   const runGet = method => (...args) => {
@@ -45,19 +50,6 @@ const proxify = instance => {
   const proxyMe = { get: (obj, name) => check(name) ?? (/^\d+$/.test(`${name}`) ? obj.collection?.[name] : obj[name]) };
   return new Proxy( instance, proxyMe );
 };
-const inject2DOMTree = (
-  collection = [],
-  root = document.body,
-  position = insertPositions.BeforeEnd ) =>
-    collection.reduce((acc, elem) => {
-      const created = isNode(elem) && element2DOM(elem, root, position);
-      return created ? [...acc, created] : acc;
-    }, []);
-const addHandlerId = instance => {
-  const handleId = instance.first().dataset.hid || `HID${randomString()}`;
-  instance.setData({hid: handleId});
-  return `[data-hid="${handleId}"]`;
-};
 const getAllDataAttributeValues = el => {
   const getKey = attr => attr.nodeName.slice(attr.nodeName.indexOf(`-`) + 1);
   const data = [...el.attributes]
@@ -67,6 +59,7 @@ const getAllDataAttributeValues = el => {
   return Object.keys(data).length && data || undefined;
 };
 const cssRuleEdit = styleFactory( { createWithId: `JQLStylesheet` } );
+const addFn = (name, fn) => instanceMethods[name] = (self, ...params) => fn(self, ...params);
 
 let static4Docs;
 const addJQLStatics = jql => {
@@ -110,6 +103,7 @@ function defaultStaticMethodsFactory(jql) {
     setStyle: editCssRule,
     delegate,
     virtual,
+    fn: addFn,
     allowTag: tagLib.allowTag,
     prohibitTag: tagLib.prohibitTag,
     lenient: () => tagLib.allowUnknownHtmlTags,
