@@ -249,21 +249,19 @@ const allMethods = {
     },
 
     append: (self, ...elems2Append) => {
-      if (!self.isEmpty() && elems2Append.length) {
+      if (!self.is.empty && elems2Append.length) {
         for (const elem of elems2Append) {
           if (IS(elem, String)) {
-            self.collection.forEach(el => el.appendChild(createElementFromHtmlString(elem)));
+            loop(self, el => el.append(createElementFromHtmlString(elem)));
           }
 
           if (isNode(elem)) {
-            self.collection.forEach( el =>
-              el.appendChild(elem));
+            loop(self, el => el.append(elem.cloneNode(true)));
           }
 
-          if (elem.isJQL && elem.collection.length) {
+          if (elem.isJQL && !elem.is.empty) {
             elem.collection.forEach( e2a =>
-              self.collection.forEach( el =>
-                el.append( e2a ) ) );
+              loop(self, el => el.append( e2a ) ) );
           }
         }
       }
