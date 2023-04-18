@@ -249,19 +249,23 @@ const allMethods = {
     },
 
     append: (self, ...elems2Append) => {
+
       if (!self.is.empty && elems2Append.length) {
-        for (const elem of elems2Append) {
-          if (IS(elem, String)) {
-            loop(self, el => el.append(createElementFromHtmlString(elem)));
+        for (const elem2Append of elems2Append) {
+          if (IS(elem2Append, String)) {
+            return loop(self, el => el.append(createElementFromHtmlString(elem2Append)));
           }
 
-          if (isNode(elem)) {
-            loop(self, el => el.append(elem.cloneNode(true)));
+          if (isNode(elem2Append)) {
+            return loop(self, el => el.append(elem2Append.cloneNode(true)));
           }
 
-          if (elem.isJQL && !elem.is.empty) {
-            elem.collection.forEach( e2a =>
-              loop(self, el => el.append( e2a ) ) );
+          if (elem2Append.isJQL && !elem2Append.is.empty) {
+            const elems = elem2Append.collection.slice();
+            elem2Append.remove();
+            elems.forEach(e2a =>
+              self.collection.forEach(el =>
+                el.appendChild(e2a instanceof Comment ? e2a : e2a.cloneNode(true))));
           }
         }
       }
@@ -269,31 +273,23 @@ const allMethods = {
       return self;
     },
     prepend: (self, ...elems2Prepend) => {
-      // todo: maybe better to only prepend to root element!
       if (!self.isEmpty() && elems2Prepend) {
 
-        for (let i = 0; i < elems2Prepend.length; i += 1) {
-          const elem2Prepend = elems2Prepend[i];
+        for (const elem2Prepend of elems2Prepend) {
 
           if (IS(elem2Prepend, String)) {
-            self.collection.forEach(el =>
-              el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
-            return self;
+            return loop(self, el => el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
           }
 
           if (isNode(elem2Prepend)) {
-            self.collection.forEach(el =>
-              el.insertBefore(
-                IS(elem2Prepend, Comment) ? elem2Prepend : elem2Prepend.cloneNode(true), el.firstChild));
-            return self;
+            return loop( self, el => el.insertBefore( elem2Prepend.cloneNode(true), el.firstChild) );
           }
 
-          if (elem2Prepend.isJQL && !elem2Prepend.isEmpty()) {
+          if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
             const elems = elem2Prepend.collection.slice();
             elem2Prepend.remove();
             elems.forEach(e2a =>
-              self.collection.forEach(el =>
-                el && el.insertBefore(IS(e2a, Comment) ? e2a : e2a.cloneNode(true), el.firstChild)));
+              loop( self, el => el && el.insertBefore( e2a.cloneNode(true), el.firstChild) ) );
           }
         }
       }
@@ -302,8 +298,9 @@ const allMethods = {
     },
     appendTo: (self, appendTo) => {
       if (!appendTo.isJQL) {
-        appendTo = self.virtual(appendTo);
+        appendTo = jql(appendTo);
       }
+
       return appendTo.append(self);
     },
     prependTo: (self, prependTo) => {

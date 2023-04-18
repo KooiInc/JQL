@@ -97,7 +97,7 @@ $([`<notallowed id="removal_immanent"></notallowed>`,
 
 // create a few buttons. Some already contain an event handler (delegated)
 const cssDefaultBttn = $$(`<button id="defaultCSS">show default css</button>`)
-const cssPopupBttn = $$(`<button id="popupCSS">show popup css</button>`)
+const cssPopupBttn = $$(`<button id="popupCSS">show popup css</button>`);
 cssPopupBttn.on(`click`, () => showStyling(`JQLPopupCSS`, cssDefaultBttn));
 cssDefaultBttn.on(`click`, () => showStyling(`JQLStylesheet`, cssPopupBttn));
 
@@ -185,7 +185,6 @@ $$(`<div>code used in this example (index.js)</div>`)
 
 // append actual code to document
 injectCode().then(_ => Prism.highlightAll());
-
 popup.show({content: `Page done, enjoy 😎!`, closeAfter: 2 });
 
 function modalDemo() {
@@ -233,10 +232,14 @@ function getDelegates4Document() {
       }, {
         target: `#showComments`,
         handlers: [
-          _ => popup.show({content: $(`<div>`)
+          _ => {
+            const content = $.virtual(`<div>`)
               .append($(`<h3>*All Comments in this document:</h3>`)
                 .Style.inline({marginTop: 0, marginBottom: `0.5rem`}))
-              .HTML.append(allComments([...document.childNodes]).join(``))  }), ]
+              .HTML.append(allComments([...document.childNodes]).join(``));
+            popup.show({content});
+          },
+        ]
       }, {
         target: `.codeVwr`,
         handlers: [
@@ -319,8 +322,9 @@ function showStyling(styleId, bttn) {
       : `${mapRule(rule, selectr)}`;
   };
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
-  return popup.show({ content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
-    .prepend($$(`<p/>`).append(bttn)) });
+  return popup.show({
+    content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
+      .prepend($$(`<p>`).append(bttn)) });
 }
 
 function getStyleRules() {
