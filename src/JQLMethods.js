@@ -249,7 +249,6 @@ const allMethods = {
     },
 
     append: (self, ...elems2Append) => {
-
       if (!self.is.empty && elems2Append.length) {
         for (const elem2Append of elems2Append) {
           if (IS(elem2Append, String)) {
@@ -263,13 +262,16 @@ const allMethods = {
           if (elem2Append.isJQL && !elem2Append.is.empty) {
             const elems = elem2Append.collection.slice();
             elem2Append.remove();
+            elem2Append.collection = [];
             elems.forEach(e2a =>
-              self.collection.forEach(el =>
-                el.appendChild(e2a instanceof Comment ? e2a : e2a.cloneNode(true))));
+             self.collection.forEach(el => {
+               e2a = !IS(e2a, Comment) ? e2a.cloneNode(true) : e2a;
+               el.appendChild(e2a);
+               elem2Append.collection.push(e2a);
+             } ) );
           }
         }
       }
-
       return self;
     },
     prepend: (self, ...elems2Prepend) => {
@@ -293,7 +295,6 @@ const allMethods = {
           }
         }
       }
-
       return self;
     },
     appendTo: (self, appendTo) => {
