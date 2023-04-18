@@ -38,11 +38,16 @@ function JQLFactory() {
     };
 
     const isRawElemCollection = isArrayOfHtmlElements(instance.collection);
+
+    if (location.host.startsWith(`dev`)) {
+      instance.params = { virtual: instance.isVirtual, jql: instance.isJQL, isRawHtml, isRawHtmlArray, isRawElemCollection };
+    }
+
     const logStr = `input =&gt; ${
       isRawHtmlArray
-        ? `"${truncateHtmlStr(input.join(``), logLineLength)}"`
+        ? `"${truncateHtmlStr(input.join(`, `), logLineLength)}"`
         : !shouldCreateElements && isRawElemCollection ? `element collection [${
-            truncateHtmlStr( instance.collection.map(el => el.outerHTML || el.textContent).join(``), logLineLength)}]`
+            truncateHtmlStr( instance.collection.map(el => el.outerHTML || el.textContent).join(`, `), logLineLength)}]`
           : `"${truncateHtmlStr(input, logLineLength)}"`}`;
 
     if (instance.collection.length && isRawElemCollection) {
