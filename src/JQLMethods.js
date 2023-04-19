@@ -260,15 +260,10 @@ const allMethods = {
           }
 
           if (elem2Append.isJQL && !elem2Append.is.empty) {
-            const elems = elem2Append.collection.slice();
+            const elems = elem2Append.collection.slice().map(el => !IS(el, Comment) ? el.cloneNode(true) : el);
             elem2Append.remove();
-            elem2Append.collection = [];
-            elems.forEach(e2a =>
-             self.collection.forEach(el => {
-               e2a = !IS(e2a, Comment) ? e2a.cloneNode(true) : e2a;
-               el.appendChild(e2a);
-               elem2Append.collection.push(e2a);
-             } ) );
+            elems.forEach( e2a => loop(self, el => el.appendChild(e2a) ) );
+            elem2Append.collection = elems;
           }
         }
       }
@@ -288,10 +283,10 @@ const allMethods = {
           }
 
           if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
-            const elems = elem2Prepend.collection.slice();
+            const elems = elem2Prepend.collection.slice().map(el => !IS(el, Comment) ? el.cloneNode(true) : el);
             elem2Prepend.remove();
-            elems.forEach(e2a =>
-              loop( self, el => el && el.insertBefore( e2a.cloneNode(true), el.firstChild) ) );
+            elems.forEach(e2a => loop( self, el => el && el.insertBefore( e2a, el.firstChild) ) );
+            elem2Prepend.collection = elems;
           }
         }
       }
