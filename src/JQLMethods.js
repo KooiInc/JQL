@@ -290,7 +290,7 @@ const allMethods = {
             elem2Prepend.remove();
             elems.forEach(e2p =>
               loop( self, el => {
-                !IS(e2p, Text, Comment)
+                IS(e2p, HTMLElement)
                   ? el.insertAdjacentElement(jql.at.AfterBegin, e2p.cloneNode(1))
                   : el.insertBefore( e2p.cloneNode(1), el.firstChild)
               } ) );
