@@ -5,7 +5,7 @@ import {
   isNode,
   randomString,
   inject2DOMTree,
-  isCommentOrTextNode
+  isCommentOrTextNode, systemLog
 } from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
@@ -260,9 +260,12 @@ const allMethods = {
           }
 
           if (elem2Append.isJQL && !elem2Append.is.empty) {
-            const elems = elem2Append.collection.slice().map(el => !IS(el, Comment) ? el.cloneNode(true) : el);
+            const elems = elem2Append.collection.slice();
             elem2Append.remove();
-            elems.forEach( e2a => loop(self, el => el.appendChild(e2a) ) );
+            elems.forEach( e2a => loop( self, el =>
+              IS(e2a, HTMLElement)
+                ? el.insertAdjacentElement(jql.at.BeforeEnd, e2a.cloneNode(1))
+                : el.appendChild(e2a.cloneNode(1)) ) );
             elem2Append.collection = elems;
           }
         }
@@ -283,9 +286,14 @@ const allMethods = {
           }
 
           if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
-            const elems = elem2Prepend.collection.slice().map(el => !IS(el, Comment) ? el.cloneNode(true) : el);
+            const elems = elem2Prepend.collection.slice();
             elem2Prepend.remove();
-            elems.forEach(e2a => loop( self, el => el && el.insertBefore( e2a, el.firstChild) ) );
+            elems.forEach(e2p =>
+              loop( self, el => {
+                !IS(e2p, Text, Comment)
+                  ? el.insertAdjacentElement(jql.at.AfterBegin, e2p.cloneNode(1))
+                  : el.insertBefore( e2p.cloneNode(1), el.firstChild)
+              } ) );
             elem2Prepend.collection = elems;
           }
         }
