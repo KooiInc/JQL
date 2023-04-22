@@ -110,6 +110,9 @@ const allMethods = {
     }),
     HTML: self => ({
       get: (outer, escaped) => {
+        if (self.is.empty) {
+          return `NO ELEMENTS IN COLLECTION`;
+        }
         const html = outer ? self.outerHtml : self.html();
         return escaped ? escHtml(html) : html;
       },
@@ -250,7 +253,7 @@ const allMethods = {
 
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
-        for (const elem2Append of elems2Append) {
+        for (let elem2Append of elems2Append) {
           if (IS(elem2Append, String)) {
             return loop(self, el => el.append(createElementFromHtmlString(elem2Append)));
           }
@@ -260,13 +263,11 @@ const allMethods = {
           }
 
           if (elem2Append.isJQL && !elem2Append.is.empty) {
-            const elems = elem2Append.collection.slice();
+            const nwCollection = elem2Append.collection.slice();
             elem2Append.remove();
-            elems.forEach( e2a => loop( self, el =>
-              IS(e2a, HTMLElement)
-                ? el.insertAdjacentElement(jql.at.BeforeEnd, e2a.cloneNode(1))
-                : el.appendChild(e2a.cloneNode(1)) ) );
-            elem2Append.collection = elems;
+            delete elem2Append.collection;
+            elem2Append.collection = [];
+            nwCollection.forEach( e2a => loop( self, el => el.append( e2a.cloneNode(1) ) ) );
           }
         }
       }
@@ -282,19 +283,15 @@ const allMethods = {
           }
 
           if (isNode(elem2Prepend)) {
-            return loop( self, el => el.insertBefore( elem2Prepend.cloneNode(true), el.firstChild) );
+            return loop(self, el => el.insertBefore(elem2Prepend.cloneNode(true), el.firstChild));
           }
 
           if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
-            const elems = elem2Prepend.collection.slice();
+            const nwCollection = elem2Prepend.collection.slice();
             elem2Prepend.remove();
-            elems.forEach(e2p =>
-              loop( self, el => {
-                IS(e2p, HTMLElement)
-                  ? el.insertAdjacentElement(jql.at.AfterBegin, e2p.cloneNode(1))
-                  : el.insertBefore( e2p.cloneNode(1), el.firstChild)
-              } ) );
-            elem2Prepend.collection = elems;
+            delete elem2Prepend.collection;
+            elem2Prepend.collection = [];
+            nwCollection.forEach( e2p => loop( self, el => el.prepend( e2p.cloneNode(1) ) ) );
           }
         }
       }
@@ -309,7 +306,7 @@ const allMethods = {
     },
     prependTo: (self, prependTo) => {
       if (!prependTo.isJQL) {
-        prependTo = self.virtual(prependTo);
+        prependTo = jql.virtual(prependTo);
       }
 
       return prependTo.prepend(self);
