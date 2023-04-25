@@ -1,4 +1,4 @@
 [submodule "LifeCSS"]
 	path = LifeCSS
-	url = git@github.com:KooiInc/LifeCSS.git
+	url = https://github.com/KooiInc/LifeCSS.git
 	branch = main
