@@ -51,7 +51,7 @@ function newPopupFactory($) {
       modalWarning = $.IS(warnMessage, String) && `${warnMessage?.trim()}`.length || warnMessage?.isJQL
         ? warnMessage : undefined;
       txtBox.clear().append(content.isJQL ? content : $(`<div>${content}</div>`));
-      isModal && txtBox.append(warnTemplate.duplicate());
+      isModal && warnMessage && txtBox.append(warnTemplate.duplicate());
       popupContainer.addClass(`popup-active`);
       callbackOnClose = callback;
 
@@ -74,7 +74,7 @@ function newPopupFactory($) {
       setPopupZIndex(getCurrentZIndexBoundaries(), true);
       $.IS(callbackOnClose, Function) && callbackOnClose();
       modalWarning = ``;
-      return callbackOnClose = false;
+      return callbackOnClose = () => {};
     }
     return isModal && warn();
   }
