@@ -7,11 +7,13 @@ let useLogging = false;
 let log2Console = true;
 let reverseLogging = false;
 let useHtml = true;
+let editLogRule;
 const logBoxId = `#jql_logger`;
+
 const setStyling4Log = setStyle => { logStyling?.forEach(selector => setStyle(selector)); };
 const createLogElement = () => {
   if (logStyling) {
-    setStyling4Log(jql.createStyle(`JQLLogCSS`));
+    setStyling4Log(editLogRule);
   }
   const jql_logger_element_name = useHtml ? `div` : `pre`;
   const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
@@ -24,15 +26,17 @@ const decodeForConsole = something => IS(something, String) &&
   something;
 const Log = (...args) => {
     if (!useLogging) { return; }
+    editLogRule = jql.createStyle(`JQLLogCSS`);
     if (!log2Console && !jql.node(`#jql_logger`)) {
+      editLogRule = jql.createStyle(`JQLLogCSS`);
       createLogElement();
     }
     const logLine = arg => `${IS(arg, Object) ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => log2Console
-      ? console.log(decodeForConsole(arg))
+      ? console.info(`${logTime()} ✔ ${decodeForConsole(arg)}`)
       : jql.node(`#jql_logger`).insertAdjacentHTML(
           reverseLogging ? `afterbegin` : `beforeend`,
-          `${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
+          `<div class="entry">${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}</div>`)
     );
 };
 const logActive = {
@@ -44,8 +48,7 @@ const setSystemLog = {
   off() { logSystem = false; },
 };
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
-let debugLog = {};
-debugLog = {...debugLog,
+const debugLog = {
   isOn: () => useLogging,
   isVisible: () => jql(`#jql_logger`).is(`visible`),
   on: () => {
@@ -55,8 +58,7 @@ debugLog = {...debugLog,
       const box = jql.node(logBoxId) || createLogElement();
       box?.parentNode["classList"].add(`visible`);
     }
-    Log(`Debug logging started. Every call to [jql instance] is logged (${
-      reverseLogging ? `ascending: latest last` : `descending: latest first`}).`);
+    Log(`Debug logging started. Every call to [jql instance] is logged`);
     return debugLog;
   },
   off: () => {
@@ -72,12 +74,12 @@ debugLog = {...debugLog,
   toConsole: {
     on: () => {
       log2Console = true;
-      Log(`Debug logging to console activated`);
+      Log(`Started logging to console`);
       return debugLog;
     },
     off() {
+      Log(`Stopped logging to console`);
       log2Console = false;
-      Log(`Debug logging to document activated`);
       return debugLog;
     }
   },
@@ -104,12 +106,14 @@ debugLog = {...debugLog,
   reversed: {
     on: () => {
       reverseLogging = true;
-      Log(`Reverse logging reset: now logging bottom to top (latest first)`);
+      Log(`Reverse logging set: now logging bottom to top (latest first)`);
+      jql(`#logBox .legend`).addClass(`reversed`);
       return debugLog;
     },
     off: () => {
       reverseLogging = false;
-      Log(`Reverse logging reset: now logging top to bottom (latest last)`);
+      jql(`#logBox .legend`).removeClass(`reversed`);
+      Log(`Reverse logging reset: now logging chronological (latest last)`);
       return debugLog;
     },
   },

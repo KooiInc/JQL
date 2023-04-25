@@ -24,8 +24,10 @@ function getLogStyling() {
     "#logBox.visible{background-color:rgb(255, 255, 224);z-index:1;position:static;border:1px dotted rgb(153, 153, 153);max-width:50vw;min-width:30vw;min-height:10vh;max-height:90vh;overflow:auto;width:50vw;height:20vh;margin:1rem 0px;padding:0px 8px 19px;resize:both;}",
     "#logBox .legend{text-align:center;position:absolute;margin-top:-1em;width:inherit;max-width:inherit;}",
     "#logBox .legend div{text-align:center;display:inline-block;max-width:inherit;height:1.2rem;background-color:rgb(119, 119, 119);padding:2px 10px;color:rgb(255, 255, 255);box-shadow:rgb(119 119 119) 2px 1px 10px;border-radius:4px;}",
-    "#logBox .legend div:before{content:'JQL Logging';}",
-    "#logBox #jql_logger{marginTop:0.7rem;lineHeight:1.4em;font-family:consolas,monospace;whiteSpace:pre-wrap;maxWidth:inherit;}"
+    "#logBox .legend div:before{content:'JQL Logging (chronological)';}",
+    "#logBox .legend.reversed div:before{content:'JQL Logging (reversed)';}",
+    "#logBox #jql_logger{marginTop:0.7rem;lineHeight:1.4em;font-family:consolas,monospace;whiteSpace:pre-wrap;maxWidth:inherit;padding-left:100px;}",
+    "#logBox #jql_logger div.entry{text-indent:-100px;whiteSpace:normal;}",
   ]
 }
 

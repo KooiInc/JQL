@@ -11,7 +11,7 @@ const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 $.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
 
 // activate logging all JQL events (hidden)
-debugLog.on().toConsole.off().hide();
+debugLog.on().toConsole.off().reversed.on().hide();
 const apiLinkPrefix = `//github.com/KooiInc/JQL`;
 
 // Some methods used in handler delegates
@@ -185,7 +185,9 @@ $$(`<div>code used in this example (index.js)</div>`)
 
 // append actual code to document
 injectCode().then(_ => Prism.highlightAll());
+$(`#logBox`).style({maxWidth: `${$(`#JQLRoot`).dimensions.width}px`});
 popup.show({content: `Page done, enjoy 😎!`, closeAfter: 2 });
+
 
 function modalDemo() {
   const callbackAfterClose = () => popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
