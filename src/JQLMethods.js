@@ -267,7 +267,11 @@ const allMethods = {
             elem2Append.remove();
             delete elem2Append.collection;
             elem2Append.collection = [];
-            nwCollection.forEach( e2a => loop( self, el => el.append( e2a.cloneNode(1) ) ) );
+            nwCollection.forEach( e2a => loop( self, el => {
+              const cloned = e2a.cloneNode(1);
+              cloned.removeAttribute(`id`);
+              el.append( cloned );
+            } ) );
           }
         }
       }
@@ -291,7 +295,11 @@ const allMethods = {
             elem2Prepend.remove();
             delete elem2Prepend.collection;
             elem2Prepend.collection = [];
-            nwCollection.forEach( e2p => loop( self, el => el.prepend( e2p.cloneNode(1) ) ) );
+            nwCollection.forEach( e2p => loop( self, el => {
+              const cloned = e2p.cloneNode(1);
+              cloned.removeAttribute(`id`);
+              el.prepend( cloned );
+            } ) );
           }
         }
       }
