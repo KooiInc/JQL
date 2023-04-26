@@ -31,8 +31,8 @@ const setCollectionFromCssSelector = (input, root, self) => {
   return errorStr ?? `CSS querySelector "${input}", output ${self.collection.length} element(s)`;
 };
 const addHandlerId = instance => {
-  const handleId = instance.first().dataset.hid || `HID${randomString()}`;
-  instance.setData({hid: handleId});
+  const handleId = instance.data.get(`hid`) || `HID${randomString()}`;
+  instance.data.add({hid: handleId});
   return `[data-hid="${handleId}"]`;
 };
 const proxify = instance => {
