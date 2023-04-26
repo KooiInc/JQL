@@ -25,8 +25,8 @@ export default addJQLStatics(JQLFactory());
 function JQLFactory() {
   const logLineLength = 70;
 
-  return function(input, root = document.body, position = insertPositions.BeforeEnd) {
-    root = root?.isJQL ? root?.[0] : root;
+  return function JQLDefault(input, root, position = insertPositions.BeforeEnd) {
+    root = (root && root?.isJQL ? root[0] : root) ?? document.body;
     position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
