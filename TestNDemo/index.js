@@ -27,7 +27,7 @@ const createExternalLink = (href, txt) =>
 
 // create container for all generated html
 $(`<div id="container">`).css({className: `MAIN`, position: `absolute`, top: 0, left: 0, right: 0, bottom: 0})
-  .append($$(`<div id="JQLRoot"/>`)
+  .append($$(`<div id="JQLRoot">`)
     .css({position: `relative`, margin: `2rem auto`, maxWidth: `50vw`, display: `table`,})
   );
 const JQLRoot = $(`#JQLRoot`);
