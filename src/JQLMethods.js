@@ -78,7 +78,10 @@ const allMethods = {
     is: self => isIt(self),
     length: self => self.collection.length,
     dimensions: self => self.first()?.getBoundingClientRect(),
-    parent: self => self.collection.length && jql(self.first()?.parentNode) || self,
+    parent: self =>{
+      const tryParent = jql(self[0]?.parentNode);
+      return !tryParent.is.empty ? tryParent : self;
+    },
     outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
     data: self => ({
       get all() { return new Proxy(self[0]?.dataset ?? {}, dataWeirdnessProxy); },
@@ -144,6 +147,10 @@ const allMethods = {
     hide: self => loop(self, el => applyStyle(el, {display: `none !important`})),
     empty: self => loop(self, empty),
     clear: self => loop(self, empty),
+    closest: (self, selector) => {
+      const theClosest = IS(selector, String) ? self[0].closest(selector) : null;
+      return theClosest ? jql(theClosest) : self
+    },
     style: (self, keyOrKvPairs, value) => {
       const loopCollectionLambda = el => {
         if (value && IS(keyOrKvPairs, String)) {
