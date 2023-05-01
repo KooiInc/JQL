@@ -262,11 +262,11 @@ const allMethods = {
       if (!self.is.empty && elems2Append.length) {
         for (let elem2Append of elems2Append) {
           if (IS(elem2Append, String)) {
-            return loop(self, el => el.append(createElementFromHtmlString(elem2Append)));
+            loop(self, el => el.append(createElementFromHtmlString(elem2Append)));
           }
 
           if (isNode(elem2Append)) {
-            return loop(self, el => el.append(elem2Append.cloneNode(true)));
+            loop(self, el => el.append(elem2Append.cloneNode(true)));
           }
 
           if (elem2Append.isJQL && !elem2Append.is.empty) {
@@ -286,11 +286,11 @@ const allMethods = {
         for (const elem2Prepend of elems2Prepend) {
 
           if (IS(elem2Prepend, String)) {
-            return loop(self, el => el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
+            loop(self, el => el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
           }
 
           if (isNode(elem2Prepend)) {
-            return loop(self, el => el.insertBefore(elem2Prepend.cloneNode(true), el.firstChild));
+            loop(self, el => el.insertBefore(elem2Prepend.cloneNode(true), el.firstChild));
           }
 
           if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
