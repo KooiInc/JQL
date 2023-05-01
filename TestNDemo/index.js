@@ -5,6 +5,7 @@ if (location.host.startsWith(`dev`)) {
 }
 const {virtual: $$, log, debugLog} = $;
 
+
 // initialize popup
 const popup = $.popup();
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;

@@ -25,7 +25,14 @@ const decodeForConsole = something => IS(something, String) &&
   Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
   something;
 const Log = (...args) => {
+    const isInstanceLog = args[0] === `fromStatic`;
+    args = isInstanceLog ? args.slice(1) : args;
+    if ( isInstanceLog && !useLogging) {
+      return args.forEach(arg => console.info(`${logTime()} ✔ ${decodeForConsole(arg)}`));
+    }
+
     if (!useLogging) { return; }
+
     editLogRule = jql.createStyle(`JQLLogCSS`);
     if (!log2Console && !jql.node(`#jql_logger`)) {
       editLogRule = jql.createStyle(`JQLLogCSS`);
