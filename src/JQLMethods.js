@@ -184,8 +184,8 @@ const allMethods = {
     getData: (self, dataAttribute, valueWhenFalsy) => self.first() &&
       self.first().dataset?.[dataAttribute] || valueWhenFalsy,
     hasClass: (self, ...classNames) => {
-      const firstElem = self.first();
-      return self.isEmpty() || !firstElem.classList.length
+      const firstElem = self[0];
+      return !firstElem || !firstElem.classList.length
         ? false : classNames.find(cn => firstElem.classList.contains(cn)) && true || false;
     },
     replace: (self, oldChild, newChild) => {
