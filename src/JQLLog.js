@@ -85,7 +85,7 @@ const debugLog = {
       return debugLog;
     },
     off() {
-      Log(`Stopped logging to console`);
+      Log(`Stopped logging to console (except error messages)`);
       log2Console = false;
       return debugLog;
     }
