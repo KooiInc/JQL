@@ -5,7 +5,7 @@ import {
   isNode,
   randomString,
   inject2DOMTree,
-  isCommentOrTextNode, systemLog
+  isCommentOrTextNode,
 } from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
