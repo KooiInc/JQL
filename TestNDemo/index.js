@@ -95,10 +95,12 @@ $([`<notallowed id="removal_immanent"></notallowed>`,
   .appendTo(JQLRoot);
 
 // create a few buttons. Some already contain an event handler (delegated)
-const cssDefaultBttn = $$(`<button id="defaultCSS">show default css</button>`)
-const cssPopupBttn = $$(`<button id="popupCSS">show popup css</button>`);
-cssPopupBttn.on(`click`, () => showStyling(`JQLPopupCSS`, cssDefaultBttn));
-cssDefaultBttn.on(`click`, () => showStyling(`JQLStylesheet`, cssPopupBttn));
+const cssBttns = {
+  defaultCSS: $$(`<button data-sheet-id="JQLPopupCSS" data-switch-bttn="popupCSS">show popup css</button>`),
+  popupCSS: $$(`<button data-sheet-id="JQLStylesheet" data-switch-bttn="defaultCSS">show default css</button>`),
+};
+$.delegate(`click`, `[data-switch-bttn]`,
+  evt => showStyling(evt.target.dataset?.sheetId, cssBttns[evt.target.dataset?.switchBttn]));
 
 const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
   $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
@@ -107,7 +109,7 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
     .prop(`title`, `Show content of comment elements in a popup`),
   $$(`<button id="showCSS">Show custom CSS</button>`)
     .prop(`title`, `Show the dynamically created styling in a popup`)
-    .on(`click`, _ => showStyling(`JQLStylesheet`, cssPopupBttn)),
+    .on(`click`, evt => showStyling(`JQLStylesheet`, cssBttns.defaultCSS)),
   $$(`<button>Modal popup demo</button`).on(`click`, modalDemo),
   $$(`<button>Github</button>`)
     .on(`click`, () => {
@@ -325,7 +327,7 @@ function showStyling(styleId, bttn) {
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
   return popup.show({
     content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
-      .prepend($$(`<p>`).append(bttn)) });
+      .prepend($$(`<p>`).append(bttn.HTML.get(1))) });
 }
 
 function getStyleRules() {
