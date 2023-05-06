@@ -20,9 +20,10 @@ function getPermissions() {
 
 function getLogStyling() {
   return [
-    "#logBox{min-width:0px;max-width:0px;min-height:0px;max-height:0px;,width:0;height:0;z-index:-1;border:none;padding:0px;overflow:hidden;transition:all 0.3s ease;position:fixed;}",
+    "#logBox{min-width:0px;max-width:0px;min-height:0px;max-height:0px;,width:0;height:0;z-index:-1;border:none;padding:0px;overflow:hidden;transition:all 0.3s ease;margin-top:-100px;}",
     "#logBox.visible{background-color:rgb(255, 255, 224);z-index:1;position:static;border:1px dotted rgb(153, 153, 153);max-width:50vw;min-width:30vw;min-height:10vh;max-height:90vh;overflow:auto;width:50vw;height:20vh;margin:1rem 0px;padding:0px 8px 19px;resize:both;}",
-    "#logBox .legend{text-align:center;position:absolute;margin-top:-1em;width:inherit;max-width:inherit;}",
+    "#logBox.visible .legend{position:absolute;}",
+    "#logBox .legend{text-align:center;margin-top:-1em;width:inherit;max-width:inherit;}",
     "#logBox .legend div{text-align:center;display:inline-block;max-width:inherit;height:1.2rem;background-color:rgb(119, 119, 119);padding:2px 10px;color:rgb(255, 255, 255);box-shadow:rgb(119 119 119) 2px 1px 10px;border-radius:4px;}",
     "#logBox .legend div:before{content:'JQL Logging (chronological)';}",
     "#logBox .legend.reversed div:before{content:'JQL Logging (reversed)';}",
