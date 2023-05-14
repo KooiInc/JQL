@@ -58,7 +58,7 @@ function newPopupFactory($) {
       if (!isModal) {
         closer.addClass(`popup-active`);
         positionCloser();
-        $.IS(+closeAfter, Number) && timed(closeAfter);
+        $.IS(+closeAfter, Number) && timed(closeAfter, callbackOnClose);
       }
 
       return;
