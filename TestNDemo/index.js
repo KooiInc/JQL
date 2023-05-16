@@ -24,7 +24,7 @@ const logActivation = (logBttn, active = true) => {
 };
 
 const createExternalLink = (href, txt) =>
-  $$(`<a class="ExternalLink" href="${href}">${txt}</a>`).addTitle("opens in new tab/window");
+  $$(`<a class="InternalLink" href="${href}">${txt}</a>`).addTitle("opens in current tab/window");
 
 // create container for all generated html
 $(`<div id="container">`).css({className: `MAIN`, position: `absolute`, top: 0, left: 0, right: 0, bottom: 0});
@@ -356,7 +356,7 @@ function getStyleRules() {
       padding: 0 0.5rem;
       display: inline-block;
     }`,
-    `a.ExternalLink {
+    `a.InternalLink {
       textDecoration: none;
       color: blue;
       background-color: #EEE;
