@@ -64,8 +64,9 @@ const addFn = (name, fn) => instanceMethods[name] = (self, ...params) => fn(self
 let static4Docs;
 const addJQLStatics = jql => {
   const staticMethods = defaultStaticMethodsFactory(jql);
-  Object.entries(staticMethods).forEach(([name, method]) => jql[name] = method);
-  static4Docs = staticMethods;
+  Object.keys(staticMethods).forEach( k =>
+    Object.defineProperty(jql, k, Object.getOwnPropertyDescriptor(staticMethods, k)));
+  static4Docs = {...staticMethods};
   return jql;
 };
 
@@ -97,17 +98,17 @@ function defaultStaticMethodsFactory(jql) {
     debugLog,
     log: (...args) => Log(`fromStatic`, ...args),
     insertPositions,
-    at: insertPositions,
+    get at() { return insertPositions; },
     editCssRules,
     editCssRule,
     setStyle: editCssRule,
     delegate,
     virtual,
-    fn: addFn,
-    allowTag: tagLib.allowTag,
-    prohibitTag: tagLib.prohibitTag,
-    lenient: () => tagLib.allowUnknownHtmlTags,
-    IS,
+    get fn() { return addFn; },
+    get allowTag() { return tagLib.allowTag; },
+    get prohibitTag() { return tagLib.prohibitTag },
+    get lenient() { return tagLib.allowUnknownHtmlTags; },
+    get IS() { return IS; },
     popup: () => PopupFactory(jql),
     createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
     removeCssRule: (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
