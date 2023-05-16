@@ -17,7 +17,7 @@ const loop = (instance, callback) => {
   return instance;
 };
 const isIt = ExamineElementFeatureFactory();
-const empty = el => el && (el.textContent = "");
+const emptyElement = el => el && (el.textContent = "");
 const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
 const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
@@ -145,8 +145,8 @@ const allMethods = {
     setData: (self, keyValuePairs) => loop(self, el => setData(el, keyValuePairs)),
     show: self => loop(self, el => applyStyle(el, {display: `revert-layer !important`})),
     hide: self => loop(self, el => applyStyle(el, {display: `none !important`})),
-    empty: self => loop(self, empty),
-    clear: self => loop(self, empty),
+    empty: self => loop(self, emptyElement),
+    clear: self => loop(self, emptyElement),
     closest: (self, selector) => {
       const theClosest = IS(selector, String) ? self[0].closest(selector) : null;
       return theClosest ? jql(theClosest) : self
@@ -173,12 +173,19 @@ const allMethods = {
     each: (self, cb) => loop(self, cb),
     remove: (self, selector) => {
       const remover = el => el.remove();
+      const removeFromCollection = () =>
+        self.collection = self.collection.filter(el =>  document.documentElement.contains(el));
       if (selector) {
         const selectedElements = self.find$(selector);
-        !selectedElements.isEmpty() && loop(selectedElements, remover);
-        return;
+        if (!selectedElements.is.empty) {
+          loop(selectedElements, remover);
+          removeFromCollection();
+        }
+        return self;
       }
       loop(self, remover);
+      removeFromCollection();
+      return self;
     },
     computedStyle: (self, property) => self.first() && getComputedStyle(self.first())[property],
     getData: (self, dataAttribute, valueWhenFalsy) => self.first() &&
