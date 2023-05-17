@@ -273,15 +273,17 @@ const allMethods = {
           }
 
           if (isNode(elem2Append)) {
-            loop(self, el => el.append(elem2Append.cloneNode(true)));
+            let toAppend = elem2Append;
+            if (self.length > 1) {
+              toAppend = elem2Append.cloneNode(true);
+              toAppend.removeAttribute(`id`);
+            }
+            loop(self, el => el.append(toAppend));
           }
 
           if (elem2Append.isJQL && !elem2Append.is.empty) {
-            const nwCollection = elem2Append.collection.slice();
-            elem2Append.remove();
-            delete elem2Append.collection;
-            elem2Append.collection = [];
-            nwCollection.forEach( e2a => loop( self, el => el.append( e2a.cloneNode(1) ) ) );
+            const cloneCollection = self.length > 1 ? elem2Append.duplicate().collection : elem2Append.collection;
+            loop(self, el => el.append(...cloneCollection));
           }
         }
       }
@@ -297,15 +299,17 @@ const allMethods = {
           }
 
           if (isNode(elem2Prepend)) {
-            loop(self, el => el.insertBefore(elem2Prepend.cloneNode(true), el.firstChild));
+            let toPrepend = elem2Prepend;
+            if (self.length > 1) {
+              toPrepend = elem2Prepend.cloneNode(true);
+              toPrepend.removeAttribute(`id`);
+            }
+            loop(self, el => el.insertBefore(toPrepend, el.firstChild));
           }
 
           if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
-            const nwCollection = elem2Prepend.collection.slice();
-            elem2Prepend.remove();
-            delete elem2Prepend.collection;
-            elem2Prepend.collection = [];
-            nwCollection.forEach( e2p => loop( self, el => el.prepend( e2p.cloneNode(1) ) ) );
+            const clonedCollection = self.length > 1 ? elem2Prepend.duplicate().collection : elem2Prepend.collection;
+            loop(self, el => el.prepend(...clonedCollection));
           }
         }
       }
