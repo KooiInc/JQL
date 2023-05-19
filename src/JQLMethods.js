@@ -276,7 +276,7 @@ const allMethods = {
             let toAppend = elem2Append;
             if (self.length > 1) {
               toAppend = elem2Append.cloneNode(true);
-              toAppend.removeAttribute(`id`);
+              toAppend.removeAttribute && toAppend.removeAttribute(`id`);
             }
             loop(self, el => el.append(toAppend));
           }
@@ -302,7 +302,7 @@ const allMethods = {
             let toPrepend = elem2Prepend;
             if (self.length > 1) {
               toPrepend = elem2Prepend.cloneNode(true);
-              toPrepend.removeAttribute(`id`);
+              toPrepend.removeAttribute && toPrepend.removeAttribute(`id`);
             }
             loop(self, el => el.insertBefore(toPrepend, el.firstChild));
           }
@@ -344,20 +344,11 @@ const allMethods = {
 
       return self;
     },
-    toNodeList: self => {
-      const virtual = document.createElement(`div`);
-
-      for (const elem of self.collection) {
-        const nodeClone = document.importNode(elem, true);
-        nodeClone.removeAttribute(`id`);
-        virtual.append(nodeClone);
-      }
-
-      return virtual.childNodes;
-    },
+    toNodeList: self => [...self.collection].map(el => document.importNode(el, true)),
     duplicate: (self, toDOM = false, root = document.body) => {
-      const clonedCollection = jql.virtual(...self.toNodeList());
-      return toDOM ? clonedCollection.toDOM(root) : clonedCollection;
+      const nodes = self.toNodeList().map(el => el.removeAttribute && el.removeAttribute(`id`) || el);
+      const nwJQL = jql.virtual(nodes);
+      return toDOM ? nwJQL.toDOM(root) : nwJQL;
     },
     toDOM: (self, root = document.body, position = insertPositions.BeforeEnd) => {
       self.collection = inject2DOMTree(self.collection, root, position);
