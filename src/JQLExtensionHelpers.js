@@ -11,10 +11,11 @@ const instanceMethods = allMethods.instanceExtensions;
 const instanceGetters = allMethods.factoryExtensions;
 const isCommentOrTextNode = elem => IS(elem, Comment, Text);
 const isNode = input => IS(input, Text, HTMLElement, Comment);
+const isComment = input => IS(input, Comment);
+const isText = input => IS(input, Text);
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => IS(input, Array) && !input?.find(s => !isHtmlString(s));
 const isArrayOfHtmlElements = input => IS(input, Array) && !input?.find(el => !isNode(el));
-const isComment = input => IS(input, Comment);
 const ElemArray2HtmlString = elems => elems?.filter(el => el).reduce((acc, el) =>
   acc.concat(isComment(el) ? `<!--${el.textContent}-->` : isCommentOrTextNode(el) ?
     el.textContent : el.outerHTML), ``);

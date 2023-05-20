@@ -110,7 +110,7 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
   $$(`<button id="showCSS">Show custom CSS</button>`)
     .prop(`title`, `Show the dynamically created styling in a popup`)
     .on(`click`, evt => showStyling(`JQLStylesheet`, cssBttns.defaultCSS)),
-  $$(`<button>Modal popup demo</button`).on(`click`, modalDemo),
+  $$(`<button>Modal popup demo</button>`).on(`click`, modalDemo),
   $$(`<button>Github</button>`)
     .on(`click`, () => {
         popup.show({
@@ -169,7 +169,7 @@ $$(`<!--Hi, I am a multiline HTML-comment.
 
 
 // a comment can also be appended using append/appendTo/prepend/prependTo
-  $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
+$$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
 $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
 // comment insertion test

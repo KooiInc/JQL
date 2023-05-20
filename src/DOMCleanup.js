@@ -25,7 +25,7 @@ const cleanupHtml = elem => {
   }
   template.innerHTML = `<div id="placeholder">${elem.outerHTML}</div>`;
   const el2Clean = template.content.querySelector("#placeholder");
-  el2Clean.querySelectorAll("*").forEach(child => {
+  el2Clean.childNodes.forEach(child => {
     const attrStore = IS(child, SVGElement) ? ATTRS.svg : ATTRS.html;
     [...child.attributes]
       .forEach(attr => {

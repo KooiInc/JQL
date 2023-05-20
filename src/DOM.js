@@ -1,7 +1,7 @@
 import {
   cleanupHtml,
   getRestricted, } from "./DOMCleanup.js";
-import {truncateHtmlStr, IS, randomString, isNode} from "./JQLExtensionHelpers.js";
+import {truncateHtmlStr, IS, isNode} from "./JQLExtensionHelpers.js";
 const insertPositions = {
   BeforeBegin: "beforebegin",
   AfterBegin: "afterbegin",
@@ -15,25 +15,24 @@ const htmlToVirtualElement = htmlString => {
     : undefined;
 };
 const characterDataElement2DOM = (elem, root, position) => {
-  switch(position) {
-    case insertPositions.BeforeBegin: root.parentElement?.insertBefore(elem, root); break;
-    case insertPositions.AfterBegin: root.insertBefore(elem, root.firstElementChild); break;
-    case insertPositions.AfterEnd: root.parentElement?.insertBefore(elem, root.nextElementSibling); break;
-    default: root.appendChild(elem); break;
+  if (IS(elem, Comment)) {
+    return root.insertAdjacentHTML(position, `<!--${elem.data}-->`);
   }
+  return root.insertAdjacentText(position, elem.data);
 };
 const inject2DOMTree = (
   collection = [],
   root = document.body,
   position = insertPositions.BeforeEnd ) =>
-  collection.reduce((acc, elem) => {
+  collection.reduce( (acc, elem) => {
     const created = isNode(elem) && element2DOM(elem, root, position);
     return created ? [...acc, created] : acc;
   }, []);
 const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {
   root = root?.isJQL ? root?.[0] : root;
-  return IS(elem, Comment) ? characterDataElement2DOM(elem, root, position) :
-    root.insertAdjacentElement(position, elem);
+
+  return IS(elem, Comment, Text) ?
+    characterDataElement2DOM(elem, root, position) : root.insertAdjacentElement(position, elem);
 };
 const createElementFromHtmlString = htmlStr => {
   htmlStr = htmlStr.trim();
@@ -42,9 +41,17 @@ const createElementFromHtmlString = htmlStr => {
     return document.createComment(htmlStr.replace(/<!--|-->$/g, ''));
   }
 
+  if (htmlStr.startsWith(`<!text>`)) {
+    return document.createTextNode(htmlStr.replace(`<!text>`, ``));
+  }
+
+  if (!/^<(.+)[^>]+>/m.test(htmlStr)) {
+     return document.createTextNode(htmlStr);
+  }
+
   const nwElem = htmlToVirtualElement(htmlStr);
 
-  if (!nwElem.children.length) {
+  if (!nwElem.childNodes.length) {
       return createElementFromHtmlString(`<span data-jqlcreationerror="1">${truncateHtmlStr(htmlStr, 60)}</span>`);
   }
 

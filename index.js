@@ -52,16 +52,22 @@ function JQLFactory() {
 
     if (instance.collection.length && isRawElemCollection) {
       systemLog(logStr);
+      instance.collection.forEach(el => {
+        if (!document.documentElement.contains(el)) {
+          inject2DOMTree([el], root, position);
+        }
+      });
+
       return proxify(instance);
     }
 
     if (shouldCreateElements) {
-      [input].flat().forEach(htmlString =>
-        instance.collection.push(createElementFromHtmlString(htmlString)));
+      [input].flat().forEach(htmlStringOrComment =>
+        instance.collection.push(createElementFromHtmlString(htmlStringOrComment)));
 
       if (instance.collection.length > 0) {
-        const errors = instance.collection.filter( el => el.dataset?.jqlcreationerror );
-        instance.collection = instance.collection.filter(el => !el.dataset?.jqlcreationerror);
+        const errors = instance.collection.filter( el => el?.dataset?.jqlcreationerror );
+        instance.collection = instance.collection.filter(el => !el?.dataset?.jqlcreationerror);
 
         systemLog(`${logStr}`);
         systemLog(`*Created ${instance.isVirtual ? `VIRTUAL ` : ``}[${

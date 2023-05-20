@@ -154,7 +154,7 @@ const allMethods = {
     style: (self, keyOrKvPairs, value) => {
       const loopCollectionLambda = el => {
         if (value && IS(keyOrKvPairs, String)) {
-           keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
+          keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
         }
 
         applyStyle(el, keyOrKvPairs);
@@ -174,7 +174,7 @@ const allMethods = {
     remove: (self, selector) => {
       const remover = el => el.remove();
       const removeFromCollection = () =>
-        self.collection = self.collection.filter(el =>  document.documentElement.contains(el));
+        self.collection = self.collection.filter(el => document.documentElement.contains(el));
       if (selector) {
         const selectedElements = self.find$(selector);
         if (!selectedElements.is.empty) {
@@ -264,12 +264,13 @@ const allMethods = {
 
       return self;
     },
-
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
         for (let elem2Append of elems2Append) {
           if (IS(elem2Append, String)) {
-            loop(self, el => el.append(createElementFromHtmlString(elem2Append)));
+            const isPlainString = !/^<.+>$/m.test(elem2Append.trim());
+            loop(self, el =>
+              el.append(isPlainString ? elem2Append : createElementFromHtmlString(elem2Append)));
           }
 
           if (isNode(elem2Append)) {
@@ -293,9 +294,10 @@ const allMethods = {
       if (!self.isEmpty() && elems2Prepend) {
 
         for (const elem2Prepend of elems2Prepend) {
-
           if (IS(elem2Prepend, String)) {
-            loop(self, el => el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
+            const isPlainString = !/^<.+>$/m.test(elem2Prepend.trim());
+            loop(self, el =>
+              el.prepend(isPlainString ? elem2Prepend : createElementFromHtmlString(elem2Prepend)));
           }
 
           if (isNode(elem2Prepend)) {
