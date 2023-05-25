@@ -35,12 +35,31 @@ const toCamelcase = str2Convert =>
     .split(`-`)
     .map( (str, i) => i && `${ucFirst(str)}` || str)
     .join(``) : str2Convert;
-const IS = (obj, ...shouldBe) => { /*NODOC*/
+const IS = (obj, ...shouldBe) => {
+  const ISOneOf = (obj, ...params) => !!params.find( param => IS(obj, param) );
+  const checkNaN = thing => `${thing}` === `NaN`;
   if (shouldBe.length > 1) { return ISOneOf(obj, ...shouldBe); }
-  shouldBe = shouldBe.shift();
-  const self = obj === 0 ? Number : obj === `` ? String : !obj ? {name: invalid} :
+  shouldBe = shouldBe.length > 0 && shouldBe.shift();
+
+  // is nothing stuff
+  const shouldBeNaN = `${shouldBe}` === `NaN`;
+  if (shouldBeNaN) { return checkNaN(obj); }
+  const isNothing = obj === null || obj === undefined;
+  const shouldBeNothing = /null|undefined/.test(`${shouldBe}`);
+  if (isNothing && !shouldBeNothing && shouldBe) { return false; }
+  if (isNothing && !shouldBeNothing) { return `${obj}`; }
+  if (isNothing && shouldBeNothing) { return (`${obj}` === `${shouldBe}`); }
+  // end is nothing stuff
+
+  // boolean stuff
+  if (obj === false && shouldBe === Boolean) { return true; }
+  if (obj === false && !shouldBe) { return `Boolean`; }
+  // end boolean stuff
+
+  const self = obj === 0 ? Number : obj === `` ? String : !obj ? {name: obj.toString()} :
     Object.getPrototypeOf(obj)?.constructor;
-  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self : self?.name;
+  return shouldBe ? !!(shouldBe === self?.__proto__ || shouldBe === self || shouldBe.toString === self?.name)
+    : self?.name;
 };
 const randomString = () => `_${shuffle(characters4RandomString).slice(0, 8).join(``)}`;
 const truncate2SingleStr = (str, maxLength = 120) =>
