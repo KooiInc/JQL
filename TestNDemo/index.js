@@ -327,7 +327,7 @@ function showStyling(styleId, bttn) {
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
   return popup.show({
     content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
-      .prepend($$(`<p>`).append(bttn.HTML.get(1))) });
+      .prepend($$(`<p></p>`).append(bttn.HTML.get(1))) });
 }
 
 function getStyleRules() {
