@@ -36,30 +36,52 @@ const toCamelcase = str2Convert =>
     .map( (str, i) => i && `${ucFirst(str)}` || str)
     .join(``) : str2Convert;
 const IS = (obj, ...shouldBe) => {
-  const ISOneOf = (obj, ...params) => !!params.find( param => IS(obj, param) );
-  const checkNaN = thing => `${thing}` === `NaN`;
+  const toStringTrial = something => {
+    try { return `${something}`; }
+    catch(e) {
+      return /a Symbol value/.test(e.message) ? `Symbol` : something }
+  }
+  const nopes = [`NaN`, `null`, `undefined`];
+  const isNothing = nothing => {
+    for (let nada of nopes) {
+      if (nada === toStringTrial(nothing)) { return true; }
+    }
+    return false;
+  };
+  const ISOneOf = (obj, ...params) => {
+    for (let param of params) {
+      if (IS(obj, param))  { return true; }
+    }
+    return false;
+  };
+
   if (shouldBe.length > 1) { return ISOneOf(obj, ...shouldBe); }
-  shouldBe = shouldBe.length > 0 && shouldBe.shift();
 
-  // is nothing stuff
-  const shouldBeNaN = `${shouldBe}` === `NaN`;
-  if (shouldBeNaN) { return checkNaN(obj); }
-  const isNothing = obj === null || obj === undefined;
-  const shouldBeNothing = /null|undefined/.test(`${shouldBe}`);
-  if (isNothing && !shouldBeNothing && shouldBe) { return false; }
-  if (isNothing && !shouldBeNothing) { return `${obj}`; }
-  if (isNothing && shouldBeNothing) { return (`${obj}` === `${shouldBe}`); }
-  // end is nothing stuff
+  const isSymbolTrial = toStringTrial(obj);
+  const shouldBeLen = shouldBe.length > 0;
+  shouldBe = shouldBeLen && shouldBe.shift();
 
-  // boolean stuff
-  if (obj === false && shouldBe === Boolean) { return true; }
-  if (obj === false && !shouldBe) { return `Boolean`; }
-  // end boolean stuff
+  const objIsNothing = isNothing(isSymbolTrial);
+  const shouldBeIsNothing = isNothing(shouldBe);
 
-  const self = obj === 0 ? Number : obj === `` ? String : !obj ? {name: obj.toString()} :
-    Object.getPrototypeOf(obj)?.constructor;
-  return shouldBe ? !!(shouldBe === self?.__proto__ || shouldBe === self || shouldBe.toString === self?.name)
-    : self?.name;
+  if (!objIsNothing && isSymbolTrial === `Symbol`) {
+    return !shouldBeLen ? isSymbolTrial : shouldBe === Symbol;
+  }
+
+  if (objIsNothing) {
+    return shouldBeIsNothing ?
+      `${obj}` === `${shouldBe}` : shouldBe instanceof Object ?
+        false : `${obj}`;
+  }
+
+  if (obj === false) { return shouldBe === Boolean ? true : `Boolean`; }
+
+  const self = obj === 0 ? Number : obj === `` ?
+    String : !obj ?
+      {name: obj.toString()} : Object.getPrototypeOf(obj)?.constructor;
+  return shouldBe ? !!(shouldBe === self?.__proto__ ||
+    shouldBe === self ||
+    shouldBe.toString === self?.name) : self?.name;
 };
 const randomString = () => `_${shuffle(characters4RandomString).slice(0, 8).join(``)}`;
 const truncate2SingleStr = (str, maxLength = 120) =>
