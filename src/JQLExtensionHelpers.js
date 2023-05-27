@@ -44,20 +44,15 @@ const proxify = instance => {
     }
     return { tmpKey: undefined };
   };
-  const check = name => {
-    if (instanceGetters[name]) { return runGet(instanceGetters[name])().tmpKey;  }
-    return instanceMethods[name] && runExt(instanceMethods[name]);
+  const check = (self, key) => {
+    if (IS(key, Symbol)) { return `nothing`; }
+    if (IS(+key, Number)) { return self.collection?.[key]; }
+    if (key in instanceGetters) { return runGet(instanceGetters[key])().tmpKey;  }
+    if (key in instanceMethods) { return runExt(instanceMethods[key]); }
+    return self[key];
   }
-  const proxyMe = { get: (obj, name) => check(name) ?? (/^\d+$/.test(`${name}`) ? obj.collection?.[name] : obj[name]) };
+  const proxyMe = { get: (obj, key) => check(obj, key) };
   return new Proxy( instance, proxyMe );
-};
-const getAllDataAttributeValues = el => {
-  const getKey = attr => attr.nodeName.slice(attr.nodeName.indexOf(`-`) + 1);
-  const data = [...el.attributes]
-    .filter(da => da.nodeName.startsWith(`data-`))
-    .reduce((acc, val) =>
-      ({...acc, [getKey(val)]: val.nodeValue}), {});
-  return Object.keys(data).length && data || undefined;
 };
 const cssRuleEdit = styleFactory( { createWithId: `JQLStylesheet` } );
 const addFn = (name, fn) => instanceMethods[name] = (self, ...params) => fn(self, ...params);
