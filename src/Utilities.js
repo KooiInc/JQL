@@ -1,4 +1,5 @@
 import jql from "../index.js";
+import IS from "../typeofAnything/typofany.module.js";
 const characters4RandomString = [...Array(26)]
   .map((x, i) => String.fromCharCode(i + 65))
   .concat([...Array(26)].map((x, i) => String.fromCharCode(i + 97)))
@@ -35,54 +36,6 @@ const toCamelcase = str2Convert =>
     .split(`-`)
     .map( (str, i) => i && `${ucFirst(str)}` || str)
     .join(``) : str2Convert;
-const IS = (obj, ...shouldBe) => {
-  const toStringTrial = something => {
-    try { return `${something}`; }
-    catch(e) {
-      return /a Symbol value/.test(e.message) ? `Symbol` : something }
-  }
-  const nopes = [`NaN`, `null`, `undefined`];
-  const isNothing = nothing => {
-    for (let nada of nopes) {
-      if (nada === toStringTrial(nothing)) { return true; }
-    }
-    return false;
-  };
-  const ISOneOf = (obj, ...params) => {
-    for (let param of params) {
-      if (IS(obj, param))  { return true; }
-    }
-    return false;
-  };
-
-  if (shouldBe.length > 1) { return ISOneOf(obj, ...shouldBe); }
-
-  const isSymbolTrial = toStringTrial(obj);
-  const shouldBeLen = shouldBe.length > 0;
-  shouldBe = shouldBeLen && shouldBe.shift();
-
-  const objIsNothing = isNothing(isSymbolTrial);
-  const shouldBeIsNothing = isNothing(shouldBe);
-
-  if (!objIsNothing && isSymbolTrial === `Symbol`) {
-    return !shouldBeLen ? isSymbolTrial : shouldBe === Symbol;
-  }
-
-  if (objIsNothing) {
-    return shouldBeIsNothing ?
-      `${obj}` === `${shouldBe}` : shouldBe instanceof Object ?
-        false : `${obj}`;
-  }
-
-  if (obj === false) { return shouldBe === Boolean ? true : `Boolean`; }
-
-  const self = obj === 0 ? Number : obj === `` ?
-    String : !obj ?
-      {name: obj.toString()} : Object.getPrototypeOf(obj)?.constructor;
-  return shouldBe ? !!(shouldBe === self?.__proto__ ||
-    shouldBe === self ||
-    shouldBe.toString === self?.name) : self?.name;
-};
 const randomString = () => `_${shuffle(characters4RandomString).slice(0, 8).join(``)}`;
 const truncate2SingleStr = (str, maxLength = 120) =>
   truncateHtmlStr(str, maxLength).replace(/&lt;/g, `<`);
