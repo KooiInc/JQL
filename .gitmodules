@@ -2,3 +2,7 @@
 	path = LifeCSS
 	url = https://github.com/KooiInc/LifeCSS.git
 	branch = main
+[submodule "typeofAnything"]
+	path = typeofAnything
+	url = https://github.com/KooiInc/typeofAnything.git
+	branch = main
