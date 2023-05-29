@@ -7,7 +7,7 @@ function newPopupFactory($) {
   let isModal, callbackOnClose, modalWarning, timeout;
   const warnTemplate = $.virtual(`<div class="popup-warn"></div>`);
   const popupContainer = $(`<div class="popupContainer">`)
-    .append( $(`<span class="closeHandleIcon">`), $(`<div class="content">`) );
+    .append( $(`<span class="closeHandleIcon"/>`), $(`<div class="content"/>`) );
   const [closer, txtBox] = [$(`.popupContainer .closeHandleIcon`), $( `.popupContainer .content` )];
   const positionCloser = () => { if (closer.hasClass(`popup-active`) ) {
       const {x, y, width} = txtBox.dimensions;
@@ -26,8 +26,7 @@ function newPopupFactory($) {
         .map( node => +getComputedStyle(node).zIndex ).filter( zi => $.IS(zi, Number) )];
     return { max: Math.max(...zIndxs) ?? 0, min: Math.min(...zIndxs) ?? 0 };
   };
-  const timed = (seconds, callback) => timeout = setTimeout( () => {
-    remove(closer[0]); $.IS(callback, Function) && callback(); callback = false; }, +seconds * 1000 );
+  const timed = (seconds, callback) => timeout = setTimeout( () => remove(closer[0]), +seconds * 1000 );
   setPopupZIndex(getCurrentZIndexBoundaries(), true);
   $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
   $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`popup-warn-active`));
@@ -53,12 +52,12 @@ function newPopupFactory($) {
       txtBox.clear().append(content.isJQL ? content : $(`<div>${content}</div>`));
       isModal && warnMessage && txtBox.append(warnTemplate.duplicate());
       popupContainer.addClass(`popup-active`);
-      callbackOnClose = callback;
+      if ($.IS(callback, Function)) { callbackOnClose = () => { callback(); callbackOnClose = null; } }
 
       if (!isModal) {
         closer.addClass(`popup-active`);
         positionCloser();
-        $.IS(+closeAfter, Number) && timed(closeAfter, callbackOnClose);
+        if ($.IS(+closeAfter, Number)) { timed(closeAfter, callbackOnClose); }
       }
 
       return;
@@ -72,9 +71,11 @@ function newPopupFactory($) {
       txtBox.clear();
       $(`.popup-active`).removeClass(`popup-active`);
       setPopupZIndex(getCurrentZIndexBoundaries(), true);
-      $.IS(callbackOnClose, Function) && callbackOnClose();
+
+      if ($.IS(callbackOnClose, Function)) { callbackOnClose(); }
+
       modalWarning = ``;
-      return callbackOnClose = () => {};
+      return;
     }
     return isModal && warn();
   }
