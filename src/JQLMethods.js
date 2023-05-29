@@ -270,7 +270,7 @@ const allMethods = {
           if (IS(elem2Append, String)) {
             const isPlainString = !/^<.+>$/m.test(elem2Append.trim());
             loop(self, el =>
-              el.append(isPlainString ? elem2Append : createElementFromHtmlString(elem2Append)));
+              el.append(isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append)));
           }
 
           if (isNode(elem2Append)) {
