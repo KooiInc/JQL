@@ -297,7 +297,7 @@ const allMethods = {
           if (IS(elem2Prepend, String)) {
             const isPlainString = !/^<.+>$/m.test(elem2Prepend.trim());
             loop(self, el =>
-              el.prepend(isPlainString ? elem2Prepend : createElementFromHtmlString(elem2Prepend)));
+              el.prepend(isPlainString ? jql.text(elem2Prepend) : createElementFromHtmlString(elem2Prepend)));
           }
 
           if (isNode(elem2Prepend)) {
