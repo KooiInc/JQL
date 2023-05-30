@@ -5,11 +5,13 @@ function newPopupFactory($) {
   const editRule = $.createStyle(`JQLPopupCSS`);
   popupStyling.forEach( rule => editRule(rule) );
   let isModal, callbackOnClose, modalWarning, timeout;
-  const warnTemplate = $.virtual(`<div class="popup-warn"></div>`);
+  const warnTemplate = $.virtual(`<div class="popup-warn">`);
   const popupContainer = $(`<div class="popupContainer">`)
-    .append( $(`<span class="closeHandleIcon"/>`), $(`<div class="content"/>`) );
-  const [closer, txtBox] = [$(`.popupContainer .closeHandleIcon`), $( `.popupContainer .content` )];
-  const positionCloser = () => { if (closer.hasClass(`popup-active`) ) {
+    .append( $(`<span class="closeHandleIcon">`) )
+    .append( $(`<div class="content">`) );
+  const [closer, txtBox] = [$(`.popupContainer > .closeHandleIcon`), $( `.popupContainer > .content` )];
+  const positionCloser = () => {
+    if ( closer.hasClass(`popup-active`) ) {
       const {x, y, width} = txtBox.dimensions;
       closer.style({top: `${y - 12}px`, left: `${x + width - 12}px`});
     } };
@@ -31,6 +33,7 @@ function newPopupFactory($) {
   $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
   $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`popup-warn-active`));
   $.delegate(`resize`, positionCloser);
+
   return {
     show: createAndShowPupup,
     create: (message, isModalOrCallback, modalCallback, modalWarning) => { /*legacy*/
@@ -52,15 +55,16 @@ function newPopupFactory($) {
       txtBox.clear().append(content.isJQL ? content : $(`<div>${content}</div>`));
       isModal && warnMessage && txtBox.append(warnTemplate.duplicate());
       popupContainer.addClass(`popup-active`);
+
       if ($.IS(callback, Function)) { callbackOnClose = () => { callback(); callbackOnClose = null; } }
 
       if (!isModal) {
+        if ($.IS(+closeAfter, Number)) { timed(closeAfter, callbackOnClose); }
         closer.addClass(`popup-active`);
         positionCloser();
-        if ($.IS(+closeAfter, Number)) { timed(closeAfter, callbackOnClose); }
       }
 
-      return;
+      return true;
     }
     return console.error(`Popup creation needs at least some text to show`);
   }
