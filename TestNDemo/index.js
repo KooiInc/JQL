@@ -5,9 +5,6 @@ if (location.host.startsWith(`dev`)) {
 }
 const {virtual: $$, log, debugLog} = $;
 
-
-// initialize popup
-const popup = $.popup();
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 $.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
 
@@ -113,7 +110,7 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
   $$(`<button>Modal popup demo</button>`).on(`click`, modalDemo),
   $$(`<button>Github</button>`)
     .on(`click`, () => {
-        popup.show({
+        $.Popup.show({
          content: $$(`
           <p>
             The repository can be found  @${
@@ -187,14 +184,14 @@ $$(`<div>code used in this example (index.js)</div>`)
 // append actual code to document
 injectCode().then(_ => Prism.highlightAll());
 $(`#logBox`).style({maxWidth: `${$(`#JQLRoot`).dimensions.width}px`});
-popup.show({content: `Page done, enjoy 😎!`, closeAfter: 2 });
+$.Popup.show({content: `Page done, enjoy 😎!`, closeAfter: 2 });
 
 
 function modalDemo() {
-  const callbackAfterClose = () => popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
+  const callbackAfterClose = () => $.Popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
   const closeBttn = $$(`<button id="modalCloseTest">Close me</button>`)
     .css({marginTop: `0.5rem`}).on(`click`, () => popup.removeModal());
-  popup.show({
+  $.Popup.show({
       content: `
         <p>
           Hi. This box is <i>really</i> modal.
@@ -240,7 +237,7 @@ function getDelegates4Document() {
               .append($(`<h3>*All Comments in this document:</h3>`)
                 .Style.inline({marginTop: 0, marginBottom: `0.5rem`}))
               .HTML.append(allComments([...document.childNodes]).join(``));
-            popup.show({content});
+            $.Popup.show({content});
           },
         ]
       }, {
@@ -325,7 +322,7 @@ function showStyling(styleId, bttn) {
       : `${mapRule(rule, selectr)}`;
   };
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
-  return popup.show({
+  return $.Popup.show({
     content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
       .prepend($$(`<p></p>`).append(bttn.HTML.get(1))) });
 }
