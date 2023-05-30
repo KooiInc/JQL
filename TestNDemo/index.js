@@ -1,10 +1,7 @@
 import $ from "../index.js";
 window.jql = $;
-if (location.host.startsWith(`dev`)) {
-  document.title += ` DEV`;
-}
+if (location.host.startsWith(`dev`)) { document.title += ` DEV`; }
 const {virtual: $$, log, debugLog} = $;
-
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 $.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
 
