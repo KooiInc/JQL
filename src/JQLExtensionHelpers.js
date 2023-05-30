@@ -105,7 +105,11 @@ function defaultStaticMethodsFactory(jql) {
     get prohibitTag() { return tagLib.prohibitTag },
     get lenient() { return tagLib.allowUnknownHtmlTags; },
     get IS() { return IS; },
-    popup: () => PopupFactory(jql),
+    popup: () => jql.Popup,
+    get Popup() {
+      jql.activePopup = jql.activePopup ?? PopupFactory(jql);
+      return jql.activePopup;
+    },
     createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
     removeCssRule: (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
     text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
