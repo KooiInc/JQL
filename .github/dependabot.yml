@@ -11,9 +11,9 @@ updates:
       interval: "daily"
   - package-ecosystem: "gitsubmodule"
     directory: "/LifeCSS"
-        schedule:
+    schedule:
       interval: "weekly"
   - package-ecosystem: "gitsubmodule"
     directory: "/typeofAnything"
-        schedule:
+    schedule:
       interval: "weekly"
