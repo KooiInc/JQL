@@ -107,7 +107,7 @@ function defaultStaticMethodsFactory(jql) {
     get IS() { return IS; },
     popup: () => jql.Popup,
     get Popup() {
-      jql.activePopup = jql.activePopup ?? PopupFactory(jql);
+      if (!jql.activePopup) { jql.activePopup = PopupFactory(jql); }
       return jql.activePopup;
     },
     createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
