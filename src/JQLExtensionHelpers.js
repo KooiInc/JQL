@@ -136,14 +136,14 @@ function defaultStaticMethodsFactory(jql) {
     Object.defineProperty(acc, tag, {
       get() {
         return tag === `comment`
-          ? (txt) => jql( document.createComment(txt) )
+          ? (txt) => jql( document.createComment(txt  ?? `no text given`) )
           : (html) => jql.virtual(document.createElement(tag)).html(html ?? ``);
       }
     });
     Object.defineProperty(acc, tag.toUpperCase(), {
       get() {
         return tag === `comment`
-          ? (txt) => jql( document.createComment(txt) )
+          ? (txt) => jql( document.createComment(txt ?? `no text given`) )
           : jql.virtual(document.createElement(tag));
       }
     });
