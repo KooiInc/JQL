@@ -128,7 +128,7 @@ function defaultStaticMethodsFactory(jql) {
   return meths;
 }
 
-  const allStatics = mix(staticElements, staticMethodsFactory(jql));
+  const allStatics = combine(staticElements, staticMethodsFactory(jql));
   return allStatics;
 
   function tagsTrial(acc, [tag, cando]) {
@@ -151,11 +151,11 @@ function defaultStaticMethodsFactory(jql) {
     return acc;
   }
 
-  function mix(...sources) {
+  function combine(...sources) {
     const result = {}
     for (const source of sources) {
       const descriptors = Object.getOwnPropertyDescriptors(source);
-      Object.entries(descriptors).forEach( ([key, descriptor]) => Object.defineProperty(result, key, descriptor));
+      Object.entries(descriptors).forEach( ([key, descriptor]) => Object.defineProperty(result, key, descriptor) );
     }
     return result;
   }
