@@ -1,4 +1,4 @@
-import { createElementFromHtmlString, element2DOM, insertPositions, inject2DOMTree } from "./DOM.js";
+import { createElementFromHtmlString, insertPositions, inject2DOMTree } from "./DOM.js";
 import { debugLog, Log, systemLog } from "./JQLLog.js";
 import allMethods from "./JQLMethods.js";
 import PopupFactory from "./Popup.js";
@@ -57,16 +57,17 @@ const proxify = instance => {
 const cssRuleEdit = styleFactory( { createWithId: `JQLStylesheet` } );
 const addFn = (name, fn) => instanceMethods[name] = (self, ...params) => fn(self, ...params);
 
-let static4Docs;
+let static4Docs, elems4Docs;
 const addJQLStatics = jql => {
   const staticMethods = defaultStaticMethodsFactory(jql);
-  Object.keys(staticMethods).forEach( k =>
-    Object.defineProperty(jql, k, Object.getOwnPropertyDescriptor(staticMethods, k)));
+  Object.entries(Object.getOwnPropertyDescriptors(staticMethods))
+    .forEach( ([key, descriptor]) => { Object.defineProperty(jql, key, descriptor); } );
   static4Docs = {...staticMethods};
   return jql;
 };
 
 function defaultStaticMethodsFactory(jql) {
+  const states = {activePopup: undefined};
   const breakElement = document.createElement(`br`);
   const editCssRules = (...rules) => rules.forEach(rule => cssRuleEdit(rule));
   const editCssRule = (ruleOrSelector, ruleObject) => cssRuleEdit(ruleOrSelector, ruleObject);
@@ -89,33 +90,75 @@ function defaultStaticMethodsFactory(jql) {
 
     return handlers.forEach(handler => handle(type, origin, handler));
   };
-
-  return {
-    debugLog,
-    log: (...args) => Log(`fromStatic`, ...args),
-    insertPositions,
-    get at() { return insertPositions; },
-    editCssRules,
-    editCssRule,
-    setStyle: editCssRule,
-    delegate,
-    virtual,
-    get fn() { return addFn; },
-    get allowTag() { return tagLib.allowTag; },
-    get prohibitTag() { return tagLib.prohibitTag },
-    get lenient() { return tagLib.allowUnknownHtmlTags; },
-    get IS() { return IS; },
-    popup: () => jql.Popup,
-    get Popup() {
-      if (!jql.activePopup) { jql.activePopup = PopupFactory(jql); }
-      return jql.activePopup;
-    },
-    createStyle: id => styleFactory( { createWithId: id || `jql${randomString()}` } ),
-    removeCssRule: (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
-    text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-    node: (selector, root = document) => root.querySelector(selector, root),
-    nodes: (selector, root = document) => [...root.querySelectorAll(selector, root)],
+  let staticElements = Object.entries(tagLib.tagsRaw).reduce(tagsTrial, {});
+  elems4Docs = Object.entries(tagLib.tagsRaw)
+    .filter( ([,cando]) => cando)
+    .map( ([key,]) => key)
+    .sort( (a, b) => a.localeCompare(b));
+  const staticMethodsFactory = jql => {
+    const meths = {
+      debugLog,
+      log: (...args) => Log(`fromStatic`, ...args),
+      insertPositions,
+      get at() { return insertPositions; },
+      editCssRules,
+      editCssRule,
+      setStyle: editCssRule,
+      delegate,
+      virtual,
+      get fn() { return addFn; },
+      get allowTag() { return tagLib.allowTag; },
+      get prohibitTag() { return tagLib.prohibitTag; },
+      get lenient() { return tagLib.allowUnknownHtmlTags; },
+      get IS() { return IS; },
+      popup: () => jql.Popup,
+      get Popup() {
+        if (!jql.activePopup) {
+          jql.activePopup = PopupFactory(jql);
+        }
+        return jql.activePopup;
+      },
+      createStyle: id => styleFactory({createWithId: id || `jql${randomString()}`}),
+      removeCssRule: (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
+      text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
+      node: (selector, root = document) => root.querySelector(selector, root),
+      nodes: (selector, root = document) => [...root.querySelectorAll(selector, root)],
   };
+
+  return meths;
+}
+
+  const allStatics = mix(staticElements, staticMethodsFactory(jql));
+  return allStatics;
+
+  function tagsTrial(acc, [tag, cando]) {
+    if (!cando) { return acc; }
+    Object.defineProperty(acc, tag, {
+      get() {
+        return tag === `comment`
+          ? (txt) => jql( document.createComment(txt) )
+          : (html) => jql.virtual(document.createElement(tag)).html(html ?? ``);
+      }
+    });
+    Object.defineProperty(acc, tag.toUpperCase(), {
+      get() {
+        return tag === `comment`
+          ? (txt) => jql( document.createComment(txt) )
+          : jql.virtual(document.createElement(tag));
+      }
+    });
+
+    return acc;
+  }
+
+  function mix(...sources) {
+    const result = {}
+    for (const source of sources) {
+      const descriptors = Object.getOwnPropertyDescriptors(source);
+      Object.entries(descriptors).forEach( ([key, descriptor]) => Object.defineProperty(result, key, descriptor));
+    }
+    return result;
+  }
 }
 
 export {
@@ -142,4 +185,5 @@ export {
   systemLog,
   IS,
   static4Docs,
+  elems4Docs,
 };
