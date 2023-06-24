@@ -276,7 +276,7 @@ const allMethods = {
           if (isNode(elem2Append)) {
             let toAppend = elem2Append;
             if (self.length > 1) {
-              toAppend = elem2Append.cloneNode(true);
+              toAppend = elem2Append;
               toAppend.removeAttribute && toAppend.removeAttribute(`id`);
             }
             loop(self, el => el.append(toAppend));
