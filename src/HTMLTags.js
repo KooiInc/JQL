@@ -5,6 +5,7 @@ const allowUnknownHtmlTags = {
   off: () => lenient = false,
 };
 export default {
+  tagsRaw: allTags,
   allowUnknownHtmlTags,
   isAllowed(elem) {
     if (lenient) { return true; }
