@@ -72,7 +72,7 @@ $([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="dele
 
 // <notallowed> is ... well ... not allowed, so will be removed
 // styles inline
-$([`<notallowed id="removal_immanent"></notallowed>`,
+$([`<notallowed id="removal_imminent"></notallowed>`,
   `<div>Hi 2</div>`])
   .text(` [Hey! I am clickable too!]`, true)
   .style({color: `red`, marginTop: `0.7rem`, cursor: `pointer`})
