@@ -17,14 +17,11 @@ const logContingentErrors = elCreationInfo => {
     console.info(msgs);
   }
 };
-const cleanupHtml = elem => {
-  const template = document.createElement("template");
+const cleanupHtml = el2Clean => {
   const elCreationInfo = {
-    rawHTML: elem.outerHTML,
+    rawHTML: el2Clean.outerHTML,
     removed: { },
   }
-  template.innerHTML = `<div id="placeholder">${elem.outerHTML}</div>`;
-  const el2Clean = template.content.querySelector("#placeholder");
   el2Clean.childNodes.forEach(child => {
     const attrStore = IS(child, SVGElement) ? ATTRS.svg : ATTRS.html;
     [...child.attributes]
@@ -43,13 +40,15 @@ const cleanupHtml = elem => {
     });
     const allowed = cleanupTagInfo.isAllowed(child);
     if (!allowed) {
+      console.log(el2Clean.firstChild);
       elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `not allowed, not rendered (tag: ${
         truncate2SingleStr(child.outerHTML, 60)})`;
       child.remove();
     }
   });
   logContingentErrors(elCreationInfo);
-  return el2Clean.children[0];
+
+  return el2Clean;
 };
 const emphasize = str => `***${str}***`;
 const getRestricted = emphasizeTag =>
