@@ -264,14 +264,14 @@ const allMethods = {
 
       return self;
     },
-    addAfter: (self, elem2Inject) => {
-      elem2Inject = !elem2Inject.isJQL ? jql(elem2Inject) : elem2Inject;
-      elem2Inject.after(self);
+    addAfter: (self, elem2Add) => {
+      elem2Add = !elem2Add.isJQL ? jql(elem2Add) : elem2Add;
+      elem2Add.after(self);
       return self;
     },
-    addBefore: (self, elem2Inject) => {
-      elem2Inject = !elem2Inject.isJQL ? jql(elem2Inject) : elem2Inject;
-      elem2Inject.before(self);
+    addBefore: (self, elem2Add) => {
+      elem2Add = !elem2Add.isJQL ? jql(elem2Add) : elem2Add;
+      elem2Add.before(self);
       return self;
     },
     after: (self, injectAfter)  => {
