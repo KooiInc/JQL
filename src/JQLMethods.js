@@ -264,14 +264,25 @@ const allMethods = {
 
       return self;
     },
-    after: (self, afterEl)  => {
-      afterEl = afterEl.isJQL ? afterEl[0] : afterEl;
-      loop(self, el => afterEl.after(el));
+    addAfter: (self, elem2Inject) => {
+      elem2Inject = !elem2Inject.isJQL ? jql(elem2Inject) : elem2Inject;
+      elem2Inject.after(self);
       return self;
     },
-    before: (self, beforeEl)  => {
-      beforeEl = beforeEl.isJQL ? beforeEl[0] : beforeEl;
-      return loop(self, el => beforeEl.before(el));
+    addBefore: (self, elem2Inject) => {
+      elem2Inject = !elem2Inject.isJQL ? jql(elem2Inject) : elem2Inject;
+      elem2Inject.before(self);
+      return self;
+    },
+    after: (self, injectAfter)  => {
+      injectAfter = injectAfter.isJQL ? injectAfter[0] : injectAfter;
+      IS(self[0], Comment, Text) ? injectAfter.after(self[0]) : loop(self, el => injectAfter.after(el));
+      return self;
+    },
+    before: (self, injectBefore)  => {
+      injectBefore = injectBefore.isJQL ? injectBefore[0] : injectBefore;
+      IS(self[0], Comment, Text) ? injectBefore.before(self[0]) : loop(self, el => injectBefore.before(el));
+      return self;
     },
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
