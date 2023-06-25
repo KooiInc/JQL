@@ -23,7 +23,7 @@ const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.setAttribute(`data-${toDashedNotation(key)}`, value));
 };
-const checkProp = prop => ATTRS.html.find(attr => prop === attr);
+const checkProp = prop => ATTRS.html.find(attr => prop.toLowerCase() === attr);
 const css = (el, keyOrKvPairs, value) => {
   if (value && IS(keyOrKvPairs, String)) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
@@ -264,6 +264,15 @@ const allMethods = {
 
       return self;
     },
+    after: (self, afterEl)  => {
+      afterEl = afterEl.isJQL ? afterEl[0] : afterEl;
+      loop(self, el => afterEl.after(el));
+      return self;
+    },
+    before: (self, beforeEl)  => {
+      beforeEl = beforeEl.isJQL ? beforeEl[0] : beforeEl;
+      return loop(self, el => beforeEl.before(el));
+    },
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
         for (let elem2Append of elems2Append) {
@@ -321,7 +330,6 @@ const allMethods = {
       if (!appendTo.isJQL) {
         appendTo = jql(appendTo);
       }
-
       appendTo.append(self);
       return self;
     },
