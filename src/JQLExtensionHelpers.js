@@ -19,7 +19,8 @@ const isArrayOfHtmlElements = input => IS(input, Array) && !input?.find(el => !i
 const ElemArray2HtmlString = elems => elems?.filter(el => el).reduce((acc, el) =>
   acc.concat(isComment(el) ? `<!--${el.textContent}-->` : isCommentOrTextNode(el) ?
     el.textContent : el.outerHTML), ``);
-const input2Collection = input => !input ? []
+const input2Collection = input =>
+  !input ? []
     : IS(input, NodeList) ? [...input]
       : isNode(input) ? [input]
         : isArrayOfHtmlElements(input) ? input
@@ -90,7 +91,7 @@ function defaultStaticMethodsFactory(jql) {
 
     return handlers.forEach(handler => handle(type, origin, handler));
   };
-  let staticElements = Object.entries(tagLib.tagsRaw).reduce(tagsTrial, {});
+  let staticElements = Object.entries(tagLib.tagsRaw).reduce(staticTags, {});
   elems4Docs = Object.entries(tagLib.tagsRaw)
     .filter( ([,cando]) => cando)
     .map( ([key,]) => key)
@@ -131,20 +132,24 @@ function defaultStaticMethodsFactory(jql) {
   const allStatics = combine(staticElements, staticMethodsFactory(jql));
   return allStatics;
 
-  function tagsTrial(acc, [tag, cando]) {
+  function staticTags(acc, [tag, cando]) {
     if (!cando) { return acc; }
     Object.defineProperty(acc, tag, {
       get() {
         return tag === `comment`
-          ? (txt) => jql( document.createComment(txt  ?? `no text given`) )
-          : (html) => jql.virtual(document.createElement(tag)).html(html ?? ``);
+          ? (txt) => jql.virtual( document.createComment(txt  ?? `no text given`) )
+          : tag === `txt`
+            ? (txt) => jql.virtual( document.createTextNode(txt  ?? `no text given`) )
+            : (html) => jql.virtual(document.createElement(tag)).append(html ?? ``);
       }
     });
     Object.defineProperty(acc, tag.toUpperCase(), {
       get() {
         return tag === `comment`
-          ? (txt) => jql( document.createComment(txt ?? `no text given`) )
-          : jql.virtual(document.createElement(tag));
+          ? (txt) => jql.virtual( document.createComment(txt ?? `no text given`) )
+          : tag === `txt`
+            ? (txt) => jql.virtual( document.createTextNode(txt  ?? `no text given`) )
+            : jql.virtual(document.createElement(tag));
       }
     });
 
