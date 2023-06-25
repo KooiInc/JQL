@@ -52,8 +52,8 @@ const createElementFromHtmlString = htmlStr => {
 
   const nwElem = htmlToVirtualElement(htmlStr);
 
-  if (!nwElem.childNodes.length) {
-      return createElementFromHtmlString(`<span data-jqlcreationerror="1">${truncateHtmlStr(htmlStr, 60)}</span>`);
+  if (nwElem.childNodes.length < 1) {
+    return createElementFromHtmlString(`<span data-jqlcreationerror="1">${truncateHtmlStr(htmlStr, 60)}</span>`);
   }
 
   return nwElem.children[0];
