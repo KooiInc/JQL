@@ -40,8 +40,7 @@ const cleanupHtml = el2Clean => {
     });
     const allowed = cleanupTagInfo.isAllowed(child);
     if (!allowed) {
-      console.log(el2Clean.firstChild);
-      elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `not allowed, not rendered (tag: ${
+        elCreationInfo.removed[`<${child.nodeName.toLowerCase()}>`] = `not allowed, not rendered (tag: ${
         truncate2SingleStr(child.outerHTML, 60)})`;
       child.remove();
     }
