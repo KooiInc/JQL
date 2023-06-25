@@ -388,13 +388,7 @@ const allMethods = {
     },
     first$: (self, indexOrSelector) => self.single(indexOrSelector),
     find: (self, selector) => self.first()?.querySelectorAll(selector) || [],
-    find$: (self, selector) => {
-      const found = self.collection.reduce((acc, el) =>
-        [...acc, [...el.querySelectorAll(selector)]], [])
-        .flat()
-        .filter(el => IS(el, HTMLElement));
-      return found.length && jql(found) || jql();
-    },
+    find$: (self, selector) => { return jql(selector, self); },
     prop: (self, property, value) => {
       if (value && !checkProp(property)) {
         return self;
