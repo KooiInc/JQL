@@ -322,14 +322,16 @@ const allMethods = {
         appendTo = jql(appendTo);
       }
 
-      return appendTo.append(self);
+      appendTo.append(self);
+      return self;
     },
     prependTo: (self, prependTo) => {
       if (!prependTo.isJQL) {
         prependTo = jql.virtual(prependTo);
       }
 
-      return prependTo.prepend(self);
+      prependTo.prepend(self);
+      return self;
     },
     single: (self, indexOrSelector) => {
       if (self.collection.length > 0) {
