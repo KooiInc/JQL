@@ -46,7 +46,7 @@ const proxify = instance => {
     return { tmpKey: undefined };
   };
   const check = (self, key) => {
-    if (IS(key, Symbol)) { return `nothing`; }
+    if (IS(key, Symbol)) { return () =>  self; }
     if (IS(+key, Number)) { return self.collection?.[key]; }
     if (key in instanceGetters) { return runGet(instanceGetters[key])().tmpKey;  }
     if (key in instanceMethods) { return runExt(instanceMethods[key]); }
@@ -76,7 +76,7 @@ function defaultStaticMethodsFactory(jql) {
     root = root?.isJQL ? root?.[0] : root;
     position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const virtualElem = jql(html, breakElement);
-    if (root) {
+    if (root && !IS(root, HTMLBRElement)) {
       virtualElem.collection.forEach(elem =>
         position ? root.insertAdjacentElement(position, elem) : root.append(elem));
     }
@@ -129,30 +129,27 @@ function defaultStaticMethodsFactory(jql) {
   return meths;
 }
 
-  const allStatics = combine(staticElements, staticMethodsFactory(jql));
-  return allStatics;
+  return combine(staticElements, staticMethodsFactory(jql));
+
+  function tag2JqlFactory(tag) {
+    function getter(tag) {
+      return tag.toLowerCase() === `comment`
+        ? text => jql.virtual( document.createComment(txt  ?? `no text given`) )
+        : tag.toLowerCase() === `txt`
+          ? txt => jql.span(`${txt  ?? `no text given`}`)
+          : tag.toUpperCase() === tag
+            ? jql.virtual( document.createElement(tag) )
+            : htmlOrText =>
+                jql.virtual(document.createElement(tag)).append(htmlOrText);
+    }
+    return { get() { return getter(tag); } };
+  }
 
   function staticTags(acc, [tag, cando]) {
     if (!cando) { return acc; }
-    Object.defineProperty(acc, tag, {
-      get() {
-        return tag === `comment`
-          ? (txt) => jql.virtual( document.createComment(txt  ?? `no text given`) )
-          : tag === `txt`
-            ? (txt) => jql.virtual( document.createTextNode(txt  ?? `no text given`) )
-            : (html) => jql.virtual(document.createElement(tag)).append(html ?? ``);
-      }
-    });
-    Object.defineProperty(acc, tag.toUpperCase(), {
-      get() {
-        return tag === `comment`
-          ? (txt) => jql.virtual( document.createComment(txt ?? `no text given`) )
-          : tag === `txt`
-            ? (txt) => jql.virtual( document.createTextNode(txt  ?? `no text given`) )
-            : jql.virtual(document.createElement(tag));
-      }
-    });
-
+    const TAG = tag.toUpperCase();
+    Object.defineProperty(acc, tag, tag2JqlFactory(tag) );
+    Object.defineProperty(acc, TAG, tag2JqlFactory(TAG) );
     return acc;
   }
 
