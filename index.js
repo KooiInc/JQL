@@ -26,14 +26,15 @@ function JQLFactory() {
   const logLineLength = 70;
 
   return function JQLDefault(input, root, position = insertPositions.BeforeEnd) {
-    root = (root && root?.isJQL ? root[0] : root) ?? document.body;
+    const isVirtual = IS(root, HTMLBRElement);
+    root = isVirtual && document.body || (root && root?.isJQL ? root[0] : root) || document.body;
     position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const shouldCreateElements = isRawHtmlArray || isRawHtml;
     let instance = {
       collection: input2Collection(input) ?? [],
-      isVirtual: IS(root, HTMLBRElement),
+      isVirtual,
       isJQL: true,
     };
 
