@@ -36,14 +36,15 @@ const element2DOM = (elem, root = document.body, position = insertPositions.Befo
 };
 const createElementFromHtmlString = htmlStr => {
   htmlStr = htmlStr.trim();
-  const textNode = htmlStr.split(/<!text>/i)
+  let textNode = htmlStr.split(/<text>|<\/text>/i)
+  textNode = textNode.length > 1 ? textNode.filter(v => v.length).shift() : undefined;
 
   if (htmlStr.startsWith(`<!--`) && htmlStr.endsWith(`-->`)) {
     return document.createComment(htmlStr.replace(/<!--|-->$/g, ''));
   }
 
-  if (textNode.length > 1) {
-    return document.createTextNode(htmlStr.replace(textNode[1]));
+  if (textNode) {
+    return document.createTextNode(textNode);
   }
 
   if (!/^<(.+)[^>]+>/m.test(htmlStr)) {
