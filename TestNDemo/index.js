@@ -31,18 +31,22 @@ $(`#container`).prepend(lb);
 $.editCssRules(...getStyleRules())
 
 // create a header
-$(`<div id="StyledPara"></div>`)
+$.DIV
+  .prop(`id`,`StyledPara`)
   .addClass(`thickBorder`)
-  .append( $([`<h2>Demo & test JQueryLike (JQL) library</h2>`,
-    `<div>
-      <i><b class="attention">Everything</b></i> 
-      on this page was dynamically created using JQL.
-    </div>`,
-    `<div>
-      <b class="arrRight">&#8594;</b> 
-      Check the HTML source &mdash; right click anywhere, and select 'View page source'.
-    </div>`]) )
-  .appendTo(JQLRoot)
+  .append(
+      $.h2(`Demo & test JQueryLike (JQL) library`)
+      .andThen($(`
+        <div>
+          <i><b class="attention">Everything</b></i> 
+          on this page was dynamically created using JQL.
+        </div>`))
+      .andThen($(`
+         <div>
+          <b class="arrRight">&#8594;</b> 
+          Check the HTML source &mdash; right click anywhere, and select 'View page source'.
+        </div>`) )
+  ).appendTo(JQLRoot)
   // and prepend a comment
   .prepend($(`<!--p#JQLRoot contains all generated html-->`));
 
@@ -187,7 +191,7 @@ $.Popup.show({content: `Page done, enjoy 😎!`, closeAfter: 2 });
 function modalDemo() {
   const callbackAfterClose = () => $.Popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
   const closeBttn = $$(`<button id="modalCloseTest">Close me</button>`)
-    .css({marginTop: `0.5rem`}).on(`click`, () => popup.removeModal());
+    .css({marginTop: `0.5rem`}).on(`click`, () => $.Popup.removeModal());
   $.Popup.show({
       content: `
         <p>
