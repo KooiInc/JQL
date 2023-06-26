@@ -264,25 +264,24 @@ const allMethods = {
 
       return self;
     },
-    addAfter: (self, elem2Add) => {
-      elem2Add = !elem2Add.isJQL ? jql(elem2Add) : elem2Add;
-      elem2Add.after(self);
-      return self;
+    andThen: (self, elem2Add, before = false) => {
+      return self[before ? `beforeMe` : `afterMe`](elem2Add);
     },
-    addBefore: (self, elem2Add) => {
-      elem2Add = !elem2Add.isJQL ? jql(elem2Add) : elem2Add;
-      elem2Add.before(self);
-      return self;
+    afterMe: (self, elem2Add) => {
+      elem2Add = !elem2Add.isJQL ? jql.virtual(elem2Add) : elem2Add;
+      const reCollect = [...self.collection, ...elem2Add.collection];
+      const parent = !IS(self.parent?.[0], HTMLBRElement) ? self.parent?.[0] : undefined;
+      const selfIsVirtual = self.isVirtual;
+      !selfIsVirtual && self.remove();
+      return selfIsVirtual ? jql.virtual(reCollect, parent) : jql(reCollect, parent);
     },
-    after: (self, injectAfter)  => {
-      injectAfter = injectAfter.isJQL ? injectAfter[0] : injectAfter;
-      IS(self[0], Comment, Text) ? injectAfter.after(self[0]) : loop(self, el => injectAfter.after(el));
-      return self;
-    },
-    before: (self, injectBefore)  => {
-      injectBefore = injectBefore.isJQL ? injectBefore[0] : injectBefore;
-      IS(self[0], Comment, Text) ? injectBefore.before(self[0]) : loop(self, el => injectBefore.before(el));
-      return self;
+    beforeMe: (self, elem2Add) => {
+      elem2Add = !elem2Add.isJQL ? jql.virtual(elem2Add) : elem2Add;
+      const reCollect = [...elem2Add.collection, ...self.collection];
+      const selfIsVirtual = self.isVirtual;
+      const parent = self.parent;
+      self.remove();
+      return selfIsVirtual ? jql.virtual(reCollect, parent) : jql(reCollect, parent);
     },
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
