@@ -1,6 +1,9 @@
 import $ from "../index.js";
 window.jql = $;
-if (location.host.startsWith(`dev`)) { document.title += ` DEV`; }
+if (location.host.startsWith(`dev`)) {
+  $(`head`).append($.LINK.attr({href: `/favNICon.ico`, rel: `icon`}));
+  document.title = `##DEV## ${document.title}`;
+}
 const {virtual: $$, log, debugLog} = $;
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 $.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
@@ -21,9 +24,13 @@ const createExternalLink = (href, txt) =>
   $$(`<a class="InternalLink" href="${href}">${txt}</a>`).addTitle("opens in current tab/window");
 
 // create container for all generated html
-$(`<div id="container">`).css({className: `MAIN`, position: `absolute`, top: 0, left: 0, right: 0, bottom: 0});
-const JQLRoot = $(`<div id="JQLRoot">`, $(`#container`))
-    .css({position: `relative`, margin: `2rem auto`, maxWidth: `50vw`, display: `table`,});
+$.DIV
+  .prop({id: `container`})
+  .css({className: `MAIN`, position: `absolute`, top: 0, left: 0, right: 0, bottom: 0});
+const JQLRoot = $.DIV
+  .prop({id: `JQLRoot`})
+  .css({position: `relative`, margin: `2rem auto`, maxWidth: `50vw`, display: `table`,})
+  .appendTo($(`#container`));
 const lb = $(`#logBox`).style({margin: `1rem auto`});
 $(`#container`).prepend(lb);
 
@@ -36,16 +43,13 @@ $.DIV
   .addClass(`thickBorder`)
   .append(
       $.h2(`Demo & test JQueryLike (JQL) library`)
-      .andThen($(`
-        <div>
-          <i><b class="attention">Everything</b></i> 
-          on this page was dynamically created using JQL.
-        </div>`))
-      .andThen($(`
-         <div>
-          <b class="arrRight">&#8594;</b> 
-          Check the HTML source &mdash; right click anywhere, and select 'View page source'.
-        </div>`) )
+      .andThen(`
+          <div><i><b class="attention">Everything</b></i>
+          on this page was dynamically created using JQL.</div>`)
+      .andThen(`
+         <div><b class="arrRight">&#8594;</b> 
+          Check the HTML source &mdash; 
+          right click anywhere, and select 'View page source'.</div>`)
   ).appendTo(JQLRoot)
   // and prepend a comment
   .prepend($(`<!--p#JQLRoot contains all generated html-->`));
