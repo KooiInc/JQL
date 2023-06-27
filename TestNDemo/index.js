@@ -1,5 +1,6 @@
 import $ from "../index.js";
 window.jql = $;
+const started = performance.now();
 if (location.host.startsWith(`dev`)) {
   $(`head`).append($.LINK.attr({href: `/favNICon.ico`, rel: `icon`}));
   document.title = `##DEV## ${document.title}`;
@@ -189,7 +190,10 @@ $$(`<div>code used in this example (index.js)</div>`)
 // append actual code to document
 injectCode().then(_ => Prism.highlightAll());
 $(`#logBox`).style({maxWidth: `${$(`#JQLRoot`).dimensions.width}px`});
-$.Popup.show({content: `Page done, enjoy 😎!`, closeAfter: 2 });
+const donePerf = (performance.now() - started)/1000;
+const perfDiv = $.div(`Page creation took ${donePerf.toFixed(3)} seconds`)
+  .andThen(`<div>All done, enjoy 😎!</div>`);
+$.Popup.show({content: perfDiv, closeAfter: 5 });
 
 
 function modalDemo() {
