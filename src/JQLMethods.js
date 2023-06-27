@@ -287,7 +287,8 @@ const allMethods = {
       if (!self.is.empty && elems2Append.length) {
         for (let elem2Append of elems2Append) {
           if (IS(elem2Append, String)) {
-            const isPlainString = !/^<.+>$/m.test(elem2Append.trim());
+            elem2Append = elem2Append.trim();
+            const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Append);
             loop(self, el =>
               el.append(isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append)));
           }
@@ -388,16 +389,23 @@ const allMethods = {
     first$: (self, indexOrSelector) => self.single(indexOrSelector),
     find: (self, selector) => self.first()?.querySelectorAll(selector) || [],
     find$: (self, selector) => { return jql(selector, self); },
-    prop: (self, property, value) => {
-      if (value && !checkProp(property)) {
-        return self;
+    prop: (self, nameOrProperties, value) => {
+      if (IS(nameOrProperties, String) && !value) {
+        return self[0]?.[nameOrProperties];
       }
 
-      if (!value) {
-        return self[0]?.[property];
-      }
+      const props = !IS(nameOrProperties, Object) ? { [nameOrProperties]: value } : nameOrProperties;
+      Object.entries(props).forEach( ([propName, propValue]) => {
+        propName = propName.trim();
 
-      return loop(self, el => el[property] = value);
+        if (propValue && !checkProp(propName) || !propValue) {
+          return false;
+        }
+
+        loop(self, el => el[propName] = propValue);
+      });
+
+      return self;
     },
     on: (self, type, ...callback) => {
       if (self.collection.length) {
