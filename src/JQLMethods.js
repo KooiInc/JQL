@@ -289,8 +289,8 @@ const allMethods = {
           if (IS(elem2Append, String)) {
             elem2Append = elem2Append.trim();
             const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Append);
-            loop(self, el =>
-              el.append(isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append)));
+            elem2Append = isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append);
+            loop(self, el => el.append(elem2Append))
           }
 
           if (isNode(elem2Append)) {
