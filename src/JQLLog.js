@@ -8,6 +8,7 @@ let log2Console = true;
 let reverseLogging = false;
 let useHtml = true;
 let editLogRule;
+let logBox;
 const logBoxId = `#jql_logger`;
 
 const setStyling4Log = setStyle => { logStyling?.forEach(selector => setStyle(selector)); };
@@ -19,6 +20,7 @@ const createLogElement = () => {
   const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
     jql_logger_element_name} id="jql_logger"></${jql_logger_element_name}></div>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
+  logBox = jql(`#logBox`);
   return jql.node(logBoxId);
 };
 const decodeForConsole = something => IS(something, String) &&
@@ -62,18 +64,16 @@ const debugLog = {
     logActive.on();
     setSystemLog.on();
     if (!log2Console) {
-      const box = jql.node(logBoxId) || createLogElement();
-      box?.parentNode["classList"].add(`visible`);
+      logBox?.addClass(`visible`);
     }
     Log(`Debug logging started. Every call to [jql instance] is logged`);
     return debugLog;
   },
   off: () => {
-    const logBox = jql(logBoxId);
     if (!logBox.isEmpty) {
       setSystemLog.off();
       Log(`Debug logging stopped`);
-      logBox.parent.removeClass(`visible`);
+      logBox?.removeClass(`visible`);;
     }
     logActive.off();
     return debugLog;
@@ -93,8 +93,8 @@ const debugLog = {
   remove: () => {
     logActive.off();
     setSystemLog.off();
-    jql(logBoxId)?.remove();
-    console?.clear();
+    logBox?.remove();
+    console.clear();
     console.log(`${logTime()} logging completely disabled and all entries removed`);
     return debugLog;
   },
@@ -103,11 +103,11 @@ const debugLog = {
     return debugLog;
   },
   hide: () => {
-    jql(logBoxId)?.parent?.removeClass(`visible`);
+    logBox?.removeClass(`visible`);
     return debugLog;
   },
   show: () => {
-    jql(logBoxId)?.parent?.addClass(`visible`);
+    logBox?.addClass(`visible`);
     return debugLog;
   },
   reversed: {
@@ -125,7 +125,7 @@ const debugLog = {
     },
   },
   clear: () => {
-    jql(logBoxId)?.text(``);
+    logBox?.text(``);
     console.clear();
     Log(`Logging cleared`);
     return debugLog;
