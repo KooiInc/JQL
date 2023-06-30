@@ -17,8 +17,9 @@ const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim(
 const isArrayOfHtmlStrings = input => IS(input, Array) && !input?.find(s => !isHtmlString(s));
 const isArrayOfHtmlElements = input => IS(input, Array) && !input?.find(el => !isNode(el));
 const ElemArray2HtmlString = elems => elems?.filter(el => el).reduce((acc, el) =>
-  acc.concat(isComment(el) ? `<!--${el.textContent}-->` : isCommentOrTextNode(el) ?
-    el.textContent : el.outerHTML), ``);
+  acc.concat(isComment(el) ? `<!--${el.data}-->`
+    : isCommentOrTextNode(el) ?  el.textContent
+      : el.outerHTML), ``);
 const input2Collection = input =>
   !input ? []
     : IS(input, NodeList) ? [...input]
@@ -29,7 +30,7 @@ const setCollectionFromCssSelector = (input, root, self) => {
   const selectorRoot = root !== document.body && (IS(input, String) && input.toLowerCase() !== "body") ? root : document;
   let errorStr = undefined;
   try { self.collection = [...selectorRoot.querySelectorAll(input)]; }
-  catch (err) { errorStr =  `Invalid CSS querySelector. [${input}]`; }
+  catch (err) { errorStr = `Invalid CSS querySelector. [${!IS(input, String) ? `Nothing valid given!` : input}]`; }
   return errorStr ?? `CSS querySelector "${input}", output ${self.collection.length} element(s)`;
 };
 const addHandlerId = instance => {
@@ -92,6 +93,7 @@ function defaultStaticMethodsFactory(jql) {
     return handlers.forEach(handler => handle(type, origin, handler));
   };
   let staticElements = Object.entries(tagLib.tagsRaw).reduce(staticTags, {});
+  const cssRemove = (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
   elems4Docs = Object.entries(tagLib.tagsRaw)
     .filter( ([,cando]) => cando)
     .map( ([key,]) => key)
@@ -120,8 +122,10 @@ function defaultStaticMethodsFactory(jql) {
         return jql.activePopup;
       },
       createStyle: id => styleFactory({createWithId: id || `jql${randomString()}`}),
-      removeCssRule: (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
+      removeCssRule: cssRemove,
+      removeCssRules: cssRemove,
       text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
+      comment: str => jql.text(str, true),
       node: (selector, root = document) => root.querySelector(selector, root),
       nodes: (selector, root = document) => [...root.querySelectorAll(selector, root)],
   };
@@ -131,16 +135,34 @@ function defaultStaticMethodsFactory(jql) {
 
   return combine(staticElements, staticMethodsFactory(jql));
 
+  function createDirect({tag, content = ``, cssClass = ``, props = {}} = {}) {
+    const elem = jql.virtual(`<${tag}></${tag}>`);
+
+    if (IS(content, String, HTMLElement, Array) || content.isJQL) {
+      if (!IS(content, Array)) { content = [content]; }
+      elem.append(...content);
+    }
+
+    if (IS(props, Object)) {
+      elem.prop(props);
+    }
+
+    if (cssClass) {
+      cssClass = !IS(cssClass, Array) ? [cssClass] : cssClass;
+      elem.addClass(...cssClass);
+    }
+
+    return elem;
+  }
+
   function tag2JqlFactory(tag) {
     function getter(tag) {
-      return tag.toLowerCase() === `comment`
-        ? text => jql.virtual( document.createComment(txt  ?? `no text given`) )
-        : tag.toLowerCase() === `txt`
-          ? txt => jql.span(`${txt  ?? `no text given`}`)
-          : tag.toUpperCase() === tag
-            ? jql.virtual( document.createElement(tag) )
-            : htmlOrText =>
-                jql.virtual(document.createElement(tag)).append(htmlOrText);
+      return tag.toUpperCase() === tag
+        ? jql.virtual( `<${tag}></${tag}>` )
+        : (htmlTextOrObject, props = {}) =>
+            createDirect(!htmlTextOrObject.isJQL && IS(htmlTextOrObject, Object)
+              ? {tag, ...htmlTextOrObject }
+              : {tag, content: htmlTextOrObject, props} );
     }
     return { get() { return getter(tag); } };
   }
