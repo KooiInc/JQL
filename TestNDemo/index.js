@@ -32,8 +32,8 @@ $.editCssRules(...getStyleRules())
 const container = $.div( {
   content: $(`#logBox`).style({margin: `1rem auto`}).andThen($.p({props: {id: `JQLRoot`}})),
   props: {id: `container`},
-  cssClass: `MAIN` } )
-  .toDOM();
+  cssClass: `MAIN`,
+  toDOM: true } );
 
 const JQLRoot = $(`#JQLRoot`);
 
