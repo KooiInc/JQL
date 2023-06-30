@@ -135,7 +135,7 @@ function defaultStaticMethodsFactory(jql) {
 
   return combine(staticElements, staticMethodsFactory(jql));
 
-  function createDirect({tag, content = ``, cssClass = ``, props = {}} = {}) {
+  function createDirect({tag, content = ``, cssClass = ``, props = {}, toDOM = false} = {}) {
     const elem = jql.virtual(`<${tag}></${tag}>`);
 
     if (IS(content, String, HTMLElement, Array) || content.isJQL) {
@@ -152,7 +152,7 @@ function defaultStaticMethodsFactory(jql) {
       elem.addClass(...cssClass);
     }
 
-    return elem;
+    return toDOM ? elem.toDOM() : elem;
   }
 
   function tag2JqlFactory(tag) {
