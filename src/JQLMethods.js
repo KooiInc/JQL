@@ -265,23 +265,15 @@ const allMethods = {
       return self;
     },
     andThen: (self, elem2Add, before = false) => {
-      return self[before ? `beforeMe` : `afterMe`](elem2Add);
+      elem2Add = !elem2Add.isJQL ? jql.virtual(elem2Add) : elem2Add;
+      const reCollected = before ? elem2Add.collection.concat(self.collection) : self.collection.concat(elem2Add.collection);
+      return jql(reCollected);
     },
     afterMe: (self, elem2Add) => {
-      elem2Add = !elem2Add.isJQL ? jql.virtual(elem2Add) : elem2Add;
-      const reCollect = [...self.collection, ...elem2Add.collection];
-      const parent = !IS(self.parent?.[0], HTMLBRElement) ? self.parent?.[0] : undefined;
-      const selfIsVirtual = self.isVirtual;
-      !selfIsVirtual && self.remove();
-      return selfIsVirtual ? jql.virtual(reCollect, parent) : jql(reCollect, parent);
+      return self.andThen(elem2Add);
     },
     beforeMe: (self, elem2Add) => {
-      elem2Add = !elem2Add.isJQL ? jql.virtual(elem2Add) : elem2Add;
-      const reCollect = [...elem2Add.collection, ...self.collection];
-      const selfIsVirtual = self.isVirtual;
-      const parent = self.parent;
-      self.remove();
-      return selfIsVirtual ? jql.virtual(reCollect, parent) : jql(reCollect, parent);
+      return self.andThen(elem2Add, true);
     },
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
