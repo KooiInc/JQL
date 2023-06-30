@@ -2,6 +2,7 @@ import $ from "../index.js";
 window.jql = $;
 const started = performance.now();
 if (location.host.startsWith(`dev`)) {
+  $(`head link[rel="icon"]`).remove();
   $(`head`).append($.LINK.attr({href: `/favNICon.ico`, rel: `icon`}));
   document.title = `##DEV## ${document.title}`;
 }
@@ -24,36 +25,30 @@ const logActivation = (logBttn, active = true) => {
 const createExternalLink = (href, txt) =>
   $$(`<a class="InternalLink" href="${href}">${txt}</a>`).addTitle("opens in current tab/window");
 
-// create container for all generated html
-$.DIV
-  .prop({id: `container`})
-  .css({className: `MAIN`, position: `absolute`, top: 0, left: 0, right: 0, bottom: 0});
-const JQLRoot = $.DIV
-  .prop({id: `JQLRoot`})
-  .css({position: `relative`, margin: `2rem auto`, maxWidth: `50vw`, display: `table`,})
-  .appendTo($(`#container`));
-const lb = $(`#logBox`).style({margin: `1rem auto`});
-$(`#container`).prepend(lb);
-
 // initialize styling for logging and a few elements (to create later)
 $.editCssRules(...getStyleRules())
 
-// create a header
-$.DIV
-  .prop(`id`,`StyledPara`)
-  .addClass(`thickBorder`)
-  .append(
-      $.h2(`Demo & test JQueryLike (JQL) library`)
-      .andThen(`
-          <div><i><b class="attention">Everything</b></i>
-          on this page was dynamically created using JQL.</div>`)
-      .andThen(`
-         <div><b class="arrRight">&#8594;</b> 
-          Check the HTML source &mdash; 
-          right click anywhere, and select 'View page source'.</div>`)
-  ).appendTo(JQLRoot)
-  // and prepend a comment
-  .prepend($(`<!--p#JQLRoot contains all generated html-->`));
+// create container for all generated html
+const container = $.div( {
+  content: $(`#logBox`).style({margin: `1rem auto`}).andThen($.p({props: {id: `JQLRoot`}})),
+  props: {id: `container`},
+  cssClass: `MAIN` } )
+  .toDOM();
+
+const JQLRoot = $(`#JQLRoot`);
+
+// create the header
+let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
+  .andThen(`
+   <div><i><b class="attention">Everything</b></i>
+    on this page was dynamically created using JQL.</div>`)
+  .andThen(`
+   <div><b class="arrRight">&#8594;</b> 
+    Check the HTML source &mdash; 
+     right click anywhere, and select 'View page source'.</div>`);
+
+$.div({content: headerContent, props: {id: `StyledPara`}, cssClass: `thickBorder`})
+  .appendTo( JQLRoot );
 
 // add all event handling delegates defined in function [getDelegates4Document]
 getDelegates4Document()
@@ -73,11 +68,10 @@ $(`<div id="nohandling" onclick="alert('${msg}')"></div>`)
 
 // script and data attribute will be removed, but you can add data-attributes later
 // styles are inline here
-$([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="delegates">Hi 1</div>`])
+$([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="delegates">Hi 1</div>`], JQLRoot)
   .data.add({hello: "Added post creation"})
   .html(` [you may <b><i>click</i> me</b>] `, true)
   .style({cursor: `pointer`})
-  .appendTo(JQLRoot);
 
 // <notallowed> is ... well ... not allowed, so will be removed
 // styles inline
@@ -176,9 +170,10 @@ $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
 $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
 // comment insertion test
-$(`<!--Comment @ #JQLRoot beforebegin (verify it in DOM tree)-->`, JQLRoot, `beforebegin`);
-$(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), `afterend`);
-$(`<!--Comment @ #bttnblock afterbegin (verify it in DOM tree) -->`, $(`#bttnblock`), `afterbegin`);
+$($.text(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`, true), JQLRoot, $.at.BeforeBegin);
+$($.comment(`p#JQLRoot contains all generated html`), JQLRoot, $.at.BeforeBegin);
+$(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterEnd);
+$(`<!--Comment @ #bttnblock afterbegin (so, prepend) verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterBegin);
 
 // display code of this file
 // -------------------------
@@ -224,14 +219,13 @@ function getDelegates4Document() {
       handlers: [
         (_, self) => {
           clearTimeout(+self.data.get('timer') || 0);
+          self.find$(`span.funny`)?.remove();
           self.toggleClass(`green`);
           $(`[data-funny]`).remove();
-          self.append( self.hasClass(`green`)
-            ? `<span class="green" data-funny>now I'm  green</span>`
-            : `<span data-funny>now I'm black</span>`
-          );
-          $(self).data.add({timer: setTimeout(() => self.find$(`[data-funny]`)?.remove(), 2500)});
-          log(`That's funny ... ${self.find$(`[data-funny]`).html()}`);
+          const colr = self.hasClass(`green`) ? `green` : `black`;
+          self.append( $.span({ content: `Funny! Now I'm  ${colr}`, cssClass: `funny` }));
+          self.data.add({timer: setTimeout(() => self.find$(`span.funny`)?.remove(), 2500)});
+          log(`That's funny ... ${self.find$(`.black,.green`).html()}`);
         },
       ]
     },
@@ -257,13 +251,13 @@ function getDelegates4Document() {
 
             if (!+self.data.get(`hidden`)) {
               codeElem.removeClass(`down`);
-              return $(self).data.add({updown: '\u25bc View ', hidden: 1})
+              return self.data.add({updown: '\u25bc View ', hidden: 1})
             }
 
             $(`.down`).each(el => el.classList.remove(`down`));
             $(`[data-forid]`).data.add({updown: '\u25bc View ', hidden: 1});
             codeElem.addClass(`down`);
-            $(self).data.add({updown: '\u25b2 Hide ', hidden: 0});
+            self.data.add({updown: '\u25b2 Hide ', hidden: 0});
           }
         ]
       }]
@@ -341,6 +335,15 @@ function getStyleRules() {
     `body {
       font: normal 12px/15px verdana, arial;
       margin: 2rem;
+    }`,
+    `#JQLRoot { 
+      position: relative; 
+      margin: 2rem auto; 
+      maxWidth: 50vw; 
+      display: table }`,
+    `.MAIN { 
+      position: absolute; 
+      inset: 0; 
     }`,
     `pre[class*='language-'] {
       position: relative;
