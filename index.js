@@ -30,7 +30,7 @@ function JQLFactory() {
     root = isVirtual && document.body || (root && root?.isJQL ? root[0] : root) || document.body;
     position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const isRawHtml = isHtmlString(input);
-    const isRawHtmlArray = isArrayOfHtmlStrings(input);
+    const isRawHtmlArray = !isRawHtml && isArrayOfHtmlStrings(input);
     const shouldCreateElements = isRawHtmlArray || isRawHtml;
     let instance = {
       collection: input2Collection(input) ?? [],
@@ -53,11 +53,14 @@ function JQLFactory() {
 
     if (instance.collection.length && isRawElemCollection) {
       systemLog(logStr);
-      instance.collection.forEach(el => {
-        if (!document.documentElement.contains(el)) {
-          inject2DOMTree([el], root, position);
-        }
-      });
+
+      if (!isVirtual) {
+        instance.collection.forEach(el => {
+          if (!root.contains(el)) {
+            inject2DOMTree([el], root, position);
+          }
+        });
+      }
 
       return proxify(instance);
     }
