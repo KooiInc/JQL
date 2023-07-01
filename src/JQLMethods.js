@@ -279,8 +279,8 @@ const allMethods = {
       if (!self.is.empty && elems2Append.length) {
         for (let elem2Append of elems2Append) {
           if (IS(elem2Append, String)) {
-            elem2Append = elem2Append.trim();
-            const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Append);
+            const elem2Append4Test = elem2Append.trim();
+            const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Append4Test);
             elem2Append = isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append);
             loop(self, el => el.append(elem2Append))
           }
