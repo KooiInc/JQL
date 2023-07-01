@@ -38,11 +38,12 @@ const container = $.div( {
 const JQLRoot = $(`#JQLRoot`);
 
 // create the header
+//`<b class="attention">Everything</b>`
 let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
-  .andThen(`
-   <div><i><b class="attention">Everything</b></i>
-    on this page was dynamically created using JQL.</div>`)
-  .andThen(`
+  .andThen( $.div( [
+    $.i( $.b( { content: `Everything`, cssClass: `attention` } ) ),
+    ` on this page was dynamically created using JQL.` ] )
+  ).andThen(`
    <div><b class="arrRight">&#8594;</b> 
     Check the HTML source &mdash; 
      right click anywhere, and select 'View page source'.</div>`);
@@ -333,7 +334,7 @@ function showStyling(styleId, bttn) {
 function getStyleRules() {
   return [
     `body {
-      font: normal 12px/15px verdana, arial;
+      font: normal 13px/16px verdana, arial;
       margin: 2rem;
     }`,
     `#JQLRoot { 
@@ -416,7 +417,7 @@ function getStyleRules() {
     }`,
     `.hidden { display: none; }`,
     `b.attention {
-      color: red, 
+      color: red;
       fontSize: 1.2em; 
      }`
   ];
