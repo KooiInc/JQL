@@ -10,7 +10,7 @@ export default {
   isAllowed(elem) {
     if (lenient) { return true; }
     const nodeName = elem?.nodeName.toLowerCase() || `none`;
-    return !!allTags[nodeName];
+    return nodeName === `#text` || !!allTags[nodeName];
   },
   allowTag: tag2Allow => allTags[tag2Allow.toLowerCase()] = true,
   prohibitTag: tag2Prohibit => allTags[tag.toLowerCase()] = false,
