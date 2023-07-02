@@ -30,7 +30,9 @@ $.editCssRules(...getStyleRules())
 
 // create container for all generated html
 const container = $.div( {
-  content: $(`#logBox`).style({margin: `1rem auto`}).andThen($.p({props: {id: `JQLRoot`}})),
+  content: $(`#logBox`).style({margin: `1rem auto`})
+    .andThen($.p({props: {id: `JQLRoot`}})
+    .andThen($.comment(`p#JQLRoot contains all generated html`), true)),
   props: {id: `container`},
   cssClass: `MAIN`,
   toDOM: true } );
@@ -170,9 +172,8 @@ $$(`<!--Hi, I am a multiline HTML-comment.
 $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
 $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
-// comment insertion test
+// comment insertion test (note: this works with before-/afterMe/andThen too now)
 $($.text(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`, true), JQLRoot, $.at.BeforeBegin);
-$($.comment(`p#JQLRoot contains all generated html`), JQLRoot, $.at.BeforeBegin);
 $(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterEnd);
 $(`<!--Comment @ #bttnblock afterbegin (so, prepend) verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterBegin);
 
