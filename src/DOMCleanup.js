@@ -16,8 +16,7 @@ const logContingentErrors = elCreationInfo => {
     const msgs = Object.entries(elCreationInfo.removed)
       .reduce( (acc, [k, v]) => [...acc, `${escHtml(k)} => ${v}`], [])
       .join(`\\000A`);
-    const godverdomme = escHtml(msgs);
-    debugLog.log(`JQL HTML creation errors: ${debugLog.isConsole ? msgs : godverdomme}`);
+    debugLog.log(`JQL HTML creation errors: ${debugLog.isConsole ? msgs : escHtml(msgs)}`);
   }
 };
 const cleanupHtml = el2Clean => {
