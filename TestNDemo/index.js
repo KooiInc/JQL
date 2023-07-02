@@ -161,11 +161,11 @@ $$(`<div id="helloworld"/>`)
   .css({className: `okRed`, color: `red`});
 
 // append multiline comment to p#JQLRoot
-$$(`<!--Hi, I am a multiline HTML-comment.
+$$($.comment(`Hi, I am a multiline HTML-comment.
      So, you can add plain comments using JQL
      A comment may be injected into a child 
      element (using the [root] parameter
-     combined with a position-->`).appendTo(JQLRoot),
+     combined with a position`)).appendTo(JQLRoot),
 
 
 // a comment can also be appended using append/appendTo/prepend/prependTo
