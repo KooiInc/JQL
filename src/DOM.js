@@ -35,20 +35,20 @@ const element2DOM = (elem, root = document.body, position = insertPositions.Befo
     characterDataElement2DOM(elem, root, position) : root.insertAdjacentElement(position, elem);
 };
 const createElementFromHtmlString = htmlStr => {
-  htmlStr = htmlStr.trim();
-  let textNode = htmlStr.split(/<text>|<\/text>/i)
-  textNode = textNode.length > 1 ? textNode.filter(v => v.length).shift() : undefined;
+  if (IS(htmlStr, Text, Comment)) {
+    return htmlStr;
+  }
 
-  if (htmlStr.startsWith(`<!--`) && htmlStr.endsWith(`-->`)) {
+  const testStr = htmlStr.trim();
+  let text = testStr.split(/<text>|<\/text>/i);
+  text = text.length > 1 ? text.filter(v => v.length).shift() : undefined;
+
+  if (testStr.startsWith(`<!--`) && testStr.endsWith(`-->`)) {
     return document.createComment(htmlStr.replace(/<!--|-->$/g, ''));
   }
 
-  if (textNode) {
-    return document.createTextNode(textNode);
-  }
-
-  if (!/^<(.+)[^>]+>/m.test(htmlStr)) {
-     return document.createTextNode(htmlStr);
+  if (text || !/^<(.+)[^>]+>/m.test(testStr)) {
+    return document.createTextNode(text);
   }
 
   const nwElem = htmlToVirtualElement(htmlStr);
