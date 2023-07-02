@@ -58,6 +58,7 @@ const setSystemLog = {
 };
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 const debugLog = {
+  get isConsole() { return log2Console === true; },
   isOn: () => useLogging,
   isVisible: () => jql(`#jql_logger`).is(`visible`),
   on: () => {
