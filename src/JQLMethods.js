@@ -265,9 +265,13 @@ const allMethods = {
       return self;
     },
     andThen: (self, elem2Add, before = false) => {
-      elem2Add = !elem2Add.isJQL ? jql.virtual(elem2Add) : elem2Add;
-      const reCollected = before ? elem2Add.collection.concat(self.collection) : self.collection.concat(elem2Add.collection);
-      return jql(reCollected);
+      elem2Add = elem2Add.isJQL ? elem2Add.collection : jql.virtual(createElementFromHtmlString(elem2Add)).collection;
+      const [index, method, reCollected] = before
+        ? [0, `before`, elem2Add.concat(self.collection)]
+        : [self.collection.length - 1, `after`, self.collection.concat(elem2Add)];
+      self[index][method](...elem2Add);
+      self.collection = reCollected;
+      return self;
     },
     afterMe: (self, elem2Add) => {
       return self.andThen(elem2Add);
