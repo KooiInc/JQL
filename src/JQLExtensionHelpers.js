@@ -95,9 +95,13 @@ function defaultStaticMethodsFactory(jql) {
   let staticElements = Object.entries(tagLib.tagsRaw).reduce(staticTags, {});
   const cssRemove = (...rules) => {
     if (rules.length === 1) {
-      rules = rules.shift().split(`,`).map(v => v.trim());
+      const ruleStr = String(rules.shift().trim());
+      rules = !ruleStr.startsWith(`!`)
+          ? ruleStr.split(`,`).map(v => v.trim())
+          : [ruleStr.slice(1, -1)];
     }
-    rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1}));
+    rules.map(rule => rule.startsWith(`!`) ? rule.slice(1, -1) : rule)
+      .forEach(rule => cssRuleEdit(rule, {removeRule: 1}));
   },
   elems4Docs = Object.entries(tagLib.tagsRaw)
     .filter( ([,cando]) => cando)
