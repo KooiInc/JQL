@@ -119,6 +119,10 @@ const allMethods = {
         const html = outer ? self.outerHtml : self.html();
         return escaped ? escHtml(html) : html;
       },
+      set: (value, append = false, escape = false) => {
+        self.html(escape ? escHtml(value) : value, append);
+        return self;
+      },
       replace: str => {
         if (!self.is.empty) { self.html(str); }
         return self;
