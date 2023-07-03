@@ -119,21 +119,21 @@ const allMethods = {
         const html = outer ? self.outerHtml : self.html();
         return escaped ? escHtml(html) : html;
       },
-      set: (value, append = false, escape = false) => {
-        self.html(escape ? escHtml(value) : value, append);
+      set: (content, append = false, escape = false) => {
+        const isString = IS(content, String);
+        content = isString && content.isJQL ? content.HTML.get(1) : content;
+        content = isString && escape ? escHtml(content) : content;
+        if (isString && (content || ``).trim().length) { self.html(content, append); }
         return self;
       },
-      replace: str => {
-        if (!self.is.empty) { self.html(str); }
-        return self;
+      replace: (str, escape = false) => {
+        return self.HTML.set(content, false, escape);
       },
-      append: str => {
-        if (!self.is.empty) { self.html(str, true); }
-        return self;
+      append: (content, escape = false) => {
+        return self.HTML.set(content, true, escape);
       },
-      insert: str => {
-        if (!self.is.empty) { self.html(`${str.isJQL ? str.HTML.get(true) : str}${self.HTML.get()}`); }
-        return self;
+      insert: (content, escape = false) => {
+        return self.HTML.set(content, false, escape);
       },
     })
   },
