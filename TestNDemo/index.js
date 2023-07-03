@@ -14,14 +14,6 @@ $.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
 debugLog.on().toConsole.off().reversed.on().hide();
 const apiLinkPrefix = `//github.com/KooiInc/JQL`;
 
-// Some methods used in handler delegates
-const logActivation = (logBttn, active = true) => {
-  if (!logBttn.is.empty) {
-    logBttn.data.add({on: +active});
-    debugLog[active ? `show` : `hide`]();
-  }
-};
-
 const createExternalLink = (href, txt) =>
   $$(`<a class="InternalLink" href="${href}">${txt}</a>`).addTitle("opens in current tab/window");
 
@@ -39,13 +31,12 @@ const container = $.div( {
 
 const JQLRoot = $(`#JQLRoot`);
 
-// create the header
-//`<b class="attention">Everything</b>`
+// create the header content
 let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
   .andThen( $.div( [
     $.i( $.b( { content: `Everything`, cssClass: `attention` } ) ),
-    ` on this page was dynamically created using JQL.` ] )
-  ).andThen(`
+    ` on this page was dynamically created using JQL.` ] ) )
+  .andThen(`
    <div><b class="arrRight">&#8594;</b> 
     Check the HTML source &mdash; 
      right click anywhere, and select 'View page source'.</div>`);
@@ -265,6 +256,14 @@ function getDelegates4Document() {
       }]
   });
 }
+
+// Some methods used in handler delegates
+const logActivation = (logBttn, active = true) => {
+  if (!logBttn.is.empty) {
+    logBttn.data.add({on: +active});
+    debugLog[active ? `show` : `hide`]();
+  }
+};
 
 function allComments(root, result = []) {
   for (const node of root) {
