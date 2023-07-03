@@ -95,7 +95,7 @@ function defaultStaticMethodsFactory(jql) {
   let staticElements = Object.entries(tagLib.tagsRaw).reduce(staticTags, {});
   const cssRemove = (...rules) => {
     if (rules.length === 1) {
-      rules = rules.split(`,`).map(v => v.trim())
+      rules = rules.shift().split(`,`).map(v => v.trim());
     }
     rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1}));
   },
