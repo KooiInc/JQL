@@ -85,6 +85,11 @@ const allMethods = {
     outerHtml: self => (self.first() || {outerHTML: undefined}).outerHTML,
     data: self => ({
       get all() { return new Proxy(self[0]?.dataset ?? {}, dataWeirdnessProxy); },
+      set: (valuesObj = {}) => {
+        !self.is.empty && IS(valuesObj, Object) && Object.entries(valuesObj)
+          .forEach( ([key,value]) => self.setData( { [key]: value} ) );
+         return self;
+      },
       get: (key, whenUndefined) => self.data.all[key] ?? whenUndefined,
       add: (valuesObj = {}) => {
         !self.is.empty && IS(valuesObj, Object) && Object.entries(valuesObj)
@@ -103,11 +108,26 @@ const allMethods = {
       valueOf: key => {
         return !self.is.empty ? getComputedStyle(self[0])[toDashedNotation(key)] : undefined;
       },
+      nwRule: rule => self.Style.byRule({rules: rule}),
       byRule: ({classes2Apply = [], rules = []} = {}) => {
+        const isSingleRule = IS(rules, String);
+        const addClassNameOrID = isSingleRule && !classes2Apply.length ? rules.split(`{`)[0].trim() : ``;
+        rules = rules && IS(rules, String) ? [rules] : rules;
+        classes2Apply = classes2Apply && IS(classes2Apply, String) ? [classes2Apply] : classes2Apply;
+
         if (rules?.length || classes2Apply?.length) {
           rules?.length && jql.editCssRules(...rules);
           classes2Apply?.forEach(selector => self.addClass(selector));
         }
+
+        if (addClassNameOrID?.startsWith(`.`)) {
+          self.addClass(addClassNameOrID.slice(1));
+        }
+
+        if (addClassNameOrID?.startsWith(`#`) && !self.attr(`id`)) {
+          self.prop({id: addClassNameOrID.slice(1)});
+        }
+
         return self;
       },
     }),
@@ -120,20 +140,21 @@ const allMethods = {
         return escaped ? escHtml(html) : html;
       },
       set: (content, append = false, escape = false) => {
+        content = content.isJQL ? content.HTML.get(1) : content;
         const isString = IS(content, String);
-        content = isString && content.isJQL ? content.HTML.get(1) : content;
         content = isString && escape ? escHtml(content) : content;
         if (isString && (content || ``).trim().length) { self.html(content, append); }
         return self;
       },
-      replace: (str, escape = false) => {
+      replace: (content, escape = false) => {
         return self.HTML.set(content, false, escape);
       },
       append: (content, escape = false) => {
         return self.HTML.set(content, true, escape);
       },
       insert: (content, escape = false) => {
-        return self.HTML.set(content, false, escape);
+        content = content.isJQL ? content.HTML.get() : content;
+        return self.HTML.set(content + self.HTML.get(), false, escape);
       },
     })
   },
@@ -402,7 +423,11 @@ const allMethods = {
           return false;
         }
 
-        loop(self, el => el[propName] = propValue);
+        const isId = propName.toLowerCase() === `id`;
+
+        if (isId) { self[0].id = propValue; }
+
+        !isId && loop(self, el => el[propName] = propValue);
       });
 
       return self;
