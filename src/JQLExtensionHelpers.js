@@ -93,7 +93,12 @@ function defaultStaticMethodsFactory(jql) {
     return handlers.forEach(handler => handle(type, origin, handler));
   };
   let staticElements = Object.entries(tagLib.tagsRaw).reduce(staticTags, {});
-  const cssRemove = (...rules) => rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1})),
+  const cssRemove = (...rules) => {
+    if (rules.length === 1) {
+      rules = rules.split(`,`).map(v => v.trim())
+    }
+    rules.forEach(rule => cssRuleEdit(rule, {removeRule: 1}));
+  },
   elems4Docs = Object.entries(tagLib.tagsRaw)
     .filter( ([,cando]) => cando)
     .map( ([key,]) => key)
