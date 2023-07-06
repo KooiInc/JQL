@@ -1,12 +1,16 @@
 import $ from "../index.js";
 window.jql = $;
 const started = performance.now();
+
 if (location.host.startsWith(`dev`)) {
-  $(`head link[rel="icon"]`).remove();
-  $(`head`).append($.LINK.attr({href: `/favNICon.ico`, rel: `icon`}));
+  $(`link[rel="icon"]`).replaceMe($.LINK.prop({href: `/favNICon.ico`, rel: `icon`}));
   document.title = `##DEV## ${document.title}`;
 }
+
+// initialize statics from $
 const {virtual: $$, log, debugLog} = $;
+
+// some helpers
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 $.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
 
