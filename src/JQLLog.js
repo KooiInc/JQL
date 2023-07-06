@@ -80,7 +80,7 @@ const debugLog = {
     if (!getLogBox().isEmpty) {
       setSystemLog.off();
       Log(`Debug logging stopped`);
-      getLogBox()?.removeClass(`visible`);;
+      getLogBox()?.removeClass(`visible`);
     }
     logActive.off();
     return debugLog;
