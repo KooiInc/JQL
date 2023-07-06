@@ -223,8 +223,8 @@ const allMethods = {
     replace: (self, oldChild, newChild) => {
       const firstElem = self[0];
 
-      if (!oldChild || !newChild) {
-        console.error(`JQL replace: nothing to replace`);
+      if (!oldChild || (!newChild || !IS(newChild, HTMLElement) && !newChild.isJQL)) {
+        console.error(`JQL replace: invalid replacement value`);
         return self;
       }
 
@@ -251,15 +251,17 @@ const allMethods = {
 
       return self;
     },
-    replaceMe: (self, newChild) => {
-      newChild = newChild && IS(newChild, HTMLElement) ? newChild : newChild.isJQL && newChild[0];
+    replaceWith: (self, newChild) => {
+      newChild = IS(newChild, Element) ? newChild : newChild.isJQL ? newChild[0] : undefined;
 
       if (newChild) {
         self[0].replaceWith(newChild);
+        self = jql.virtual(newChild);
       }
 
-      return jql(newChild);
+      return self;
     },
+    replaceMe: (self, newChild) => /*NODOC*/ self.replaceWith(newChild),
     val: (self, newValue) => {
       const firstElem = self[0];
 
