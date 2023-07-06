@@ -221,7 +221,7 @@ const allMethods = {
         ? false : classNames.find(cn => firstElem.classList.contains(cn)) && true || false;
     },
     replace: (self, oldChild, newChild) => {
-      const firstElem = self.first();
+      const firstElem = self[0];
 
       if (!oldChild || !newChild) {
         console.error(`JQL replace: nothing to replace`);
@@ -229,7 +229,7 @@ const allMethods = {
       }
 
       if (newChild.isJQL) {
-        newChild = newChild.first();
+        newChild = newChild[0];
       }
 
       if (IS(newChild, NodeList)) {
@@ -252,8 +252,12 @@ const allMethods = {
       return self;
     },
     replaceMe: (self, newChild) => {
-      newChild = IS(newChild, HTMLElement) ? jql(newChild) : newChild;
-      self.parent.replace(self, newChild);
+      newChild = newChild && IS(newChild, HTMLElement) ? newChild : newChild.isJQL && newChild[0];
+
+      if (newChild) {
+        self[0].replaceWith(newChild);
+      }
+
       return jql(newChild);
     },
     val: (self, newValue) => {
