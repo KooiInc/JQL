@@ -9,7 +9,7 @@ let reverseLogging = false;
 let useHtml = true;
 let editLogRule;
 const getLogBox = () => jql(`#logBox`);
-const logBoxId = `#jql_logger`;
+const logBoxTextBoxId = `#jql_logger`;
 
 const setStyling4Log = setStyle => { logStyling?.forEach(selector => setStyle(selector)); };
 
@@ -21,7 +21,7 @@ const createLogElement = () => {
   const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
     jql_logger_element_name} id="jql_logger"></${jql_logger_element_name}></div>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
-  return jql.node(logBoxId);
+  return jql.node(logBoxTextBoxId);
 };
 
 const decodeForConsole = something => IS(something, String) &&
@@ -132,7 +132,7 @@ const debugLog = {
     },
   },
   clear: () => {
-    jql(logBoxId).text(``);
+    jql(logBoxTextBoxId).text(``);
     console.clear();
     Log(`Logging cleared`);
     return debugLog;
