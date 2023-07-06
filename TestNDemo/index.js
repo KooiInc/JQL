@@ -99,7 +99,7 @@ $.delegate(`click`, `[data-switch-bttn]`,
 
 const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
   $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
-  $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, debugLog.clear),
+  $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, () => debugLog.clear()),
   $$(`<button id="showComments">Show document comments</button>`)
     .prop(`title`, `Show content of comment elements in a popup`),
   $$(`<button id="showCSS">Show custom CSS</button>`)
