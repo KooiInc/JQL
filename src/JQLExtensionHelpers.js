@@ -31,6 +31,7 @@ const setCollectionFromCssSelector = (input, root, self) => {
   let errorStr = undefined;
   try { self.collection = [...selectorRoot.querySelectorAll(input)]; }
   catch (err) { errorStr = `Invalid CSS querySelector. [${!IS(input, String) ? `Nothing valid given!` : input}]`; }
+
   return errorStr ?? `CSS querySelector "${input}", output ${self.collection.length} element(s)`;
 };
 const addHandlerId = instance => {
