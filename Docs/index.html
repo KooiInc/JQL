@@ -11,6 +11,9 @@
 <body>
   <div id="navigation"></div>
   <div class="docs loading"></div>
-  <script src="./bundle/jqldoc.min.js" type="module"></script>
+  <script id="loader">
+    const src = location.host.startsWith(`dev`) ? `./index.js` : `./bundle/jqldoc.min.js`;
+    document.body.append(Object.assign(document.createElement(`script`), {src: src, type: `module`}));
+  </script>
 </body>
 </html>
