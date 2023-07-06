@@ -8,10 +8,11 @@ let log2Console = true;
 let reverseLogging = false;
 let useHtml = true;
 let editLogRule;
-let logBox;
+const getLogBox = () => jql(`#logBox`);
 const logBoxId = `#jql_logger`;
 
 const setStyling4Log = setStyle => { logStyling?.forEach(selector => setStyle(selector)); };
+
 const createLogElement = () => {
   if (logStyling) {
     setStyling4Log(editLogRule);
@@ -20,12 +21,12 @@ const createLogElement = () => {
   const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
     jql_logger_element_name} id="jql_logger"></${jql_logger_element_name}></div>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
-  logBox = jql(`#logBox`);
   return jql.node(logBoxId);
 };
+
 const decodeForConsole = something => IS(something, String) &&
-  Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
-  something;
+  Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent || something;
+
 const Log = (...args) => {
     const isInstanceLog = args[0] === `fromStatic`;
     args = isInstanceLog ? args.slice(1) : args;
@@ -35,12 +36,13 @@ const Log = (...args) => {
 
     if (!useLogging) { return; }
 
-    editLogRule = jql.createStyle(`JQLLogCSS`);
-    if (!log2Console && !jql.node(`#jql_logger`)) {
+    if (!log2Console && !jql.node(`#logBox`)) {
       editLogRule = jql.createStyle(`JQLLogCSS`);
       createLogElement();
     }
+
     const logLine = arg => `${IS(arg, Object) ? JSON.stringify(arg, null, 2) : arg}\n`;
+
     args.forEach( arg => log2Console
       ? console.info(`${logTime()} ✔ ${decodeForConsole(arg)}`)
       : jql.node(`#jql_logger`).insertAdjacentHTML(
@@ -48,15 +50,19 @@ const Log = (...args) => {
           `<div class="entry">${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}</div>`)
     );
 };
+
 const logActive = {
   on() {  useLogging = true; Log(`Logging activated`); },
   off() { useLogging = false; console.log(`Logging deactivated`) },
 }
+
 const setSystemLog = {
   on() { logSystem = true; },
   off() { logSystem = false; },
 };
+
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
+
 const debugLog = {
   get isConsole() { return log2Console === true; },
   isOn: () => useLogging,
@@ -65,16 +71,16 @@ const debugLog = {
     logActive.on();
     setSystemLog.on();
     if (!log2Console) {
-      logBox?.addClass(`visible`);
+      getLogBox()?.addClass(`visible`);
     }
     Log(`Debug logging started. Every call to [jql instance] is logged`);
     return debugLog;
   },
   off: () => {
-    if (!logBox.isEmpty) {
+    if (!getLogBox().isEmpty) {
       setSystemLog.off();
       Log(`Debug logging stopped`);
-      logBox?.removeClass(`visible`);;
+      getLogBox()?.removeClass(`visible`);;
     }
     logActive.off();
     return debugLog;
@@ -94,7 +100,7 @@ const debugLog = {
   remove: () => {
     logActive.off();
     setSystemLog.off();
-    logBox?.remove();
+    getLogBox()?.remove();
     console.clear();
     console.log(`${logTime()} logging completely disabled and all entries removed`);
     return debugLog;
@@ -104,11 +110,11 @@ const debugLog = {
     return debugLog;
   },
   hide: () => {
-    logBox?.removeClass(`visible`);
+    getLogBox()?.removeClass(`visible`);
     return debugLog;
   },
   show: () => {
-    logBox?.addClass(`visible`);
+    getLogBox()?.addClass(`visible`);
     return debugLog;
   },
   reversed: {
@@ -126,7 +132,7 @@ const debugLog = {
     },
   },
   clear: () => {
-    logBox?.text(``);
+    jql(logBoxId).text(``);
     console.clear();
     Log(`Logging cleared`);
     return debugLog;
