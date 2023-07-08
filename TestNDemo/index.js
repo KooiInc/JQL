@@ -3,7 +3,7 @@ window.jql = $;
 const started = performance.now();
 
 if (location.host.startsWith(`dev`)) {
-  $(`link[rel="icon"]`).replaceWith($.LINK.prop({href: `./demoIcon.png`, rel: `icon`}));
+  $(`link[rel="icon"]`).replaceWith($.LINK.prop({href: `./demoIcon.png`, rel: `icon`, type: `image/png`}));
   document.title = `##DEV## ${document.title}`;
 }
 
