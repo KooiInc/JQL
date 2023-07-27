@@ -41,8 +41,8 @@ let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
     $.i( $.b( { content: `Everything`, cssClass: `attention` } ) ),
     ` on this page was dynamically created using JQL.` ] ) )
   .andThen(`
-   <div><b class="arrRight">&#8594;</b> 
-    Check the HTML source &mdash; 
+   <div><b class="arrRight">&#8594;</b>
+    Check the HTML source &mdash;
      right click anywhere, and select 'View page source'.</div>`);
 
 $.div({content: headerContent, props: {id: `StyledPara`}, cssClass: `thickBorder`})
