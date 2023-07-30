@@ -26,6 +26,9 @@ const cleanupHtml = el2Clean => {
   }
   if (IS(el2Clean, HTMLElement)) {
     [...el2Clean.childNodes].forEach(child => {
+      if (child?.children?.length) {
+        cleanupHtml(child);
+      }
       if (child?.attributes) {
         const attrStore = IS(child, SVGElement) ? ATTRS.svg : ATTRS.html;
 
