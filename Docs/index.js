@@ -4,6 +4,10 @@ const importLink =  isDev ?
   `../../Bundle/jql.min.js`;
 const $ = (await import(importLink)).default;
 $(`#loader`).remove();
+const setAllCodeStyling = el => {
+  const pre = el.closest(`pre`);
+  return !pre ? $(el).addClass(`inline`) : $(pre).addClass(`language-javascript`, `line-numbers`);
+}
 const perform = performance.now();
 document.title = isDev ? `##DEV## ${document.title}` : document.title;
 if (isDev) {
@@ -40,24 +44,22 @@ const createNavigationItems = ({group, displayName}) => {
     });
   return displayName;
 };
-
 const docsContainer = $.node(`.docs`);
 const handler = clientHandling($);
 $.delegate(`click`, handler);
 $.delegate(`scroll`, `.docs`, handler);
-
 const codeMapper = (code, i) => {
+  code = code.trim().replace(/</g, `&lt;`).replace(/>/g, `&gt;`);
   return `<div class="exContainer"><h3 class="example">Example${
-    i > 0 ? ` ${i + 1}` : ``}</h3><pre class="language-javascript"><code class="js language-javascript line-numbers">${
-    code.trim().replace(/</g, `&lt;`).replace(/>/g, `&gt;`)}</code></pre></div>`;
+    i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${code}</code></pre></div>`;
 };
 const convertExamples = descriptionValue => {
   const re = /(?<=<example>)(.|\n)*?(?=<\/example>)/gm;
-  const exampleCode = (descriptionValue.match(re) || [])
-    .map( (code, i) => codeMapper(code, i) );
+  const exampleCode = (descriptionValue.match(re) || []).map( (code, i) => codeMapper(code, i) );
 
   return descriptionValue.replace(/<example>(.|\n)*?<\/example>/g, () => exampleCode.shift());
 };
+
 const groupWithExamples = description => /<example>/.test(description) ? convertExamples(description) : description;
 const escHtml = str => str.replace(/</g, `&lt;`).replace(/&lt;code/g, `<code`).replace(/&lt;\/code/g, `</code`);
 const paramStr2Div = value => Object.entries(value).map( ([key, val]) => {
@@ -110,17 +112,19 @@ groups.forEach( group => {
         </div>`, docsContainer);
     });
 });
+$(`code`).each(setAllCodeStyling);
 $.log(`Documenter json parsed to DOM.`);
 // free some memory
 documentationData = null;
 // remove loading message
 $(`.docs`).removeClass(`loading`);
-// format the code blocks
-$(`code.js`).each(node => Prism.highlightElement(node));
+//format the code blocks
+Prism.highlightAll();
 $.log(`Code formatting done.`);
 // navigate to top
 $(`#jql_About`).html(` (<span class="jqlTitle"><b>JQ</b>uery<b>L</b>ike</span>)`, true);
 // display the first item
 $(`[data-group="jql"]`).trigger(`click`);
 $.log(`Navigation triggered.`);
+//$.nodes(`pre[class*=language-]`).forEach(node => window.Prism.highlightElement(node));
 $.log(`Documenter implementation took ${Math.round(performance.now() - perform)}Ms`);
