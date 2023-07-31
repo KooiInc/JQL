@@ -3,6 +3,7 @@ const importLink =  isDev ?
   `../index.js` :
   `../../Bundle/jql.min.js`;
 const $ = (await import(importLink)).default;
+const codeReplacements = new Map([[`<`, `&lt;`], [`>`, `&gt;`], [`&`, `&amp;`], [`&nbsp;`, `<br><br>`]]);
 $(`#loader`).remove();
 const setAllCodeStyling = el => {
   const pre = el.closest(`pre`);
@@ -49,7 +50,11 @@ const handler = clientHandling($);
 $.delegate(`click`, handler);
 $.delegate(`scroll`, `.docs`, handler);
 const codeMapper = (code, i) => {
-  code = code.trim().replace(/</g, `&lt;`).replace(/>/g, `&gt;`);
+  code = code.trim()
+    .replace(/[<>]/g, a => codeReplacements.get(a))
+    .replace(/&nbsp;|#!#/g, codeReplacements.get(`&nbsp;`))
+    .replace(/&[^(l|g)t;]/g, codeReplacements.get(`&`));
+
   return `<div class="exContainer"><h3 class="example">Example${
     i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${code}</code></pre></div>`;
 };
@@ -61,7 +66,10 @@ const convertExamples = descriptionValue => {
 };
 
 const groupWithExamples = description => /<example>/.test(description) ? convertExamples(description) : description;
-const escHtml = str => str.replace(/</g, `&lt;`).replace(/&lt;code/g, `<code`).replace(/&lt;\/code/g, `</code`);
+const escHtml = str => str
+  .replace(/</g, `&lt;`)
+  .replace(/&lt;code/g, `<code`)
+  .replace(/&lt;\/code/g, `</code`);
 const paramStr2Div = value => Object.entries(value).map( ([key, val]) => {
   const prm = /_isobject/i.test(key) ? `[Object&lt;string, any>]` : key;
   return `<div class="param"><code>${escHtml(prm)}</code>: ${escHtml(val)}</div>`;
