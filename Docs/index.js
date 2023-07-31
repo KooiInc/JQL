@@ -4,7 +4,12 @@ const importLink =  isDev ?
   `../index.js` :
   `../../Bundle/jql.min.js`;
 const $ = (await import(importLink)).default;
-const codeReplacements = new Map([[`<`, `&lt;`], [`>`, `&gt;`], [`&`, a => `&amp;${a[1]}`], [`linebreak`, `\n<br>`]]);
+const codeReplacements = new Map( [
+  [`<`, `&lt;`],
+  [`>`, `&gt;`],
+  [`&`, a => `&amp;${a[1]}`],
+  [`linebreak`, `\n<br>`],
+  [`reducebreaks`, `\n\n`] ] );
 $(`#loader`).remove();
 const setAllCodeStyling = el => {
   const pre = el.closest(`pre`);
@@ -53,8 +58,9 @@ $.delegate(`scroll`, `.docs`, handler);
 const codeMapper = (code, i) => {
   const cleanedCode = code.trim()
     .replace(/[<>]/g, a => codeReplacements.get(a))
+    .replace(/\n{3,}/g, codeReplacements.get(`reducebreaks`))
     .replace(/\n/g, codeReplacements.get(`linebreak`))
-    .replace(/&[^(l|g)t;|amp;]/g, codeReplacements.get(`&`))
+    .replace(/&[^(l|g)t;|amp;]/g, codeReplacements.get(`&`));
 
   return `<div class="exContainer"><h3 class="example">Example${
     i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${cleanedCode}</code></pre></div>`;
