@@ -1,9 +1,10 @@
+Prism.manual = true;
 const isDev = location.host.startsWith(`dev`);
 const importLink =  isDev ?
   `../index.js` :
   `../../Bundle/jql.min.js`;
 const $ = (await import(importLink)).default;
-const codeReplacements = new Map([[`<`, `&lt;`], [`>`, `&gt;`], [`&`, `&amp;`], [`&nbsp;`, `<br><br>`]]);
+const codeReplacements = new Map([[`<`, `&lt;`], [`>`, `&gt;`], [`&`, a => `&amp;${a[1]}`], [`linebreak`, `\n<br>`]]);
 $(`#loader`).remove();
 const setAllCodeStyling = el => {
   const pre = el.closest(`pre`);
@@ -50,13 +51,13 @@ const handler = clientHandling($);
 $.delegate(`click`, handler);
 $.delegate(`scroll`, `.docs`, handler);
 const codeMapper = (code, i) => {
-  code = code.trim()
+  const cleanedCode = code.trim()
     .replace(/[<>]/g, a => codeReplacements.get(a))
-    .replace(/&nbsp;|#!#/g, codeReplacements.get(`&nbsp;`))
-    .replace(/&[^(l|g)t;]/g, codeReplacements.get(`&`));
+    .replace(/\n/g, codeReplacements.get(`linebreak`))
+    .replace(/&[^(l|g)t;|amp;]/g, codeReplacements.get(`&`))
 
   return `<div class="exContainer"><h3 class="example">Example${
-    i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${code}</code></pre></div>`;
+    i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${cleanedCode}</code></pre></div>`;
 };
 const convertExamples = descriptionValue => {
   const re = /(?<=<example>)(.|\n)*?(?=<\/example>)/gm;
