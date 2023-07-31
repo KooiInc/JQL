@@ -1,6 +1,6 @@
 {
   "name": "jqlmodule",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "private": false,
   "type": "module",
   "description": "A JQuery alike es20xx module",
