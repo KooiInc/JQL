@@ -146,9 +146,13 @@ function defaultStaticMethodsFactory(jql) {
   return combine(staticElements, staticMethodsFactory(jql));
 
   function createDirect({tag, content = ``, cssClass = ``, props = {}, toDOM = false} = {}) {
-    const elem = jql.virtual(`<${tag}></${tag}>`);
-
-    if (IS(content, String, HTMLElement, Array) || content.isJQL) {
+    let elem = jql.virtual(`<${tag}></${tag}>`);
+   
+    if (IS(content, String)) {
+      elem = jql.virtual(`<${tag}>${content}</${tag}>`);
+    }
+    
+    if (IS(content, HTMLElement, Array) || content.isJQL) {
       if (!IS(content, Array)) { content = [content]; }
       elem.append(...content);
     }
@@ -171,7 +175,7 @@ function defaultStaticMethodsFactory(jql) {
         ? jql.virtual( `<${tag}></${tag}>` )
         : (htmlTextOrObject, props = {}) =>
             createDirect(!htmlTextOrObject.isJQL && IS(htmlTextOrObject, Object)
-              ? {tag, ...htmlTextOrObject }
+              ? {tag, ...htmlTextOrObject, props }
               : {tag, content: htmlTextOrObject, props} );
     }
     return { get() { return getter(tag); } };
