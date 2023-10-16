@@ -151,7 +151,7 @@ function defaultStaticMethodsFactory(jql) {
       cssClass = props.cssClass;
       delete props.cssClass;
     }
-    console.log(`content verdomme ${content} (${debug})`);
+    
     if (IS(content, String)) {
       elem = jql.virtual(`<${tag}>${content}</${tag}>`);
     }
@@ -162,7 +162,6 @@ function defaultStaticMethodsFactory(jql) {
     }
 
     if (IS(props, Object)) {
-      console.log(`WTF`, props);
       elem.prop(props);
     }
 
