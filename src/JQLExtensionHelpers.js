@@ -166,7 +166,6 @@ function defaultStaticMethodsFactory(jql) {
     }
 
     if (cssClass) {
-      console.log(content, cssClass);
       cssClass = !IS(cssClass, Array) ? [cssClass] : cssClass;
       elem.addClass(...cssClass);
     }
