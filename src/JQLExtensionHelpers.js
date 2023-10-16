@@ -147,6 +147,7 @@ function defaultStaticMethodsFactory(jql) {
 
   function createDirect({tag, content = ``, cssClass = ``, props = {}, toDOM = false, debug} = {}) {
     let elem;
+    
     if (props?.cssClass) {
       cssClass = props.cssClass;
       delete props.cssClass;

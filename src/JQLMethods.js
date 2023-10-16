@@ -439,7 +439,8 @@ const allMethods = {
           if (propName.startsWith(`data`)) {
             return el.dataset[propName.slice(propName.indexOf(`-`)+1)] = propValue;
           }
-          el.dataset[propName] = propValue;
+          
+          el[propName] = propValue;
         });
       });
 
