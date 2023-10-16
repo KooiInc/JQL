@@ -23,7 +23,7 @@ const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.setAttribute(`data-${toDashedNotation(key)}`, value));
 };
-const checkProp = prop => ATTRS.html.find(attr => prop.toLowerCase() === attr);
+const checkProp = prop => prop.startsWith(`data`) || ATTRS.html.find(attr => prop.toLowerCase() === attr);
 const css = (el, keyOrKvPairs, value) => {
   if (value && IS(keyOrKvPairs, String)) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
@@ -418,7 +418,9 @@ const allMethods = {
     find$: (self, selector) => { return jql(selector, self); },
     prop: (self, nameOrProperties, value) => {
       if (IS(nameOrProperties, String) && !value) {
-        return self[0]?.[nameOrProperties];
+        return nameOrProperties.startsWith(`data`)
+          ? self[0]?.dataset[nameOrProperties.slice(nameOrProperties.indexOf(`-`)+1)]
+          : self[0]?.[nameOrProperties];
       }
 
       const props = !IS(nameOrProperties, Object) ? { [nameOrProperties]: value } : nameOrProperties;
@@ -431,9 +433,14 @@ const allMethods = {
 
         const isId = propName.toLowerCase() === `id`;
 
-        if (isId) { self[0].id = propValue; }
+        if (isId) { return self[0].id = propValue; }
 
-        !isId && loop(self, el => el[propName] = propValue);
+        loop(self, el => {
+          if (propName.startsWith(`data`)) {
+            return el.dataset[propName.slice(propName.indexOf(`-`)+1)] = propValue;
+          }
+          el.dataset[propName] = propValue;
+        });
       });
 
       return self;

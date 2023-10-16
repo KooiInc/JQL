@@ -145,23 +145,29 @@ function defaultStaticMethodsFactory(jql) {
 
   return combine(staticElements, staticMethodsFactory(jql));
 
-  function createDirect({tag, content = ``, cssClass = ``, props = {}, toDOM = false} = {}) {
-    let elem = jql.virtual(`<${tag}></${tag}>`);
-   
+  function createDirect({tag, content = ``, cssClass = ``, props = {}, toDOM = false, debug} = {}) {
+    let elem;
+    if (props?.cssClass) {
+      cssClass = props.cssClass;
+      delete props.cssClass;
+    }
+    console.log(`content verdomme ${content} (${debug})`);
     if (IS(content, String)) {
       elem = jql.virtual(`<${tag}>${content}</${tag}>`);
     }
     
     if (IS(content, HTMLElement, Array) || content.isJQL) {
       if (!IS(content, Array)) { content = [content]; }
-      elem.append(...content);
+      elem = jql.virtual(`<${tag}></${tag}>`).append(...content);
     }
 
     if (IS(props, Object)) {
+      console.log(`WTF`, props);
       elem.prop(props);
     }
 
     if (cssClass) {
+      console.log(content, cssClass);
       cssClass = !IS(cssClass, Array) ? [cssClass] : cssClass;
       elem.addClass(...cssClass);
     }
@@ -175,8 +181,8 @@ function defaultStaticMethodsFactory(jql) {
         ? jql.virtual( `<${tag}></${tag}>` )
         : (htmlTextOrObject, props = {}) =>
             createDirect(!htmlTextOrObject.isJQL && IS(htmlTextOrObject, Object)
-              ? {tag, ...htmlTextOrObject, props }
-              : {tag, content: htmlTextOrObject, props} );
+              ? { tag, ...{ ...htmlTextOrObject, props } }
+              : { tag, props, content: htmlTextOrObject } );
     }
     return { get() { return getter(tag); } };
   }
