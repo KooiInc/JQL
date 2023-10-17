@@ -27,7 +27,7 @@ $.editCssRules(...getStyleRules())
 // create container for all generated html
 const container = $.div( {
   content: $(`#logBox`).style({margin: `1rem auto`})
-    .andThen($.p(``, {id: `JQLRoot`})
+    .andThen($.p({content: ``, props: {id: `JQLRoot`}} )
     .andThen($.comment(`p#JQLRoot contains all generated html`), true)),
   props: {id: `container`},
   cssClass: `MAIN`,
@@ -158,7 +158,7 @@ $$(`<div id="helloworld"/>`)
 // append multiline comment to p#JQLRoot
 $$($.comment(`Hi, I am a multiline HTML-comment.
      So, you can add plain comments using JQL
-     A comment may be injected into a child 
+     A comment may be injected into a child
      element (using the [root] parameter
      combined with a position`)).appendTo(JQLRoot),
 
@@ -341,14 +341,14 @@ function getStyleRules() {
       font: normal 13px/16px verdana, arial;
       margin: 2rem;
     }`,
-    `#JQLRoot { 
-      position: relative; 
-      margin: 2rem auto; 
-      maxWidth: 50vw; 
+    `#JQLRoot {
+      position: relative;
+      margin: 2rem auto;
+      maxWidth: 50vw;
       display: table }`,
-    `.MAIN { 
-      position: absolute; 
-      inset: 0; 
+    `.MAIN {
+      position: absolute;
+      inset: 0;
     }`,
     `pre[class*='language-'] {
       position: relative;
@@ -375,7 +375,7 @@ function getStyleRules() {
       color: blue;
       background-color: #EEE;
       padding: 3px;
-      font-weight: bold; 
+      font-weight: bold;
     }`,
     `.codeVwr {
       cursor: pointer;
@@ -384,8 +384,8 @@ function getStyleRules() {
       padding: 3px;
       font-weight: bold;
     }`,
-    `.codeVwr:before { 
-      content: ' 'attr(data-updown); 
+    `.codeVwr:before {
+      content: ' 'attr(data-updown);
     }`,
     `.upDownFader {
       max-height: 0;
@@ -415,14 +415,14 @@ function getStyleRules() {
        overflow: hidden;
     }`,
     `@media screen and (width < 1400px) {
-      #bttnblock button { 
-       margin-top: 0.4rem; 
+      #bttnblock button {
+       margin-top: 0.4rem;
       }
     }`,
     `.hidden { display: none; }`,
     `b.attention {
       color: red;
-      fontSize: 1.2em; 
+      fontSize: 1.2em;
      }`
   ];
 }

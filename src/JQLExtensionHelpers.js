@@ -180,7 +180,7 @@ function defaultStaticMethodsFactory(jql) {
         ? jql.virtual( `<${tag}></${tag}>` )
         : (htmlTextOrObject, props = {}) =>
             createDirect(!htmlTextOrObject.isJQL && IS(htmlTextOrObject, Object)
-              ? { tag, ...{ ...htmlTextOrObject, props } }
+              ? { tag, ...{ ...htmlTextOrObject, ...props } }
               : { tag, props, content: htmlTextOrObject } );
     }
     return { get() { return getter(tag); } };
