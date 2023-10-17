@@ -27,7 +27,7 @@ $.editCssRules(...getStyleRules())
 // create container for all generated html
 const container = $.div( {
   content: $(`#logBox`).style({margin: `1rem auto`})
-    .andThen($.p({content: ``, props: {id: `JQLRoot`}} )
+    .andThen($.p( {props: {id: `JQLRoot`}} )
     .andThen($.comment(`p#JQLRoot contains all generated html`), true)),
   props: {id: `container`},
   cssClass: `MAIN`,
