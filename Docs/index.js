@@ -141,5 +141,4 @@ $(`#jql_About`).html(` (<span class="jqlTitle"><b>JQ</b>uery<b>L</b>ike</span>)`
 // display the first item
 $(`[data-group="jql"]`).trigger(`click`);
 $.log(`Navigation triggered.`);
-//$.nodes(`pre[class*=language-]`).forEach(node => window.Prism.highlightElement(node));
 $.log(`Documenter implementation took ${((performance.now() - perform)/1000).toFixed(3)} seconds`);
