@@ -1,10 +1,13 @@
 import { popupStyling } from "./EmbedResources.js";
+import { randomString } from "./Utilities.js";
+
 export default newPopupFactory;
 
 function newPopupFactory($) {
   const editRule = $.createStyle(`JQLPopupCSS`);
   popupStyling.forEach( rule => editRule(rule) );
-  let isModal, callbackOnClose, modalWarning, timeout;
+  let callbackOnClose = {};
+  let isModal, modalWarning, timeout;
   const warnTemplate = $.virtual(`<div class="popup-warn">`);
   const popupContainer = $(`<div class="popupContainer">`)
     .append( $(`<span class="closeHandleIcon">`) )
@@ -44,7 +47,7 @@ function newPopupFactory($) {
     createTimed: (message, closeAfter, callback) => /*legacy*/
       createAndShowPupup({content: message, closeAfter, callback}),
     removeModal: modalRemover, };
-
+  
   function createAndShowPupup( { content, modal, closeAfter, callback, warnMessage } ) {
     if (content) {
       clearTimeout(timeout);
@@ -55,11 +58,19 @@ function newPopupFactory($) {
       txtBox.clear().append(content.isJQL ? content : $(`<div>${content}</div>`));
       isModal && warnMessage && txtBox.append(warnTemplate.duplicate());
       popupContainer.addClass(`popup-active`);
-
-      if ($.IS(callback, Function)) { callbackOnClose = () => { callback(); callbackOnClose = null; } }
+      
+      if ($.IS(callback, Function)) {
+        const tmpId = randomString();
+        popupContainer.data.set( {callbackId:  tmpId} );
+        callbackOnClose[tmpId] = callback;
+      }
 
       if (!isModal) {
-        if ($.IS(+closeAfter, Number)) { timed(closeAfter, callbackOnClose); }
+        if ($.IS(+closeAfter, Number)) {
+          const callbackId = popupContainer.data.get(`callbackId`);
+          const callback = callbackId && callbackOnClose[callbackId];
+          timed(closeAfter, callback);
+        }
         closer.addClass(`popup-active`);
         positionCloser();
       }
@@ -73,11 +84,13 @@ function newPopupFactory($) {
     if (!isModal && !origin.closest(`.content`)) {
       clearTimeout(timeout);
       txtBox.clear();
+      const callbackId = popupContainer.data.get(`callbackId`);
+      popupContainer.data.remove(`callbackId`);
       $(`.popup-active`).removeClass(`popup-active`);
       setPopupZIndex(getCurrentZIndexBoundaries(), true);
-
-      if ($.IS(callbackOnClose, Function)) { callbackOnClose(); }
-
+      const cb = callbackId && callbackOnClose[callbackId];
+      if ($.IS(cb, Function)) { cb(); }
+      if (callbackId) { delete callbackOnClose[callbackId]; }
       modalWarning = ``;
       return;
     }

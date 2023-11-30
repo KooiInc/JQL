@@ -296,7 +296,9 @@ const allMethods = {
       return self;
     },
     andThen: (self, elem2Add, before = false) => {
-      elem2Add = elem2Add.isJQL ? elem2Add.collection : jql.virtual(createElementFromHtmlString(elem2Add)).collection;
+      elem2Add = elem2Add.isJQL
+        ? elem2Add.collection
+        : jql.virtual(createElementFromHtmlString(elem2Add)).collection;
       const [index, method, reCollected] = before
         ? [0, `before`, elem2Add.concat(self.collection)]
         : [self.collection.length - 1, `after`, self.collection.concat(elem2Add)];
