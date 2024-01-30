@@ -178,10 +178,13 @@ function defaultStaticMethodsFactory(jql) {
     function getter(tag) {
       return tag.toUpperCase() === tag
         ? jql.virtual( `<${tag}></${tag}>` )
-        : (htmlTextOrObject, props = {}) =>
-            createDirect(!htmlTextOrObject.isJQL && IS(htmlTextOrObject, Object)
-              ? { tag, ...{ ...htmlTextOrObject, ...props } }
-              : { tag, props, content: htmlTextOrObject } );
+        : (htmlTextOrObject, props = {}) => {
+          return !htmlTextOrObject && Object.keys(props).length < 1
+            ? jql.virtual(`<${tag}></${tag}>`)
+            : createDirect(!htmlTextOrObject.isJQL && IS(htmlTextOrObject, Object)
+              ? {tag, ...{...htmlTextOrObject, ...props}}
+              : {tag, props, content: htmlTextOrObject});
+          }
     }
     return { get() { return getter(tag); } };
   }
