@@ -145,12 +145,17 @@ function defaultStaticMethodsFactory(jql) {
 
   return combine(staticElements, staticMethodsFactory(jql));
 
-  function createDirect({tag, content = ``, cssClass = ``, props = {}, toDOM = false, debug} = {}) {
+  function createDirect({tag, content = ``, id, cssClass = ``, props = {}, toDOM = false, debug} = {}) {
     let elem;
     
     if (props?.cssClass) {
       cssClass = props.cssClass;
       delete props.cssClass;
+    }
+    
+    if (props?.id) {
+      id = props.id;
+      delete props.id;
     }
     
     if (IS(content, String)) {
@@ -161,7 +166,7 @@ function defaultStaticMethodsFactory(jql) {
       if (!IS(content, Array)) { content = [content]; }
       elem = jql.virtual(`<${tag}></${tag}>`).append(...content);
     }
-
+    
     if (IS(props, Object)) {
       elem.prop(props);
     }
@@ -169,6 +174,10 @@ function defaultStaticMethodsFactory(jql) {
     if (cssClass) {
       cssClass = !IS(cssClass, Array) ? [cssClass] : cssClass;
       elem.addClass(...cssClass);
+    }
+    
+    if (id && IS(id, String) && id.trim().length > 0) {
+      elem.prop({id});
     }
 
     return toDOM ? elem.toDOM() : elem;
