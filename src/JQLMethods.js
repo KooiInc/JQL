@@ -10,6 +10,7 @@ import {
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
 import {ExamineElementFeatureFactory, toDashedNotation, toCamelcase, escHtml} from "./Utilities.js";
+import {debugLog} from "./JQLLog.js";
 const loop = (instance, callback) => {
   const cleanCollection = instance.collection.filter(el => !isCommentOrTextNode(el));
   for (let i = 0; i < cleanCollection.length; i += 1) {
@@ -72,6 +73,10 @@ const applyStyle = (el, rules) => {
 const dataWeirdnessProxy = {
   get(obj, key) { return obj[toCamelcase(key)] || obj[key]; }
 };
+
+const logDebug = (...args) => {
+  debugLog.log(`❗` + args.map(v => String(v)).join(`, `) ) ;
+}
 
 const allMethods = {
   factoryExtensions: {
@@ -296,12 +301,21 @@ const allMethods = {
       return self;
     },
     andThen: (self, elem2Add, before = false) => {
-      elem2Add = elem2Add.isJQL
+      if (!elem2Add || !IS(elem2Add, HTMLElement, String, Object)) {
+        logDebug(`[JQL instance].[beforeMe | afterMe | andThen]: insufficient input [${elem2Add}]`, );
+        return self;
+      }
+      
+      elem2Add = elem2Add?.isJQL
         ? elem2Add.collection
-        : jql.virtual(createElementFromHtmlString(elem2Add)).collection;
+        : IS(elem2Add, HTMLElement)
+          ? [elem2Add]
+          : jql.virtual(createElementFromHtmlString(elem2Add)).collection;
+      
       const [index, method, reCollected] = before
         ? [0, `before`, elem2Add.concat(self.collection)]
         : [self.collection.length - 1, `after`, self.collection.concat(elem2Add)];
+      
       self[index][method](...elem2Add);
       self.collection = reCollected;
       return self;
