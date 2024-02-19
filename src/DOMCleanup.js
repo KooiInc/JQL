@@ -19,11 +19,19 @@ const logContingentErrors = elCreationInfo => {
     debugLog.log(`JQL HTML creation errors: ${debugLog.isConsole ? msgs : escHtml(msgs)}`);
   }
 };
+const elementCheck = function(child) {
+  const name = child.nodeName.toLowerCase();
+  const notAllowedCustomElementNames = [
+    `annotation-xml`, `color-profile`, `font-face`, `font-face-src`,
+    `font-face-uri`, `font-face-format`, `font-face-name`, `missing-glyph` ];
+  return /-/.test(name) && !notAllowedCustomElementNames.find(v => v === name) || cleanupTagInfo.isAllowed(name);
+};
 const cleanupHtml = el2Clean => {
   const elCreationInfo = {
     rawHTML: el2Clean.outerHTML,
     removed: { },
   }
+  
   if (IS(el2Clean, HTMLElement)) {
     [...el2Clean.childNodes].forEach(child => {
       if (child?.children?.length) {
@@ -37,7 +45,8 @@ const cleanupHtml = el2Clean => {
             const name = attr.name.trim().toLowerCase();
             const value = attr.value.trim().toLowerCase().replace(attrRegExpStore.whiteSpace, ``);
             const evilValue = name === "href"
-              ? !attrRegExpStore.validURL.test(value) : attrRegExpStore.notAllowedValues.test(value);
+              ? !attrRegExpStore.validURL.test(value)
+              : attrRegExpStore.notAllowedValues.test(value);
             const evilAttrib = name.startsWith(`data`) ? !attrRegExpStore.data.test(name) : !!attrStore[name];
 
             if (evilValue || evilAttrib) {
@@ -49,7 +58,8 @@ const cleanupHtml = el2Clean => {
             }
           });
       }
-      const allowed = cleanupTagInfo.isAllowed(child);
+      const allowed = elementCheck(child);
+      
       if (!allowed) {
         const tag = (child?.outerHTML || child?.textContent).trim();
         let tagValue = truncate2SingleStr(tag, 60) ?? `EMPTY`;

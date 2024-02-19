@@ -1,4 +1,5 @@
 import { allTags } from "./EmbedResources.js";
+import { IS } from "./JQLExtensionHelpers.js";
 let lenient = false;
 const allowUnknownHtmlTags = {
   on: () => lenient = true,
@@ -9,7 +10,7 @@ export default {
   allowUnknownHtmlTags,
   isAllowed(elem) {
     if (lenient) { return true; }
-    const nodeName = elem?.nodeName.toLowerCase() || `none`;
+    const nodeName = IS(elem, String) ? elem.toLowerCase() : elem?.nodeName.toLowerCase() || `none`;
     return nodeName === `#text` || !!allTags[nodeName];
   },
   allowTag: tag2Allow => allTags[tag2Allow.toLowerCase()] = true,

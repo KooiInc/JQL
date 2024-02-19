@@ -38,11 +38,14 @@ const createElementFromHtmlString = htmlStr => {
   if (IS(htmlStr, Text, Comment)) {
     return htmlStr;
   }
-
-  const testStr = htmlStr.trim();
-  let text = testStr.split(/<text>|<\/text>/i);
-  text = text.length > 1 ? text.filter(v => v.length).shift() : undefined;
-
+  
+  const testStr = htmlStr?.trim();
+  let text = testStr?.split(/<text>|<\/text>/i) ?? [];
+  
+  if (text?.length) {
+    text = text.length > 1 ? text.filter(v => v.length).shift() : undefined;
+  }
+  
   if (testStr.startsWith(`<!--`) && testStr.endsWith(`-->`)) {
     return document.createComment(htmlStr.replace(/<!--|-->$/g, ''));
   }
