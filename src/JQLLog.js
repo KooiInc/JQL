@@ -65,9 +65,9 @@ const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 
 const debugLog = {
   get isConsole() { return log2Console === true; },
-  isOn: () => useLogging,
-  isVisible: () => jql(`#jql_logger`).is(`visible`),
-  on: () => {
+  get isOn() { return useLogging; },
+  isVisible: function() { return jql(`#jql_logger`).is(`visible`); },
+  on() {
     logActive.on();
     setSystemLog.on();
     if (!log2Console) {
@@ -76,7 +76,7 @@ const debugLog = {
     Log(`Debug logging started. Every call to [jql instance] is logged`);
     return debugLog;
   },
-  off: () => {
+  off() {
     if (!getLogBox().isEmpty) {
       setSystemLog.off();
       Log(`Debug logging stopped`);
@@ -97,7 +97,7 @@ const debugLog = {
       return debugLog;
     }
   },
-  remove: () => {
+  remove() {
     logActive.off();
     setSystemLog.off();
     getLogBox()?.remove();
@@ -105,11 +105,11 @@ const debugLog = {
     console.log(`${logTime()} logging completely disabled and all entries removed`);
     return debugLog;
   },
-  log: (...args) => {
+  log(...args) {
     Log(...args);
     return debugLog;
   },
-  hide: () => {
+  hide() {
     getLogBox()?.removeClass(`visible`);
     return debugLog;
   },
