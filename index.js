@@ -13,14 +13,14 @@ import {
   setCollectionFromCssSelector,
   truncateHtmlStr,
   proxify,
-  addJQLStatics,
+  addJQLStaticMethods,
   createElementFromHtmlString,
   insertPositions,
   systemLog,
   IS,
 } from "./src/JQLExtensionHelpers.js";
 
-export default addJQLStatics(JQLFactory());
+export default addJQLStaticMethods(JQLFactory());
 
 function JQLFactory() {
   const logLineLength = 70;
