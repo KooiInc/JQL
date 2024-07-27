@@ -332,49 +332,56 @@ const allMethods = {
           if (IS(elem2Append, String)) {
             const elem2Append4Test = elem2Append.trim();
             const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Append4Test);
-            elem2Append = isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append);
-            loop(self, el => el.append(elem2Append))
+            const toAppend = isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append);
+            loop( self, el => el.insertAdjacentElement(`beforeend`, toAppend.cloneNode(true)) )
           }
 
           if (isNode(elem2Append)) {
-            let toAppend = elem2Append;
-            if (self.length > 1) {
-              toAppend = elem2Append;
-              toAppend.removeAttribute && toAppend.removeAttribute(`id`);
-            }
-            loop(self, el => el.append(toAppend));
+            let toAppend = elem2Append.cloneNode(true);
+            toAppend.removeAttribute && toAppend.removeAttribute(`id`);
+            elem2Append.remove();
+            loop( self, el => el.append(toAppend.cloneNode(true)) );
           }
 
           if (elem2Append.isJQL && !elem2Append.is.empty) {
-            const cloneCollection = self.length > 1 ? elem2Append.duplicate().collection : elem2Append.collection;
-            loop(self, el => el.append(...cloneCollection));
+            loop( self, el => {
+              elem2Append.collection.forEach(elem => {
+                const cloned = elem.cloneNode(true);
+                elem.remove();
+                el.append(cloned);
+              } );
+            } );
           }
         }
       }
       return self;
     },
     prepend: (self, ...elems2Prepend) => {
-      if (!self.isEmpty() && elems2Prepend) {
+      if (!self.is.empty && elems2Prepend) {
 
-        for (const elem2Prepend of elems2Prepend) {
+        for (let elem2Prepend of elems2Prepend) {
           if (IS(elem2Prepend, String)) {
-            const isPlainString = !/^<.+>$/m.test(elem2Prepend.trim());
-            loop(self, el =>
-              el.prepend(isPlainString ? jql.text(elem2Prepend) : createElementFromHtmlString(elem2Prepend)));
+            elem2Prepend = elem2Prepend.trim();
+            const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Prepend);
+            const toPrepend = isPlainString ? jql.text(elem2Prepend) : createElementFromHtmlString(elem2Prepend);
+            loop( self, el => el.insertAdjacentElement(`afterbegin`, toPrepend.cloneNode(true)) );
           }
 
           if (isNode(elem2Prepend)) {
-            let toPrepend = elem2Prepend;
-            if (self.length > 1) {
-              toPrepend = elem2Prepend.cloneNode(true);
-              toPrepend.removeAttribute && toPrepend.removeAttribute(`id`);
-            }
-            loop(self, el => el.insertBefore(toPrepend, el.firstChild));
+            const toPrepend = elem2Prepend.cloneNode(true);
+            toPrepend.removeAttribute && toPrepend.removeAttribute(`id`);
+            elem2Prepend.remove();
+            loop( self, el => el.prepend(toPrepend.cloneNode(true)) );
           }
-
+          
           if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
-            const clonedCollection = self.length > 1 ? elem2Prepend.duplicate().collection : elem2Prepend.collection;
-            loop(self, el => el.prepend(...clonedCollection));
+            loop( self, el => {
+              elem2Prepend.collection.forEach(elem => {
+                const cloned = elem.cloneNode(true);
+                elem.remove();
+                el.prepend(cloned);
+              } );
+            } );
           }
         }
       }

@@ -1,6 +1,8 @@
 import $ from "../index.js";
+
 window.jql = $;
 const started = performance.now();
+const debug = false;
 
 if (location.host.startsWith(`dev`)) {
   $(`link[rel="icon"]`).replaceWith($.LINK.prop({href: `./demoIcon.png`, rel: `icon`, type: `image/png`}));
@@ -12,7 +14,10 @@ const {virtual: $$, log, debugLog} = $;
 
 // some helpers
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
-$.fn( `addTitle`, (self, ttl) => { self.prop(`title`, ttl); return self; } );
+$.fn(`addTitle`, (self, ttl) => {
+  self.prop(`title`, ttl);
+  return self;
+});
 
 // activate logging all JQL events (hidden)
 debugLog.on().toConsole.off().reversed.on().hide();
@@ -25,138 +30,144 @@ const createExternalLink = (href, txt) =>
 $.editCssRules(...getStyleRules())
 
 // create container for all generated html
-const container = $.div( {
+const container = $.div({
   content: $(`#logBox`).style({margin: `1rem auto`})
-    .andThen( $.p({ id: `JQLRoot` } )
-    .andThen( $.comment(`p#JQLRoot contains all generated html`), true)),
+    .andThen($.p({id: `JQLRoot`})
+      .andThen($.comment(`p#JQLRoot contains all generated html`), true)),
   props: {id: `container`},
   cssClass: `MAIN`,
-  toDOM: true } );
+  toDOM: true
+});
 
 const JQLRoot = $(`#JQLRoot`);
 
+/* DEBUG ENTRY POINT  */
+if (!debug) {
 // create the header content
-let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
-  .andThen( $.div( [
-    $.i( $.b( { content: `Everything`, cssClass: `attention` } ) ),
-    ` on this page was dynamically created using JQL.` ] ) )
-  .andThen(`
-   <div><b class="arrRight">&#8594;</b>
-    Check the HTML source &mdash;
-     right click anywhere, and select 'View page source'.</div>`);
-
-$.div({content: headerContent, props: {id: `StyledPara`}, cssClass: `thickBorder`})
-  .appendTo( JQLRoot );
+  let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
+    .andThen($.div([
+      $.i($.b({content: `Everything`, cssClass: `attention`})),
+      ` on this page was dynamically created using JQL.`]))
+    .andThen(`
+ <div><b class="arrRight">&#8594;</b>
+  Check the HTML source &mdash;
+   right click anywhere, and select 'View page source'.</div>`);
+  
+  $.div({content: headerContent, props: {id: `StyledPara`}, cssClass: `thickBorder`})
+    .appendTo(JQLRoot);
 
 // add all event handling delegates defined in function [getDelegates4Document]
-getDelegates4Document()
-  .forEach(([type, targetedHandlers]) =>
-    targetedHandlers.forEach(handler =>
-      $.delegate(type, handler.target, ...handler.handlers)));
+  getDelegates4Document()
+    .forEach(([type, targetedHandlers]) =>
+      targetedHandlers.forEach(handler =>
+        $.delegate(type, handler.target, ...handler.handlers)));
 
 // generic delegates (on document) from the static $.delegate
-const someClicks = [
-  evt => evt.target.closest(`.exampleText`) && log(`HI from div.exampleText (you clicked it)`) ];
-$.delegate(`click`, ...someClicks);
+  const someClicks = [
+    evt => evt.target.closest(`.exampleText`) && log(`HI from div.exampleText (you clicked it)`)];
+  $.delegate(`click`, ...someClicks);
 
 // onclick is not allowed, so will be removed on element creation
-const msg = `hi there, you won't see me`;
-$(`<div id="nohandling" onclick="alert('${msg}')"></div>`)
-  .html(`<h1>Hell! O world.</h1>`).appendTo(JQLRoot);
+  const msg = `hi there, you won't see me`;
+  $(`<div id="nohandling" onclick="alert('${msg}')"></div>`)
+    .html(`<h1>Hell! O world.</h1>`).appendTo(JQLRoot);
 
 // script and data attribute will be removed, but you can add data-attributes later
 // styles are inline here
-$([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="delegates">Hi 1</div>`], JQLRoot)
-  .data.add({hello: "Added post creation"})
-  .html(` [you may <b><i>click</i> me</b>] `, true)
-  .style({cursor: `pointer`})
+  $([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="delegates">Hi 1</div>`], JQLRoot)
+    .data.add({hello: "Added post creation"})
+    .html(` [you may <b><i>click</i> me</b>] `, true)
+    .style({cursor: `pointer`})
 
 // <notallowed> is ... well ... not allowed, so will be removed
 // styles inline
-$([`<notallowed id="removal_imminent"></notallowed>`,
-  `<div>Hi 2</div>`])
-  .text(` [Hey! I am clickable too!]`, true)
-  .style({color: `red`, marginTop: `0.7rem`, cursor: `pointer`})
-  // add a click handlers
-  .on(`click`, (_, self) => {
-    const currentColor = self.first().style.color;
-    // o look, a state machine ;)
-    self.style({
-      color: currentColor === `red`
-        ? `green` : currentColor === `orange`
-          ? `red` : `orange`
-    });
-  })
-  .appendTo(JQLRoot);
+  $([`<notallowed id="removal_imminent"></notallowed>`,
+    `<div>Hi 2</div>`])
+    .text(` [Hey! I am clickable too!]`, true)
+    .style({color: `red`, marginTop: `0.7rem`, cursor: `pointer`})
+    // add a click handlers
+    .on(`click`, (_, self) => {
+      const currentColor = self.first().style.color;
+      // o look, a state machine ;)
+      self.style({
+        color: currentColor === `red`
+          ? `green` : currentColor === `orange`
+            ? `red` : `orange`
+      });
+    })
+    .appendTo(JQLRoot);
 
 // create a few buttons. Some already contain an event handler (delegated)
-const cssBttns = {
-  defaultCSS: $$(`<button data-sheet-id="JQLPopupCSS" data-switch-bttn="popupCSS">show popup css</button>`),
-  popupCSS: $$(`<button data-sheet-id="JQLStylesheet" data-switch-bttn="defaultCSS">show default css</button>`),
-};
-$.delegate(`click`, `[data-switch-bttn]`,
-  evt => showStyling(evt.target.dataset?.sheetId, cssBttns[evt.target.dataset?.switchBttn]));
-
-const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
-  $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
-  $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, () => debugLog.clear()),
-  $$(`<button id="showComments">Show document comments</button>`)
-    .prop(`title`, `Show content of comment elements in a popup`),
-  $$(`<button id="showCSS">Show custom CSS</button>`)
-    .prop(`title`, `Show the dynamically created styling in a popup`)
-    .on(`click`, evt => showStyling(`JQLStylesheet`, cssBttns.defaultCSS)),
-  $$(`<button>Modal popup demo</button>`).on(`click`, modalDemo),
-  $$(`<button>Github</button>`)
-    .on(`click`, () => {
-        $.Popup.show({
-         content: $$(`
+  const cssBttns = {
+    defaultCSS: $$(`<button data-sheet-id="JQLPopupCSS" data-switch-bttn="popupCSS">show popup css</button>`),
+    popupCSS: $$(`<button data-sheet-id="JQLStylesheet" data-switch-bttn="defaultCSS">show default css</button>`),
+  };
+  $.delegate(`click`, `[data-switch-bttn]`,
+    evt => showStyling(evt.target.dataset?.sheetId, cssBttns[evt.target.dataset?.switchBttn]));
+  
+  const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
+      $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
+      $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, () => debugLog.clear()),
+      $$(`<button id="showComments">Show document comments</button>`)
+        .prop(`title`, `Show content of comment elements in a popup`),
+      $$(`<button id="showCSS">Show custom CSS</button>`)
+        .prop(`title`, `Show the dynamically created styling in a popup`)
+        .on(`click`, evt => showStyling(`JQLStylesheet`, cssBttns.defaultCSS)),
+      $$(`<button>Modal popup demo</button>`).on(`click`, modalDemo),
+      $$(`<button>Github</button>`)
+        .on(`click`, () => {
+            $.Popup.show({
+                content: $$(`
           <p>
             The repository can be found  @${
-          createExternalLink(`${apiLinkPrefix}`,
-            `github.com/KooiInc/JQL`).outerHtml}<br>
+                  createExternalLink(`${apiLinkPrefix}`,
+                    `github.com/KooiInc/JQL`).outerHtml}<br>
             The documentation resides @${
-          createExternalLink(`//kooiinc.github.io/JQL/Docs`, `kooiinc.github.io/JQL/Docs`).outerHtml}
-          </p>`) }
-        );
-      }
-    )])
-  .appendTo(JQLRoot);
-
-$(`button`)
-  .style({marginRight: `4px`})
-  .each( (btn, i) => btn.dataset.index = `bttn-${i}` ); // each demo
+                  createExternalLink(`//kooiinc.github.io/JQL/Docs`, `kooiinc.github.io/JQL/Docs`).outerHtml}
+          </p>`)
+              }
+            );
+          }
+        )])
+    .appendTo(JQLRoot);
+  
+  $(`button`)
+    .style({marginRight: `4px`})
+    .each((btn, i) => btn.dataset.index = `bttn-${i}`); // each demo
 
 // styled via named class .exampleText
-$$(`<div>styling`)
-  .css({
-    className: `exampleText`,
-    borderTop: `2px dotted #999`,
-    borderLeft: `5px solid red`,
-    paddingLeft: `5px`,
-    display: `block`,
-    maxWidth: `800px`,
-    'margin-top': `1rem`,
-    'padding-top': `0.2rem`, })
-  .prepend($$(`<span>Some </span>`))
-  .html(` examples`, true)
-  .appendTo(JQLRoot);
+  $$(`<div>styling`)
+    .css({
+      className: `exampleText`,
+      borderTop: `2px dotted #999`,
+      borderLeft: `5px solid red`,
+      paddingLeft: `5px`,
+      display: `block`,
+      maxWidth: `800px`,
+      'margin-top': `1rem`,
+      'padding-top': `0.2rem`,
+    })
+    .prepend($$(`<span>Some </span>`))
+    .html(` examples`, true)
+    .appendTo(JQLRoot);
 
 // styled with intermediate class
-$$(`<div id="helloworld"/>`)
-  .text(`Example: hello ... world`)
-  .append($(`<span> OK</span>`))
-  .css({
-    marginTop: `0.5rem`,
-    border: `3px solid green`,
-    padding: `5px`,
-    fontSize: `1.2em`,
-    display: `inline-block`, } )
-  .appendTo(JQLRoot)
-  .find$(`span`)
-  .css({className: `okRed`, color: `red`});
+  $$(`<div id="helloworld"/>`)
+    .text(`Example: hello ... world`)
+    .append($(`<span> OK</span>`))
+    .css({
+      marginTop: `0.5rem`,
+      border: `3px solid green`,
+      padding: `5px`,
+      fontSize: `1.2em`,
+      display: `inline-block`,
+    })
+    .appendTo(JQLRoot)
+    .find$(`span`)
+    .css({className: `okRed`, color: `red`});
 
 // append multiline comment to p#JQLRoot
-$$($.comment(`Hi, I am a multiline HTML-comment.
+  $$($.comment(`Hi, I am a multiline HTML-comment.
      So, you can add plain comments using JQL
      A comment may be injected into a child
      element (using the [root] parameter
@@ -164,36 +175,37 @@ $$($.comment(`Hi, I am a multiline HTML-comment.
 
 
 // a comment can also be appended using append/appendTo/prepend/prependTo
-$$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
-$$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
+    $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
+  $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
 // comment insertion test (note: this works with before-/afterMe/andThen too now)
-$($.text(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`, true), JQLRoot, $.at.BeforeBegin);
-$(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterEnd);
-$(`<!--Comment @ #bttnblock afterbegin (so, prepend) verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterBegin);
+  $($.text(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`, true), JQLRoot, $.at.BeforeBegin);
+  $(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterEnd);
+  $(`<!--Comment @ #bttnblock afterbegin (so, prepend) verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterBegin);
 
 // display code of this file
 // -------------------------
-$$(`<div>code used in this example (index.js)</div>`)
-  .data.add( {updown: `\u25BC View `, forid: `code`, hidden: 1} )
-  .addClass(`exampleText`, `codeVwr`)
-  .appendTo(JQLRoot);
+  $$(`<div>code used in this example (index.js)</div>`)
+    .data.add({updown: `\u25BC View `, forid: `code`, hidden: 1})
+    .addClass(`exampleText`, `codeVwr`)
+    .appendTo(JQLRoot);
 
 // append actual code to document
-injectCode().then(_ => Prism.highlightAll());
-$(`#logBox`).style({maxWidth: `${$(`#JQLRoot`).dimensions.width}px`});
-const donePerf = (performance.now() - started)/1000;
-const perfDiv = $.div(`Page creation took ${donePerf.toFixed(3)} seconds`)
-  .andThen(`<div>All done, enjoy 😎!</div>`);
-$.Popup.show({content: perfDiv, closeAfter: 5 });
-
+  injectCode().then(_ => Prism.highlightAll());
+  $(`#logBox`).style({maxWidth: `${$(`#JQLRoot`).dimensions.width}px`});
+  const donePerf = (performance.now() - started) / 1000;
+  const perfDiv = $.div(`Page creation took ${donePerf.toFixed(3)} seconds`)
+    .andThen(`<div>All done, enjoy 😎!</div>`);
+  $.Popup.show({content: perfDiv, closeAfter: 5});
+}
+/* DEBUG EXIT POINT */
 
 function modalDemo() {
   const callbackAfterClose = () => $.Popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
   const closeBttn = $$(`<button id="modalCloseTest">Close me</button>`)
     .css({marginTop: `0.5rem`}).on(`click`, () => $.Popup.removeModal());
   $.Popup.show({
-      content: `
+    content: `
         <p>
           Hi. This box is <i>really</i> modal.
           <br>There is no close icon and clicking outside this box does nothing.
@@ -202,9 +214,9 @@ function modalDemo() {
             or click outside the popup).
           <br>${closeBttn.outerHtml}
         </p>`,
-      modal: true,
-      callback: callbackAfterClose,
-      warnMessage: `There's only <b><i>one</i></b> escape`,
+    modal: true,
+    callback: callbackAfterClose,
+    warnMessage: `There's only <b><i>one</i></b> escape`,
   });
 }
 
@@ -220,7 +232,7 @@ function getDelegates4Document() {
           self.toggleClass(`green`);
           $(`[data-funny]`).remove();
           const colr = self.hasClass(`green`) ? `green` : `black`;
-          self.append( $.span({ content: `Funny! Now I'm  ${colr}`, cssClass: `funny` }));
+          self.append($.span({content: `Funny! Now I'm  ${colr}`, cssClass: `funny`}));
           self.data.add({timer: setTimeout(() => self.find$(`span.funny`)?.remove(), 2500)});
           log(`That's funny ... ${self.find$(`.black,.green`).html()}`);
         },
@@ -245,12 +257,12 @@ function getDelegates4Document() {
         handlers: [
           (_, self) => {
             const codeElem = $(`#${self.data.get(`forid`)}`);
-
+            
             if (!+self.data.get(`hidden`)) {
               codeElem.removeClass(`down`);
               return self.data.add({updown: '\u25bc View ', hidden: 1})
             }
-
+            
             $(`.down`).each(el => el.classList.remove(`down`));
             $(`[data-forid]`).data.add({updown: '\u25bc View ', hidden: 1});
             codeElem.addClass(`down`);
@@ -271,35 +283,35 @@ const logActivation = (logBttn, active = true) => {
 
 function allComments(root, result = []) {
   for (const node of root) {
-
+    
     if (node.childNodes && node.childNodes.length) {
       allComments([...node.childNodes], result);
     }
-
+    
     if (node.nodeType === 8) {
       const parent = node.parentNode;
       let parentStr = `&#8226; in <b>??</b>`;
-
+      
       if (parent) {
         const className = parent.classList.length && `.${[...parent.classList][0]}` || ``;
         parentStr = `&#8226; in <b>${
           parent.nodeName.toLowerCase()}${
           parent.id ? `#${parent.id}` : className ? className : ``}</b>`;
       }
-
+      
       const spacing = repeat(`&nbsp;`, 7);
       result.push(`<div class="cmmt">${parentStr}<br>${repeat(`&nbsp;`, 2)}&lt;!--${
         node.textContent.replace(/</, `&lt;`).replace(/\n/g, `<br>${spacing}`)}--&gt;</div>`);
     }
   }
-
+  
   return result;
 }
 
 async function injectCode() {
   const source = await fetch("./index.js").then(r => r.text());
   $(`#JQLRoot`)
-    .append( $(`
+    .append($(`
     <div class="upDownFader" id="code">
       <pre class="language-javascript"><code class="language-javascript js line-numbers">${
       source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`)}</code></pre>
@@ -308,7 +320,9 @@ async function injectCode() {
 
 function showStyling(styleId, bttn) {
   const theStyle = $(`style#${styleId}`);
-  if (theStyle.is.empty) { return; }
+  if (theStyle.is.empty) {
+    return;
+  }
   const getMediaRuleSelector = rule => rule.cssText.split(/\{/).shift().trim();
   const rules = theStyle[0].sheet.cssRules;
   const mapRule = (rule, selector) => `${selector} {\n  ${
@@ -332,7 +346,8 @@ function showStyling(styleId, bttn) {
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
   return $.Popup.show({
     content: $$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
-      .prepend($$(`<p></p>`).append(bttn.HTML.get(1))) });
+      .prepend($$(`<p></p>`).append(bttn.HTML.get(1)))
+  });
 }
 
 function getStyleRules() {
