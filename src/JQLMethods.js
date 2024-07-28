@@ -20,6 +20,12 @@ const loop = (instance, callback) => {
 const isIt = ExamineElementFeatureFactory();
 const emptyElement = el => el && (el.textContent = "");
 const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
+const cloneAndDestroy = elem => {
+  const cloned = elem.cloneNode(true)
+  cloned.removeAttribute && cloned.removeAttribute(`id`);
+  elem.remove();
+  return cloned;
+};
 const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.setAttribute(`data-${toDashedNotation(key)}`, value));
@@ -328,37 +334,38 @@ const allMethods = {
     },
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
+        const shouldMove = self.length === 1;
+        
         for (let elem2Append of elems2Append) {
           if (IS(elem2Append, String)) {
             const elem2Append4Test = elem2Append.trim();
             const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Append4Test);
             const toAppend = isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append);
-            loop( self, el => el.insertAdjacentElement(`beforeend`, toAppend.cloneNode(true)) )
+            loop( self, el => el.append(toAppend) )
           }
 
           if (isNode(elem2Append)) {
-            let toAppend = elem2Append.cloneNode(true);
-            toAppend.removeAttribute && toAppend.removeAttribute(`id`);
-            elem2Append.remove();
-            loop( self, el => el.append(toAppend.cloneNode(true)) );
+            let maybeCloned = shouldMove ? elem2Append : cloneAndDestroy(elem2Append);
+            loop( self, el => el.append( maybeCloned ) );
           }
 
           if (elem2Append.isJQL && !elem2Append.is.empty) {
             loop( self, el => {
               elem2Append.collection.forEach(elem => {
-                const cloned = elem.cloneNode(true);
-                elem.remove();
-                el.append(cloned);
+                let maybeCloned = shouldMove ? elem : cloneAndDestroy(elem);
+                el.append(maybeCloned);
               } );
             } );
           }
         }
       }
+      
       return self;
     },
     prepend: (self, ...elems2Prepend) => {
       if (!self.is.empty && elems2Prepend) {
-
+        const shouldMove = self.length === 1;
+        
         for (let elem2Prepend of elems2Prepend) {
           if (IS(elem2Prepend, String)) {
             elem2Prepend = elem2Prepend.trim();
@@ -368,23 +375,21 @@ const allMethods = {
           }
 
           if (isNode(elem2Prepend)) {
-            const toPrepend = elem2Prepend.cloneNode(true);
-            toPrepend.removeAttribute && toPrepend.removeAttribute(`id`);
-            elem2Prepend.remove();
-            loop( self, el => el.prepend(toPrepend.cloneNode(true)) );
+            let maybeCloned = shouldMove ? elem2Prepend : cloneAndDestroy(elem2Prepend);
+            loop( self, el => el.prepend(maybeCloned) );
           }
           
           if (elem2Prepend.isJQL && !elem2Prepend.is.empty) {
             loop( self, el => {
-              elem2Prepend.collection.forEach(elem => {
-                const cloned = elem.cloneNode(true);
-                elem.remove();
-                el.prepend(cloned);
+              elem2Prepend.collection.forEach( elem => {
+                let maybeCloned = shouldMove ? elem : cloneAndDestroy(elem);
+                el.prepend(maybeCloned);
               } );
             } );
           }
         }
       }
+      
       return self;
     },
     appendTo: (self, appendTo) => {
