@@ -14,5 +14,5 @@ export default {
     return nodeName === `#text` || !!allTags[nodeName];
   },
   allowTag: tag2Allow => allTags[tag2Allow.toLowerCase()] = true,
-  prohibitTag: tag2Prohibit => allTags[tag.toLowerCase()] = false,
+  prohibitTag: tag2Prohibit => allTags[tag2Prohibit.toLowerCase()] = false,
 };
