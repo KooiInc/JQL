@@ -42,7 +42,6 @@ function newPopupFactory($) {
   function createAndShowPupup( { content, modal, closeAfter, callback, warnMessage } ) {
     if (content) {
       clearTimeout(timeout);
-      //setPopupZIndex();
       isModal = modal ?? false;
       modalWarning = $.IS(warnMessage, String) && `${warnMessage?.trim()}`.length || warnMessage?.isJQL
         ? warnMessage : undefined;
