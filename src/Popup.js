@@ -5,7 +5,7 @@ export default newPopupFactory;
 
 function newPopupFactory($) {
   const editRule = $.createStyle(`JQLPopupCSS`);
-  const maxZIndexValue = 2147483647;
+  //const maxZIndexValue = 2147483647;
   popupStyling.forEach( rule => editRule(rule) );
   let callbackOnClose = {};
   let isModal, modalWarning, timeout;
@@ -19,26 +19,11 @@ function newPopupFactory($) {
       const {x, y, width} = txtBox.dimensions;
       closer.style({top: `${y - 12}px`, left: `${x + width - 12}px`});
     } };
-  const setPopupZIndex = (currentZIndexValues, min = false) => {
-    const zi = min ? currentZIndexValues.min - 100 : currentZIndexValues.max + 10;
-    popupContainer.style({zIndex: zi});
-    closer.style({zIndex: zi + 1}); };
   const warn = () => {
     modalWarning && $(`.popup-warn`).clear().append($(`<div>${modalWarning}</div>`));
     txtBox.addClass(`popup-warn-active`); };
   const modalRemover = () => { isModal = false; remove(closer[0]); };
-  const getCurrentZIndexBoundaries = () => {
-    const zIndxs = [0, ...$.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
-        .map( node => {
-          const zIndexValue = parseInt(getComputedStyle(node).getPropertyValue(`z-index`));
-          return !node.shadowRoot && zIndexValue !== maxZIndexValue ? zIndexValue : 0; } )
-        .filter( zi => $.IS(zi, Number) )];
-    const max = Math.max(...zIndxs) ?? 0;
-    const min = Math.min(...zIndxs) ?? 0;
-    return {max, min};
-  };
   const timed = (seconds, callback) => timeout = setTimeout( () => remove(closer[0]), +seconds * 1000 );
-  setPopupZIndex(getCurrentZIndexBoundaries(), true);
   $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
   $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`popup-warn-active`));
   $.delegate(`resize`, positionCloser);
@@ -57,7 +42,7 @@ function newPopupFactory($) {
   function createAndShowPupup( { content, modal, closeAfter, callback, warnMessage } ) {
     if (content) {
       clearTimeout(timeout);
-      setPopupZIndex(getCurrentZIndexBoundaries());
+      //setPopupZIndex();
       isModal = modal ?? false;
       modalWarning = $.IS(warnMessage, String) && `${warnMessage?.trim()}`.length || warnMessage?.isJQL
         ? warnMessage : undefined;
@@ -93,7 +78,7 @@ function newPopupFactory($) {
       const callbackId = popupContainer.data.get(`callbackId`);
       popupContainer.data.remove(`callbackId`);
       $(`.popup-active`).removeClass(`popup-active`);
-      setPopupZIndex(getCurrentZIndexBoundaries(), true);
+      //setPopupZIndex(getCurrentZIndexBoundaries(), true);
       const cb = callbackId && callbackOnClose[callbackId];
       if ($.IS(cb, Function)) { cb(); }
       if (callbackId) { delete callbackOnClose[callbackId]; }
