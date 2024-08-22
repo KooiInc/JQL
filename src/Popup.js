@@ -31,10 +31,11 @@ function newPopupFactory($) {
     const zIndxs = [0, ...$.nodes(`*:not(.popupContainer, .closeHandleIcon)`, document.body)
         .map( node => {
           const zIndexValue = parseInt(getComputedStyle(node).getPropertyValue(`z-index`));
-          return !node.shadowRoot ? zIndexValue : 0; } )
+          return !node.shadowRoot && zIndexValue !== maxZIndexValue ? zIndexValue : 0; } )
         .filter( zi => $.IS(zi, Number) )];
     const max = Math.max(...zIndxs) ?? 0;
-    return { max: Math.max(...zIndxs) ?? 0, min: Math.min(...zIndxs) ?? 0 };
+    const min = Math.min(...zIndxs) ?? 0;
+    return {max, min};
   };
   const timed = (seconds, callback) => timeout = setTimeout( () => remove(closer[0]), +seconds * 1000 );
   setPopupZIndex(getCurrentZIndexBoundaries(), true);
