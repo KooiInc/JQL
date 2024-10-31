@@ -45,13 +45,13 @@ const JQLRoot = $(`#JQLRoot`);
 if (!debug) {
 // create the header content
   let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
-    .andThen($.div([
-      $.i($.b({content: `Everything`, cssClass: `attention`})),
-      ` on this page was dynamically created using JQL.`]))
+    .andThen($.span( $.i($.b({content: `<u>Everything</u>`, cssClass: `attention`} ) ) )
+      .andThen($.span(` on this page was dynamically created using JQL.`, {props: {id: `watte`}}) ) )
     .andThen(`
- <div><b class="arrRight">&#8594;</b>
-  Check the HTML source &mdash;
-   right click anywhere, and select 'View page source'.</div>`);
+        <p>
+          <b class="arrRight">&#8594;</b>
+          Check the HTML source &mdash; right click anywhere, and select 'View page source'.
+        </p>`);
   
   $.div({content: headerContent, props: {id: `StyledPara`}, cssClass: `thickBorder`})
     .appendTo(JQLRoot);
