@@ -5,14 +5,17 @@ const started = performance.now();
 const debug = false;
 
 if (location.host.startsWith(`dev`)) {
-  $(`link[rel="icon"]`).replaceWith($.LINK.prop({href: `./demoIcon.png`, rel: `icon`, type: `image/png`}));
+  $(`link[rel="icon"]`).replaceWith($.LINK({href: `./demoIcon.png`, rel: `icon`, type: `image/png`}));
   document.title = `##DEV## ${document.title}`;
 }
 
 // initialize statics from $
 const {virtual: $$, log, debugLog} = $;
+window.jql = $;
+const {DIV, H2, SPAN, I, B, P, U, A, BUTTON, COMMENT, BR} = $;
 
 // some helpers
+
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 $.fn(`addTitle`, (self, ttl) => {
   self.prop(`title`, ttl);
@@ -21,40 +24,48 @@ $.fn(`addTitle`, (self, ttl) => {
 
 // activate logging all JQL events (hidden)
 debugLog.on().toConsole.off().reversed.on().hide();
-const apiLinkPrefix = `//github.com/KooiInc/JQL`;
-
-const createExternalLink = (href, txt) =>
-  $$(`<a class="InternalLink" href="${href}">${txt}</a>`).addTitle("opens in current tab/window");
+const protocol = location.protocol;
+const backLinks = $$(
+  P(`The repository can be found  @ `,
+    A( {
+      href: `//github.com/KooiInc/JQL`,
+      target: `_blank`,
+      text: `https://github.com/KooiInc/JQL` } ),
+    BR(),
+    `The documentation resides @ `,
+    A( {
+      href: `//kooiinc.github.io/JQL/Docs`,
+      target: `_blank`,
+      text: `https://kooiinc.github.io/JQL/Docs`} )
+  ) );
 
 // initialize styling for logging and a few elements (to create later)
 $.editCssRules(...getStyleRules())
 
 // create container for all generated html
-const container = $.div({
-  content: $(`#logBox`).style({margin: `1rem auto`})
-    .andThen($.p({id: `JQLRoot`})
-      .andThen($.comment(`p#JQLRoot contains all generated html`), true)),
-  props: {id: `container`},
-  cssClass: `MAIN`,
-  toDOM: true
-});
+$( $.div( {id: `container`, class: `MAIN`},
+     $.div({id: `JQLRoot`},
+          $.comment(`div#JQLRoot contains all generated html`) )
+     )
+).prepend($(`#logBox`).style({margin: `1rem auto`}));
 
 const JQLRoot = $(`#JQLRoot`);
 
 /* DEBUG ENTRY POINT  */
 if (!debug) {
-// create the header content
-  let headerContent = $.h2(`Demo & test JQueryLike (JQL) library`)
-    .andThen($.span( $.i($.b({content: `<u>Everything</u>`, cssClass: `attention`} ) ) )
-      .andThen($.span(` on this page was dynamically created using JQL.`, {props: {id: `watte`}}) ) )
-    .andThen(`
-        <p>
-          <b class="arrRight">&#8594;</b>
-          Check the HTML source &mdash; right click anywhere, and select 'View page source'.
-        </p>`);
+  // create the header content
+  let headerContent = $(
+    DIV( { id: `StyledPara`, class: `thickBorder` },
+      H2( `Demo & test JQueryLike (JQL) library`),
+      SPAN( I( B( {class: `attention`}, U(`Everything`) ) ),
+        ` on this page was dynamically created using JQL.`),
+      P( B({class: `arrRight`, html: `&#8594;`}, ),
+        ` Check the HTML source &mdash; right click anywhere, and select 'View page source'.`)
+    )
+  );
   
-  $.div({content: headerContent, props: {id: `StyledPara`}, cssClass: `thickBorder`})
-    .appendTo(JQLRoot);
+  //$.div(headerContent, props: {id: `StyledPara`}, cssClass: `thickBorder`})
+   headerContent.appendTo(JQLRoot);
 
 // add all event handling delegates defined in function [getDelegates4Document]
   getDelegates4Document()
@@ -77,7 +88,7 @@ if (!debug) {
   $([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="delegates">Hi 1</div>`], JQLRoot)
     .data.add({hello: "Added post creation"})
     .html(` [you may <b><i>click</i> me</b>] `, true)
-    .style({cursor: `pointer`})
+    .style({cursor: `pointer`});
 
 // <notallowed> is ... well ... not allowed, so will be removed
 // styles inline
@@ -105,69 +116,53 @@ if (!debug) {
   $.delegate(`click`, `[data-switch-bttn]`,
     evt => showStyling(evt.target.dataset?.sheetId, cssBttns[evt.target.dataset?.switchBttn]));
   
-  const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
-      $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
-      $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, () => debugLog.clear()),
-      $$(`<button id="showComments">Show document comments</button>`)
-        .prop(`title`, `Show content of comment elements in a popup`),
-      $$(`<button id="showCSS">Show custom CSS</button>`)
-        .prop(`title`, `Show the dynamically created styling in a popup`)
-        .on(`click`, evt => showStyling(`JQLStylesheet`, cssBttns.defaultCSS)),
-      $$(`<button>Modal popup demo</button>`).on(`click`, modalDemo),
-      $$(`<button>Github</button>`)
-        .on(`click`, () => {
-            $.Popup.show({
-                content: $$(`
-          <p>
-            The repository can be found  @${
-                  createExternalLink(`${apiLinkPrefix}`,
-                    `github.com/KooiInc/JQL`).outerHtml}<br>
-            The documentation resides @${
-                  createExternalLink(`//kooiinc.github.io/JQL/Docs`, `kooiinc.github.io/JQL/Docs`).outerHtml}
-          </p>`)
-              }
-            );
-          }
-        )])
-    .appendTo(JQLRoot);
+  $(DIV({id: "bttnblock"})).append(...[
+      $$(BUTTON({id: "logBttn", data: {on: "0"}, title: "show/hide the logged activities"})),
+      $$(BUTTON({id: "clearLog", text: "Clear Log box" }) ).on(`click`, () => debugLog.clear()),
+      $$(BUTTON({id: "showComments", text: "Show document comments", title: "Show content of comment elements in a popup"})),
+      $$(BUTTON({id: "showCSS", title: "Show the dynamically created styling in a popup"}, "Show custom CSS"))
+        .on("click", evt => showStyling("JQLStylesheet", cssBttns.defaultCSS)),
+      $$(BUTTON("Modal popup demo")).on(`click`, modalDemo),
+      $$(BUTTON("Github")).on(`click`, () =>  $.Popup.show( { content: backLinks } ) )]
+    ).appendTo(JQLRoot);
   
-  $(`button`)
-    .style({marginRight: `4px`})
+  $("button")
+    .style({marginRight: "4px"})
     .each((btn, i) => btn.dataset.index = `bttn-${i}`); // each demo
 
 // styled via named class .exampleText
   $$(`<div>styling`)
     .css({
-      className: `exampleText`,
-      borderTop: `2px dotted #999`,
-      borderLeft: `5px solid red`,
-      paddingLeft: `5px`,
-      display: `block`,
-      maxWidth: `800px`,
-      'margin-top': `1rem`,
-      'padding-top': `0.2rem`,
+      className: "exampleText",
+      borderTop: "2px dotted #999",
+      borderLeft: "5px solid red",
+      paddingLeft: "5px",
+      display: "block",
+      maxWidth: "800px",
+      'margin-top': "1rem",
+      'padding-top': "0.2rem",
     })
-    .prepend($$(`<span>Some </span>`))
-    .html(` examples`, true)
+    .prepend($$("<span>Some </span>"))
+    .html(" examples", true)
     .appendTo(JQLRoot);
 
 // styled with intermediate class
   $$(`<div id="helloworld"/>`)
-    .text(`Example: hello ... world`)
-    .append($(`<span> OK</span>`))
+    .text("Example: hello ... world")
+    .append($("<span> OK</span>"))
     .css({
-      marginTop: `0.5rem`,
-      border: `3px solid green`,
-      padding: `5px`,
-      fontSize: `1.2em`,
-      display: `inline-block`,
+      marginTop: "0.5rem",
+      border: "3px solid green",
+      padding: "5px",
+      fontSize: "1.2em",
+      display: "inline-block",
     })
     .appendTo(JQLRoot)
-    .find$(`span`)
-    .css({className: `okRed`, color: `red`});
+    .find$("span")
+    .css({className: "okRed", color: "red"});
 
 // append multiline comment to p#JQLRoot
-  $$($.comment(`Hi, I am a multiline HTML-comment.
+  $$(COMMENT(`Hi, I am a multiline HTML-comment.
      So, you can add plain comments using JQL
      A comment may be injected into a child
      element (using the [root] parameter
@@ -175,11 +170,11 @@ if (!debug) {
 
 
 // a comment can also be appended using append/appendTo/prepend/prependTo
-    $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
+  $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
   $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
 // comment insertion test (note: this works with before-/afterMe/andThen too now)
-  $($.text(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`, true), JQLRoot, $.at.BeforeBegin);
+  $( COMMENT(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`), JQLRoot, $.at.BeforeBegin);
   $(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterEnd);
   $(`<!--Comment @ #bttnblock afterbegin (so, prepend) verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterBegin);
 
@@ -194,9 +189,11 @@ if (!debug) {
   injectCode().then(_ => Prism.highlightAll());
   $(`#logBox`).style({maxWidth: `${$(`#JQLRoot`).dimensions.width}px`});
   const donePerf = (performance.now() - started) / 1000;
-  const perfDiv = $.div(`Page creation took ${donePerf.toFixed(3)} seconds`)
-    .andThen(`<div>All done, enjoy 😎!</div>`);
-  $.Popup.show({content: perfDiv, closeAfter: 5});
+  const perfMessage = $([
+    $.div(`Page creation took ${donePerf.toFixed(3)} seconds`),
+    $.div(`All done, enjoy 😎!`)]
+  );
+  $.Popup.show({content: perfMessage, closeAfter: 5});
 }
 /* DEBUG EXIT POINT */
 
@@ -232,7 +229,7 @@ function getDelegates4Document() {
           self.toggleClass(`green`);
           $(`[data-funny]`).remove();
           const colr = self.hasClass(`green`) ? `green` : `black`;
-          self.append($.span({content: `Funny! Now I'm  ${colr}`, cssClass: `funny`}));
+          self.append($.span({class: `funny`}, `Funny! Now I'm  ${colr}`));
           self.data.add({timer: setTimeout(() => self.find$(`span.funny`)?.remove(), 2500)});
           log(`That's funny ... ${self.find$(`.black,.green`).html()}`);
         },
@@ -417,6 +414,7 @@ function getStyleRules() {
       opacity: 1;
       overflow: auto;
     }`,
+    `#bttnblock { margin-top: 1em; }`,
     `#logBttn[data-on='0']:before { content: 'Show logs'; }`,
     `#logBttn[data-on='1']:before { content: 'Hide logs'; }`,
     `b.arrRight {
