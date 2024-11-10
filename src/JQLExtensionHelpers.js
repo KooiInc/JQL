@@ -5,6 +5,7 @@ import PopupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import styleFactory from "../LifeCSS/index.js";
 import tagLib from "./HTMLTags.js";
+import tags from "../tinyDOM/tinyDOM.js";
 import { randomString, toDashedNotation, IS, truncateHtmlStr,
   truncate2SingleStr, logTime, hex2RGBA, } from "./Utilities.js";
 
@@ -143,22 +144,6 @@ function cssRemove(...rules) {
     .forEach(rule => cssRuleEdit(rule, {removeRule: 1}));
 }
 
-function tag2JqlFactory(tag, jql) {
-  const createDirect = createDirectFactory(jql);
-  function getter(tag) {
-    return tag.toUpperCase() === tag
-      ? jql.virtual( `<${tag}></${tag}>` )
-      : (htmlTextOrObject, props = {}) => {
-        return !htmlTextOrObject && Object.keys(props).length < 1
-          ? jql.virtual(`<${tag}></${tag}>`)
-          : createDirect(!htmlTextOrObject.isJQL && IS(htmlTextOrObject, Object)
-            ? {tag, ...{...htmlTextOrObject, ...props}}
-            : {tag, props, content: htmlTextOrObject});
-      }
-  }
-  return { get() { return getter(tag); } };
-}
-
 function delegateFactory(handle) {
   return function(type, origin, ...handlers) {
     if (IS(origin, Function)) {
@@ -183,55 +168,20 @@ function virtualFactory(jql) {
   }
 }
 
-function createDirectFactory(jql) {
-  return function ({tag, content = ``, id, cssClass = ``, props = {}, toDOM = false, debug} = {}) {
-    let elem;
-    
-    if (props?.cssClass) {
-      cssClass = props.cssClass;
-      delete props.cssClass;
-    }
-    
-    if (props?.id) {
-      id = props.id;
-      delete props.id;
-    }
-    
-    if (IS(content, String)) {
-      elem = jql.virtual(`<${tag}>${content}</${tag}>`);
-    }
-    
-    if (IS(content, HTMLElement, Array) || content.isJQL) {
-      if (!IS(content, Array)) { content = [content]; }
-      elem = jql.virtual(`<${tag}></${tag}>`).append(...content);
-    }
-    
-    if (IS(props, Object)) {
-      elem.prop(props);
-    }
-    
-    if (cssClass) {
-      cssClass = !IS(cssClass, Array) ? [cssClass] : cssClass;
-      elem.addClass(...cssClass);
-    }
-    
-    if (id && IS(id, String) && id.trim().length > 0) {
-      elem.prop({id});
-    }
-    
-    return toDOM ? elem.toDOM() : elem;
-  }
-}
-
 function combineObjectSources(...sources) {
   const result = {};
   
   for (const source of sources) {
     const descriptors = Object.getOwnPropertyDescriptors(source);
-    Object.entries(descriptors).forEach( ([key, descriptor]) => Object.defineProperty(result, key, descriptor) );
+    Object.entries(descriptors).forEach( ([key, descriptor]) =>
+      !(key in result) && Object.defineProperty(result, key, descriptor) );
   }
   
   return result;
+}
+
+function tag2JqlStaticGetterFactory(tag) {
+  return { get() { return (...args) => tags[tag.toLowerCase()](...args); } };
 }
 
 function staticTagsLambda(jql) {
@@ -240,8 +190,9 @@ function staticTagsLambda(jql) {
       return acc;
     }
     const TAG = tag.toUpperCase();
-    Object.defineProperty(acc, tag, tag2JqlFactory(tag, jql));
-    Object.defineProperty(acc, TAG, tag2JqlFactory(TAG, jql));
+    Object.defineProperty(acc, tag, tag2JqlStaticGetterFactory(tag));
+    Object.defineProperty(acc, TAG, tag2JqlStaticGetterFactory(TAG));
+    
     return acc;
   }
 }
