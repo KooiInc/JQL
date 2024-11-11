@@ -6,7 +6,3 @@
 	path = typeofAnything
 	url = https://github.com/KooiInc/typeofAnything.git
 	branch = main
-[submodule "tinyDOM"]
-	path = tinyDOM
-	url = git@github.com:KooiInc/tinyDOM.git
-	branch = main
