@@ -439,7 +439,7 @@ const allMethods = {
     },
     first$: (self, indexOrSelector) => self.single(indexOrSelector),
     find: (self, selector) => self.first()?.querySelectorAll(selector) || [],
-    find$: (self, selector) => { return jql(selector, self); },
+    find$: (self, selector) => { return self.collection.length ? jql(selector, self) : self; },
     prop: (self, nameOrProperties, value) => {
       if (IS(nameOrProperties, String) && !value) {
         return nameOrProperties.startsWith(`data`)
