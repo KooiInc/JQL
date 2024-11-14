@@ -168,9 +168,12 @@ $.log(`Documenter implementation took ${((performance.now() - perform)/1000).toF
 
 const loadItem = QS2Obj();
 if (loadItem.load) {
-  const item = $(`[data-navitem="#${loadItem.load}"]`);
-  item && $(`[data-navitem="#${loadItem.load}"]`).trigger(`click`);
-  $.Popup.show({content: $.b(`loaded `, $.code({class: "inline"}, loadItem.load)), closeAfter: 2});
+  const load = loadItem.load.replace(/about/, `About`);
+  const item = $(`[data-navitem="#${load}"]`) || $(`[data-key="${load}"]`).closest(`.navGroupItems`);
+  if (item) {
+    $(item).trigger(`click`);
+    $.Popup.show({content: $.b(`loaded `, $.code({class: "inline"}, loadItem.load)), closeAfter: 2});
+  }
 }
 
 function QS2Obj() {
