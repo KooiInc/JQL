@@ -41,6 +41,7 @@ function newPopupFactory($) {
   
   function createAndShowPupup( { content, modal, closeAfter, callback, warnMessage } ) {
     if (content) {
+      content = IS(content, Node) ? content[Symbol.jqlvirtual] : content;
       clearTimeout(timeout);
       isModal = modal ?? false;
       modalWarning = $.IS(warnMessage, String) && `${warnMessage?.trim()}`.length || warnMessage?.isJQL
