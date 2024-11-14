@@ -86,13 +86,13 @@ function proxify(instance) {
 function addJQLStaticMethods(jql) {
   Symbol.jql = Symbol.for(`jql`);
   Symbol.jqlvirtual = Symbol.for(`jqlv`);
-  Symbol.jql2Root = Symbol.for(`jqldom`);
+  Symbol.jql2Root = Symbol.for(`jql2dom`);
   Object.defineProperties(
     Node.prototype, {
       [Symbol.jql]:        { get: function() { return jql(this); } },
       [Symbol.jqlvirtual]: { get: function() { return jql.virtual(this); } },
       [Symbol.jql2Root]: {
-        value: function(root = document.body, at = insertPositions.beforeend) {
+        value: function(root = document.body, at = insertPositions.end) {
           return jql(this, root, at);
         }
       }
