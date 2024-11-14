@@ -67,12 +67,12 @@ function ExamineElementFeatureFactory() {
   const notApplicable = `n/a`;
   const isWritable = function(elem) {
     return elem.parentNode
-      ? !!jql.nodes(`:is(:read-write)`, elem?.parentNode)?.find(el => el === elem) : notApplicable;
+      ? !!jql.nodes(`:is(:read-write)`, elem?.parentNode)?.find(el => el === elem) : false;
   };
   
   const isModal = function(elem) {
     return elem.parentNode
-      ? !!jql.nodes(`:is(:modal)`, elem?.parentNode)?.find(el => el === elem) : notApplicable;
+      ? !!jql.nodes(`:is(:modal)`, elem?.parentNode)?.find(el => el === elem) : false;
   };
   
   const noElements = { notInDOM: true, writable: notApplicable, modal: notApplicable, empty: true, open: notApplicable, visible: notApplicable, };
