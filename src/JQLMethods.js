@@ -161,10 +161,13 @@ const allMethods = {
         return self.HTML.set(content, false, escape);
       },
       append: (content, escape = false) => {
+        content = IS(content, HTMLElement)
+          ? content[Symbol.jqlvirtual].HTML.get(1) : content.isJQL ? content.HTML.get(1) : content;
         return self.HTML.set(content, true, escape);
       },
       insert: (content, escape = false) => {
-        content = content.isJQL ? content.HTML.get() : content;
+        content = IS(content, HTMLElement)
+          ? content[Symbol.jqlvirtual].HTML.get(1) : content.isJQL ? content.HTML.get(1) : content;
         return self.HTML.set(content + self.HTML.get(), false, escape);
       },
     })
@@ -315,7 +318,7 @@ const allMethods = {
       elem2Add = elem2Add?.isJQL
         ? elem2Add.collection
         : IS(elem2Add, HTMLElement)
-          ? [elem2Add]
+          ? [elem2Add[Symbol.jqlVirtual]]
           : jql.virtual(createElementFromHtmlString(elem2Add)).collection;
       
       const [index, method, reCollected] = before
@@ -495,19 +498,21 @@ const allMethods = {
     },
     htmlFor: (self, forQuery, htmlString = "", append = false) => {
       if (forQuery && self.collection.length) {
+        if (!forQuery || !IS(htmlString, String)) { return self; }
+        
         const el2Change = self.find$(forQuery);
-        if (!el2Change) {
-          return self;
-        }
+        
+        if (el2Change.length < 1) { return self; }
 
-        if (`{htmlValue}`.trim().length < 1) {
-          el2Change.textContent = "";
-          return self;
-        }
-
-        const nwElement = createElementFromHtmlString(`<div>${htmlString}</div>`);
-        nwElement && el2Change.html(nwElement.innerHTML, append);
+        const nwElement = createElementFromHtmlString(`<span>${htmlString}</span>`);
+        
+        el2Change.each(el => {
+          if (!append) { el.textContent = ``; }
+          el.insertAdjacentHTML(`beforeend`, nwElement.innerHTML)
+        });
+        
       }
+      
       return self;
     },
     trigger: (self, evtType, SpecifiedEvent = Event, options = {}) => {
