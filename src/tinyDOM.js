@@ -1,20 +1,22 @@
 import {
-  default as IS,
-  maybe,
-} from "https://cdn.jsdelivr.net/gh/KooiInc/typeofAnything/typeofany.module.min.js";
-export default ( function tagProxyFactory() {
-  const tinyDOMProxyGetter = { get(obj, key) {
-    const tag = String(key)?.toLowerCase();
-    switch(true) {
-      case tag in obj: return obj[tag];
-      case validateTag(tag): return (obj[tag] = tag2FN(key)) && obj[tag];
-      default: return createErrorElementFN(obj, tag, key);
-    }
-  } };
-  return new Proxy({}, tinyDOMProxyGetter); }
-)();
+   default as IS,
+   maybe,
+ } from "../typeofAnything/typeofany.module.js";
+export default tinyDOM();
 
 const converts = {html: `innerHTML`, text: `textContent`,  class: `className`};
+
+function tinyDOM() {
+  const tinyDOMProxyGetter = { get(obj, key) {
+      const tag = String(key)?.toLowerCase();
+      switch(true) {
+        case tag in obj: return obj[tag];
+        case validateTag(tag): return (obj[tag] = tag2FN(key)) && obj[tag];
+        default: return createErrorElementFN(obj, tag, key);
+      }
+    } };
+  return new Proxy({}, tinyDOMProxyGetter);
+}
 
 function createErrorElementFN(obj, tag, key) {
   obj[tag] = () => createElement(`b`, {style:`color:red`,text:`'${key}' is not a valid HTML-tag`});
@@ -77,10 +79,11 @@ function createElementAndAppend(tag, element2Append) {
 }
 
 function createElement(tagName, props = {}) {
+  props = IS(props, {isTypes: Object, notTypes: [Proxy, Array], defaultValue: {}});
   const data = Object.entries(structuredClone(props?.data || {}));
   const elem = Object.assign(
     isComment(tagName) ? new Comment() : document.createElement(tagName),
-    cleanupProps( IS(props, {isTypes: Object, notTypes: Array, defaultValue: {}})) );
+    cleanupProps( props ) );
   data.length && data.forEach(([key, value]) => elem.dataset[key] = value);
   return elem;
 }
