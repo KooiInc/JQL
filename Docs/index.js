@@ -112,7 +112,7 @@ groups.forEach( group => {
       itemValue.description = itemValue.description.trim();
       const isDeprecated = /--DEPRECATED/.test(itemValue.description);
       const itemNameClean = sliceName(itemName);
-      let params = `<span/>`;
+      let params;
       let exampleCode = [];
       const itemGroupLookup = {
         instance: `[JQL instance].`,
@@ -123,7 +123,7 @@ groups.forEach( group => {
 
       if (itemValue.params?.length) {
         const paramDivs = itemValue.params.reduce((acc, value) => [...acc, paramStr2Div(value)], []);
-        params = `<div><b>Parameters</b>${paramDivs.join('')}</div>`;
+        params = `<div data-parameters><b>Parameters</b>${paramDivs.join('')}</div>`;
       }
 
       // insert formatted example code if applicable
@@ -138,13 +138,15 @@ groups.forEach( group => {
       }
 
       $(`
-        <div class="paragraph">
-          <h3 class="methodName" id="${itemName.replace(/([a-z])\$/gi, `$1_D`)}"><span class="group">${
-            itemGroupLookup[itemName.slice(0, itemName.indexOf(`_`))]}</span><span${
-              isDeprecated ? ` class="deprecated"` : ""}>${itemNameClean}</span></h3>
-          ${params}
+        <div class="paragraph" data-for="${itemNameClean.replace(/([a-z])\$/gi, `$1_D`)}">
+          <h3 class="methodName" id="${itemName.replace(/([a-z])\$/gi, `$1_D`)}">
+            <span class="group">${itemGroupLookup[itemName.slice(0, itemName.indexOf(`_`))]}</span>
+            <span${isDeprecated ? ` class="deprecated"` : ""}>${itemNameClean}</span>
+          </h3>
+          ${params ?? ``}
           <div class="returnValue"><b>Returns</b>: ${itemValue.returnValue}</div>
-          <div class="description">${isDeprecated ? `<b class="red">*deprecated</b> ` : ``}${itemValue.description.replace(/\n{2,}/g, `\n`)}</div>
+          <div class="description">${isDeprecated ? `<b class="red">*deprecated</b> ` : ``}${
+              itemValue.description.replace(/\n{2,}/g, `\n`)}</div>
         </div>`, docsContainer);
     });
 });
