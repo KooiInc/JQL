@@ -5,11 +5,10 @@ import PopupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import styleFactory from "../LifeCSS/index.js";
 import tagLib from "./HTMLTags.js";
-import tags from "../tinyDOM/tinyDOM.js";
+import tagFNFactory from "./tinyDOM.js";
 import { randomString, toDashedNotation, IS, truncateHtmlStr,
   truncate2SingleStr, logTime, hex2RGBA, } from "./Utilities.js";
-
-let static4Docs;
+let static4Docs = {};
 const {
   instanceMethods, instanceGetters,isCommentOrTextNode, isNode, isComment, isText,
   isHtmlString, isArrayOfHtmlElements, isArrayOfHtmlStrings, ElemArray2HtmlString,
@@ -85,10 +84,18 @@ function proxify(instance) {
 }
 
 function addJQLStaticMethods(jql) {
+  Symbol.jql = Symbol.for(`jql`);
+  Symbol.jqlvirtual = Symbol.for(`jqlv`);
+  Object.defineProperties(
+    Node.prototype, {
+      [Symbol.jql]:        { get: function() { return jql(this); } },
+      [Symbol.jqlvirtual]: { get: function() { return jql.virtual(this); } }
+    });
   const staticMethods = defaultStaticMethodsFactory(jql);
   Object.entries(Object.getOwnPropertyDescriptors(staticMethods))
-    .forEach( ([key, descriptor]) => { Object.defineProperty(jql, key, descriptor); } );
-  static4Docs = {...staticMethods};
+    .forEach( ([key, descriptor]) => {
+      Object.defineProperty(jql, key, descriptor);
+      Object.defineProperty(static4Docs, key, descriptor); } );
   return jql;
 }
 
@@ -100,7 +107,6 @@ function defaultStaticMethodsFactory(jql) {
 
 function staticMethodsFactory(jql) {
   const editCssRule = (ruleOrSelector, ruleObject) => cssRuleEdit(ruleOrSelector, ruleObject);
-  
   return {
     debugLog,
     log: (...args) => Log(`fromStatic`, ...args),
@@ -108,12 +114,12 @@ function staticMethodsFactory(jql) {
     get at() { return insertPositions; },
     editCssRules: (...rules) => rules.forEach(rule => cssRuleEdit(rule)),
     editCssRule,
-    setStyle: editCssRule,
+    get setStyle() { /*deprecated*/return editCssRule; },
     delegate: delegateFactory(HandleFactory()),
     virtual: virtualFactory(jql),
     get fn() { return addFn; },
     get allowTag() { return tagLib.allowTag; },
-    get prohibitTag() { return tagLib.prohibitTag; },
+    prohibitTag: tagName => { return tagLib.prohibitTag(tagName); },
     get lenient() { return tagLib.allowUnknownHtmlTags; },
     get IS() { return IS; },
     popup: () => jql.Popup,
@@ -124,10 +130,10 @@ function staticMethodsFactory(jql) {
       return jql.activePopup;
     },
     createStyle: id => styleFactory({createWithId: id || `jql${randomString()}`}),
+    editStylesheet: id => styleFactory({createWithId: id || `jql${randomString()}`}),
     removeCssRule: cssRemove,
     removeCssRules: cssRemove,
-    text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-    comment: str => jql.text(str, true),
+    text: (str, isComment = false) => isComment ? jql.comment(str) : document.createTextNode(str),
     node: (selector, root = document) => root.querySelector(selector, root),
     nodes: (selector, root = document) => [...root.querySelectorAll(selector, root)],
   };
@@ -180,18 +186,14 @@ function combineObjectSources(...sources) {
   return result;
 }
 
-function tag2JqlStaticGetterFactory(tag) {
-  return { get() { return (...args) => tags[tag.toLowerCase()](...args); } };
-}
-
 function staticTagsLambda(jql) {
   return function(acc, [tag, cando]) {
-    if (!cando) {
-      return acc;
-    }
-    const TAG = tag.toUpperCase();
-    Object.defineProperty(acc, tag, tag2JqlStaticGetterFactory(tag));
-    Object.defineProperty(acc, TAG, tag2JqlStaticGetterFactory(TAG));
+    if (!cando) { return acc; }
+    const tagGetter = { get() { return (...args) =>
+        tagFNFactory[tag.toLowerCase()](...args);}, enumerable: false };
+    const tagJQLGetter = { get() { return (...args) =>
+        jql.virtual(tagFNFactory[tag.replace(`$`, ``).toLowerCase()](...args));}, enumerable: false };
+    Object.defineProperties(acc, {[tag]: tagGetter, [tag.toUpperCase()]: tagGetter, [`${tag}$`]: tagJQLGetter });
     
     return acc;
   }
