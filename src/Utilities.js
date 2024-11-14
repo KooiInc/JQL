@@ -64,17 +64,22 @@ function ExamineElementFeatureFactory() {
     const noOpacity = +computedStyle.opacity === 0 || +(elStyle.opacity || 1) === 0;
     return !(offscreen || noOpacity || noDisplay || invisible);
   };
-  const isWritable = function(elem) {
-    return !!jql.nodes(`:is(:read-write)`, elem.parentNode).find(el => el === elem);
-  };
-  const isModal = function(elem) {
-    return !!jql.nodes(`:is(:modal)`, elem.parentNode).find(el => el === elem);
-  };
   const notApplicable = `n/a`;
-  const noElements = { writable: notApplicable, modal: notApplicable, empty: true, open: notApplicable, visible: notApplicable, };
+  const isWritable = function(elem) {
+    return elem.parentNode
+      ? !!jql.nodes(`:is(:read-write)`, elem?.parentNode)?.find(el => el === elem) : notApplicable;
+  };
+  
+  const isModal = function(elem) {
+    return elem.parentNode
+      ? !!jql.nodes(`:is(:modal)`, elem?.parentNode)?.find(el => el === elem) : notApplicable;
+  };
+  
+  const noElements = { notInDOM: true, writable: notApplicable, modal: notApplicable, empty: true, open: notApplicable, visible: notApplicable, };
 
   return self => {
     const firstElem = self[0];
+    
     return firstElem ? {
       get writable() {
         return isWritable(firstElem);
@@ -82,17 +87,20 @@ function ExamineElementFeatureFactory() {
       get modal() {
         return isModal(firstElem);
       },
+      get inDOM() {
+        return !!firstElem.parentNode;
+      },
       get open() {
-        return firstElem.open;
+        return firstElem.open ?? false;
       },
       get visible() {
         return isVisible(firstElem);
       },
       get disabled() {
-        return firstElem.hasAttribute("readonly") || firstElem.hasAttribute("disabled")
+        return firstElem.hasAttribute("readonly") || firstElem.hasAttribute("disabled");
       },
       get empty() {
-        return false;
+        return self.collection.length < 1;
       },
       get virtual() {
         return self.isVirtual;
