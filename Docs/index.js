@@ -1,5 +1,5 @@
 Prism.manual = true;
-const isDev = location.host.startsWith(`dev`);
+const isDev = location.host.startsWith(`dev`) || location.host.startsWith(`localhost`);
 const importLink =  isDev ?
   `../index.js` :
   `../../Bundle/jql.min.js`;
@@ -15,10 +15,11 @@ const setAllCodeStyling = el => {
   const pre = el.closest(`pre`);
   return !pre ? $(el).addClass(`inline`) : $(pre).addClass(`language-javascript`, `line-numbers`);
 }
+
 const perform = performance.now();
 document.title = isDev ? `##DEV## ${document.title}` : document.title;
 if (isDev) {
-  $(`link[rel="icon"]`).replaceWith($.LINK.prop({href: `./devIco.png`, rel: `icon`}));
+  $(`link[rel="icon"]`).replaceWith($.LINK({href: `./devIco.png`, rel: `icon`}));
   window.jql = $;
   window.IS = $.IS;
   window.popup = $.Popup;
@@ -31,7 +32,8 @@ const randomNumber = (max, min = 0) => {
 let documentationData = await fetch(`./documentation.json?v=${randomNumber(10000, 1000)}`).then(r => r.json());
 $.log(`Fetched documenter json...`);
 import styling from "./styling.js";
-import clientHandling from "./HandlingFactory.js";
+import handlerFactory  from "./HandlingFactory.js";
+const {clientHandling, allExampleActions} = handlerFactory($);
 styling($);
 $.log(`Applied styling...`);
 const groupOrder = ['jql_About', 'static_About', 'instance_About', 'popup_About', 'debuglog_About'];
@@ -45,14 +47,17 @@ const createNavigationItems = ({group, displayName}) => {
     .sort( (a, b) => a.localeCompare(b) )
     .forEach(item => {
       const itemClean = item.replace(/([a-z])\$/gi, `$1_D`);
+      const isDeprecated = /--DEPRECATED/.test(documentationData[item]?.description);
       $(`.navGroupItems`, ul[0])
-        .append($(`<li data-key="${itemClean}"><div data-navitem="#${itemClean}">${
-          sliceName(item)}</div></li>`));
+        .append($(`
+            <li data-key="${itemClean}">
+            <div data-navitem="#${itemClean}"${isDeprecated ? ` class="deprecated"` : ``}>${
+              sliceName(item)}</div></li>`));
     });
   return displayName;
 };
 const docsContainer = $.node(`.docs`);
-const handler = clientHandling($);
+const handler = clientHandling;
 $.delegate(`click`, handler);
 $.delegate(`scroll`, `.docs`, handler);
 const codeMapper = (code, i) => {
@@ -65,13 +70,27 @@ const codeMapper = (code, i) => {
   return `<div class="exContainer"><h3 class="example">Example${
     i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${cleanedCode}</code></pre></div>`;
 };
+const getCodeBody = fn => {
+  fn = String(fn).replace(/</g, `&lt;`);
+  return fn.slice(fn.indexOf(`{`)+1, -1).replace(/\n {6}/g, `\n`).trim();
+}
 const convertExamples = descriptionValue => {
   const re = /(?<=<example>)(.|\n)*?(?=<\/example>)/gm;
   const exampleCode = (descriptionValue.match(re) || []).map( (code, i) => codeMapper(code, i) );
-
-  return descriptionValue.replace(/<example>(.|\n)*?<\/example>/g, () => exampleCode.shift());
+  const replaceCB = () => {
+    let code = exampleCode.shift();
+    
+    if (/##EXAMPLECODE/.test(code)) {
+      const actionMethodName = code.slice(code.indexOf(`@`) + 1).split(`#`)[0];
+      code = code.replace(/##.+##/, allExampleActions[actionMethodName]) +
+        `<button class="exRunBttn" data-action="${actionMethodName}">Try it</button>`;
+    }
+    
+    return code;
+  }
+  
+  return descriptionValue.replace(/<example>(.|\n)*?<\/example>/g, replaceCB);
 };
-
 const groupWithExamples = description => /<example>/.test(description) ? convertExamples(description) : description;
 const escHtml = str => str
   .replace(/</g, `&lt;`)
@@ -91,6 +110,7 @@ groups.forEach( group => {
     .sort( ([key1,], [key2,]) => key1.localeCompare(key2))
     .forEach( ([itemName, itemValue]) => {
       itemValue.description = itemValue.description.trim();
+      const isDeprecated = /--DEPRECATED/.test(itemValue.description);
       const itemNameClean = sliceName(itemName);
       let params = `<span/>`;
       let exampleCode = [];
@@ -120,10 +140,11 @@ groups.forEach( group => {
       $(`
         <div class="paragraph">
           <h3 class="methodName" id="${itemName.replace(/([a-z])\$/gi, `$1_D`)}"><span class="group">${
-            itemGroupLookup[itemName.slice(0, itemName.indexOf(`_`))]}</span>${itemNameClean}</h3>
+            itemGroupLookup[itemName.slice(0, itemName.indexOf(`_`))]}</span><span${
+              isDeprecated ? ` class="deprecated"` : ""}>${itemNameClean}</span></h3>
           ${params}
           <div class="returnValue"><b>Returns</b>: ${itemValue.returnValue}</div>
-          <div class="description">${itemValue.description.replace(/\n{2,}/g, `\n`)}</div>
+          <div class="description">${isDeprecated ? `<b class="red">*deprecated</b> ` : ``}${itemValue.description.replace(/\n{2,}/g, `\n`)}</div>
         </div>`, docsContainer);
     });
 });
@@ -142,3 +163,23 @@ $(`#jql_About`).html(` (<span class="jqlTitle"><b>JQ</b>uery<b>L</b>ike</span>)`
 $(`[data-group="jql"]`).trigger(`click`);
 $.log(`Navigation triggered.`);
 $.log(`Documenter implementation took ${((performance.now() - perform)/1000).toFixed(3)} seconds`);
+
+const loadItem = QS2Obj();
+if (loadItem.load) {
+  const item = $(`[data-navitem="#${loadItem.load}"]`);
+  item && $(`[data-navitem="#${loadItem.load}"]`).trigger(`click`);
+  $.Popup.show({content: $.b(`loaded `, $.code({class: "inline"}, loadItem.load)), closeAfter: 2});
+}
+
+function QS2Obj() {
+  const search = location.search
+  if (search.length > 1) {
+    const search = location.search.slice(1);
+    return search.split(`&`).reduce((acc, item) => {
+      const [key, value] = item.split(`=`);
+      return {...acc, [key]: value};
+    }, {});
+  }
+  
+  return {};
+}
