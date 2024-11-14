@@ -140,8 +140,8 @@ groups.forEach( group => {
       $(`
         <div class="paragraph" data-for="${itemNameClean.replace(/([a-z])\$/gi, `$1_D`)}">
           <h3 class="methodName" id="${itemName.replace(/([a-z])\$/gi, `$1_D`)}">
-            <span class="group">${itemGroupLookup[itemName.slice(0, itemName.indexOf(`_`))]}</span>
-            <span${isDeprecated ? ` class="deprecated"` : ""}>${itemNameClean}</span>
+            <span class="group">${itemGroupLookup[itemName.slice(0, itemName.indexOf(`_`))]}</span
+            ><span${isDeprecated ? ` class="deprecated"` : ""}>${itemNameClean}</span>
           </h3>
           ${params ?? ``}
           <div class="returnValue"><b>Returns</b>: ${itemValue.returnValue}</div>
