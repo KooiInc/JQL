@@ -2,11 +2,17 @@ import {
   cleanupHtml,
   getRestricted, } from "./DOMCleanup.js";
 import {truncateHtmlStr, IS, isNode} from "./JQLExtensionHelpers.js";
-const insertPositions = {
-  BeforeBegin: "beforebegin",
-  AfterBegin: "afterbegin",
-  BeforeEnd: "beforeend",
-  AfterEnd: "afterend" };
+// const insertPositions = {
+//   beforebegin: "beforebegin",
+//   afterbegin: "afterbegin",
+//   beforeend: "beforeend",
+//   afterend: "afterend" };
+const insertPositions = new Proxy({
+  beforebegin: "beforebegin",
+  afterbegin: "afterbegin",
+  beforeend: "beforeend",
+  afterend: "afterend" },
+  { get(obj, key) {return obj[String(key).toLowerCase()] ?? obj[key]; } });
 const placeholderNode = document.createElement("div");
 const htmlToVirtualElement = htmlString => {
   placeholderNode.innerHTML = htmlString;
