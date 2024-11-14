@@ -86,7 +86,7 @@ const debugLog = {
     return debugLog;
   },
   toConsole: {
-    on: () => {
+    on() {
       log2Console = true;
       Log(`Started logging to console`);
       return debugLog;
@@ -105,7 +105,7 @@ const debugLog = {
     console.log(`${logTime()} logging completely disabled and all entries removed`);
     return debugLog;
   },
-  log(...args) {
+  log: function(...args) {
     Log(...args);
     return debugLog;
   },
@@ -117,21 +117,23 @@ const debugLog = {
     getLogBox()?.addClass(`visible`);
     return debugLog;
   },
-  reversed: {
-    on: () => {
-      reverseLogging = true;
-      Log(`Reverse logging set: now logging bottom to top (latest first)`);
-      jql(`#logBox .legend`).addClass(`reversed`);
-      return debugLog;
-    },
-    off: () => {
-      reverseLogging = false;
-      jql(`#logBox .legend`).removeClass(`reversed`);
-      Log(`Reverse logging reset: now logging chronological (latest last)`);
-      return debugLog;
-    },
+  get reversed() {
+    return {
+      on: () => {
+        reverseLogging = true;
+        Log(`Reverse logging set: now logging bottom to top (latest first)`);
+        jql(`#logBox .legend`).addClass(`reversed`);
+        return debugLog;
+      },
+      off: () => {
+        reverseLogging = false;
+        jql(`#logBox .legend`).removeClass(`reversed`);
+        Log(`Reverse logging reset: now logging chronological (latest last)`);
+        return debugLog;
+      },
+    };
   },
-  clear: () => {
+  clear() {
     jql(logBoxTextBoxId).text(``);
     console.clear();
     Log(`Logging cleared`);
