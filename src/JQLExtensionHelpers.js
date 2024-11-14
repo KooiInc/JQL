@@ -86,10 +86,16 @@ function proxify(instance) {
 function addJQLStaticMethods(jql) {
   Symbol.jql = Symbol.for(`jql`);
   Symbol.jqlvirtual = Symbol.for(`jqlv`);
+  Symbol.jql2Root = Symbol.for(`jqldom`);
   Object.defineProperties(
     Node.prototype, {
       [Symbol.jql]:        { get: function() { return jql(this); } },
-      [Symbol.jqlvirtual]: { get: function() { return jql.virtual(this); } }
+      [Symbol.jqlvirtual]: { get: function() { return jql.virtual(this); } },
+      [Symbol.jql2Root]: {
+        value: function(root = document.body, at = insertPositions.beforeend) {
+          return jql(this, root, at);
+        }
+      }
     });
   const staticMethods = defaultStaticMethodsFactory(jql);
   Object.entries(Object.getOwnPropertyDescriptors(staticMethods))
@@ -189,10 +195,17 @@ function combineObjectSources(...sources) {
 function staticTagsLambda(jql) {
   return function(acc, [tag, cando]) {
     if (!cando) { return acc; }
-    const tagGetter = { get() { return (...args) =>
-        tagFNFactory[tag.toLowerCase()](...args);}, enumerable: false };
-    const tagJQLGetter = { get() { return (...args) =>
-        jql.virtual(tagFNFactory[tag.replace(`$`, ``).toLowerCase()](...args));}, enumerable: false };
+    const tagGetter = {
+      get() { return (...args) =>
+        tagFNFactory[tag.toLowerCase()](...args);},
+      enumerable: false
+    };
+    const tagJQLGetter = {
+      get() { return (...args) =>
+        jql.virtual(tagFNFactory[tag.replace(`$`, ``).toLowerCase()](...args));},
+      enumerable: false,
+      configurable: false,
+    };
     Object.defineProperties(acc, {[tag]: tagGetter, [tag.toUpperCase()]: tagGetter, [`${tag}$`]: tagJQLGetter });
     
     return acc;
