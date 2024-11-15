@@ -29,7 +29,8 @@ const randomNumber = (max, min = 0) => {
   [max, min] = [Math.floor(max), Math.ceil(min)];
   return Math.floor( (crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32 )
     * (max - min + 1) + min ); };
-let documentationData = await fetch(`./documentation.json?v=${randomNumber(10000, 1000)}`).then(r => r.json());
+// ?v=${randomNumber(10000, 1000)}
+let documentationData = await fetch(`./documentation.json`).then(r => r.json());
 $.log(`Fetched documenter json...`);
 import styling from "./styling.js";
 import handlerFactory  from "./HandlingFactory.js";
@@ -61,11 +62,7 @@ const handler = clientHandling;
 $.delegate(`click`, handler);
 $.delegate(`scroll`, `.docs`, handler);
 const codeMapper = (code, i) => {
-  const cleanedCode = code.trim()
-    .replace(/[<>]/g, a => codeReplacements.get(a))
-    .replace(/\n{3,}/g, codeReplacements.get(`reducebreaks`))
-    .replace(/\n/g, codeReplacements.get(`linebreak`))
-    .replace(/&[^(l|g)t;|amp;]/g, codeReplacements.get(`&`));
+  const cleanedCode = code.trim().replace(/\n{3,}/g, codeReplacements.get(`reducebreaks`));
 
   return `<div class="exContainer"><h3 class="example">Example${
     i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${cleanedCode}</code></pre></div>`;
