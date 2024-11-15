@@ -310,15 +310,14 @@ const allMethods = {
       return self;
     },
     andThen: (self, elem2Add, before = false) => {
-      if (!elem2Add || !IS(elem2Add, HTMLElement, String, Object)) {
+      if (!elem2Add || !IS(elem2Add, String, Node, Proxy)) {
         logDebug(`[JQL instance].[beforeMe | afterMe | andThen]: insufficient input [${elem2Add}]`, );
         return self;
       }
       
       elem2Add = elem2Add?.isJQL
         ? elem2Add.collection
-        : IS(elem2Add, HTMLElement)
-          ? [elem2Add[Symbol.jqlVirtual]]
+        : IS(elem2Add, Node) ? jql.virtual(elem2Add).collection
           : jql.virtual(createElementFromHtmlString(elem2Add)).collection;
       
       const [index, method, reCollected] = before
