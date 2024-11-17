@@ -183,7 +183,7 @@ function clickActionsFactory($) {
       $.editCssRule(".user:before {content: 'Hi user! ';}");
       $('<div id="tmpEx">This is not very useful</div>', getCurrentParagraph(evt))
         .addClass("warnUser", "user");
-      $("#tmpEx").remove();
+      setTimeout($("#tmpEx").remove, 2000);
     },
     appendEx: evt => {
       exDivStyle();
