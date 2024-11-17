@@ -45,7 +45,6 @@ function documentHandlingFactory($) {
         .replace(/\n {6}/g, `\n`)
         .replace(/</g, `&lt;`)
         .replace(/\$/g, `&dollar;`)
-        .replace(/\r/g, ``)
         .trim()
     };
   }

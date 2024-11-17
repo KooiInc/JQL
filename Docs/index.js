@@ -33,9 +33,6 @@ $.log(`Fetched documenter json...`);
 import styling from "./styling.js";
 import handlerFactory  from "./HandlingFactory.js";
 const {clientHandling, allExampleActions} = handlerFactory($);
-
-styling($);
-$.log(`Applied styling...`);
 const groupOrder = ['jql_About', 'static_About', 'instance_About', 'popup_About', 'debuglog_About'];
 const groups = groupOrder.reduce((acc, group) =>
   [...acc, {name: group, displayName: group.slice(0, group.indexOf(`About`)).toUpperCase()}], []);
@@ -146,17 +143,30 @@ groups.forEach( group => {
         </div>`, docsContainer);
     });
 });
+styling($);
+$.log(`Applied styling.`);
+
 $(`code`).each(setAllCodeStyling);
 $.log(`Documenter json parsed to DOM.`);
+
 // free some memory
 documentationData = null;
+
 // remove loading message
 $(`.docs`).removeClass(`loading`);
+
 //format the code blocks
 Prism.highlightAll();
 $.log(`Code formatting done.`);
+
+// wrap into .container
+$.div({class: `container`}, $.div({class:`docBrowser`}))[Symbol.jql];
+$(`.docBrowser`).append($(`#navigation`), $(`.docs`));
+$.log(`Wrapped into container.`);
+
 // navigate to top
 $(`#jql_About`).html(` (<span class="jqlTitle"><b>JQ</b>uery<b>L</b>ike</span>)`, true);
+
 // display the first item
 $(`[data-group="jql"]`).trigger(`click`);
 $.log(`Navigation triggered.`);
