@@ -35,6 +35,7 @@ $.log(`Fetched documenter json...`);
 import styling from "./styling.js";
 import handlerFactory  from "./HandlingFactory.js";
 const {clientHandling, allExampleActions} = handlerFactory($);
+
 styling($);
 $.log(`Applied styling...`);
 const groupOrder = ['jql_About', 'static_About', 'instance_About', 'popup_About', 'debuglog_About'];
