@@ -2,7 +2,7 @@ Prism.manual = true;
 const isDev = location.host.startsWith(`dev`) || location.host.startsWith(`localhost`);
 const importLink =  isDev ?
   `../index.js` :
-  `../../Bundle/jql.min.js`;
+  `../Bundle/jql.min.js`;
 const $ = (await import(importLink)).default;
 const codeReplacements = new Map( [
   [`<`, `&lt;`],
