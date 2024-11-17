@@ -56,7 +56,7 @@ const createNavigationItems = ({group, displayName}) => {
 const docsContainer = $.node(`.docs`);
 const handler = clientHandling;
 $.delegate(`click`, handler);
-$.delegate(`scroll`, `.docs`, handler);
+$.delegate(`scroll`, `.container`, handler);
 const codeMapper = (code, i) => {
   const cleanedCode = code.trim().replace(/\n{3,}/g, codeReplacements.get(`reducebreaks`));
 

@@ -51,10 +51,11 @@ function documentHandlingFactory($) {
 
   function handleScroll(evt) {
     const docsTop = evt.target.scrollTop;
+    
     const nextHeader = $.nodes(`.paragraph, [data-groupcontainer]`)
       .find( el => {
          const marge = docsTop - el.nextElementSibling.offsetTop;
-         return marge <= -100;
+         return marge <= -120;
       } );
 
     if (nextHeader) {
