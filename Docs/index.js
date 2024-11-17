@@ -28,7 +28,6 @@ const randomNumber = (max, min = 0) => {
   [max, min] = [Math.floor(max), Math.ceil(min)];
   return Math.floor( (crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32 )
     * (max - min + 1) + min ); };
-// ?v=${randomNumber(10000, 1000)}
 let documentationData = await fetch(`./documentation.json`).then(r => r.json());
 $.log(`Fetched documenter json...`);
 import styling from "./styling.js";
