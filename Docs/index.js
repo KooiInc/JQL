@@ -16,7 +16,7 @@ const setAllCodeStyling = el => {
   return !pre ? $(el).addClass(`inline`) : $(pre).addClass(`language-javascript`, `line-numbers`);
 }
 const perform = performance.now();
-document.title = isDev ? `##DEV## ${document.title}` : document.title;
+document.title = isDev ? `###DEV### ${document.title}` : document.title;
 if (isDev) {
   $(`link[rel="icon"]`).replaceWith($.LINK({href: `./devIco.png`, rel: `icon`}));
   window.jql = $;
