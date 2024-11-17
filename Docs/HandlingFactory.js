@@ -116,7 +116,7 @@ function clickActionsFactory($) {
         <br>In other words: you can only close this using the button below.\
         <br>Try clicking anywhere outside the box ...";
       const closeBttn = $.button({id: "modalCloseTest"}, "Close me");
-      $.delegate(`click`, `#modalCloseTest`, popup.removeModal);
+      $.delegate("click", "#modalCloseTest", popup.removeModal);
       const okMessage = () => popup.show({ content: `Modal closed, you're ok, bye.`, closeAfter: 2});
       const message = $.div(
         modalBoxText,
@@ -136,7 +136,7 @@ function clickActionsFactory($) {
         <br>In other words: you can only close this using the button below.\
         <br>Try clicking anywhere outside the box ...";
       const closeBttn = $.button({id: "modalCloseTest"}, "Close me");
-      $.delegate(`click`, `#modalCloseTest`, popup.removeModal);
+      $.delegate("click", "#modalCloseTest", popup.removeModal);
       const okMessage = () => popup.show({ content: `Modal closed, you're ok, bye.`, closeAfter: 2});
       const message = $.div(
         modalBoxText,
