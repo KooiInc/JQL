@@ -85,7 +85,7 @@ function proxify(instance) {
 
 function addJQLStaticMethods(jql) {
   Symbol.jql = Symbol.for(`jql`);
-  Symbol.jqlvirtual = Symbol.for(`jqlv`);
+  Symbol.jqlvirtual = Symbol.for(`jqlvirtual`);
   Symbol.jql2Root = Symbol.for(`jql2dom`);
   Object.defineProperties(
     Node.prototype, {
@@ -124,8 +124,21 @@ function staticMethodsFactory(jql) {
     delegate: delegateFactory(HandleFactory()),
     virtual: virtualFactory(jql),
     get fn() { return addFn; },
-    get allowTag() { return tagLib.allowTag; },
-    prohibitTag: tagName => { return tagLib.prohibitTag(tagName); },
+    allowTag: tagName => {
+      tagLib.allowTag(tagName);
+      const tagGetter = tagGetterFactory(tagName);
+      const tagJQLGetter = tagGetterFactory(tagName.replace(`$`, ``));
+      Object.defineProperties(jql, {
+        [tagName]: tagGetter,
+        [tagName.toUpperCase()]: tagGetter,
+        [`${tagName}$`]: tagJQLGetter });
+    },
+    prohibitTag: tagName => {
+      tagLib.prohibitTag(tagName);
+      delete jql[tagName.toUpperCase()];
+      delete jql[tagName];
+      delete jql[`${tagName}$`];
+    },
     get lenient() { return tagLib.allowUnknownHtmlTags; },
     get IS() { return IS; },
     popup: () => jql.Popup,
@@ -192,21 +205,25 @@ function combineObjectSources(...sources) {
   return result;
 }
 
+function tagGetterFactory(tagName) {
+  tagName = tagName.toLowerCase().replace(`$`, ``);
+  return {
+    get() { return (...args) => tagFNFactory[tagName](...args); },
+    enumerable: false,
+    configurable: false,
+  }
+}
+
 function staticTagsLambda(jql) {
   return function(acc, [tag, cando]) {
     if (!cando) { return acc; }
-    const tagGetter = {
-      get() { return (...args) =>
-        tagFNFactory[tag.toLowerCase()](...args);},
-      enumerable: false
-    };
-    const tagJQLGetter = {
-      get() { return (...args) =>
-        jql.virtual(tagFNFactory[tag.replace(`$`, ``).toLowerCase()](...args));},
-      enumerable: false,
-      configurable: false,
-    };
-    Object.defineProperties(acc, {[tag]: tagGetter, [tag.toUpperCase()]: tagGetter, [`${tag}$`]: tagJQLGetter });
+    
+    const getterForThisTag = tagGetterFactory(tag);
+    Object.defineProperties( acc, {
+      [tag]: getterForThisTag,
+      [tag.toUpperCase()]: getterForThisTag,
+      [`${tag}$`]: getterForThisTag,
+    });
     
     return acc;
   }
