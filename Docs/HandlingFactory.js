@@ -318,6 +318,7 @@ function clickActionsFactory($) {
         } );
       },
     staticElemEx: () => {
+      // use Symbol.jqlvirtual (create)
       $.editCssRules(".exRed {color: red;}");
       const popupPara = $.p("Hello world ...")[create]
        .append(
@@ -331,6 +332,7 @@ function clickActionsFactory($) {
       });
     },
     staticElemEx2: (evt) =>{
+      // use Symbol.jql (toDOM)
       $.editCssRules(
         ".exRed { color: red; }",
         ".exFont {\
@@ -341,6 +343,7 @@ function clickActionsFactory($) {
       const popupPara = $.p( { text: "Hello world ... ", id: "Hithere" })[toDOM];
       popupPara.append( $.i( { class: "exRed exFont" }, $.SPAN(" here we are!") ) )
         .appendTo(getCurrentParagraph(evt));
+      
       $.Popup.show({
         content: popupPara,
         callback: () => $.removeCssRules(".exRed", ".exFont"),
@@ -348,6 +351,7 @@ function clickActionsFactory($) {
       });
     },
     staticElemEx3: () =>{
+      // extract tag methods from [JQL] and use Symbol.jql2Root (jqlTo)
       $.editCssRules(
         ".exRed {color: red;}",
         ".exFont {\
@@ -359,6 +363,7 @@ function clickActionsFactory($) {
       const hereWeAre = I( { class: "exRed exFont" }, SPAN("Here we are! ") );
       const popupPara = P( { text: "Hello world ... ", id: "Hithere" });
       hereWeAre[jqlTo](popupPara, $.at.start);
+      
       $.Popup.show({
         content: popupPara,
         callback: () => $.removeCssRules(".exRed", ".exFont"),
@@ -366,19 +371,26 @@ function clickActionsFactory($) {
       });
     },
     staticElemEx4: () =>{
+      // use [JQL][tag]_jql (extract tag methods from [JQL])
+      const fontFamily = "'Brush Script MT', cursive";
       $.editCssRules(
-        ".exRed {color: red;}",
-        ".exFont {\
-          font-family: fantasy;\
-          font-size: 1.2rem;\
-          margin-right: 0.4rem;\
-        }" );
-      const {p_jql: P, I, SPAN} = $;
-      const hereWeAre = I( { class: "exRed exFont" }, SPAN("Here we are! ") );
+        `[data-static-id] {
+          color: green;
+          letter-spacing: 6px;
+          .exRed {color: red;}
+          .exFont {
+            font-family: ${fontFamily};
+            font-size: 1.2rem;
+            margin-right: 0.4rem;
+            letter-spacing: normal;
+        }`,
+      );
+      const {p_jql: P, SPAN} = $;
+      const hereWeAre = $.I_JQL( { class: "exRed exFont" }, SPAN("Here we are! ") );
       const popupPara = P( "Hello world ... " );
-      popupPara.data.set({id: "staticElemEx"}).prepend(hereWeAre);
+      
       $.Popup.show({
-        content: popupPara,
+        content: popupPara.data.set({staticId: "staticElemEx"}).prepend(hereWeAre),
         callback: () => $.removeCssRules(".exRed", ".exFont"),
         closeAfter: 3,
       });
