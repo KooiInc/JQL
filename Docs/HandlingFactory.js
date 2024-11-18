@@ -55,7 +55,7 @@ function documentHandlingFactory($) {
     const nextHeader = $.nodes(`.paragraph, [data-groupcontainer]`)
       .find( el => {
          const marge = docsTop - el.nextElementSibling.offsetTop;
-         return marge <= -120;
+         return marge <= -40;
       } );
 
     if (nextHeader) {
@@ -365,6 +365,25 @@ function clickActionsFactory($) {
         closeAfter: 3,
       });
     },
+    staticElemEx4: () =>{
+      $.editCssRules(
+        ".exRed {color: red;}",
+        ".exFont {\
+          font-family: fantasy;\
+          font-size: 1.2rem;\
+          margin-right: 0.4rem;\
+        }" );
+      const {p_jql: P, I, SPAN} = $;
+      const hereWeAre = I( { class: "exRed exFont" }, SPAN("Here we are! ") );
+      const popupPara = P( "Hello world ... " );
+      popupPara.data.set({id: "staticElemEx"}).prepend(hereWeAre);
+      $.Popup.show({
+        content: popupPara,
+        callback: () => $.removeCssRules(".exRed", ".exFont"),
+        closeAfter: 3,
+      });
+    },
+    
     fnEx2: evt => {
       $.fn( `colorRed`, me => { me[0].style.color = "red"; return me; } );
       const someDiv = $.virtual(`<div data-id="tmpEx">Hello world</div>`);

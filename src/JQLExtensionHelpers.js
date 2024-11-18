@@ -14,6 +14,10 @@ const {
   isHtmlString, isArrayOfHtmlElements, isArrayOfHtmlStrings, ElemArray2HtmlString,
   input2Collection, setCollectionFromCssSelector, addHandlerId, cssRuleEdit,
   addFn, elems4Docs } = smallHelpersFactory();
+Symbol.jql = Symbol.for(`jql`);
+Symbol.jqlvirtual = Symbol.for(`jqlvirtual`);
+Symbol.jql2Root = Symbol.for(`jql2dom`);
+Symbol.JQLX = Symbol.for(`NodeProxy`);
 
 /* region functions */
 function smallHelpersFactory() {
@@ -34,10 +38,11 @@ function smallHelpersFactory() {
         : el.outerHTML), ``);
   const input2Collection = input =>
     !input ? []
-      : IS(input, NodeList) ? [...input]
-        : isNode(input) ? [input]
-          : isArrayOfHtmlElements(input) ? input
-            : input.isJQL ? input.collection : undefined;
+      : IS(input, Proxy) ? [input.EL]
+        : IS(input, NodeList) ? [...input]
+          : isNode(input) ? [input]
+            : isArrayOfHtmlElements(input) ? input
+              : input.isJQL ? input.collection : undefined;
   const setCollectionFromCssSelector = (input, root, self) => {
     const selectorRoot = root !== document.body && (IS(input, String) && input.toLowerCase() !== "body") ? root : document;
     let errorStr = undefined;
@@ -84,9 +89,6 @@ function proxify(instance) {
 }
 
 function addJQLStaticMethods(jql) {
-  Symbol.jql = Symbol.for(`jql`);
-  Symbol.jqlvirtual = Symbol.for(`jqlvirtual`);
-  Symbol.jql2Root = Symbol.for(`jql2dom`);
   Object.defineProperties(
     Node.prototype, {
       [Symbol.jql]:        { get: function() { return jql(this); } },
@@ -141,13 +143,17 @@ function staticMethodsFactory(jql) {
     },
     get lenient() { return tagLib.allowUnknownHtmlTags; },
     get IS() { return IS; },
-    popup: () => jql.Popup,
     get Popup() {
       if (!jql.activePopup) {
-        jql.activePopup = PopupFactory(jql);
+        Object.defineProperty(
+          jql, `activePopup`, {
+            value: PopupFactory(jql),
+            enumerable: false
+          } );
       }
       return jql.activePopup;
     },
+    popup: () => jql.Popup,
     createStyle: id => styleFactory({createWithId: id || `jql${randomString()}`}),
     editStylesheet: id => styleFactory({createWithId: id || `jql${randomString()}`}),
     removeCssRule: cssRemove,
@@ -205,10 +211,12 @@ function combineObjectSources(...sources) {
   return result;
 }
 
-function tagGetterFactory(tagName) {
-  tagName = tagName.toLowerCase().replace(`$`, ``);
+function tagGetterFactory(tagName, toJQL = false) {
+  tagName = tagName.toLowerCase();
   return {
-    get() { return (...args) => tagFNFactory[tagName](...args); },
+    get() { return (...args) =>
+      toJQL ? jql.virtual(tagFNFactory[tagName](...args)) : tagFNFactory[tagName](...args);
+    },
     enumerable: false,
     configurable: false,
   }
@@ -219,10 +227,12 @@ function staticTagsLambda(jql) {
     if (!cando) { return acc; }
     
     const getterForThisTag = tagGetterFactory(tag);
+    const jqlGetterForThisTag = tagGetterFactory(tag.replace(/_jql$/i, ``), true);
     Object.defineProperties( acc, {
       [tag]: getterForThisTag,
       [tag.toUpperCase()]: getterForThisTag,
-      [`${tag}$`]: getterForThisTag,
+      [`${tag}_jql`]: jqlGetterForThisTag,
+      [`${tag.toUpperCase()}_JQL`]: jqlGetterForThisTag,
     });
     
     return acc;

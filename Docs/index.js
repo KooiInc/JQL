@@ -30,7 +30,6 @@ const randomNumber = (max, min = 0) => {
     * (max - min + 1) + min ); };
 let documentationData = await fetch(`./documentation.json`).then(r => r.json());
 $.log(`Fetched documenter json...`);
-import styling from "./styling.js";
 import handlerFactory  from "./HandlingFactory.js";
 const {clientHandling, allExampleActions} = handlerFactory($);
 const groupOrder = ['jql_About', 'static_About', 'instance_About', 'popup_About', 'debuglog_About'];
@@ -143,8 +142,6 @@ groups.forEach( group => {
         </div>`, docsContainer);
     });
 });
-styling($);
-$.log(`Applied styling.`);
 
 $(`code`).each(setAllCodeStyling);
 $.log(`Documenter json parsed to DOM.`);
@@ -176,8 +173,9 @@ const loadItem = QS2Obj();
 if (loadItem.load) {
   const load = loadItem.load.replace(/about/, `About`);
   const item = $(`[data-navitem="#${load}"]`) || $(`[data-key="${load}"]`).closest(`.navGroupItems`);
-  if (item) {
-    $(item).trigger(`click`);
+  
+  if (item.length > 0) {
+    item.trigger(`click`);
     $.Popup.show({content: $.b(`loaded `, $.code({class: "inline"}, loadItem.load)), closeAfter: 2});
   }
 }

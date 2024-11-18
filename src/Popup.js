@@ -5,7 +5,6 @@ export default newPopupFactory;
 
 function newPopupFactory($) {
   const editRule = $.createStyle(`JQLPopupCSS`);
-  //const maxZIndexValue = 2147483647;
   popupStyling.forEach( rule => editRule(rule) );
   let callbackOnClose = {};
   let isModal, modalWarning, timeout;
@@ -78,7 +77,6 @@ function newPopupFactory($) {
       const callbackId = popupContainer.data.get(`callbackId`);
       popupContainer.data.remove(`callbackId`);
       $(`.popup-active`).removeClass(`popup-active`);
-      //setPopupZIndex(getCurrentZIndexBoundaries(), true);
       const cb = callbackId && callbackOnClose[callbackId];
       if ($.IS(cb, Function)) { cb(); }
       if (callbackId) { delete callbackOnClose[callbackId]; }
