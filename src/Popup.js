@@ -21,7 +21,7 @@ function newPopupFactory($) {
   const warn = () => {
     modalWarning && $(`.popup-warn`).clear().append($(`<div>${modalWarning}</div>`));
     txtBox.addClass(`popup-warn-active`); };
-  const modalRemover = () => { isModal = false; remove(closer[0]); };
+  const removeModal = () => { isModal = false; remove(closer.first()); };
   const timed = (seconds, callback) => timeout = setTimeout( () => remove(closer[0]), +seconds * 1000 );
   $.delegate(`click`, `.popupContainer, .closeHandleIcon`, evt => remove(evt.target));
   $.delegate(`click`, `.popupContainer .content`, (_, self) => isModal && self.removeClass(`popup-warn-active`));
@@ -36,7 +36,8 @@ function newPopupFactory($) {
         callback: isModal ? modalCallback : isModalOrCallback, warnMessage: modalWarning, }); },
     createTimed: (message, closeAfter, callback) => /*legacy*/
       createAndShowPupup({content: message, closeAfter, callback}),
-    removeModal: modalRemover, };
+    removeModal,
+  };
   
   function createAndShowPupup( { content, modal, closeAfter, callback, warnMessage } ) {
     if (content) {
