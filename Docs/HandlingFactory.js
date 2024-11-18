@@ -84,17 +84,6 @@ function clickActionsFactory($) {
   const popup = $.Popup;
   const docsContainer = $.node(".docs");
   const scrollPosition = () => docsContainer.scrollBy(0, -15);
-  const modalPopupShowDemo = () => {
-    const closeBttn = $.button({id: "modalCloseDemo"}, "Close me")[create]
-      .on("click", () => popup.removeModal())
-    const sayOk = () => popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
-    const message = $.virtual( $(`[data-popup2]`).HTML.get()).append($.virtual(`<p/>`).append(closeBttn));
-    popup.show({
-      content: message,
-      modal: true,
-      callback: sayOk,
-      warnMessage: `"In other words: <i>you can only close this using the <b>button</b> ...</i>"`});
-  };
   const removeEx = (...rules2Remove) => setTimeout(() => {
     $('#tmpEx, [data-id="tmpEx"]').remove();
     rules2Remove.length > 0 && $.removeCssRule(...rules2Remove);
@@ -105,23 +94,23 @@ function clickActionsFactory($) {
   return {
     popupTimedEx: () => {
       // A timed popup message
-      const timedText = "Hi, this is a popup! I'll be active for 5 seconds (as long as you don't close me first).";
-      popup.createTimed( timedText, 5, () => popup.createTimed("I am closing", 2) );
+      const timedText = "Hi, this is a popup! I'll be active for 5 seconds (as long as one don't close me first).";
+      $.Popup.createTimed( timedText, 5, () => popup.createTimed("I am closing", 2) );
     },
     popupCreateModalEx: () => {
       // A modal popup message
       const modalBoxText = "\
         Hi. This box is <i>really</i> modal.\
         <br>There is no close icon and clicking outside this box does nothing.\
-        <br>In other words: you can only close this using the button below.\
+        <br>In other words: one can only close this using the button below.\
         <br>Try clicking anywhere outside the box ...";
-      const closeBttn = $.button({id: "modalCloseTest"}, "Close me");
-      $.delegate("click", "#modalCloseTest", popup.removeModal);
-      const okMessage = () => popup.show({ content: `Modal closed, you're ok, bye.`, closeAfter: 2});
+      const closeBttn = $.button({data: {id: "modalClose"}}, "Close me");
+      $.delegate("click", "[data-id='modalClose']", $.Popup.removeModal);
+      const okMessage = () => popup.show({ content: `Modal closed, we're ok, bye.`, closeAfter: 2});
       const message = $.div(
         modalBoxText,
         $.div({style: "margin-top: 0.6rem;"}, closeBttn)
-      ).outerHTML;
+      );
       $.Popup.create(
         message,
         true,
@@ -133,11 +122,11 @@ function clickActionsFactory($) {
       const modalBoxText = "\
         Hi. This box is <i>really</i> modal.\
         <br>There is no close icon and clicking outside this box does nothing.\
-        <br>In other words: you can only close this using the button below.\
+        <br>In other words: one can only close this using the button below.\
         <br>Try clicking anywhere outside the box ...";
-      const closeBttn = $.button({id: "modalCloseTest"}, "Close me");
-      $.delegate("click", "#modalCloseTest", popup.removeModal);
-      const okMessage = () => popup.show({ content: `Modal closed, you're ok, bye.`, closeAfter: 2});
+      const closeBttn = $.button({data: {id: "modalClose2"}}, "Close me");
+      $.delegate("click", "[data-id='modalClose2']", $.Popup.removeModal);
+      const okMessage = () => popup.show({ content: `Modal closed, we're ok, bye.`, closeAfter: 2});
       const message = $.div(
         modalBoxText,
         $.div({style: "margin-top: 0.6rem;"}, closeBttn)
@@ -151,29 +140,29 @@ function clickActionsFactory($) {
     },
     popupCreateEx: () => {
       // Just a message
-      popup.create(
+      $.Popup.create(
         $.div(
-          "Here's a popup message for you.",
+          "Here's a popup message.",
           $.div("Close it by clicking the checkmark icon or anywhere outside the box")
         )
       );
     },
     popupShowEx: () => {
       // Just a message
-      popup.show( {
+      $.Popup.show( {
         content: $.div(
-            "Here's a popup message for you.",
+            "Here's a popup message.",
             $.div("Close it by clicking the checkmark icon or anywhere outside the box")
           )
       } );
     },
     popupShowTimedEx: () => {
       // A timed popup message
-      popup.show( {
+      $.Popup.show( {
         content: $.div(
-          "Here's a popup message for you.",
+          "Here's a popup message.",
           $.div("Close it by clicking the checkmark icon or anywhere outside the box"),
-          $.div("If you don't, I will close all by myself after 5 seconds ;)")
+          $.div("If not closed by the user, I will close all by myself after 5 seconds ;)")
         ),
         closeAfter: 5
       } );
@@ -198,7 +187,7 @@ function clickActionsFactory($) {
             Object.assign( document.createElement("div"), {textContent: "Appended element"}) );
         setTimeout(() =>
           popup.show( {
-            content: toAppendJQLInstance.html("Now I am appended to the popup element, you can still click me"),
+            content: toAppendJQLInstance.html("Now I am appended to the popup element, one can still click me"),
             callback: () => $("#tmpEx").remove(),
         }), 1500);
     },
@@ -372,7 +361,7 @@ function clickActionsFactory($) {
     },
     staticElemEx4: () =>{
       // use [JQL][tag]_jql (extract tag methods from [JQL])
-      const fontFamily = "'Brush Script MT', cursive";
+      const fontFamily = "Georgia, cursive";
       $.editCssRules(
         `[data-static-id] {
           color: green;
