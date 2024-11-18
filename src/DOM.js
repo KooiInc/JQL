@@ -3,15 +3,12 @@ import {
   getRestricted, } from "./DOMCleanup.js";
 import {truncateHtmlStr, IS, isNode} from "./JQLExtensionHelpers.js";
 const insertPositions = new Proxy({
-  start: "afterbegin",
-  end: "beforeend",
-  before: "beforebegin",
-  after: "afterend",
-  beforebegin: "beforebegin",
-  afterbegin: "afterbegin",
-  beforeend: "beforeend",
-  afterend: "afterend" },
-  { get(obj, key) {return obj[String(key).toLowerCase()] ?? obj[key]; } });
+  start: "afterbegin", afterbegin: "afterbegin",
+  end: "beforeend", beforeend: "beforeend",
+  before: "beforebegin", beforebegin: "beforebegin",
+  after: "afterend", afterend: "afterend" }, {
+    get(obj, key) { return obj[String(key).toLowerCase()] ?? obj[key]; }
+  });
 const placeholderNode = document.createElement("div");
 const htmlToVirtualElement = htmlString => {
   placeholderNode.innerHTML = htmlString;
