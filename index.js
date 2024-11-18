@@ -50,7 +50,7 @@ function JQLFactory() {
         : !shouldCreateElements && isRawElemCollection ? `element collection [${
             truncateHtmlStr( instance.collection.map(el => `${
               IS(el, Comment, Text) ? `Comment|Text @` : ``} ${
-                el.outerHTML || el.textContent}`).join(`, `), logLineLength)}]`
+                el?.outerHTML || el?.textContent}`).join(`, `), logLineLength)}]`
           : `"${truncateHtmlStr(input, logLineLength)}"`}`;
 
     if (instance.collection.length && isRawElemCollection) {
