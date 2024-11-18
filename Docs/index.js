@@ -4,6 +4,7 @@ const importLink =  isDev ?
   `../index.js` :
   `../Bundle/jql.min.js`;
 const $ = (await import(importLink)).default;
+window.$ = $;
 const codeReplacements = new Map( [
   [`<`, `&lt;`],
   [`>`, `&gt;`],
@@ -15,6 +16,13 @@ const setAllCodeStyling = el => {
   const pre = el.closest(`pre`);
   return !pre ? $(el).addClass(`inline`) : $(pre).addClass(`language-javascript`, `line-numbers`);
 }
+// wrap into .container
+$.div_jql({class: `container`})
+  .append($.div_jql({class:`docBrowser`})
+    .append($(`#navigation`), $(`.docs`)))
+  .toDOM();
+$.log(`Wrapped into container.`);
+
 const perform = performance.now();
 document.title = isDev ? `##DEV## ${document.title}` : document.title;
 if (isDev) {
@@ -155,11 +163,6 @@ $(`.docs`).removeClass(`loading`);
 //format the code blocks
 Prism.highlightAll();
 $.log(`Code formatting done.`);
-
-// wrap into .container
-$.div({class: `container`}, $.div({class:`docBrowser`}))[Symbol.jql];
-$(`.docBrowser`).append($(`#navigation`), $(`.docs`));
-$.log(`Wrapped into container.`);
 
 // navigate to top
 $(`#jql_About`).html(` (<span class="jqlTitle"><b>JQ</b>uery<b>L</b>ike</span>)`, true);

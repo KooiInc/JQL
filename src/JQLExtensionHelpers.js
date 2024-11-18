@@ -211,11 +211,11 @@ function combineObjectSources(...sources) {
   return result;
 }
 
-function tagGetterFactory(tagName, toJQL = false) {
+function tagGetterFactory(tagName, jql) {
   tagName = tagName.toLowerCase();
   return {
     get() { return (...args) =>
-      toJQL ? jql.virtual(tagFNFactory[tagName](...args)) : tagFNFactory[tagName](...args);
+      IS(jql, Function) ? jql.virtual(tagFNFactory[tagName](...args)) : tagFNFactory[tagName](...args);
     },
     enumerable: false,
     configurable: false,
@@ -227,7 +227,7 @@ function staticTagsLambda(jql) {
     if (!cando) { return acc; }
     
     const getterForThisTag = tagGetterFactory(tag);
-    const jqlGetterForThisTag = tagGetterFactory(tag.replace(/_jql$/i, ``), true);
+    const jqlGetterForThisTag = tagGetterFactory(tag.replace(/_jql$/i, ``), jql);
     Object.defineProperties( acc, {
       [tag]: getterForThisTag,
       [tag.toUpperCase()]: getterForThisTag,
