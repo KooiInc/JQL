@@ -27,7 +27,7 @@ function JQLFactory() {
 
   return function JQLDefault(input, root, position = insertPositions.BeforeEnd) {
     const isVirtual = IS(root, HTMLBRElement);
-    root = isVirtual && document.body || (root && root?.isJQL ? root[0] : root) || document.body;
+    root = (!isVirtual && root && root.isJQL ? root[0] : root) || document.body;
     position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = !isRawHtml && isArrayOfHtmlStrings(input);
