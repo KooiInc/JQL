@@ -228,7 +228,6 @@ function addGetters(tag, jql) {
 
 function staticTagsLambda(jql) {
   return function(acc, [tag, cando]) {
-    if (!cando) { return acc; }
     Object.defineProperties( acc, addGetters(tag, jql) );
     return acc;
   }
