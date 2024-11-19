@@ -128,19 +128,9 @@ function staticMethodsFactory(jql) {
     get fn() { return addFn; },
     allowTag: tagName => {
       tagLib.allowTag(tagName);
-      const tagGetter = tagGetterFactory(tagName);
-      const tagJQLGetter = tagGetterFactory(tagName.replace(`$`, ``));
-      Object.defineProperties(jql, {
-        [tagName]: tagGetter,
-        [tagName.toUpperCase()]: tagGetter,
-        [`${tagName}$`]: tagJQLGetter });
+      Object.defineProperties(jql, addGetters(tagName, jql));
     },
-    prohibitTag: tagName => {
-      tagLib.prohibitTag(tagName);
-      delete jql[tagName.toUpperCase()];
-      delete jql[tagName];
-      delete jql[`${tagName}$`];
-    },
+    prohibitTag: tagLib.prohibitTag,
     get lenient() { return tagLib.allowUnknownHtmlTags; },
     get IS() { return IS; },
     get Popup() {
@@ -213,28 +203,33 @@ function combineObjectSources(...sources) {
 
 function tagGetterFactory(tagName, jql) {
   tagName = tagName.toLowerCase();
+  
   return {
     get() { return (...args) =>
-      IS(jql, Function) ? jql.virtual(tagFNFactory[tagName](...args)) : tagFNFactory[tagName](...args);
+        IS(jql, Function)
+          ? tagLib.tagsRaw[tagName.toLowerCase()] && jql.virtual(tagFNFactory[tagName](...args)) || undefined
+          : tagLib.tagsRaw[tagName.toLowerCase()] && tagFNFactory[tagName](...args)  || undefined;
     },
     enumerable: false,
     configurable: false,
   }
 }
 
+function addGetters(tag, jql) {
+  const getterForThisTag = tagGetterFactory(tag);
+  const jqlGetterForThisTag = tagGetterFactory(tag.replace(/_jql$/i, ``), jql);
+  return {
+    [tag]: getterForThisTag,
+    [tag.toUpperCase()]: getterForThisTag,
+    [`${tag}_jql`]: jqlGetterForThisTag,
+    [`${tag.toUpperCase()}_JQL`]: jqlGetterForThisTag,
+  };
+}
+
 function staticTagsLambda(jql) {
   return function(acc, [tag, cando]) {
     if (!cando) { return acc; }
-    
-    const getterForThisTag = tagGetterFactory(tag);
-    const jqlGetterForThisTag = tagGetterFactory(tag.replace(/_jql$/i, ``), jql);
-    Object.defineProperties( acc, {
-      [tag]: getterForThisTag,
-      [tag.toUpperCase()]: getterForThisTag,
-      [`${tag}_jql`]: jqlGetterForThisTag,
-      [`${tag.toUpperCase()}_JQL`]: jqlGetterForThisTag,
-    });
-    
+    Object.defineProperties( acc, addGetters(tag, jql) );
     return acc;
   }
 }
