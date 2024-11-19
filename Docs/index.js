@@ -11,16 +11,18 @@ const codeReplacements = new Map( [
   [`&`, a => `&amp;${a[1]}`],
   [`linebreak`, `\n<br>`],
   [`reducebreaks`, `\n\n`] ] );
-$(`#loader`).remove();
+
 const setAllCodeStyling = el => {
   const pre = el.closest(`pre`);
   return !pre ? $(el).addClass(`inline`) : $(pre).addClass(`language-javascript`, `line-numbers`);
 }
 // wrap into .container
+const docContainer = $(`.docs`);
 $.div_jql({class: `container`})
   .append($.div_jql({class:`docBrowser`})
-    .append($(`#navigation`), $(`.docs`)))
+    .append($(`#navigation`), docContainer))
   .toDOM();
+docContainer.addClass(`loading`);
 $.log(`Wrapped into container.`);
 
 const perform = performance.now();
