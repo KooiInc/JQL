@@ -113,7 +113,7 @@ ul.navGroupItems li {
   background-color: #eee;
 }
 
-[data-groupcontainer]:not(first-child) {
+[data-groupcontainer]:not(:first-child) {
   padding: 1.5rem 1rem 1rem;
   box-shadow: 2px 2px 6px #999;
   border-radius: 5px;
@@ -239,7 +239,7 @@ ul.navGroupItems li {
 .exRunBttn {
   position: relative;
   display: block;
-  margin: -0.8rem 0px 1rem 1rem;
+  margin: -0.8rem 0 1rem 1rem;
 }
 
 code.inline {
@@ -279,7 +279,7 @@ img.gitLink {
     margin-top: 1rem;
   }
 
-  [data-groupcontainer], [data-groupcontainer]:not(first-child) {
+  [data-groupcontainer], [data-groupcontainer]:not(:first-child) {
     max-width: 92%;
   }
 
