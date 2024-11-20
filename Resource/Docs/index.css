@@ -113,7 +113,7 @@ ul.navGroupItems li {
   background-color: #eee;
 }
 
-[data-groupcontainer]:not(:first-child) {
+[data-groupcontainer] {
   padding: 1.5rem 1rem 1rem;
   box-shadow: 2px 2px 6px #999;
   border-radius: 5px;
@@ -255,6 +255,26 @@ code.inline b, .red, .note b {
   color: red;
 }
 
+a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a[target]:before {
+  color: rgba(0, 0, 238, 0.7);
+  font-size: 1.1rem;
+  padding-right: 2px;
+  vertical-align: baseline;
+}
+
+a[target="_top"]:before {
+  content: "↺";
+}
+
+a[target="_blank"]:before {
+  content: "↗";
+}
+
 img.gitLink {
   width: 32px;
   height: 32px;
@@ -279,7 +299,7 @@ img.gitLink {
     margin-top: 1rem;
   }
 
-  [data-groupcontainer], [data-groupcontainer]:not(:first-child) {
+  [data-groupcontainer] {
     max-width: 92%;
   }
 
