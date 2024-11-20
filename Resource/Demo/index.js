@@ -298,13 +298,18 @@ function allComments(root, result = []) {
 }
 
 async function injectCode() {
-  const source = await fetch("./index.js").then(r => r.text());
-  $(`#JQLRoot`)
-    .append($(`
-    <div class="upDownFader" id="code">
-      <pre class="language-javascript"><code class="language-javascript js line-numbers">${
-      source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`)}</code></pre>
-    </div>`));
+  return await fetch("./index.js").then(r => r.text())
+    .then(r =>
+      $(`#JQLRoot`).append(
+        $.div({
+          class: `upDownFader`,
+          id: `code` },
+        $.pre({
+          class: `language-javascript line-numbers`},
+          $.code({class: `language-javascript line-numbers`}, r)
+        ) )
+      )
+    );
 }
 
 function showStyling(styleId, bttn) {
@@ -357,8 +362,8 @@ function getStyleRules() {
     `pre[class*='language-'] {
       position: relative;
       display: block;
-    }`,
-    `code:not([class*=language-]) {
+     }`,
+    `code:not([class*='language-']) {
       background-color: rgb(227, 230, 232);
       color: rgb(12, 13, 14);
       padding: 2px 4px;
