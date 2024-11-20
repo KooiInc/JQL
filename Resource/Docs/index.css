@@ -251,7 +251,7 @@ code.inline {
   margin: 1px 0;
 }
 
-code.inline b, .red {
+code.inline b, .red, .note b {
   color: red;
 }
 
