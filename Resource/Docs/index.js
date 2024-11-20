@@ -73,7 +73,7 @@ const codeMapper = (code, i) => {
     i > 0 ? ` ${i + 1}` : ``}</h3><pre><code>${cleanedCode}</code></pre></div>`;
 };
 const getCodeBody = fn => {
-  fn = String(fn).replace(/</g, `&lt;`);
+  fn = String(fn);
   return fn.slice(fn.indexOf(`{`)+1, -1).replace(/\n {6}/g, `\n`).trim();
 }
 const convertExamples = descriptionValue => {
