@@ -200,14 +200,14 @@ function clickActionsFactory($) {
       setTimeout($("#tmpEx").remove, 2000);
     },
     afterMeEx: evt => {
-      $.Popup.show({ content: $.div("I am div 1")[create].afterMe($("<div>And I am div 2</div>"))});
+      $.Popup.show({ content: $.div("I am div 1")[create].after($("<div>And I am div 2</div>"))});
     },
     beforeMeEx: evt => {
       $.Popup.show({
       content: $("<div>...and I am div 2</div>")
          .andThen( $.div("...and finally I am div 4")[create]
-           .beforeMe($.div("...hithere, I am div 3")[create]))
-       .beforeMe( $($.div("I am div 1")) )
+           .before($.div("...hithere, I am div 3")[create]))
+       .before( $($.div("I am div 1")) )
       } );
     },
     andThenEx: evt => {
