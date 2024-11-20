@@ -30,6 +30,12 @@ const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.setAttribute(`data-${toDashedNotation(key)}`, value));
 };
+const before = (self, elem2AddBefore) => {
+  return self.andThen(elem2AddBefore, true);
+};
+const after = (self, elem2AddAfter) => {
+  return self.andThen(elem2AddAfter);
+};
 const checkProp = prop => prop.startsWith(`data`) || ATTRS.html.find(attr => prop.toLowerCase() === attr);
 const css = (el, keyOrKvPairs, value) => {
   if (value && IS(keyOrKvPairs, String)) {
@@ -328,12 +334,10 @@ const allMethods = {
       self.collection = reCollected;
       return self;
     },
-    afterMe: (self, elem2Add) => {
-      return self.andThen(elem2Add);
-    },
-    beforeMe: (self, elem2Add) => {
-      return self.andThen(elem2Add, true);
-    },
+    after,
+    afterMe: after,
+    before,
+    beforeMe: before,
     append: (self, ...elems2Append) => {
       if (!self.is.empty && elems2Append.length) {
         const shouldMove = self.length === 1;
