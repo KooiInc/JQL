@@ -1,24 +1,20 @@
-import $ from "../index.js";
-
-window.jql = $;
+import $ from "../../index.js";
 const started = performance.now();
 const debug = false;
 const toDOM = Symbol.jql;
 const create = Symbol.jqlvirtual;
 
-if (location.host.startsWith(`dev`)) {
+if ( /^dev|local/i.test(location.host) ) {
   $(`link[rel="icon"]`).replaceWith($.LINK({href: `./demoIcon.png`, rel: `icon`, type: `image/png`}));
   document.title = `##DEV## ${document.title}`;
 }
 
 // initialize statics from $
 const {virtual: $$, log, debugLog} = $;
-window.jql = $;
+window.jql = $; // use jql in the developer console
 const {DIV, H2, SPAN, I, B, P, U, A, BUTTON, COMMENT, BR} = $;
 
-// some helpers
-
-const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
+// a helper extension
 $.fn(`addTitle`, (self, ttl) => {
   self.prop(`title`, ttl);
   return self;
@@ -30,15 +26,15 @@ const back2 = /github/i.test(location.href) ? `_top` : `_blank`;
 const backLinks =
   P(`The repository can be found  @ `,
     A( {
-      href: `//github.com/KooiInc/JQL`,
-      target: back2,
-      text: `https://github.com/KooiInc/JQL` } ),
+          href: `//github.com/KooiInc/JQL`,
+          target: back2,
+          text: `https://github.com/KooiInc/JQL` } ),
     BR(),
     `The documentation resides @ `,
     A( {
-      href: `//kooiinc.github.io/JQL/Docs`,
-      target: back2,
-      text: `https://kooiinc.github.io/JQL/Docs`} )
+          href: `//kooiinc.github.io/JQL/Docs`,
+          target: back2,
+          text: `https://kooiinc.github.io/JQL/Docs`} )
   )[create];
 
 // initialize styling for logging and a few elements (to create later)
@@ -292,8 +288,8 @@ function allComments(root, result = []) {
           parent.id ? `#${parent.id}` : className ? className : ``}</b>`;
       }
       
-      const spacing = repeat(`&nbsp;`, 7);
-      result.push(`<div class="cmmt">${parentStr}<br>${repeat(`&nbsp;`, 2)}&lt;!--${
+      const spacing = `&nbsp;`.repeat(7);//repeat(`&nbsp;`, 7);
+      result.push(`<div class="cmmt">${parentStr}<br>${`&nbsp;`.repeat(2)}&lt;!--${
         node.textContent.replace(/</, `&lt;`).replace(/\n/g, `<br>${spacing}`)}--&gt;</div>`);
     }
   }
