@@ -41,7 +41,7 @@ $.div(`Hello JQL!`);
 </script>
 ```
 ## Documentation
-Documentation can be found @[kooiinc.github.io/JQL/Docs/](https://kooiinc.github.io/JQL/Docs/).
+Documentation can be found @[kooiinc.github.io/JQL/Resource/Docs/](https://kooiinc.github.io/JQL/Docs/).
 
 ## Demo and test
-A test and demo of this module can be found @[kooiinc.github.io/JQL/TestNDemo](https://kooiinc.github.io/JQL/TestNDemo/).
+A test and demo of this module can be found @[kooiinc.github.io/JQL/Resource/Demo](https://kooiinc.github.io/JQL/TestNDemo/).
