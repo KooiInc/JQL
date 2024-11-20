@@ -32,9 +32,9 @@ const backLinks =
     BR(),
     `The documentation resides @ `,
     A( {
-          href: `//kooiinc.github.io/JQL/Docs`,
+          href: `//kooiinc.github.io/JQL/Resource/Docs`,
           target: back2,
-          text: `https://kooiinc.github.io/JQL/Docs`} )
+          text: `https://kooiinc.github.io/JQL/Resource/Docs`} )
   )[create];
 
 // initialize styling for logging and a few elements (to create later)
