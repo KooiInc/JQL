@@ -380,7 +380,6 @@ function getStyleRules() {
       border: 5px solid green;
       border-width: 5px;
       padding: 0 0.5rem;
-      display: inline-block;
     }`,
     `a.InternalLink {
       textDecoration: none;
