@@ -300,6 +300,7 @@ const allMethods = {
     attr: (self, keyOrObj, value) => {
       if (!value && IS(keyOrObj, String)) {
         if (keyOrObj === `class`) {
+          // TODO: now appends, must be replace?
           return [...self[0]?.classList]?.join(` `);
         }
         return self[0]?.getAttribute(keyOrObj);
