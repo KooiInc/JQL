@@ -257,39 +257,38 @@ function getDelegates4Document() {
           log(`That's funny ... ${self.find$(`.black,.green`).html()}`);
         },
       ]
-    },
-      {
-        target: `#logBttn`,
-        handlers: [(_, self) => logActivation(self, !+(self.data.get(`on`, 1))),],
-      }, {
-        target: `#showComments`,
-        handlers: [
-          _ => {
-            const content = $.virtual(`<div>`)
-              .append($(`<h3>*All Comments in this document:</h3>`)
-                .Style.inline({marginTop: 0, marginBottom: `0.5rem`}))
-              .HTML.append(allComments([...document.childNodes]).join(``));
-            $.Popup.show({content});
-          },
-        ]
-      }, {
-        target: `.codeVwr`,
-        handlers: [
-          (_, self) => {
-            const codeElem = $(`#${self.data.get(`forid`)}`);
-            
-            if (!+self.data.get(`hidden`)) {
-              codeElem.removeClass(`down`);
-              return self.data.add({updown: '\u25bc View ', hidden: 1})
-            }
-            
-            $(`.down`).each(el => el.classList.remove(`down`));
-            $(`[data-forid]`).data.add({updown: '\u25bc View ', hidden: 1});
-            codeElem.addClass(`down`);
-            self.data.add({updown: '\u25b2 Hide ', hidden: 0});
+    }, {
+      target: `#logBttn`,
+      handlers: [(_, self) => logActivation(self, !+(self.data.get(`on`, 1))),],
+    }, {
+      target: `#showComments`,
+      handlers: [
+        _ => {
+          const content = $.virtual(`<div>`)
+            .append($(`<h3>*All Comments in this document:</h3>`)
+              .Style.inline({marginTop: 0, marginBottom: `0.5rem`}))
+            .HTML.append(allComments([...document.childNodes]).join(``));
+          $.Popup.show({content});
+        },
+      ]
+    }, {
+      target: `.codeVwr`,
+      handlers: [
+        (_, self) => {
+          const codeElem = $(`#${self.data.get(`forid`)}`);
+          
+          if (!+self.data.get(`hidden`)) {
+            codeElem.removeClass(`down`);
+            return self.data.add({updown: '\u25bc View ', hidden: 1})
           }
-        ]
-      }]
+          
+          $(`.down`).each(el => el.classList.remove(`down`));
+          $(`[data-forid]`).data.add({updown: '\u25bc View ', hidden: 1});
+          codeElem.addClass(`down`);
+          self.data.add({updown: '\u25b2 Hide ', hidden: 0});
+        }
+      ]
+    }]
   });
 }
 
