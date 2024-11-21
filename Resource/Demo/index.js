@@ -192,7 +192,8 @@ if (!debug) {
 /* DEBUG EXIT POINT */
 
 function modalDemo() {
-  const callbackAfterClose = () => $.Popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
+  const callbackAfterClose = () =>
+    $.Popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
   const closeBttn = DIV(
     BUTTON({id: "modalCloseTest"}, `Close me`))[create]
     .css({marginTop: `0.5rem`, textAlign: "center"})
