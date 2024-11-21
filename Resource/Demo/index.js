@@ -1,17 +1,24 @@
-import $ from "../../index.js";
+const isDev = /^dev|local/i.test(location.host);
+const testBndl = false;
+const libLink = !testBndl && isDev ? "../../index.js" : "../../Bundle/jql.min.js";
+const $ = (await import(libLink)).default;
 const started = performance.now();
 const debug = false;
 const toDOM = Symbol.jql;
 const create = Symbol.jqlvirtual;
+window.jql = $; // use jql in the developer console
 
-if ( /^dev|local/i.test(location.host) ) {
-  $(`link[rel="icon"]`).replaceWith($.LINK({href: `./demoIcon.png`, rel: `icon`, type: `image/png`}));
+if ( isDev ) {
+  $(`link[rel="icon"]`)
+    .replaceWith( $.LINK({
+      href: `./demoIcon.png`,
+      rel: `icon`,
+      type: `image/png` }) );
   document.title = `##DEV## ${document.title}`;
 }
 
 // initialize statics from $
 const {virtual: $$, log, debugLog} = $;
-window.jql = $; // use jql in the developer console
 const {DIV, H2, SPAN, I, B, P, U, A, BUTTON, COMMENT, BR} = $;
 
 // a helper extension
@@ -26,32 +33,32 @@ const back2 = /github/i.test(location.href) ? `_top` : `_blank`;
 const backLinks =
   P(`The repository can be found  @ `,
     A( {
-          href: `//github.com/KooiInc/JQL`,
-          target: back2,
-          text: `https://github.com/KooiInc/JQL` } ),
+      href: `//github.com/KooiInc/JQL`,
+      target: back2,
+      text: `https://github.com/KooiInc/JQL` } ),
     BR(),
     `The documentation resides @ `,
     A( {
-          href: `//kooiinc.github.io/JQL/Resource/Docs`,
-          target: back2,
-          text: `https://kooiinc.github.io/JQL/Resource/Docs`} )
+      href: `//kooiinc.github.io/JQL/Resource/Docs`,
+      target: back2,
+      text: `https://kooiinc.github.io/JQL/Resource/Docs` } )
   )[create];
 
-// initialize styling for logging and a few elements (to create later)
+// initialize styling for logging and a few elements
 $.editCssRules(...getStyleRules())
 
 // create container for all generated html
 $.div(
   {id: `container`, class: `MAIN`},
-  $.div({id: `JQLRoot`},
-    $.comment(`div#JQLRoot contains all generated html`) ))[toDOM]
-.prepend($(`#logBox`).style({margin: `1rem auto`}));
+  $.div(
+    { id: `JQLRoot` },
+    $.comment(`div#JQLRoot contains all generated html`) )
+)[toDOM] .prepend( $(`#logBox`).style({margin: `1rem auto`}) );
 
 const JQLRoot = $(`#JQLRoot`);
 
-/* DEBUG ENTRY POINT  */
+/* ENTRY POINT  */
 if (!debug) {
-
 // create the header content
   DIV( { id: `StyledPara`, class: `thickBorder` },
     H2( `Demo & test JQueryLike (JQL) library`),
@@ -79,7 +86,10 @@ if (!debug) {
 
 // script and data attribute will be removed, but you can add data-attributes later
 // styles are inline here
-  $([`<script id="noscripts">alert('hi');</script>`, `<div data-cando="1" id="delegates">Hi 1</div>`], JQLRoot)
+  $([
+      `<script id="noscripts">alert('hi');</script>`,
+      `<div data-cando="1" id="delegates">Hi 1</div>`
+    ], JQLRoot)
     .data.add({hello: "Added post creation"})
     .html(` [you may <b><i>click</i> me</b>] `, true)
     .style({cursor: `pointer`});
@@ -104,21 +114,38 @@ if (!debug) {
 
 // create a few buttons. Some already contain an event handler (delegated)
   const cssBttns = {
-    defaultCSS: $$(`<button data-sheet-id="JQLPopupCSS" data-switch-bttn="popupCSS">show popup css</button>`),
-    popupCSS: $$(`<button data-sheet-id="JQLStylesheet" data-switch-bttn="defaultCSS">show default css</button>`),
+    defaultCSS: $.button_jql({
+      data: {sheetId: `JQLPopupCSS`, switchBttn: `popupCSS`},
+      text: `show popup css` }),
+    popupCSS: BUTTON({
+      data: {sheetId: `JQLStylesheet`, switchBttn: `defaultCSS`},
+      text: `show default css` })[create],
   };
   $.delegate(`click`, `[data-switch-bttn]`,
-    evt => showStyling(evt.target.dataset?.sheetId, cssBttns[evt.target.dataset?.switchBttn]));
+    evt =>
+      showStyling(evt.target.dataset?.sheetId,
+        cssBttns[evt.target.dataset?.switchBttn]));
   
   DIV({id: "bttnblock"})[create].append(...[
-    BUTTON({id: "logBttn", data: {on: "0"}, title: "show/hide the logged activities"}),
-    BUTTON({id: "clearLog", text: "Clear Log box" })[create].on(`click`, () => debugLog.clear()),
-    BUTTON({id: "showComments", text: "Show document comments", title: "Show content of comment elements in a popup"}),
-    BUTTON({id: "showCSS", title: "Show the dynamically created styling in a popup"}, "Show custom CSS")[create]
-      .on("click", evt => showStyling("JQLStylesheet", cssBttns.defaultCSS)),
-    BUTTON("Modal popup demo")[create].on(`click`, modalDemo),
-    BUTTON("Github")[create].on(`click`, () =>  $.Popup.show( { content: backLinks } ) )]
-  ).appendTo(JQLRoot);
+      BUTTON({
+        id: "logBttn",
+        data: {on: "0"},
+        title: "show/hide the logged activities" }),
+      BUTTON({
+        id: "clearLog",
+        text: "Clear Log box" })[create].on(`click`, () => debugLog.clear()),
+      BUTTON({
+        id: "showComments",
+        text: "Show document comments",
+        title: "Show content of comment elements in a popup" }),
+      BUTTON({
+        id: "showCSS",
+        title: "Show the dynamically created styling in a popup" },
+        "Show custom CSS")[create].on("click", evt =>
+          showStyling("JQLStylesheet", cssBttns.defaultCSS)),
+      BUTTON("Modal popup demo")[create].on(`click`, modalDemo),
+      BUTTON("Github")[create].on(`click`, () =>  $.Popup.show( { content: backLinks } ) )
+    ] ).appendTo(JQLRoot);
   
   $("button")
     .style({marginRight: "4px"})
@@ -162,14 +189,20 @@ if (!debug) {
   .appendTo(JQLRoot),
 
 // a comment can also be appended using append/appendTo/prepend/prependTo
-  $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
-  $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
+  $$(`<!--I was appended to div#JQLRoot using .appendTo-->`)
+    .appendTo(JQLRoot);
+  $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`)
+    .prependTo(JQLRoot);
 
 // comment insertion test (note: this works with before-/afterMe/andThen too now)
-  $( COMMENT(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`), JQLRoot, $.at.BeforeBegin);
-  $( COMMENT(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`), JQLRoot, $.at.BeforeBegin);
-  $(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterEnd);
-  $(`<!--Comment @ #bttnblock afterbegin (so, prepend) verify it in DOM tree) -->`, $(`#bttnblock`), $.at.AfterBegin);
+  $( COMMENT(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`),
+    JQLRoot, $.at.BeforeBegin);
+  $( COMMENT(`Comment @ #JQLRoot beforebegin (verify it in DOM tree)`),
+    JQLRoot, $.at.BeforeBegin);
+  $(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`,
+    $(`#bttnblock`), $.at.AfterEnd);
+  $(`<!--Comment @ #bttnblock afterbegin (so, prepend) verify it in DOM tree) -->`,
+    $(`#bttnblock`), $.at.AfterBegin);
 
 // display code of this file
 // -------------------------
@@ -191,23 +224,20 @@ if (!debug) {
 }
 /* DEBUG EXIT POINT */
 
-function modalDemo() {
-  const callbackAfterClose = () =>
-    $.Popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
-  const closeBttn = DIV(
-    BUTTON({id: "modalCloseTest"}, `Close me`))[create]
-    .css({marginTop: `0.5rem`, textAlign: "center"})
-    .on(`click`, () => $.Popup.removeModal());
-  $.Popup.show({
-    content: DIV(
-       `Hi. This box is `, I(`really`), ` modal.`,
-        BR(), `There is no close icon and clicking outside this box does nothing.`,
-        BR(), `In other words: you can only close this using the button below.`,
-        BR() )[create].append(closeBttn),
-    modal: true,
-    callback: callbackAfterClose,
-    warnMessage: `There's only <b><i>one</i></b> escape`,
-  });
+// show actual code
+async function injectCode() {
+  return await fetch("./index.js").then(r => r.text())
+    .then(r =>
+      $(`#JQLRoot`).append(
+        DIV({
+            class: `upDownFader`,
+            id: `code` },
+          $.pre({
+              class: `language-javascript line-numbers`},
+            $.code({class: `language-javascript line-numbers`}, r.replace(/</gi, `&lt;`))
+          ) )
+      )
+    );
 }
 
 // create a few delegated handler methods
@@ -264,12 +294,31 @@ function getDelegates4Document() {
 }
 
 // Some methods used in handler delegates
-const logActivation = (logBttn, active = true) => {
+function logActivation(logBttn, active = true) {
   if (!logBttn.is.empty) {
     logBttn.data.add({on: +active});
     debugLog[active ? `show` : `hide`]();
   }
-};
+}
+
+function modalDemo() {
+  const callbackAfterClose = () =>
+    $.Popup.show({content: `Modal closed, you're ok, bye.`, closeAfter: 2});
+  const closeBttn = DIV(
+    BUTTON({id: "modalCloseTest"}, `Close me`))[create]
+    .css({marginTop: `0.5rem`, textAlign: "center"})
+    .on(`click`, () => $.Popup.removeModal());
+  $.Popup.show({
+    content: DIV(
+      `Hi. This box is `, I(`really`), ` modal.`,
+      BR(), `There is no close icon and clicking outside this box does nothing.`,
+      BR(), `In other words: you can only close this using the button below.`,
+      BR() )[create].append(closeBttn),
+    modal: true,
+    callback: callbackAfterClose,
+    warnMessage: `There's only <b><i>one</i></b> escape`,
+  });
+}
 
 function allComments(root, result = []) {
   for (const node of root) {
@@ -298,22 +347,8 @@ function allComments(root, result = []) {
   return result;
 }
 
-async function injectCode() {
-  return await fetch("./index.js").then(r => r.text())
-    .then(r =>
-      $(`#JQLRoot`).append(
-        $.div({
-          class: `upDownFader`,
-          id: `code` },
-        $.pre({
-          class: `language-javascript line-numbers`},
-          $.code({class: `language-javascript line-numbers`}, r)
-        ) )
-      )
-    );
-}
-
 function showStyling(styleId, bttn) {
+  $.log(`wtf ${styleId}`);
   const theStyle = $(`style#${styleId}`);
   if (theStyle.is.empty) {
     return;
@@ -345,6 +380,7 @@ function showStyling(styleId, bttn) {
   });
 }
 
+// style rules for this document
 function getStyleRules() {
   return [
     `body {
