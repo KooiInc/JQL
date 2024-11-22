@@ -59,13 +59,9 @@ const assignAttrValues = (/*NODOC*/el, keyValuePairs) => {
     if (key.toLowerCase().startsWith(`data`)) {
       return setData(el, value);
     }
-
-    if (compareCI(key, `class`)) {
-      return value.split(/,/).forEach(v => el.classList.add(`${v.trim()}`));
-    }
-
+    
     if (IS(value, String) && checkProp(key)) {
-      return el[key] = value;
+      el.setAttribute(key, value.split(/[, ]/)?.join(` `));
     }
   });
 };
@@ -298,12 +294,16 @@ const allMethods = {
       return self;
     },
     attr: (self, keyOrObj, value) => {
+      const firstElem = self[0];
+      
+      if (!firstElem) { return self }
+      
       if (!value && IS(keyOrObj, String)) {
         if (keyOrObj === `class`) {
-          // TODO: now appends, must be replace?
-          return [...self[0]?.classList]?.join(` `);
+          return [...firstElem?.classList]?.join(` `);
         }
-        return self[0]?.getAttribute(keyOrObj);
+        
+        return firstElem?.getAttribute(keyOrObj);
       }
 
       if (IS(keyOrObj, String) && value) {
@@ -311,7 +311,7 @@ const allMethods = {
       }
 
       if (IS(keyOrObj, Object) && !self.is.empty) {
-        assignAttrValues(self[0], keyOrObj);
+        assignAttrValues(firstElem, keyOrObj);
       }
 
       return self;
