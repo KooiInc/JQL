@@ -995,7 +995,7 @@ function clickActionsFactory($) {
       someDiv.attr({
         title: "Yes, I have a title now!",
         class: "volatile",
-        data: {myTitle: "title as data"},
+        data: {myTitle: "title as data", meaningOfLife: 42},
         onclick: _ => alert("o no!"), // <= not allowed
       });
       const attrField4Popup = (attr, str) => `<code>someDiv.attr("${attr}")</code>: ${
@@ -1005,6 +1005,7 @@ function clickActionsFactory($) {
         attrField4Popup(`id`, someDiv.attr("id")),
         attrField4Popup(`data-id`, someDiv.attr("data-id")),
         attrField4Popup(`data-my-title`, someDiv.attr("title")),
+        attrField4Popup(`data-meaning-of-life`, someDiv.attr("data-meaning-of-life")),
         attrField4Popup(`title`, someDiv.attr("class")),
         attrField4Popup(`class`, someDiv.attr("data-my-title")),
         attrField4Popup(`onclick`, someDiv.attr("onclick")),
