@@ -121,14 +121,20 @@ ul.navGroupItems li {
   margin-top: 3rem;
 }
 
-.linkLike, .linkLike code.inline {
+.linkLike {
+  margin: 0;
   color: blue;
-  cursor: pointer;
   display: inline-block;
-}
 
-.linkLike:hover, .linkLike .inline:hover {
-  text-decoration: underline;
+  code.inline {
+    color: blue;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  &:hover, .inline:hover {
+    text-decoration: underline;
+  }
 }
 
 .methodName {
@@ -219,7 +225,7 @@ ul.navGroupItems li {
   line-height: 1.7em;
 }
 
-.description ul li div {
+.description ul li div:not(.linkLike) {
   margin-top: 0.3rem !important;
   margin-bottom: 0.2rem !important;
 }
