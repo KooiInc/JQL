@@ -75,7 +75,7 @@ function clickActionsFactory($) {
   const create = Symbol.jqlvirtual;
   const toDOM = Symbol.jql;
   const jqlTo = Symbol.jql2Root;
-  const toCodeElement = str => `<code class="inline">${str}</code>`;
+  const toCodeElement = str => `<code>${str}</code>`;
   const yn = item => item === undefined ? `Yep 😎` : `Nope 😡`;
   const randomNr = (max, min = 0) => {
     [max, min] = [Math.floor(max), Math.ceil(min)];
@@ -170,9 +170,13 @@ function clickActionsFactory($) {
     addClassEx: evt => {
       $.editCssRule("#tmpEx.warnUser {color: red; font-weight: bold;}");
       $.editCssRule(".user:before {content: 'Hi user! ';}");
-      $('<div id="tmpEx">This is not very useful</div>', getCurrentParagraph(evt))
-        .addClass("warnUser", "user");
-      setTimeout($("#tmpEx").remove, 2000);
+      const exampleDiv = $(
+        '<div id="tmpEx">This is not very useful</div>',
+        getCurrentParagraph(evt) );
+      setTimeout(_ => {
+        exampleDiv.addClass("warnUser", "user");
+        setTimeout(exampleDiv.remove, 2000);
+      }, 1500);
     },
     appendEx: evt => {
       exDivStyle();
@@ -213,9 +217,9 @@ function clickActionsFactory($) {
     andThenEx: evt => {
       const ele1 = $.p("I am the first");
       const ele2 = $.p("I am the second");
-      const codeLine1 = '<code class="inline">ele1[create].andThen(ele2)</code>';
-      const codeLine2 = '<code class="inline">ele2[create].andThen(ele1)</code>';
-      const codeLine3 = '<code class="inline">ele2[create].andThen(ele1, true)</code>';
+      const codeLine1 = '<code>ele1[create].andThen(ele2)</code>';
+      const codeLine2 = '<code>ele2[create].andThen(ele1)</code>';
+      const codeLine3 = '<code>ele2[create].andThen(ele1, true)</code>';
       $.Popup.show( {
         content: $(codeLine1).andThen(ele1).andThen(ele2[create]),
         closeAfter: 3.5,
@@ -231,7 +235,7 @@ function clickActionsFactory($) {
       } );
     },
     isEx: evt => {
-      const toCodeElement = str => `<code class="inline">${str}</code>`;
+      const toCodeElement = str => `<code>${str}</code>`;
       const inpDisabled = $.input({
         id: "disabledInput",
         disabled: true,
@@ -245,7 +249,7 @@ function clickActionsFactory($) {
          </ul>`;
       const getActualPopupText = () => $.virtual(
         $.div({class: "description"},
-          `<h3><code class="inline">inpDisabled</code> ${is.inDOM ? "in" : "<i>NOT</i> in"} the DOM</h3>
+          `<h3><code>inpDisabled</code> ${is.inDOM ? "in" : "<i>NOT</i> in"} the DOM</h3>
            <div>${retrieveFeatures()}</div>`) );
       const reCheckAfterAdded2DOM = () => {
         inpDisabled.toDOM();
@@ -263,7 +267,7 @@ function clickActionsFactory($) {
       const someDiv = $('<div><b style="color:red">Hello world again</b></div>', getCurrentParagraph(evt));
       popup.show( {
         content: `
-          <code class="inline">someDiv.closest(".description").HTML.get(1, 1)</code><br>${
+          <code>someDiv.closest(".description").HTML.get(1, 1)</code><br>${
             someDiv.closest(".description").HTML.get(1,1).slice(0, 100)}&hellip;`,
         callback: someDiv.remove,
       });
@@ -291,7 +295,7 @@ function clickActionsFactory($) {
         "#example { color: green; }"
       );
       const myBrandNewCssSheet = $.node("#exampleStyleSheet");
-      const ismyBrandNewCssSheetAStyleSheet = `Is <code class="inline">myBrandNewCssSheet</code>
+      const ismyBrandNewCssSheetAStyleSheet = `Is <code>myBrandNewCssSheet</code>
           really a stylesheet? ${ $.IS(myBrandNewCssSheet, HTMLStyleElement) ? "YEP" : "NOPE" }`;
       const rules = [... myBrandNewCssSheet.sheet.rules].reduce((acc, rule) => acc.concat(rule.cssText), []);
       const checkMsg = "While this popup is open, open the developer console (tab 'Elements')\
@@ -392,9 +396,9 @@ function clickActionsFactory($) {
     },
     valEx: evt => {
       const input = $('<input data-id="tmpEx" type="text" value="hello world">', getCurrentParagraph(evt));
-      const valueResults = `Initial value <code class="inline">input.val()</code> => ${ input.val()}
-          <br>Empty it: <code class="inline">input.val("")</code> => ${ input.val("").val() }
-          <br>New value: <code class="inline">input.val("hi there")</code> => ${ input.val("hi there").val()}`;
+      const valueResults = `Initial value <code>input.val()</code> => ${ input.val()}
+          <br>Empty it: <code>input.val("")</code> => ${ input.val("").val() }
+          <br>New value: <code>input.val("hi there")</code> => ${ input.val("hi there").val()}`;
       popup.show( {
         content: valueResults,
         callback: removeEx
@@ -417,9 +421,9 @@ function clickActionsFactory($) {
       const exElem = $.virtual('<div data-id="tmpEx"><b>Hello</b> <span>World</span>!</div>', getCurrentParagraph(evt));
       popup.show( {
         content: `
-          <code class="inline">printHtml(exElem.outerHtml)</code> =&gt; ${printHtml(exElem.outerHtml)}<br>
+          <code>printHtml(exElem.outerHtml)</code> =&gt; ${printHtml(exElem.outerHtml)}<br>
           // one can also use [jql instance].HTML:
-          <code class="inline">exElem.HTML.get(true, true)</code> =&gt; ${exElem.HTML.get(true, true)}`,
+          <code>exElem.HTML.get(true, true)</code> =&gt; ${exElem.HTML.get(true, true)}`,
         callback: () => exElem.remove(),
       } );
     },
@@ -427,8 +431,8 @@ function clickActionsFactory($) {
       const exElem = $('<div data-id="tmpEx"><b>Hello</b> <span>World</span>!</div>',
         getCurrentParagraph(evt));
       exElem.prop({title: "now I have a title", onclick: 'javascript:alert("hello!")'});
-      popup.show( { content: `<code class="inline">exElem.prop("title")</code> =&gt; ${exElem.prop("title")}
-        <br><code class="inline">exElem.prop("onclick")</code> =&gt; ${exElem.prop("onclick")}`, closeAfter: 4 } );
+      popup.show( { content: `<code>exElem.prop("title")</code> =&gt; ${exElem.prop("title")}
+        <br><code>exElem.prop("onclick")</code> =&gt; ${exElem.prop("onclick")}`, closeAfter: 4 } );
       setTimeout(() => exElem.remove(), 10000);
     },
     removeClassEx: evt => {
@@ -446,9 +450,9 @@ function clickActionsFactory($) {
       const undef = thisBttn.getData("nonexistent");
       const undefWithDefaultValue = thisBttn.getData("nothing", "NOCANDO");
       popup.show( { content: [
-        `<code class="inline">action</code>: "${action}"`,
-        `<code class="inline">undef</code>: ${undef}`,
-        `<code class="inline">undefWithDefaultValue</code>: "${undefWithDefaultValue}"`].join("<br>") } );
+        `<code>action</code>: "${action}"`,
+        `<code>undef</code>: ${undef}`,
+        `<code>undefWithDefaultValue</code>: "${undefWithDefaultValue}"`].join("<br>") } );
     },
     editCssRuleEx: evt => {
       $.editCssRule("#div1 {margin: 0.3rem; color: green; background-color: #EEE; }");
@@ -486,7 +490,7 @@ function clickActionsFactory($) {
           const rulesExist = [...$.node("#JQLStylesheet", document.documentElement).sheet.cssRules]
             .filter(r => r.cssText.startsWith("#div1") || r.cssText.startsWith("#div2"))
           popup.show( {
-            content: `Rules removed, so we expect <code class="inline">rulesExist?.cssText</code>
+            content: `Rules removed, so we expect <code>rulesExist?.cssText</code>
                       to be undefined. Is that so? ${yn(rulesExist?.cssText)}`,
             closeAfter: 5,
           });
@@ -503,7 +507,7 @@ function clickActionsFactory($) {
           const rulesExist = [...$.node("#JQLStylesheet", document.documentElement).sheet.cssRules]
             .filter(r => r.cssText.startsWith("#div1"))
           popup.show( {
-            content: `Rule removed, so we expect <code class="inline">rulesExist?.cssText</code> to be undefined.
+            content: `Rule removed, so we expect <code>rulesExist?.cssText</code> to be undefined.
                  Is that so? ${yn(rulesExist?.cssText)}`,
             closeAfter: 5,
           });
@@ -572,21 +576,21 @@ function clickActionsFactory($) {
       const isNothing = something => $.IS(something, undefined, NaN, null);
       const whatIs = something => $.IS(something);
       const whatIsEnumerated = Object.keys(someVars).reduce( (acc, key) =>
-        [...acc, `<code class="inline">whatIs(someVars.${key})</code>: ${whatIs(someVars[key])}`], []);
+        [...acc, `<code>whatIs(someVars.${key})</code>: ${whatIs(someVars[key])}`], []);
       popup.show( {
         content: whatIsEnumerated.concat([
-          `<code class="inline">$.IS(someVars.Object, Object)</code>: ${$.IS(someVars.Object, Object)}`,
-          `<code class="inline">$.IS(someVars.Object, Array)</code>: ${$.IS(someVars.Object, Array)}`,
-          `<code class="inline">$.IS(someVars.Object, String, Object, Array)</code>: ${$.IS(someVars.Object, String, Object, Array)}`,
-          `<code class="inline">$.IS(someVars.Array, Array)</code>: ${$.IS(someVars.Array, Array)}`,
-          `<code class="inline">$.IS(someVars.Array, Object)</code>: ${$.IS(someVars.Array, Object)}`,
-          `<code class="inline">$.IS(someVars.RegExp, RegExp)</code>: ${$.IS(someVars.RegExp, RegExp)}`,
-          `<code class="inline">$.IS(someVars.Null, undefined)</code>: ${$.IS(someVars.Null, undefined)}`,
-          `<code class="inline">$.IS(someVars.Null, null)</code>: ${$.IS(someVars.Null, null)}`,
-          `<code class="inline">$.IS(someVars.Zero, Boolean)</code>: ${$.IS(someVars.Zero, Boolean)}`,
-          `<code class="inline">$.IS(someVars.Symbol, Symbol)</code>: ${$.IS(someVars.Symbol, Symbol)}`,
-          `<code class="inline">isNothing(someVars.Undefined)</code>: ${isNothing(someVars.Undefined)}`,
-          `<code class="inline">isNothing(someVars.RegExp)</code>: ${isNothing(someVars.RegExp)}`,]).join("<br>"),
+          `<code>$.IS(someVars.Object, Object)</code>: ${$.IS(someVars.Object, Object)}`,
+          `<code>$.IS(someVars.Object, Array)</code>: ${$.IS(someVars.Object, Array)}`,
+          `<code>$.IS(someVars.Object, String, Object, Array)</code>: ${$.IS(someVars.Object, String, Object, Array)}`,
+          `<code>$.IS(someVars.Array, Array)</code>: ${$.IS(someVars.Array, Array)}`,
+          `<code>$.IS(someVars.Array, Object)</code>: ${$.IS(someVars.Array, Object)}`,
+          `<code>$.IS(someVars.RegExp, RegExp)</code>: ${$.IS(someVars.RegExp, RegExp)}`,
+          `<code>$.IS(someVars.Null, undefined)</code>: ${$.IS(someVars.Null, undefined)}`,
+          `<code>$.IS(someVars.Null, null)</code>: ${$.IS(someVars.Null, null)}`,
+          `<code>$.IS(someVars.Zero, Boolean)</code>: ${$.IS(someVars.Zero, Boolean)}`,
+          `<code>$.IS(someVars.Symbol, Symbol)</code>: ${$.IS(someVars.Symbol, Symbol)}`,
+          `<code>isNothing(someVars.Undefined)</code>: ${isNothing(someVars.Undefined)}`,
+          `<code>isNothing(someVars.RegExp)</code>: ${isNothing(someVars.RegExp)}`,]).join("<br>"),
       });
     },
     singleEx: evt => {
@@ -595,7 +599,7 @@ function clickActionsFactory($) {
            <div class='test'>Hello world (2)</div>\
         </div>", evt.target, $.insertPositions.AfterEnd);
       popup.show( { content:
-        `<code class="inline">$("[data-id='tmpEx']").<b>single(".test")</b>.HTML.get(1,1)</code>
+        `<code>$("[data-id='tmpEx']").<b>single(".test")</b>.HTML.get(1,1)</code>
           <p>${$("[data-id='tmpEx']").single(".test").HTML.get(1,1)}</p>`,
         callback: removeEx } );
     },
@@ -605,7 +609,7 @@ function clickActionsFactory($) {
            <div class='test'>Hello world (2)</div>\
         </div>", evt.target, $.insertPositions.AfterEnd);
       popup.show( { content:
-        `<code class="inline">$("[data-id='tmpEx']").<b>single()</b>.HTML.get(true, true)</code>
+        `<code>$("[data-id='tmpEx']").<b>single()</b>.HTML.get(true, true)</code>
          <p>${$("[data-id='tmpEx']").single().HTML.get(true, true)}</p>`,
         callback: removeEx } );
     },
@@ -617,7 +621,7 @@ function clickActionsFactory($) {
          </div>',
         evt.target, $.insertPositions.AfterEnd);
       popup.show( { content:
-        `<code class="inline">$(".test").<b>single(1)</b>.HTML.get(1, 1)</code>
+        `<code>$(".test").<b>single(1)</b>.HTML.get(1, 1)</code>
          <p>${$(".test").single(1).HTML.get(1, 1)}</p>`,
         callback: removeEx } );
     },
@@ -631,29 +635,29 @@ function clickActionsFactory($) {
       HTML.set("'nough said").data.set({iteration: "set"});
 
       // html now
-      const initialElOuterHtml1 = `<code class="inline">set</code>: ${HTML.get(true, true)}`;
+      const initialElOuterHtml1 = `<code>set</code>: ${HTML.get(true, true)}`;
 
       // replace content
       HTML.replace("HELLO").data.set({iteration: "replace"});
 
       // html now
-      const initialElOuterHtml2 = `<code class="inline">replace</code>: ${HTML.get(true, true)}`;
+      const initialElOuterHtml2 = `<code>replace</code>: ${HTML.get(true, true)}`;
 
       // append to content
       HTML.append($.span(" WORLD")[create]).data.set({iteration: "append"});
 
       // html now
-      const initialElOuterHtml3 = `<code class="inline">append</code>: ${HTML.get(true, true)}`;
+      const initialElOuterHtml3 = `<code>append</code>: ${HTML.get(true, true)}`;
 
       // insert
       HTML.insert($.B("The obligatory ... ")).data.set({iteration: "insert"});
 
       // html now
-      const initialElOuterHtml4 = `<code class="inline">insert</code>: ${HTML.get(true, true)}`;
+      const initialElOuterHtml4 = `<code>insert</code>: ${HTML.get(true, true)}`;
 
       // aggregate a report
       const report = $.virtual(`<div class="description">
-        <h3>Created <code class="inline">div#initial</code></h3>
+        <h3>Created <code>div#initial</code></h3>
         <ul>
           <li>${initialElOuterHtml1}</li>
           <li>${initialElOuterHtml2}</li>
@@ -724,8 +728,8 @@ function clickActionsFactory($) {
           .appendTo(currentParagraph);
       $.Popup.show( {
         content: `
-          <code class="inline">someDiv.isEmpty()</code> =&gt; ${someDiv.isEmpty()}<br>
-          <code class="inline">someDiv.find$("b:first-child").isEmpty()</code> =&gt; ${
+          <code>someDiv.isEmpty()</code> =&gt; ${someDiv.isEmpty()}<br>
+          <code>someDiv.find$("b:first-child").isEmpty()</code> =&gt; ${
             someDiv.find$("b:first-child").isEmpty()}`,
         closeAfter: 2.5,
         callback: () => {
@@ -733,8 +737,8 @@ function clickActionsFactory($) {
           someDiv = $(".IDoNotExist");
           popup.show({
             content: `
-              <code class="inline">someDiv.isEmpty()</code> =&gt; ${someDiv.isEmpty()}<br>
-              <code class="inline">someDiv.find$("b:first-child").isEmpty()</code> =&gt; ${
+              <code>someDiv.isEmpty()</code> =&gt; ${someDiv.isEmpty()}<br>
+              <code>someDiv.find$("b:first-child").isEmpty()</code> =&gt; ${
                 someDiv.find$("b:first-child").isEmpty()}`,
             callback: someDiv.remove,
           });
@@ -825,9 +829,9 @@ function clickActionsFactory($) {
       const tmpDiv = $('<div class="one two tree">Hello world</div>', getCurrentParagraph(evt));
       popup.show( {
         content:
-        `<code class="inline">tmpDiv.hasClass("one", "tree")</code> =&gt; ${tmpDiv.hasClass("one", "tree")}<br>
-         <code class="inline">tmpDiv.hasClass("one", "four")</code> =&gt; ${tmpDiv.hasClass("one", "four")}<br>
-         <code class="inline">tmpDiv.hasClass("five")</code> =&gt; ${tmpDiv.hasClass("five")}`,
+        `<code>tmpDiv.hasClass("one", "tree")</code> =&gt; ${tmpDiv.hasClass("one", "tree")}<br>
+         <code>tmpDiv.hasClass("one", "four")</code> =&gt; ${tmpDiv.hasClass("one", "four")}<br>
+         <code>tmpDiv.hasClass("five")</code> =&gt; ${tmpDiv.hasClass("five")}`,
         callback: $(".one.two").remove
       } );
     },
@@ -964,13 +968,13 @@ function clickActionsFactory($) {
       // computed (note: randomNr is a utility function)
       const computedHello3 = $("<div>")
         .html(`
-          <code class="inline">hello3.Style.valueOf("borderLeftColor")</code>: ${
+          <code>hello3.Style.valueOf("borderLeftColor")</code>: ${
             hello3.toDOM().Style.valueOf(`borderLeftColor`)}.<br>&nbsp;<b>⤷</b> Equivalent
-          <code class="inline">hello3.Style.computed.borderLeftColor</code>: ${
+          <code>hello3.Style.computed.borderLeftColor</code>: ${
             hello3.Style.computed.borderLeftColor}`);
       const computed = hello3.Style.computed;
       const sliceStart = randomNr(computed.length, 10) - 10;
-      const hello3Computed = `<div><br><code class="inline">hello3.Style.computed</code>
+      const hello3Computed = `<div><br><code>hello3.Style.computed</code>
         (10 of ${computed.length} rules, random sample)<ul>${
         [...computed]
           .slice( sliceStart, sliceStart + 10)
@@ -983,20 +987,30 @@ function clickActionsFactory($) {
     },
     attrEx: evt => {
       const item = getCurrentParagraph(evt);
-      const someDiv = $(`<div data-id="tmpEx" class="initial">Hi, let me get some attributes</div>`, item);
-      someDiv.attr({title: "Yes, I have a title now!", class: "volatile", data: {myTitle: "title as data"}});
-      const [myDataId, myTitle, myClass, myDataTitle, myOnclick] =
-        [ someDiv.attr("data-id"),
-          someDiv.attr("title"),
-          someDiv.attr("class"),
-          someDiv.attr("data-my-title"),
-          someDiv.attr("onclick") ];
-      popup.show( { content: [
-          `<code class="inline">someDiv.attr("data-id")</code>: ${myDataId}`,
-          `<code class="inline">someDiv.attr("data-my-title")</code>: ${myDataTitle}`,
-          `<code class="inline">someDiv.attr("title")</code>: ${myTitle}`,
-          `<code class="inline">someDiv.attr("class")</code>: ${myClass}`,
-          `<code class="inline">someDiv.attr("onclick")</code>: ${myOnclick}`].join("<br>"),
+      const someDiv = $.div_jql( {
+          id: "tmpEx",
+          data: {id: "#tmpEx"},
+          class:"initial" },
+        `Hi, let me get some attributes`).appendTo(item);
+      someDiv.attr({
+        title: "Yes, I have a title now!",
+        class: "volatile",
+        data: {myTitle: "title as data"},
+        onclick: _ => alert("o no!"), // <= not allowed
+      });
+      const attrField4Popup = (attr, str) => `<code>someDiv.attr("${attr}")</code>: ${
+        $.IS(str, null, undefined) ? str : `"${str}"`}`;
+      const results = [
+        `<code>someDiv</code> is now: <code>${someDiv.HTML.get(true, true)}</code>`,
+        attrField4Popup(`id`, someDiv.attr("id")),
+        attrField4Popup(`data-id`, someDiv.attr("data-id")),
+        attrField4Popup(`data-my-title`, someDiv.attr("title")),
+        attrField4Popup(`title`, someDiv.attr("class")),
+        attrField4Popup(`class`, someDiv.attr("data-my-title")),
+        attrField4Popup(`onclick`, someDiv.attr("onclick")),
+      ];
+      popup.show( {
+        content: `<div class="description"><ul><li>${results.join(`</li><li>`)}</li>`,
         callback: someDiv.remove });
     },
     computedStyleEx: evt => {
@@ -1004,9 +1018,9 @@ function clickActionsFactory($) {
       $('<p class="redEx">Hello!</p>', getCurrentParagraph(evt));
       popup.show({
         content: `
-            <code class="inline">$(".redEx").computedStyle("color")</code>: ${
+            <code>$(".redEx").computedStyle("color")</code>: ${
             $(`.redEx`).computedStyle("color") }<br>
-            <code class="inline">$(".redEx").computedStyle("font-weight")</code>: ${
+            <code>$(".redEx").computedStyle("font-weight")</code>: ${
             $(`.redEx`).computedStyle("font-weight") }`,
         callback: $(".redEx").remove });
     },
@@ -1026,24 +1040,24 @@ function clickActionsFactory($) {
     firstEx: evt => {
       const jqlElems = $("#navigation li[data-key]");
       popup.show({content: $(`<div>
-         <code class="inline">jqlElems.collection.length</code>: ${jqlElems.collection.length},<br>
-         outerHTML <code class="inline">jqlElems.first()</code>: ${jqlElems.first()?.outerHTML.replace(/</g, "&lt;")}</div>`)});
+         <code>jqlElems.collection.length</code>: ${jqlElems.collection.length},<br>
+         outerHTML <code>jqlElems.first()</code>: ${jqlElems.first()?.outerHTML.replace(/</g, "&lt;")}</div>`)});
     },
     first$Ex: evt => {
       // note: $ is invalid in selectors, so replaced with _D
       const jqlElem = $(".docs").first$("#instance_first_D");
       const first$WithIndexExample = () => {
         popup.show({
-          content: `<code class="inline">$(".docs h3").first$(17)</code> =&gt;<br>${
+          content: `<code>$(".docs h3").first$(17)</code> =&gt;<br>${
             $(".docs h3").first$(17).HTML.get(1, 1)}` } );
       };
       popup.show(
-        { content: `<div><code class="inline">$(".docs").first$("#instance_first_D")</code> =&gt;<br>${
+        { content: `<div><code>$(".docs").first$("#instance_first_D")</code> =&gt;<br>${
           jqlElem.HTML.get(1, 1)}</div>`, callback: first$WithIndexExample } );
     },
     first$Ex2: evt => {
       const jqlElem = $(".docs").first$(30001); // does not exist
-      popup.show({ content: `<div>non existing (should be <code class="inline">undefined</code>): ${jqlElem.outerHtml}</div>` });
+      popup.show({ content: `<div>non existing (should be <code>undefined</code>): ${jqlElem.outerHtml}</div>` });
     },
     dataEx: evt => {
       const helloWrld = $("<div>Hello World again</div>", getCurrentParagraph(evt));
@@ -1051,18 +1065,18 @@ function clickActionsFactory($) {
       helloWrld.data.add({isUniverse: true, something: "else", "dashed-prop-given": 1});
       const {all: myDATA} = helloWrld.data;
       popup.show({
-        content: `<code class="inline">helloWrld.data.all</code> =&gt; ${JSON.stringify(helloWrld.data.all)}
-          <br><code class="inline">helloWrld.data.get("something")</code> =&gt; ${helloWrld.data.get("something")}
-          <br><code class="inline">helloWrld.data.all.isUniverse</code> =&gt; ${helloWrld.data.all.isUniverse}
-          <br><code class="inline">helloWrld.data.all["is-universe]</code> =&gt; ${helloWrld.data.all["is-universe"]}
-          <br><code class="inline">helloWrld.data.get("is-universe")</code> =&gt; ${helloWrld.data.get("is-universe")}
-          <br><code class="inline">helloWrld.data.get("isUniverse")</code> =&gt; ${helloWrld.data.get("isUniverse")}
-          <br><code class="inline">helloWrld.data.get("dashed-prop-given")</code> =&gt; ${helloWrld.data.get("dashed-prop-given")}
-          <br><code class="inline">helloWrld.data.all.nonexisting</code> =&gt; ${helloWrld.data.all.nonexisting}
-          <br><code class="inline">helloWrld.data.get("nonexisting", "no sir, I'm not here")</code> =&gt; ${
+        content: `<code>helloWrld.data.all</code> =&gt; ${JSON.stringify(helloWrld.data.all)}
+          <br><code>helloWrld.data.get("something")</code> =&gt; ${helloWrld.data.get("something")}
+          <br><code>helloWrld.data.all.isUniverse</code> =&gt; ${helloWrld.data.all.isUniverse}
+          <br><code>helloWrld.data.all["is-universe]</code> =&gt; ${helloWrld.data.all["is-universe"]}
+          <br><code>helloWrld.data.get("is-universe")</code> =&gt; ${helloWrld.data.get("is-universe")}
+          <br><code>helloWrld.data.get("isUniverse")</code> =&gt; ${helloWrld.data.get("isUniverse")}
+          <br><code>helloWrld.data.get("dashed-prop-given")</code> =&gt; ${helloWrld.data.get("dashed-prop-given")}
+          <br><code>helloWrld.data.all.nonexisting</code> =&gt; ${helloWrld.data.all.nonexisting}
+          <br><code>helloWrld.data.get("nonexisting", "no sir, I'm not here")</code> =&gt; ${
             helloWrld.data.get("nonexisting", "no sir, I'm not here")}
-          <br><code class="inline">myDATA.something</code> =&gt; ${myDATA.something}
-          <br><code class="inline">myDATA.isUniverse</code> =&gt; ${myDATA.isUniverse}`,
+          <br><code>myDATA.something</code> =&gt; ${myDATA.something}
+          <br><code>myDATA.isUniverse</code> =&gt; ${myDATA.isUniverse}`,
         callback: () => {
           helloWrld.data.remove("isUniverse");
           setTimeout( () => {

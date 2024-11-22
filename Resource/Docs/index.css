@@ -37,7 +37,7 @@ body {
   height: 0;
 }
 
-code.inline b.comment {
+code:not([class*='language-']) b.comment {
   color: #999;
 }
 
@@ -242,16 +242,20 @@ ul.navGroupItems li {
   margin: -0.8rem 0 1rem 1rem;
 }
 
-code.inline {
+code:not([class*='language-']) {
   background-color: rgb(227, 230, 232);
   color: rgb(12, 13, 14);
   padding: 2px 4px;
   display: inline;
   border-radius: 4px;
   margin: 1px 0;
+
+  b {
+    color: red;
+  }
 }
 
-code.inline b, .red, .note b {
+.red, .note b {
   color: red;
 }
 
