@@ -239,7 +239,6 @@ ul.navGroupItems li {
 [data-groupcontainer] .description div.exContainer,
 .paragraph .description div.exContainer {
   white-space: revert;
-  width: 96%;
 }
 
 .exRunBttn {
@@ -313,12 +312,8 @@ img.gitLink {
     max-width: 92%;
   }
 
-  h3.methodName {
-    max-width: 95%;
-  }
-
   .description div:not(.linkLike, .exContainer) {
-    max-width: 90%;
+    max-width: 95%;
   }
 }
 
