@@ -1,5 +1,6 @@
 import jql from "../index.js";
-import IS from "../typeofAnything/typeofany.module.js";
+import IS from "./typeofany.module.js";
+import styleFactory from "./LifeCSS.js";
 const characters4RandomString = [...Array(26)]
   .map((x, i) => String.fromCharCode(i + 65))
   .concat([...Array(26)].map((x, i) => String.fromCharCode(i + 97)))
@@ -121,4 +122,5 @@ export {
   hex2RGBA,
   escHtml,
   ExamineElementFeatureFactory,
+  styleFactory,
 };

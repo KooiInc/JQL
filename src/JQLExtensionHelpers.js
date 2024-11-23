@@ -3,11 +3,10 @@ import { debugLog, Log, systemLog } from "./JQLLog.js";
 import allMethods from "./JQLMethods.js";
 import PopupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
-import styleFactory from "../LifeCSS/index.js";
 import tagLib from "./HTMLTags.js";
 import tagFNFactory from "./tinyDOM.js";
 import { randomString, toDashedNotation, IS, truncateHtmlStr,
-  truncate2SingleStr, logTime, hex2RGBA, } from "./Utilities.js";
+  truncate2SingleStr, logTime, hex2RGBA, styleFactory} from "./Utilities.js";
 let static4Docs = {};
 const {
   instanceMethods, instanceGetters,isCommentOrTextNode, isNode, isComment, isText,
