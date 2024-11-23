@@ -6,6 +6,8 @@ import {
   randomString,
   inject2DOMTree,
   isCommentOrTextNode,
+  truncateHtmlStr,
+  systemLog,
 } from "./JQLExtensionHelpers.js";
 import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
@@ -213,9 +215,11 @@ const allMethods = {
     removeAttribute: (self, attrName) => loop(self, el => el.removeAttribute(attrName)),
     each: (self, cb) => loop(self, cb),
     remove: (self, selector) => {
+      systemLog(`remove ${truncateHtmlStr(self.HTML.get(1), 40)}${selector ? ` /w selector ${selector}` : ``}`);
       const remover = el => el.remove();
       const removeFromCollection = () =>
         self.collection = self.collection.filter(el => document.documentElement.contains(el));
+      
       if (selector) {
         const selectedElements = self.find$(selector);
         if (!selectedElements.is.empty) {
