@@ -9,9 +9,9 @@ const insertPositions = new Proxy({
   after: "afterend", afterend: "afterend" }, {
     get(obj, key) { return obj[String(key).toLowerCase()] ?? obj[key]; }
   });
-const placeholderNode = document.createElement("div");
 const htmlToVirtualElement = htmlString => {
-  placeholderNode.innerHTML = htmlString;
+  const placeholderNode = document.createElement("div");
+  placeholderNode.insertAdjacentHTML(insertPositions.end, htmlString);
   return placeholderNode.childNodes.length
     ? cleanupHtml(placeholderNode)
     : undefined;

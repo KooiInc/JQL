@@ -28,7 +28,7 @@ const elementCheck = function(child) {
 };
 const cleanupHtml = el2Clean => {
   const elCreationInfo = {
-    rawHTML: el2Clean.outerHTML,
+    rawHTML: el2Clean?.parentElement?.getHTML() ?? `no html`,
     removed: { },
   }
   
@@ -58,6 +58,7 @@ const cleanupHtml = el2Clean => {
             }
           });
       }
+      
       const allowed = elementCheck(child);
       
       if (!allowed) {

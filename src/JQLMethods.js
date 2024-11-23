@@ -486,14 +486,18 @@ const allMethods = {
     },
     html: (self, htmlValue, append) => {
       if (htmlValue === undefined) {
-        return self[0]?.innerHTML;
+        return self[0]?.getHTML();
       }
 
       if (!self.isEmpty()) {
         const nwElement = createElementFromHtmlString(`<div>${htmlValue.isJQL ? htmlValue.HTML.get(true) : htmlValue}</div>`);
 
         if (!IS(nwElement, Comment)) {
-          const cb = el => el.innerHTML = append ? el.innerHTML + nwElement.innerHTML : nwElement.innerHTML;
+          const cb = el => {
+            if (!append) { el.textContent = ``; }
+            
+            return el.insertAdjacentHTML(jql.at.end, nwElement.getHTML());
+          }
           return loop(self, cb);
         }
       }
@@ -512,7 +516,7 @@ const allMethods = {
         
         el2Change.each(el => {
           if (!append) { el.textContent = ``; }
-          el.insertAdjacentHTML(`beforeend`, nwElement.innerHTML)
+          el.insertAdjacentHTML(jql.at.end, nwElement.getHTML());
         });
         
       }
