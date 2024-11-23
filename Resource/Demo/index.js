@@ -83,7 +83,7 @@ if (!debug) {
   const msg = `hi there, you won't see me`;
   $(`<div id="nohandling" onclick="alert('${msg}')"></div>`)
     .html(`<h1>Hell! O world.</h1>`).appendTo(JQLRoot);
-
+  
 // script and data attribute will be removed, but you can add data-attributes later
 // styles are inline here
   $([
@@ -328,7 +328,7 @@ function allComments(root, result = []) {
     
     if (node.nodeType === 8) {
       const parent = node.parentNode;
-      let parentStr = `&#8226; in <b>??</b>`;
+      let parentStr;
       
       if (parent) {
         const className = parent.classList.length && `.${[...parent.classList][0]}` || ``;
@@ -337,9 +337,10 @@ function allComments(root, result = []) {
           parent.id ? `#${parent.id}` : className ? className : ``}</b>`;
       }
       
-      const spacing = `&nbsp;`.repeat(7);//repeat(`&nbsp;`, 7);
-      result.push(`<div class="cmmt">${parentStr}<br>${`&nbsp;`.repeat(2)}&lt;!--${
-        node.textContent.replace(/</, `&lt;`).replace(/\n/g, `<br>${spacing}`)}--&gt;</div>`);
+      const spacing = `&nbsp;`.repeat(7);
+      result.push(`<div class="cmmt">${parentStr ?? `&#8226; in <b>??</b>`}<br>${
+        `&nbsp;`.repeat(2)}&lt;!--${
+          node.textContent.replace(/</, `&lt;`).replace(/\n/g, `<br>${spacing}`)}--&gt;</div>`);
     }
   }
   
