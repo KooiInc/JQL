@@ -127,7 +127,6 @@ function staticMethodsFactory(jql) {
     get fn() { return addFn; },
     allowTag: tagName => {
       tagLib.allowTag(tagName);
-      Object.defineProperties(jql, addGetters(tagName, jql));
     },
     prohibitTag: tagLib.prohibitTag,
     get lenient() { return tagLib.allowUnknownHtmlTags; },
