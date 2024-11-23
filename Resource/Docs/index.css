@@ -125,6 +125,7 @@ ul.navGroupItems li {
   margin: 0;
   color: blue;
   display: inline-block;
+  cursor: pointer;
 
   code.inline {
     color: blue;
