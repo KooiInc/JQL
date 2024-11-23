@@ -1,4 +1,4 @@
-import { default as IS, maybe, } from "./typeofany.module.js";
+import { default as IS, maybe, $Wrap as $W } from "./typeofany.module.js";
 export default tinyDOM();
 const converts = { html: `innerHTML`, text: `textContent`,  class: `className` };
 
@@ -18,9 +18,10 @@ function createTagFunctionProperty(obj, tag, key, isError = false) {
   return obj[tag];
 }
 
-function processNext(root, argument, tagName) {
+function processNext(root, next, tagName) {
+  next = next?.isJQL && next.first() || next;
   return maybe({
-    trial: _ => containsHTML(argument) ? root.insertAdjacentHTML(`beforeend`, argument) : root.append(argument),
+    trial: _ => containsHTML(next) ? root.insertAdjacentHTML(`beforeend`, next) : root.append(next),
     whenError: err => console.info(`${tagName} not created, reason\n`, err)
   });
 }
