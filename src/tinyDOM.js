@@ -1,7 +1,4 @@
-import {
-   default as IS,
-   maybe,
- } from "../typeofAnything/typeofany.module.js";
+import { default as IS, maybe, } from "./typeofany.module.js";
 export default tinyDOM();
 const converts = { html: `innerHTML`, text: `textContent`,  class: `className` };
 
