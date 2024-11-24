@@ -1,4 +1,4 @@
-import { default as IS, maybe, $Wrap as $W } from "./typeofany.module.js";
+import { default as IS, maybe } from "./typeofany.module.js";
 export default tinyDOM();
 const converts = { html: `innerHTML`, text: `textContent`,  class: `className` };
 
@@ -59,18 +59,24 @@ function createElementAndAppend(tag, element2Append) {
 }
 
 function createElement(tagName, props = {}) {
-  const data = Object.entries(props?.data ?? {});
+  props = isObjectCheck(props, {});
+  const data = Object.entries(props.data ?? {});
   const elem = Object.assign(
     isComment(tagName) ? new Comment() : document.createElement(tagName),
-    cleanupProps( IS(props, {isTypes: Object, notTypes: Array, defaultValue: {}})) );
+    cleanupProps( props ) );
   data.length && data.forEach(([key, value]) => elem.dataset[key] = value);
   return elem;
 }
 
-function cleanupComment(initial) { return isRealObject(initial) ? initial?.text ?? initial?.textContent ?? `` : String(initial); }
+function isObjectCheck(someObject, defaultValue) {
+  return defaultValue
+    ? IS(someObject, {isTypes: Object, notTypes: [Array, null, NaN, Proxy], defaultValue})
+    : IS(someObject, {isTypes: Object, notTypes: [Array, null, NaN, Proxy]});
+}
+
+function cleanupComment(initial) { return isObjectCheck(initial) ? initial?.text ?? initial?.textContent ?? `` : String(initial); }
 function errorElement(key) { return createElement(`b`, {style:`color:red`,text:`'${key}' is not a valid HTML-tag`}); }
 function containsHTML(str, tag) { return !isComment(tag) && IS(str, String) && /<.*>|&[#|0-9a-z]+[^;];/i.test(str); }
-function isRealObject(someObject) { return IS(someObject, {isTypes: Object, notTypes: [Array, null, NaN, Proxy]}) }
 function isComment(tag) { return /comment/i.test(tag); }
 function validateTag(name) { return !IS(createElement(name), HTMLUnknownElement); }
 function tag2FN(tagName) { return (initial, ...args) => tagFN(tagName, initial, ...args); }
