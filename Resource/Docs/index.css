@@ -48,16 +48,6 @@ code:not([class*='language-']) b.comment {
   margin-left: 135px;
 }
 
-.docs.loading:before {
-  content: "Loading ...";
-  font-size: 3rem;
-  font-weight: bold;
-  color: red;
-  display: block;
-  margin-top: 2rem;
-  z-index: 5;
-}
-
 .param {
   margin-bottom: 0.3rem;
 }

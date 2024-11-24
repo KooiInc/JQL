@@ -22,7 +22,6 @@ $.div_jql({class: `container`})
   .append($.div_jql({class:`docBrowser`})
     .append($(`#navigation`), docContainer))
   .toDOM();
-docContainer.addClass(`loading`);
 $.log(`Wrapped into container.`);
 
 const perform = performance.now();
