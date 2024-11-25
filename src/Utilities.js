@@ -1,6 +1,8 @@
 import jql from "../index.js";
-import {default as tagFNFactory, IS} from "./Externals.js";
-import styleFactory from "./LifeCSS.js";
+import {
+  default as tagFNFactory,
+  IS,
+  LifeStyleFactory as styleFactory } from "./SyncedExternals.js";
 const characters4RandomString = [...Array(26)]
   .map((x, i) => String.fromCharCode(i + 65))
   .concat([...Array(26)].map((x, i) => String.fromCharCode(i + 97)))
