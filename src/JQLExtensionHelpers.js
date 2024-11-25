@@ -4,8 +4,7 @@ import allMethods from "./JQLMethods.js";
 import PopupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import tagLib from "./HTMLTags.js";
-import tagFNFactory from "./tinyDOM.js";
-import { randomString, toDashedNotation, IS, truncateHtmlStr,
+import { randomString, toDashedNotation, IS, truncateHtmlStr, tagFNFactory,
   truncate2SingleStr, logTime, hex2RGBA, styleFactory} from "./Utilities.js";
 let static4Docs = {};
 const {

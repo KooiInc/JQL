@@ -1,5 +1,5 @@
 import jql from "../index.js";
-import IS from "./typeofany.module.js";
+import {default as tagFNFactory, IS} from "./Externals.js";
 import styleFactory from "./LifeCSS.js";
 const characters4RandomString = [...Array(26)]
   .map((x, i) => String.fromCharCode(i + 65))
@@ -123,4 +123,5 @@ export {
   escHtml,
   ExamineElementFeatureFactory,
   styleFactory,
+  tagFNFactory,
 };
