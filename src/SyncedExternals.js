@@ -1,3 +1,11 @@
+/**
+  generated (synced) file for:
+    - tinyDOM
+    - lifeCSS
+    - typeofAnything
+  Last updated on 25-11-2024 16:15:44
+*/
+
 / * tinyDOM */
 const defaultTinyDOM = tinyDOM();
 const converts = { html: `innerHTML`, text: `textContent`,  class: `className` };
