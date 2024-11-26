@@ -3,7 +3,7 @@
     - tinyDOM
     - lifeCSS
     - typeofAnything
-  Last updated on 26-11-2024 12:56:34
+  Last updated on 26-11-2024 15:12:34
 */
 
 / * tinyDOM */
@@ -237,7 +237,9 @@ function TOAFactory() {
         Proxy = new nativeProxy(nativeProxy, {
           construct(target, args) {
             const proxy = new target(...args);
-            proxy[Symbol.proxy] = `Proxy (${ctor2String(args[0])})`;
+            maybe( { trial: _ => {
+                proxy[Symbol.proxy] = `Proxy (${ctor2String(args[0])})`;
+                return true; } } );
             return proxy;
           }
         });
