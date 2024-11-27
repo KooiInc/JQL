@@ -348,7 +348,7 @@ const allMethods = {
         const shouldMove = self.length === 1;
         
         for (let elem2Append of elems2Append) {
-          if (IS(elem2Append, String)) {
+          if (!elem2Append.isJQL && IS(elem2Append, String)) {
             const elem2Append4Test = elem2Append.trim();
             const isPlainString = !/^<(.+)[^>]+>$/m.test(elem2Append4Test);
             let toAppend = isPlainString ? jql.text(elem2Append) : createElementFromHtmlString(elem2Append);
