@@ -446,6 +446,7 @@ const allMethods = {
       return undefined;
     },
     first$: (self, indexOrSelector) => self.single(indexOrSelector),
+    nth$: (self, indexOrSelector) => self.single(indexOrSelector),
     find: (self, selector) => self.collection.length > 0 ? [...self.first()?.querySelectorAll(selector)] : [],
     find$: (self, selector) => { return self.collection.length > 0 ? jql(selector, self) : self; },
     prop: (self, nameOrProperties, value) => {
