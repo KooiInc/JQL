@@ -320,7 +320,6 @@ function clickActionsFactory($) {
       
       $.Popup.show({
         content: popupPara,
-        callback: () => $.removeCssRule(".exRed"),
         closeAfter: 3,
       });
     },
@@ -333,13 +332,19 @@ function clickActionsFactory($) {
             font-size: 1.2rem;\
         }"
       );
-      const popupPara = $.p( { text: "Hello world ... ", id: "Hithere" })[toDOM];
-      popupPara.append( $.i( { class: "exRed exFont" }, $.SPAN(" here we are!") ) )
-        .appendTo(getCurrentParagraph(evt));
+      const {p_jql: $P, i_jql: $I } = $;
+      const popupPara = $P( { text: "Hello world ... ", id: "Hithere" });
+      popupPara.append( $I( { class: "exRed exFont" }, $.SPAN(" here we are!") ) );
+      const popupDupe = popupPara.duplicate();
+      
+      $(getCurrentParagraph(evt))
+        .find$(`.exContainer`)
+        .nth$(3)
+        .before( popupDupe );
       
       $.Popup.show({
         content: popupPara,
-        callback: () => $.removeCssRules(".exRed", ".exFont"),
+        callback: () => popupDupe.remove(),
         closeAfter: 3,
       });
     },
@@ -359,7 +364,6 @@ function clickActionsFactory($) {
       
       $.Popup.show({
         content: popupPara,
-        callback: () => $.removeCssRules(".exRed", ".exFont"),
         closeAfter: 3,
       });
     },
@@ -384,7 +388,6 @@ function clickActionsFactory($) {
       
       $.Popup.show({
         content: popupPara.data.set({staticId: "staticElemEx"}).prepend(hereWeAre),
-        callback: () => $.removeCssRules(".exRed", ".exFont"),
         closeAfter: 3,
       });
     },
