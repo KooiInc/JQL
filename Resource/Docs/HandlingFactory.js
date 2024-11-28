@@ -597,6 +597,7 @@ function clickActionsFactory($) {
       });
     },
     singleEx: evt => {
+      // indexOrSelector is selector
       $("<div data-id='tmpEx'>\
            <div class='test'>Hello world (1)</div>\
            <div class='test'>Hello world (2)</div>\
@@ -607,6 +608,7 @@ function clickActionsFactory($) {
         callback: removeEx } );
     },
     singleEx2: evt => {
+      // indexOrSelector is empty
       $("<div data-id='tmpEx'>\
            <div class='test'>Hello world (1)</div>\
            <div class='test'>Hello world (2)</div>\
@@ -617,6 +619,7 @@ function clickActionsFactory($) {
         callback: removeEx } );
     },
     singleEx3: evt => {
+      // indexOrSelector is Number
       $('<div data-id="tmpEx">\
            <div class="test">Hello world (1)</div>\
            <div class="test">Hello world (2)</div>\
