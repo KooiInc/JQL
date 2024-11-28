@@ -1048,20 +1048,23 @@ function clickActionsFactory($) {
          outerHTML <code>jqlElems.first()</code>: ${jqlElems.first()?.outerHTML.replace(/</g, "&lt;")}</div>`)});
     },
     first$Ex: evt => {
-      // note: $ is invalid in selectors, so replaced with _D
-      const jqlElem = $(".docs").first$("#instance_first_D");
+      // first$
+      const jqlElem = $(".docs").first$("#instance_single");
       const first$WithIndexExample = () => {
         popup.show({
           content: `<code>$(".docs h3").first$(17)</code> =&gt;<br>${
             $(".docs h3").first$(17).HTML.get(1, 1)}` } );
       };
       popup.show(
-        { content: `<div><code>$(".docs").first$("#instance_first_D")</code> =&gt;<br>${
+        { content: `<div><code>$(".docs").first$("#instance_single")</code> =&gt;<br>${
           jqlElem.HTML.get(1, 1)}</div>`, callback: first$WithIndexExample } );
     },
-    first$Ex2: evt => {
-      const jqlElem = $(".docs").first$(30001); // does not exist
-      popup.show({ content: `<div>non existing (should be <code>undefined</code>): ${jqlElem.outerHtml}</div>` });
+    nth$Ex: evt => {
+      // nth$
+      const jqlElem = $(".docs").nth$(30001); // does not exist
+      popup.show({ content: `
+            <div>non existing (should be <code>undefined</code>): ${
+              jqlElem.outerHtml}</div>` });
     },
     dataEx: evt => {
       const helloWrld = $("<div>Hello World again</div>", getCurrentParagraph(evt));
