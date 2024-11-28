@@ -605,7 +605,7 @@ function clickActionsFactory($) {
       popup.show( { content:
         `<code>$("[data-id='tmpEx']").<b>single(".test")</b>.HTML.get(1,1)</code>
           <p>${$("[data-id='tmpEx']").single(".test").HTML.get(1,1)}</p>`,
-        callback: removeEx } );
+        callback: () => $(`[data-id]`).remove() } );
     },
     singleEx2: evt => {
       // indexOrSelector is empty
@@ -616,7 +616,7 @@ function clickActionsFactory($) {
       popup.show( { content:
         `<code>$("[data-id='tmpEx']").<b>single()</b>.HTML.get(true, true)</code>
          <p>${$("[data-id='tmpEx']").single().HTML.get(true, true)}</p>`,
-        callback: removeEx } );
+        callback: () => $(`[data-id]`).remove() } );
     },
     singleEx3: evt => {
       // indexOrSelector is Number
@@ -629,7 +629,7 @@ function clickActionsFactory($) {
       popup.show( { content:
         `<code>$(".test").<b>single(1)</b>.HTML.get(1, 1)</code>
          <p>${$(".test").single(1).HTML.get(1, 1)}</p>`,
-        callback: removeEx } );
+        callback: () => $(`[data-id]`).remove() } );
     },
     htmlObjEx: evt => {
       const initialEl = $.DIV({id: "initial"})[create];
@@ -1066,8 +1066,8 @@ function clickActionsFactory($) {
       // nth$
       const jqlElem = $(".docs").nth$(30001); // does not exist
       popup.show({ content: `
-            <div>non existing (should be <code>undefined</code>): ${
-              jqlElem.outerHtml}</div>` });
+            <div><code>jqlElem.HTML.get(1,1) </code> should give 'no elements' message: ${
+              jqlElem.HTML.get(1, 1)}</div>` });
     },
     dataEx: evt => {
       const helloWrld = $("<div>Hello World again</div>", getCurrentParagraph(evt));
