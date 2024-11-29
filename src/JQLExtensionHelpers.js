@@ -175,10 +175,6 @@ function delegateFactory(handle) {
 
 function virtualFactory(jql) {
   return function(html, root, position) {
-    if (!validateInput(html)) {
-      return jql(html, root, position);
-    }
-    
     root = root?.isJQL ? root?.[0] : root;
     position = position && Object.values(insertPositions).find(pos => position === pos) ? position : undefined;
     const virtualElem = jql(html, document.createElement(`br`));
@@ -187,10 +183,6 @@ function virtualFactory(jql) {
         position ? root.insertAdjacentElement(position, elem) : root.append(elem));
     }
     return virtualElem;
-  }
-
-  function validateInput(input) {
-    return IS(input, String) || IS(input, Array) && !input.find(inp => !IS(inp, String));
   }
 }
 
