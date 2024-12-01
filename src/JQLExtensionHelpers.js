@@ -89,12 +89,12 @@ function proxify(instance) {
 function addJQLStaticMethods(jql) {
   Object.defineProperties(
     Node.prototype, {
-      [Symbol.jql]:        { get: function() { return jql(this); } },
-      [Symbol.jqlvirtual]: { get: function() { return jql.virtual(this); } },
+      [Symbol.jql]:        { get: function() { return jql(this); }, enumerable: false, configurable: false },
+      [Symbol.jqlvirtual]: { get: function() { return jql.virtual(this); }, enumerable: false, configurable: false },
       [Symbol.jql2Root]: {
         value: function(root = document.body, at = insertPositions.end) {
           return jql(this, root, at);
-        }
+        }, enumerable: false, configurable: false
       }
     });
   const staticMethods = defaultStaticMethodsFactory(jql);
