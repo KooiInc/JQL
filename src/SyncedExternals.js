@@ -3,7 +3,7 @@
     - tinyDOM
     - lifeCSS
     - typeofAnything
-  Last updated on 27-11-2024 16:16:12
+  Last updated on 01-12-2024 11:43:29
 */
 
 / * tinyDOM */
@@ -17,7 +17,9 @@ function tinyDOM() {
         case tag in obj: return obj[tag];
         case validateTag(tag): return createTagFunctionProperty(obj, tag, key);
         default: return createTagFunctionProperty(obj, tag, key, true);
-      } } };
+      }
+    }, enumerable: false, configurable: false
+  };
   return new Proxy({}, tinyDOMProxyGetter);
 }
 
@@ -234,12 +236,12 @@ function TOAFactory() {
   function addSymbols2Anything() {
     if (!Object.getOwnPropertyDescriptors(Object.prototype)[Symbol.is]) {
       Object.defineProperties(Object.prototype, {
-        [Symbol.type]: { get() { return typeOf(this); }, },
-        [Symbol.is]: { value: function (...args) { return IS(this, ...args); } },
+        [Symbol.type]: { get() { return typeOf(this); }, enumerable: false, configurable: false },
+        [Symbol.is]: { value: function (...args) { return IS(this, ...args); }, enumerable: false, configurable: false },
       });
       Object.defineProperties(Object, {
-        [Symbol.type]: { value(obj) { return typeOf(obj); }, },
-        [Symbol.is]: { value: function (obj, ...args) { return IS(obj, ...args); }, },
+        [Symbol.type]: { value(obj) { return typeOf(obj); }, enumerable: false, configurable: false },
+        [Symbol.is]: { value: function (obj, ...args) { return IS(obj, ...args); }, enumerable: false, configurable: false },
       });
     }
   }
