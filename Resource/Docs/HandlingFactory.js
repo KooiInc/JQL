@@ -95,7 +95,7 @@ function clickActionsFactory($) {
     popupTimedEx: () => {
       // A timed popup message
       const timedText = "Hi, this is a popup! I'll be active for 5 seconds (as long as one don't close me first).";
-      $.Popup.createTimed( timedText, 5, () => popup.createTimed("I am closing", 2) );
+      $.Popup.createTimed( timedText, 5, () => $.Popup.createTimed("I am closing", 2) );
     },
     popupCreateModalEx: () => {
       // A modal popup message
@@ -106,7 +106,7 @@ function clickActionsFactory($) {
         <br>Try clicking anywhere outside the box ...";
       const closeBttn = $.button({data: {id: "modalClose"}}, "Close me");
       $.delegate("click", "[data-id='modalClose']", $.Popup.removeModal);
-      const okMessage = () => popup.show({ content: `Modal closed, we're ok, bye.`, closeAfter: 2});
+      const okMessage = () => $.Popup.show({ content: `Modal closed, we're ok, bye.`, closeAfter: 2});
       const message = $.div(
         modalBoxText,
         $.div({style: "margin-top: 0.6rem;"}, closeBttn)
@@ -126,7 +126,7 @@ function clickActionsFactory($) {
         <br>Try clicking anywhere outside the box ...";
       const closeBttn = $.button({data: {id: "modalClose2"}}, "Close me");
       $.delegate("click", "[data-id='modalClose2']", $.Popup.removeModal);
-      const okMessage = () => popup.show({ content: `Modal closed, we're ok, bye.`, closeAfter: 2});
+      const okMessage = () => $.Popup.show({ content: `Modal closed, we're ok, bye.`, closeAfter: 2});
       const message = $.div(
         modalBoxText,
         $.div({style: "margin-top: 0.6rem;"}, closeBttn)
@@ -190,7 +190,7 @@ function clickActionsFactory($) {
             "<div>Appended HTML string</div>",
             Object.assign( document.createElement("div"), {textContent: "Appended element"}) );
         setTimeout(() =>
-          popup.show( {
+          $.Popup.show( {
             content: toAppendJQLInstance.html("Now I am appended to the popup element, one can still click me"),
             callback: () => $("#tmpEx").remove(),
         }), 1500);
@@ -258,14 +258,14 @@ function clickActionsFactory($) {
         });
       }
       
-      popup.show({
+      $.Popup.show({
         content: $(getActualPopupText()),
         callback: reCheckAfterAdded2DOM,
       });
     },
     closestEx: evt => {
       const someDiv = $('<div><b style="color:red">Hello world again</b></div>', getCurrentParagraph(evt));
-      popup.show( {
+      $.Popup.show( {
         content: `
           <code>someDiv.closest(".description").HTML.get(1, 1)</code><br>${
             someDiv.closest(".description").HTML.get(1,1).slice(0, 100)}&hellip;`,
@@ -284,7 +284,7 @@ function clickActionsFactory($) {
     fnEx: () => {
       $.fn( "addTitle", (me, ttl) => ttl ? me.prop("title", ttl) : me );
       const someDiv = $.virtual('<div data-id="tmpEx">Hello world</div>');
-      popup.show( { content: someDiv.addTitle("hi there!").append(`<div>My title is now "${
+      $.Popup.show( { content: someDiv.addTitle("hi there!").append(`<div>My title is now "${
           someDiv.prop("title")}". Hover me!</div>`) });
     },
     staticCreateStyleEx: () => {
@@ -395,14 +395,14 @@ function clickActionsFactory($) {
     fnEx2: evt => {
       $.fn( `colorRed`, me => { me[0].style.color = "red"; return me; } );
       const someDiv = $.virtual(`<div data-id="tmpEx">Hello world</div>`);
-      popup.show( { content: someDiv.append($(`<div>There we have it</div>`).colorRed()) });
+      $.Popup.show( { content: someDiv.append($(`<div>There we have it</div>`).colorRed()) });
     },
     valEx: evt => {
       const input = $('<input data-id="tmpEx" type="text" value="hello world">', getCurrentParagraph(evt));
       const valueResults = `Initial value <code>input.val()</code> => ${ input.val()}
           <br>Empty it: <code>input.val("")</code> => ${ input.val("").val() }
           <br>New value: <code>input.val("hi there")</code> => ${ input.val("hi there").val()}`;
-      popup.show( {
+      $.Popup.show( {
         content: valueResults,
         callback: removeEx
       } );
@@ -422,7 +422,7 @@ function clickActionsFactory($) {
     outerHTMLEx: evt => {
       const printHtml = html => html.replace(/</g, "&lt;");
       const exElem = $.virtual('<div data-id="tmpEx"><b>Hello</b> <span>World</span>!</div>', getCurrentParagraph(evt));
-      popup.show( {
+      $.Popup.show( {
         content: `
           <code>printHtml(exElem.outerHtml)</code> =&gt; ${printHtml(exElem.outerHtml)}<br>
           // one can also use [jql instance].HTML:
@@ -434,7 +434,7 @@ function clickActionsFactory($) {
       const exElem = $('<div data-id="tmpEx"><b>Hello</b> <span>World</span>!</div>',
         getCurrentParagraph(evt));
       exElem.prop({title: "now I have a title", onclick: 'javascript:alert("hello!")'});
-      popup.show( { content: `<code>exElem.prop("title")</code> =&gt; ${exElem.prop("title")}
+      $.Popup.show( { content: `<code>exElem.prop("title")</code> =&gt; ${exElem.prop("title")}
         <br><code>exElem.prop("onclick")</code> =&gt; ${exElem.prop("onclick")}`, closeAfter: 4 } );
       setTimeout(() => exElem.remove(), 10000);
     },
@@ -452,7 +452,7 @@ function clickActionsFactory($) {
       const action = thisBttn.getData("action");
       const undef = thisBttn.getData("nonexistent");
       const undefWithDefaultValue = thisBttn.getData("nothing", "NOCANDO");
-      popup.show( { content: [
+      $.Popup.show( { content: [
         `<code>action</code>: "${action}"`,
         `<code>undef</code>: ${undef}`,
         `<code>undefWithDefaultValue</code>: "${undefWithDefaultValue}"`].join("<br>") } );
@@ -463,7 +463,7 @@ function clickActionsFactory($) {
       const div1 = $.virtual('<div id="div1">I am div#div1</div>');
       const div2 = $.virtual('<div id="div2">I am div#div2</div>');
       
-      popup.show( {
+      $.Popup.show( {
         content: $($.div()).append(div1, div2),
         callback: () => $.removeCssRules("#div1", "#div2")
       } );
@@ -476,7 +476,7 @@ function clickActionsFactory($) {
         "#div2 { margin: 0.3rem; color: red; background-color: #EEE; }"
       );
       
-      popup.show( {
+      $.Popup.show( {
         content: $(`<div>`).append(div1, div2),
         callback: () => $.removeCssRules("#div1", "#div2") } );
     },
@@ -486,13 +486,13 @@ function clickActionsFactory($) {
       $.editCssRules(
         "#div1 { margin: 0.3rem; color: green; background-color: #EEE; }",
         "#div2 { margin: 0.3rem; color: red; background-color: #EEE; }" );
-      popup.show( {
+      $.Popup.show( {
         content: $.virtual(`<div>`).append(div1, div2),
         callback: () => {
           $.removeCssRules("#div1", "#div2");
           const rulesExist = [...$.node("#JQLStylesheet", document.documentElement).sheet.cssRules]
             .filter(r => r.cssText.startsWith("#div1") || r.cssText.startsWith("#div2"))
-          popup.show( {
+          $.Popup.show( {
             content: `Rules removed, so we expect <code>rulesExist?.cssText</code>
                       to be undefined. Is that so? ${yn(rulesExist?.cssText)}`,
             closeAfter: 5,
@@ -503,13 +503,13 @@ function clickActionsFactory($) {
       const div1 = $.virtual('<div id="div1">I am div#div1</div>');
       const div2 = $.virtual('<div id="div2">I am div#div2</div>');
       $.editCssRule("#div1 {margin: 0.3rem; color: green; background-color: #EEE; }");
-      popup.show( {
+      $.Popup.show( {
         content: $.virtual("<div>").append(div1, div2),
         callback: () => {
           $.removeCssRule("#div1");
           const rulesExist = [...$.node("#JQLStylesheet", document.documentElement).sheet.cssRules]
             .filter(r => r.cssText.startsWith("#div1"))
-          popup.show( {
+          $.Popup.show( {
             content: `Rule removed, so we expect <code>rulesExist?.cssText</code> to be undefined.
                  Is that so? ${yn(rulesExist?.cssText)}`,
             closeAfter: 5,
@@ -522,7 +522,7 @@ function clickActionsFactory($) {
       const inDOM = instance => instance.isVirtual ? "Nope" : "Yep";
       const virtualElem = $.virtual('<div class="virtual" data-id="tmpEx">Hello</div>')
         .append($.virtual(`<span> world!</span>`).style({color: "red", fontWeight: "bold"}));
-      popup.show( {
+      $.Popup.show( {
         content: $("<div>virtual element created. In DOM tree? </div>")
           .append(` <b>${inDOM(virtualElem)}.</b>`)
           .append(" We'll add it to this chapter soon."),
@@ -580,7 +580,7 @@ function clickActionsFactory($) {
       const whatIs = something => $.IS(something);
       const whatIsEnumerated = Object.keys(someVars).reduce( (acc, key) =>
         [...acc, `<code>whatIs(someVars.${key})</code>: ${whatIs(someVars[key])}`], []);
-      popup.show( {
+      $.Popup.show( {
         content: whatIsEnumerated.concat([
           `<code>$.IS(someVars.Object, Object)</code>: ${$.IS(someVars.Object, Object)}`,
           `<code>$.IS(someVars.Object, Array)</code>: ${$.IS(someVars.Object, Array)}`,
@@ -602,7 +602,7 @@ function clickActionsFactory($) {
            <div class='test'>Hello world (1)</div>\
            <div class='test'>Hello world (2)</div>\
         </div>", evt.target, $.insertPositions.AfterEnd);
-      popup.show( { content:
+      $.Popup.show( { content:
         `<code>$("[data-id='tmpEx']").<b>single(".test")</b>.HTML.get(1,1)</code>
           <p>${$("[data-id='tmpEx']").single(".test").HTML.get(1,1)}</p>`,
         callback: () => $(`[data-id]`).remove() } );
@@ -613,7 +613,7 @@ function clickActionsFactory($) {
            <div class='test'>Hello world (1)</div>\
            <div class='test'>Hello world (2)</div>\
         </div>", evt.target, $.insertPositions.AfterEnd);
-      popup.show( { content:
+      $.Popup.show( { content:
         `<code>$("[data-id='tmpEx']").<b>single()</b>.HTML.get(true, true)</code>
          <p>${$("[data-id='tmpEx']").single().HTML.get(true, true)}</p>`,
         callback: () => $(`[data-id]`).remove() } );
@@ -626,7 +626,7 @@ function clickActionsFactory($) {
            <div class="test">Hello world (3)</div>\
          </div>',
         evt.target, $.insertPositions.AfterEnd);
-      popup.show( { content:
+      $.Popup.show( { content:
         `<code>$(".test").<b>single(1)</b>.HTML.get(1, 1)</code>
          <p>${$(".test").single(1).HTML.get(1, 1)}</p>`,
         callback: () => $(`[data-id]`).remove() } );
@@ -676,7 +676,7 @@ function clickActionsFactory($) {
         );
 
       // show it
-      popup.show({ content: report } );
+      $.Popup.show({ content: report } );
     },
     toNodeListEx: evt => {
       const currentPara = getCurrentParagraph(evt);
@@ -703,19 +703,19 @@ function clickActionsFactory($) {
     htmlForEx: evt => {
       // note: this example serves both for [JQL].html and [JQL].htmlFor
       const someDiv = $.div({data: {id: "htmlExample"}})[create];
-      popup.show({
+      $.Popup.show({
         content: someDiv.html("(<code class='inline'>html</code>) =>\
           Hello <span class='wrld'><b>world</b></span> <span>... wait 3 secs ...</span>"),
         closeAfter: 3,
         callback: () => {
-          popup.show({
+          $.Popup.show({
             content: someDiv
               .htmlFor("code", "htmlFor")
               .htmlFor(".wrld", "<i><b>UNIVERSE</b></i>")
               .htmlFor("span:last-child", "<i>... wait 3 secs ...</i>"),
             closeAfter: 3,
             callback: () =>
-              popup.show({
+              $.Popup.show({
                 // the script should not be injected
                 content: someDiv
                   .htmlFor(".wrld", "injecting a &lt;script> tag will not work")
@@ -741,7 +741,7 @@ function clickActionsFactory($) {
         callback: () => {
           someDiv.remove();
           someDiv = $(".IDoNotExist");
-          popup.show({
+          $.Popup.show({
             content: `
               <code>someDiv.isEmpty()</code> =&gt; ${someDiv.isEmpty()}<br>
               <code>someDiv.find$("b:first-child").isEmpty()</code> =&gt; ${
@@ -754,10 +754,10 @@ function clickActionsFactory($) {
     replaceWithEx: () => {
       const oldDiv = $.virtual(`<div id="oldD">I shall be replaced...<div>`);
       const newDiv = $.virtual(`<div id="newD">I have replaced div#oldD!<div>`);
-      popup.show( {
+      $.Popup.show( {
         content: oldDiv,
         closeAfter: 3,
-        callback: () => popup.show({
+        callback: () => $.Popup.show({
             content: oldDiv.replaceWith(newDiv).style({color: `red`}),
             closeAfter: 3
           }),
@@ -768,7 +768,7 @@ function clickActionsFactory($) {
       $( [$.text("Some text added here"), $.text("Some comment added here", true)], root );
       const textNodes = [...root.childNodes]
         .filter( el => el.nodeValue?.trim().length && [3, 8].find(t => el.nodeType === t));
-      popup.show( {
+      $.Popup.show( {
         content: `<div><b>The created text nodes</b></div><div>${
           textNodes.map( el => el.nodeType === 8 ? `&lt;!--${el.data}-->` : el.data ).join(`<br>`)}</div>`,
         callback: () => textNodes.forEach( node => node.remove() ),
@@ -779,10 +779,10 @@ function clickActionsFactory($) {
         <div>Hi there!<div class="oldD">I shall be replaced...</div>\
         <div class="oldD">Me Too!</div></div>');
       const newDiv = $.virtual(`<div>Formerly known as "div.oldD"<div>`).style({color: "red"});
-      popup.show( {
+      $.Popup.show( {
         content: div,
         closeAfter: 3,
-        callback: () => popup.show({
+        callback: () => $.Popup.show({
           content: div.replace(".oldD", newDiv),
           closeAfter: 3
         }),
@@ -826,14 +826,14 @@ function clickActionsFactory($) {
         .replaceClass("someClass", "tmp")
         .text(" That's right folks. Bye!", true);
       const outerHtml = $(`.someClass, .tmp`).collection.map(el => $(el).HTML.get(1,1)).join(`<br>`);
-      popup.show({
+      $.Popup.show({
         content: outerHtml,
         callback: $(".someClass, .tmp").remove,
       });
     },
     hasClassEx: evt => {
       const tmpDiv = $('<div class="one two tree">Hello world</div>', getCurrentParagraph(evt));
-      popup.show( {
+      $.Popup.show( {
         content:
         `<code>tmpDiv.hasClass("one", "tree")</code> =&gt; ${tmpDiv.hasClass("one", "tree")}<br>
          <code>tmpDiv.hasClass("one", "four")</code> =&gt; ${tmpDiv.hasClass("one", "four")}<br>
@@ -918,7 +918,7 @@ function clickActionsFactory($) {
       const cClass = [...$.node('[data-id="tmpEx"]')?.classList]?.shift()
       $(`<p data-id="tmpEx" class="leftRedBorder">Hello #2</p>`, item)
         .css({className: "leftRedBorder", paddingLeft: "4px", color: "green", borderLeft: "12px solid red"});
-      popup.show({
+      $.Popup.show({
         content: `generated class name (first element): ${cClass}`,
         callback: () => {
           $.removeCssRules(".leftRedBorder", `.${cClass}`);
@@ -935,7 +935,7 @@ function clickActionsFactory($) {
       // single class rule: .test2 automatically added to the span here
       hello.find$("span")?.Style.nwRule(".test2 { color: red; }");
 
-      popup.show({
+      $.Popup.show({
         content: $.div("This resulted in:")[create]
           .Style
             .nwRule("#test3 { color: blue; }")
@@ -987,7 +987,7 @@ function clickActionsFactory($) {
           .map( (v) => `<li>${v}: ${computed[v]}</li>`)
           .join(``) }</ul></div>`.replace(/\n+\s{2,}/g, " ");
 
-      popup.show({
+      $.Popup.show({
         content: $($.DIV()).append(hello1, hello2, hello3, computedHello3, hello3Computed,),
         callback: () => $.removeCssRules(`.${hello3GeneratedClassName}, .leftRedBorder`) } );
     },
@@ -1016,14 +1016,14 @@ function clickActionsFactory($) {
         attrField4Popup(`class`, someDiv.attr("data-my-title")),
         attrField4Popup(`onclick`, someDiv.attr("onclick")),
       ];
-      popup.show( {
+      $.Popup.show( {
         content: `<div class="description"><ul><li>${results.join(`</li><li>`)}</li>`,
         callback: someDiv.remove });
     },
     computedStyleEx: evt => {
       $.editCssRule(".redEx {color: red; font-weight: bold}");
       $('<p class="redEx">Hello!</p>', getCurrentParagraph(evt));
-      popup.show({
+      $.Popup.show({
         content: `
             <code>$(".redEx").computedStyle("color")</code>: ${
             $(`.redEx`).computedStyle("color") }<br>
@@ -1037,16 +1037,16 @@ function clickActionsFactory($) {
         .style({color: "red", fontWeight: "bold"});
       const dims = JSON.stringify(dim.dimensions, null, 2)
         .replace(/[}{"]/g, "").trim().replace(/\n/g, "<br>");
-      popup.show({content: dims, callback: () => dim.remove()});
+      $.Popup.show({content: dims, callback: () => dim.remove()});
     },
-    findEx: () => {popup.show( { content: $(".docs").find(`#instance_find`)[0]?.outerHTML.replace(/</g, "&lt;") } );},
+    findEx: () => {$.Popup.show( { content: $(".docs").find(`#instance_find`)[0]?.outerHTML.replace(/</g, "&lt;") } );},
     find$Ex: () => {
       // note: $ is invalid in selectors, so replaced with _D
-      popup.show( { content: $(".docs").find$("#instance_find_D").HTML.get(1, 1) } );
+      $.Popup.show( { content: $(".docs").find$("#instance_find_D").HTML.get(1, 1) } );
     },
     firstEx: evt => {
       const jqlElems = $("#navigation li[data-key]");
-      popup.show({content: $(`<div>
+      $.Popup.show({content: $(`<div>
          <code>jqlElems.collection.length</code>: ${jqlElems.collection.length},<br>
          outerHTML <code>jqlElems.first()</code>: ${jqlElems.first()?.outerHTML.replace(/</g, "&lt;")}</div>`)});
     },
@@ -1054,18 +1054,18 @@ function clickActionsFactory($) {
       // first$
       const jqlElem = $(".docs").first$("#instance_single");
       const first$WithIndexExample = () => {
-        popup.show({
+        $.Popup.show({
           content: `<code>$(".docs h3").first$(17)</code> =&gt;<br>${
             $(".docs h3").first$(17).HTML.get(1, 1)}` } );
       };
-      popup.show(
+      $.Popup.show(
         { content: `<div><code>$(".docs").first$("#instance_single")</code> =&gt;<br>${
           jqlElem.HTML.get(1, 1)}</div>`, callback: first$WithIndexExample } );
     },
     nth$Ex: evt => {
       // nth$
       const jqlElem = $(".docs").nth$(30001); // does not exist
-      popup.show({ content: `
+      $.Popup.show({ content: `
             <div><code>jqlElem.HTML.get(1,1) </code> should give 'no elements' message: ${
               jqlElem.HTML.get(1, 1)}</div>` });
     },
@@ -1074,7 +1074,7 @@ function clickActionsFactory($) {
       $.editCssRule("[data-is-universe]:after {content: ' ... and the universe!'; color: red;}");
       helloWrld.data.add({isUniverse: true, something: "else", "dashed-prop-given": 1});
       const {all: myDATA} = helloWrld.data;
-      popup.show({
+      $.Popup.show({
         content: `<code>helloWrld.data.all</code> =&gt; ${JSON.stringify(helloWrld.data.all)}
           <br><code>helloWrld.data.get("something")</code> =&gt; ${helloWrld.data.get("something")}
           <br><code>helloWrld.data.all.isUniverse</code> =&gt; ${helloWrld.data.all.isUniverse}
