@@ -216,14 +216,15 @@ function createCR() {
             color: #555;
             display: inline-block;
             position: fixed;
-            background-color: #DDD;
+            background-color: #eee;
             top: 0;
-            right: 0;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 2;
             border-radius: 4px;
-            padding: 0.1rem 0.3rem;
-            width: 100vw;
-            text-align: right;
+            padding: 2px 0;
+            width: 1024px;
+            text-align: center;
             box-shadow: 0 2px 12px #777;
           }
           ::slotted(span.yr) {

@@ -55,7 +55,7 @@ function documentHandlingFactory($) {
     const nextHeader = $.nodes(`.paragraph, [data-groupcontainer]`)
       .find( el => {
          const marge = docsTop - el.nextElementSibling.offsetTop;
-         return marge <= -40;
+         return marge <= -50;
       } );
 
     if (nextHeader) {
