@@ -215,6 +215,7 @@ ul.navGroupItems li {
   list-style: '\2705';
   vertical-align: top;
   padding: 1px 0 1px 0.2em;
+  line-height: 1rem;
 }
 
 .description ul li div:not(.linkLike) {
