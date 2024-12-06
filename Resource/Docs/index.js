@@ -1,9 +1,15 @@
+import {default as CreateComponent, createOrRetrieveShadowRoot}
+  from "https://cdn.jsdelivr.net/gh/KooiInc/es-webcomponent-factory/Bundle/WebComponentFactory.min.js"
 Prism.manual = true;
+createCR();
 const isDev = location.host.startsWith(`dev`) || location.host.startsWith(`localhost`);
 const importLink =  isDev ?
   `../../index.js` :
   `../../Bundle/jql.min.js`;
 const $ = (await import(importLink)).default;
+$.allowTag(`copyright-slotted`);
+const ghLink = $.a({slot: `link`, href: `//github.com/KooiInc/JQL`, target: `_top`, text: `Github`});
+$[`copyright-slotted`]($.span({slot: `year`, class: `yr` }, new Date().getFullYear()), ghLink)[Symbol.jql];
 window.$ = $;
 const codeReplacements = new Map( [
   [`<`, `&lt;`],
@@ -174,6 +180,7 @@ $.log(`Navigation triggered.`);
 $.log(`Documenter implementation took ${((performance.now() - perform)/1000).toFixed(3)} seconds`);
 
 const loadItem = QS2Obj();
+
 if (loadItem.load) {
   const load = loadItem.load.replace(/about/, `About`);
   const item = $(`[data-navitem="#${load}"]`) || $(`[data-key="${load}"]`).closest(`.navGroupItems`);
@@ -195,4 +202,57 @@ function QS2Obj() {
   }
   
   return {};
+}
+
+function createCR() {
+  CreateComponent( {
+    componentName: `copyright-slotted`,
+    onConnect(elem) {
+      const shadow = createOrRetrieveShadowRoot(elem);
+      const componentStyle = Object.assign(
+        document.createElement("style"),
+        { textContent: `
+          :host {
+            color: #555;
+            display: inline-block;
+            position: fixed;
+            background-color: #DDD;
+            top: 0;
+            right: 0;
+            z-index: 2;
+            border-radius: 4px;
+            padding: 0.1rem 0.3rem;
+            width: 100vw;
+            text-align: right;
+            box-shadow: 0 2px 12px #777;
+          }
+          ::slotted(span.yr) {
+            font-weight: bold;
+            color: green;
+          }
+          ::slotted(a[target]) {
+            text-decoration: none;
+            font-weight: bold;
+          }
+          ::slotted(a[target]):before {
+            color: rgba(0, 0, 238, 0.7);
+            font-size: 1.1rem;
+            padding-right: 2px;
+            vertical-align: baseline;
+          }
+          ::slotted(a[target="_blank"]):before { content: "↗"; }
+          ::slotted(a[target="_top"]):before { content: "↺"; }
+          ::slotted(a[target]):after {
+            content: ' | ';
+            color: #000;
+            font-weight: normal;
+          }
+          ::slotted(a[target]:last-child):after { content: ''; margin-right: 2rem; }`
+        } );
+      const content = Object.assign(
+        document.createElement(`div`), {
+          innerHTML: `&copy; <span><slot name="year"/></span> KooiInc <slot name="link"/>`})
+      shadow.append(componentStyle, content);
+    }
+  });
 }

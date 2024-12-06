@@ -83,7 +83,7 @@ function clickActionsFactory($) {
   };
   const popup = $.Popup;
   const docsContainer = $.node(".docs");
-  const scrollPosition = () => docsContainer.scrollBy(0, -15);
+  const scrollPosition = () => $.node(`.container`).scrollBy(0, -30);
   const removeEx = (...rules2Remove) => setTimeout(() => {
     $('#tmpEx, [data-id="tmpEx"]').remove();
     rules2Remove.length > 0 && $.removeCssRule(...rules2Remove);

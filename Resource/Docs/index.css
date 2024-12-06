@@ -10,7 +10,7 @@ body {
 #navigation {
   position: fixed;
   overflow-y: auto;
-  top: 2em;
+  top: 5rem;
   bottom: 0;
 }
 
@@ -46,6 +46,7 @@ code:not([class*='language-']) b.comment {
   padding-bottom: 100rem;
   padding-left: 1rem;
   margin-left: 135px;
+  margin-top: 2rem;
 }
 
 .param {
