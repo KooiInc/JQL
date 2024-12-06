@@ -135,7 +135,12 @@ function staticMethodsFactory(jql) {
     virtual: virtualFactory(jql),
     get fn() { return addFn; },
     allowTag: tagName => {
+      tagName = tagName.toLowerCase();
       tagLib.allowTag(tagName);
+
+      if (!IS(jql[tagName], Function)) {
+        Object.defineProperties( jql, addGetters(tagName, jql) );
+      }
     },
     prohibitTag: tagLib.prohibitTag,
     get lenient() { return tagLib.allowUnknownHtmlTags; },
