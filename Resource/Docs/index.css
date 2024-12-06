@@ -122,6 +122,7 @@ ul.navGroupItems li {
     color: blue;
     cursor: pointer;
     display: inline-block;
+    margin: 1px 0;
   }
 
   &:hover, .inline:hover {
@@ -212,9 +213,8 @@ ul.navGroupItems li {
 
 .description ul li {
   list-style: '\2705';
-  padding-left: 0.2em;
   vertical-align: top;
-  line-height: 1.7em;
+  padding: 1px 0 1px 0.2em;
 }
 
 .description ul li div:not(.linkLike) {
@@ -242,8 +242,8 @@ ul.navGroupItems li {
 code:not([class*='language-']) {
   background-color: rgb(227, 230, 232);
   color: rgb(12, 13, 14);
-  padding: 2px 4px;
-  display: inline;
+  padding: 0 4px;
+  display: inline-block;
   border-radius: 4px;
   margin: 1px 0;
 
