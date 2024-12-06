@@ -4,8 +4,10 @@ import allMethods from "./JQLMethods.js";
 import PopupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import tagLib from "./HTMLTags.js";
-import { randomString, toDashedNotation, IS, truncateHtmlStr, tagFNFactory,
-  truncate2SingleStr, logTime, hex2RGBA, styleFactory} from "./Utilities.js";
+import {
+  randomString, toDashedNotation, IS, truncateHtmlStr, tagFNFactory,
+  truncate2SingleStr, logTime, hex2RGBA, styleFactory, toCamelcase
+} from "./Utilities.js";
 let static4Docs = {};
 const {
   instanceMethods, instanceGetters,isCommentOrTextNode, isNode, isComment, isText,
@@ -230,12 +232,20 @@ function tagGetterFactory(tagName, jql) {
 function addGetters(tag, jql) {
   const getterForThisTag = tagGetterFactory(tag);
   const jqlGetterForThisTag = tagGetterFactory(tag.replace(/_jql$/i, ``), jql);
-  return {
+  const getters = {
     [tag]: getterForThisTag,
     [tag.toUpperCase()]: getterForThisTag,
     [`${tag}_jql`]: jqlGetterForThisTag,
     [`${tag.toUpperCase()}_JQL`]: jqlGetterForThisTag,
   };
+
+  if (/\-/.test(tag)) {
+    tag = toCamelcase(tag);
+    getters[tag] = getterForThisTag;
+    getters[`${tag}_jql`] = jqlGetterForThisTag;
+  }
+
+  return getters;
 }
 
 function staticTagsLambda(jql) {
