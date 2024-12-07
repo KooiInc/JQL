@@ -55,7 +55,7 @@ function documentHandlingFactory($) {
     const nextHeader = $.nodes(`.paragraph, [data-groupcontainer]`)
       .find( el => {
          const marge = docsTop - el.nextElementSibling.offsetTop;
-         return marge <= -50;
+         return marge <= -30;
       } );
 
     if (nextHeader) {
@@ -83,7 +83,7 @@ function clickActionsFactory($) {
   };
   const popup = $.Popup;
   const docsContainer = $.node(".docs");
-  const scrollPosition = () => $.node(`.container`).scrollBy(0, -30);
+  const scrollPosition = () => $.node(`.container`).scrollBy(0, -20);
   const removeEx = (...rules2Remove) => setTimeout(() => {
     $('#tmpEx, [data-id="tmpEx"]').remove();
     rules2Remove.length > 0 && $.removeCssRule(...rules2Remove);

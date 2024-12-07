@@ -92,7 +92,7 @@ const convertExamples = descriptionValue => {
       code = code.replace(/##.+##/, allExampleActions[actionMethodName]) +
         `<button class="exRunBttn" data-action="${actionMethodName}">Try it</button>`;
     }
-    
+
     return code;
   }
   
@@ -183,12 +183,13 @@ const loadItem = QS2Obj();
 
 if (loadItem.load) {
   const load = loadItem.load.replace(/about/, `About`);
-  const item = $(`[data-navitem="#${load}"]`) || $(`[data-key="${load}"]`).closest(`.navGroupItems`);
-  
-  if (item.length > 0) {
-    item.trigger(`click`);
-    $.Popup.show({content: $.b(`loaded `, $.code({class: "inline"}, loadItem.load)), closeAfter: 2});
-  }
+  const item2Load = $(findItemCaseInsensitive(load));
+  !item2Load.is.empty && item2Load.trigger(`click`);
+}
+
+function findItemCaseInsensitive(loadItemKey) {
+  return $.nodes(`[data-navitem]`)
+    .find(el => el.dataset.navitem?.toLowerCase() === `#${loadItemKey.toLowerCase()}`);
 }
 
 function QS2Obj() {
@@ -216,16 +217,16 @@ function createCR() {
             color: #555;
             display: inline-block;
             position: fixed;
-            background-color: #eee;
+            background-color: #fff;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
             border-radius: 4px;
             padding: 2px 0;
-            width: 1024px;
+            width: 100vw;
             text-align: center;
-            box-shadow: 0 2px 12px #777;
+            box-shadow: 0 2px 14px #999;
           }
           ::slotted(span.yr) {
             font-weight: bold;
