@@ -92,17 +92,17 @@ function addJQLStaticMethods(jql) {
   Object.defineProperties(
     Node.prototype, {
       [Symbol.jql]:        {
-        get: function() { return jql(this); },
+        get() { return jql(this); },
         enumerable: false,
         configurable: false
       },
       [Symbol.jqlvirtual]: {
-        get: function() { return jql.virtual(this); },
+        get() { return jql.virtual(this); },
         enumerable: false,
         configurable: false
       },
       [Symbol.jql2Root]: {
-        value: function(root = document.body, at = insertPositions.end) {
+        value(root = document.body, at = insertPositions.end) {
           return jql(this, root, at);
         },
         enumerable: false,
